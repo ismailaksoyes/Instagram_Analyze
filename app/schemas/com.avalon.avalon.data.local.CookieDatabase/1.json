@@ -1,0 +1,82 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "504ff035f5eacbf9f5cd1b170ec1c399",
+    "entities": [
+      {
+        "tableName": "cookie_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `csfr` TEXT NOT NULL, `dsUserID` TEXT NOT NULL, `igDId` TEXT NOT NULL, `rur` TEXT NOT NULL, `sessID` TEXT NOT NULL, `shbid` TEXT NOT NULL, `shbts` TEXT NOT NULL, `mid` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "csfr",
+            "columnName": "csfr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dsUserID",
+            "columnName": "dsUserID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "igDId",
+            "columnName": "igDId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rur",
+            "columnName": "rur",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sessID",
+            "columnName": "sessID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shbid",
+            "columnName": "shbid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shbts",
+            "columnName": "shbts",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mid",
+            "columnName": "mid",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '504ff035f5eacbf9f5cd1b170ec1c399')"
+    ]
+  }
+}
