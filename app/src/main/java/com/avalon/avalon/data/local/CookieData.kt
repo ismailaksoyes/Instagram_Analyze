@@ -15,6 +15,7 @@ data class CookieData(
         val sessID: String,
         val shbid: String,
         val shbts: String,
-        val mid: String
+        val mid: String,
+        val allCookie:String
 
 )

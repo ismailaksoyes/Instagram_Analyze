@@ -9,11 +9,18 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import com.avalon.avalon.data.local.CookieDao
 import com.avalon.avalon.data.local.CookieData
 import com.avalon.avalon.data.local.CookieDatabase
 import com.avalon.avalon.data.repository.CookieRepository
+import com.avalon.avalon.data.repository.Repository
 import com.avalon.avalon.databinding.ActivityLoginBinding
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import okhttp3.logging.HttpLoggingInterceptor
+import java.util.logging.Logger
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -26,6 +33,7 @@ class LoginActivity : AppCompatActivity() {
     var shbid = ""
     var shbts = ""
     var mid = ""
+    var allCookie = ""
     var lastControl: Boolean = true
     var getCookies: Boolean = false
 
@@ -34,15 +42,27 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val logging:HttpLoggingInterceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
+            Log.d("Response",it.toString())
+        })
+
         val dao: CookieDao = CookieDatabase.getInstance(application).cookieDao
-        val repository = CookieRepository(dao)
-        val factory = LoginViewModelFactory(repository)
+        val dbRepository = CookieRepository(dao)
+        val repository = Repository()
+        val factory = LoginViewModelFactory(dbRepository,repository)
         mCookiesVewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
         if (getCookies) {
             mCookiesVewModel.allCookies.observe(this, Observer { data ->
                 Log.d("Response", "data geldi bro")
             })
         }
+
+        mCookiesVewModel.reelsTray.observe(this, Observer { response ->
+            if(response.isSuccessful){
+                Log.d("Response",response.body()?.status.toString()!!)
+            }
+        })
+
         val loginUrl: String = "https://www.instagram.com/accounts/login/"
         val webView: WebView = binding.webView
         webView.settings.javaScriptEnabled = true
@@ -61,6 +81,7 @@ class LoginActivity : AppCompatActivity() {
                     lastControl = false
                     val loginCookies = CookieManager.getInstance().getCookie(url)
                     Log.d("Response",loginCookies.toString())
+                    allCookie = loginCookies
                     for (data in loginCookies.split(";")) {
                         val trim2 = data.trim()
                         val datalast = trim2.split("=").toTypedArray()
@@ -100,9 +121,20 @@ class LoginActivity : AppCompatActivity() {
                         rur = rur,
                         sessID = sessID,
                         shbid = shbid,
-                        shbts = shbts
+                        shbts = shbts,
+                        allCookie = loginCookies
                     )
-                    insertCookiesToDatabase(cookiesData)
+
+                    GlobalScope.launch {
+                      val success1 =  insertCookiesToDatabase(cookiesData)
+                      val success2 = LoginTest()
+
+                      if(success1&&success2){
+                          Log.d("Response","BASARILI")
+                      }
+
+                    }
+
 
                 }
             }
@@ -110,10 +142,14 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun insertCookiesToDatabase(cookieData: CookieData) {
+    private fun insertCookiesToDatabase(cookieData: CookieData):Boolean {
         mCookiesVewModel.addCookie(cookieData)
-        Log.d("Response", "cokiyi bastım")
         getCookies = true
+        return true
+    }
+    private suspend fun LoginTest():Boolean{
+        mCookiesVewModel.getReelsTray("https://i.instagram.com/api/v1/feed/reels_tray/",allCookie)
+        return true
     }
 
 }

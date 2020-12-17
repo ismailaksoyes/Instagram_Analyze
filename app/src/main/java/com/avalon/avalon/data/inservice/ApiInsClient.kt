@@ -3,13 +3,18 @@ package com.avalon.avalon.data.inservice
 import com.avalon.avalon.data.service.ApiInterceptor
 import com.avalon.avalon.data.service.ApiService
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object ApiInsClient {
+    private var logging:HttpLoggingInterceptor = HttpLoggingInterceptor()
+    val suc = logging.setLevel(HttpLoggingInterceptor.Level.BODY)
     private val client = OkHttpClient.Builder().apply {
+        addNetworkInterceptor(suc)
         addInterceptor(ApiInsInterceptor())
+
             .connectTimeout(1, TimeUnit.MINUTES)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(15, TimeUnit.SECONDS)
@@ -22,7 +27,7 @@ object ApiInsClient {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-    val api: ApiInsService by lazy {
+    val  api: ApiInsService by lazy {
         retrofit.create(
           ApiInsService::class.java
         )

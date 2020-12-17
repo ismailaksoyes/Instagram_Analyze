@@ -1,16 +1,20 @@
 package com.avalon.avalon.data.inservice
 
 import com.avalon.avalon.data.remote.insrequest.ApiRequestFollowers
-import retrofit2.http.Body
-import retrofit2.http.POST
-import retrofit2.http.Url
+import com.avalon.avalon.data.remote.insresponse.ApiResponseReelsTray
+import retrofit2.Response
+import retrofit2.http.*
 
 interface ApiInsService {
-    @POST()
-    fun getUserList(
-        @Url url:String,
-        @Body request:ApiRequestFollowers
+    @POST("friendships/{userId}/followers/")
+    suspend fun getFollowers(
+        @Path("userId") userId:Int,
     )
+    @GET()
+   suspend fun getReelsTray(
+        @Url url:String,
+        @Header("Cookie") cookies:String
+    ):Response<ApiResponseReelsTray>
 
 
 }

@@ -4,19 +4,33 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.avalon.avalon.data.local.CookieData
 import com.avalon.avalon.data.local.CookieDatabase
+import com.avalon.avalon.data.remote.insresponse.ApiResponseReelsTray
 import com.avalon.avalon.data.repository.CookieRepository
 import com.avalon.avalon.data.repository.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
-class LoginViewModel(private val repository: CookieRepository) : ViewModel() {
+class LoginViewModel(private val dbRepository: CookieRepository,private val repository: Repository) : ViewModel() {
 
-    val allCookies :LiveData<CookieData> = repository.readAllCookies
+    val allCookies :LiveData<CookieData> = dbRepository.readAllCookies
+    val reelsTray :MutableLiveData<Response<ApiResponseReelsTray>> = MutableLiveData()
 
 
     fun addCookie(cookieData: CookieData){
        viewModelScope.launch(Dispatchers.IO) {
-          repository.addCookie(cookieData)
+          dbRepository.addCookie(cookieData)
+       }
+    }
+
+    fun getFollowers(userId:Int){
+
+    }
+
+    suspend fun getReelsTray(url:String,cookies:String){
+       viewModelScope.launch {
+           val response:Response<ApiResponseReelsTray> = repository.getReelsTray(url,cookies)
+           reelsTray.value = response
        }
     }
 
