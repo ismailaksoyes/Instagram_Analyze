@@ -15,7 +15,9 @@ import com.avalon.avalon.data.local.CookieData
 import com.avalon.avalon.data.local.CookieDatabase
 import com.avalon.avalon.data.repository.CookieRepository
 import com.avalon.avalon.data.repository.Repository
+import com.avalon.avalon.data.repository.launchActivity
 import com.avalon.avalon.databinding.ActivityLoginBinding
+import com.avalon.avalon.ui.main.MainActivity
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -59,7 +61,8 @@ class LoginActivity : AppCompatActivity() {
 
         mCookiesVewModel.reelsTray.observe(this, Observer { response ->
             if(response.isSuccessful){
-                Log.d("Response",response.body()?.status.toString()!!)
+               Log.d("Response",response.body()?.status.toString()!!)
+                launchActivity<MainActivity> {  }
             }
         })
 

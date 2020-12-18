@@ -1,5 +1,7 @@
 package com.avalon.avalon.data.remote.insrequest
 
-class ApiRequestFollowers {
+data class ApiRequestFollowers(
+    val url: String,
+    val cookies:String
 
-}
+)
