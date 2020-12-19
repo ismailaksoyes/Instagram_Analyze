@@ -13,5 +13,5 @@ interface CookieDao {
     suspend fun addCookie(cookieData: CookieData)
 
     @Query("SELECT * FROM cookie_table WHERE cookieId=1")
-    fun readAllData():LiveData<CookieData>
+   suspend fun readAllData():CookieData
 }

@@ -44,20 +44,16 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val logging:HttpLoggingInterceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
-            Log.d("Response",it.toString())
-        })
 
         val dao: CookieDao = CookieDatabase.getInstance(application).cookieDao
         val dbRepository = CookieRepository(dao)
         val repository = Repository()
         val factory = LoginViewModelFactory(dbRepository,repository)
         mCookiesVewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
-        if (getCookies) {
-            mCookiesVewModel.allCookies.observe(this, Observer { data ->
-                Log.d("Response", "data geldi bro")
-            })
-        }
+
+        mCookiesVewModel.cookies.observe(this, Observer { data->
+            Log.d("Response", "data geldi bro")
+        })
 
         mCookiesVewModel.reelsTray.observe(this, Observer { response ->
             if(response.isSuccessful){

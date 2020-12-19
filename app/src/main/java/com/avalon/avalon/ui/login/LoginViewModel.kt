@@ -13,7 +13,7 @@ import retrofit2.Response
 
 class LoginViewModel(private val dbRepository: CookieRepository,private val repository: Repository) : ViewModel() {
 
-    val allCookies :LiveData<CookieData> = dbRepository.readAllCookies
+    val cookies:MutableLiveData<CookieData> = MutableLiveData()
     val reelsTray :MutableLiveData<Response<ApiResponseReelsTray>> = MutableLiveData()
 
 
@@ -23,8 +23,11 @@ class LoginViewModel(private val dbRepository: CookieRepository,private val repo
        }
     }
 
-    fun getFollowers(userId:Int){
-
+     fun getCookies(){
+        viewModelScope.launch {
+            val cookieData:CookieData = dbRepository.getCookies()
+            cookies.value = cookieData
+        }
     }
 
     suspend fun getReelsTray(url:String,cookies:String){
