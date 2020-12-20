@@ -12,13 +12,13 @@ import com.avalon.avalon.data.local.CookieDatabase
 import com.avalon.avalon.data.repository.CookieRepository
 import com.avalon.avalon.data.repository.Repository
 import com.avalon.avalon.databinding.ActivityMainBinding
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import okhttp3.internal.wait
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
-    private lateinit var cookies:String
+    private lateinit var cookies: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -26,23 +26,26 @@ class MainActivity : AppCompatActivity() {
         val dao: CookieDao = CookieDatabase.getInstance(application).cookieDao
         val dbRepository = CookieRepository(dao)
         val repository = Repository()
-        val factory = MainViewModelFactory(dbRepository,repository)
-        viewModel =  ViewModelProvider(this,factory).get(MainViewModel::class.java)
-
+        val factory = MainViewModelFactory(dbRepository, repository)
+        viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
+        Log.d("Response", "" + Thread.currentThread().name)
         viewModel.getCookies()
-        viewModel.cookies.observe(this, Observer { response->
-            cookies = response.allCookie.toString()
-            viewModel.getUserFollowers(19748713375,cookies)
+
+        viewModel.cookies.observe(this, Observer { response ->
+            cookies = response.allCookie
+            viewModel.getUserFollowers(19748713375, cookies)
         })
 
-        viewModel.allFollowers.observe(this, Observer { response->
-            if(response.isSuccessful){
-                for (data in response.body()?.users!!){
-                    Log.d("Response",data.username)
+        viewModel.allFollowers.observe(this, Observer { response ->
+            if (response.isSuccessful) {
+                for (data in response.body()?.users!!) {
+                    Log.d("Response", data.username)
                 }
             }
         })
 
     }
+
+
 
 }
