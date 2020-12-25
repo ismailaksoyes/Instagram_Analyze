@@ -7,9 +7,9 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiInsService {
-    @POST("friendships/{userId}/followers/")
+    @GET()
     suspend fun getFollowers(
-        @Path("userId") userId:Long,
+        @Url url: String,
         @Header("Cookie") cookies: String
     ):Response<ApiResponseUserFollowers>
     @GET()
