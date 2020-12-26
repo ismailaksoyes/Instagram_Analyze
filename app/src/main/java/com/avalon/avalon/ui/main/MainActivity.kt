@@ -2,20 +2,16 @@ package com.avalon.avalon.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.BoringLayout
 import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.avalon.avalon.data.local.CookieDao
-import com.avalon.avalon.data.local.CookieData
 import com.avalon.avalon.data.local.CookieDatabase
-import com.avalon.avalon.data.remote.insresponse.ApiResponseUserFollowers
-import com.avalon.avalon.data.remote.insresponse.User
 import com.avalon.avalon.data.repository.CookieRepository
 import com.avalon.avalon.data.repository.Repository
 import com.avalon.avalon.databinding.ActivityMainBinding
+import com.avalon.avalon.utils.Utils
 import kotlinx.coroutines.*
-import okhttp3.internal.wait
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -37,24 +33,22 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.cookies.observe(this, { response ->
             cookies = response.allCookie
-            viewModel.getUserFollowers(
-                "https://i.instagram.com/api/v1/friendships/19748713375/followers/",
-                cookies
-            )
-        })
+            initData()
 
+        })
 
         viewModel.allFollowers.observe(this, Observer { response ->
             if (response.isSuccessful) {
 
-                if (!response.body()?.nextMaxId.isNullOrEmpty()) {
                     if(size<5){
                         size++
-
-                        getUserList(response.body()?.nextMaxId!!)
+                        getUserList(
+                            maxId = response.body()?.nextMaxId!!,
+                            userId = "19748713375"
+                            )
                     }
 
-                }
+
                 for (data in response.body()?.users!!){
                     Log.d("Response",""+data.username)
                 }
@@ -64,18 +58,20 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    fun initData(){
+        getUserList(userId = "19748713375")
+    }
+    fun getUserList(maxId: String? = null,userId:String){
+       val url = Utils.getFriendShipUrl(
+           maxId = maxId,
+           userId = userId
+       )
 
-    fun getUserList(maxId:String){
-        val uuid: String = UUID.randomUUID().toString().replace("-", "");
-        Log.d("Response", uuid)
-        val url:String =
-            "https://i.instagram.com/api/v1/friendships/19748713375/followers/?max_id=$maxId&rank_token=19748713375_$uuid"
         CoroutineScope(Dispatchers.IO).launch {
             viewModel.getUserFollowers(
                 url,
                 cookies
             )
-
             delay((200+Random(250).nextInt().toLong()))
         }
     }

@@ -17,5 +17,4 @@ data class CookieData(
         val shbts: String,
         val mid: String,
         val allCookie:String
-
 )

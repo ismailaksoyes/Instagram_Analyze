@@ -14,7 +14,7 @@ class CookieRepository(private val cookieDao: CookieDao) {
       cookieDao.addCookie(cookieData)
     }
 
-    suspend fun getCookies():CookieData{
+     suspend fun getCookies():CookieData{
         return cookieDao.readAllData()
     }
 
