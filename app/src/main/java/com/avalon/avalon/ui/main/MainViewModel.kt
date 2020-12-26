@@ -21,6 +21,7 @@ class MainViewModel(private val dbRepository: CookieRepository, private val repo
         viewModelScope.launch {
             val response:Response<ApiResponseUserFollowers> = repository.getUserFollowers(url,cookies)
             allFollowers.value = response
+            //1K
         }
     }
     fun getCookies(){
