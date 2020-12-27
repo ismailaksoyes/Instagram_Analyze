@@ -17,9 +17,9 @@ class MainViewModel(private val dbRepository: CookieRepository, private val repo
     val allFollowers:MutableLiveData<Response<ApiResponseUserFollowers>> = MutableLiveData()
 
 
-     fun getUserFollowers(url:String,cookies:String){
+     fun getUserFollowers(userId:String,maxId: String?,rnkToken:String?, cookies: String){
         viewModelScope.launch {
-            val response:Response<ApiResponseUserFollowers> = repository.getUserFollowers(url,cookies)
+            val response:Response<ApiResponseUserFollowers> = repository.getUserFollowers(userId,maxId,rnkToken,cookies)
             allFollowers.value = response
             //1K
         }

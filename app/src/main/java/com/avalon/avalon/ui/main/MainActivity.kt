@@ -62,18 +62,29 @@ class MainActivity : AppCompatActivity() {
         getUserList(userId = "19748713375")
     }
     fun getUserList(maxId: String? = null,userId:String){
-       val url = Utils.getFriendShipUrl(
-           maxId = maxId,
-           userId = userId
-       )
-
-        CoroutineScope(Dispatchers.IO).launch {
-            viewModel.getUserFollowers(
-                url,
-                cookies
-            )
-            delay((200+Random(250).nextInt().toLong()))
+       if(!maxId.isNullOrEmpty()){
+           CoroutineScope(Dispatchers.IO).launch {
+               viewModel.getUserFollowers(
+                   userId = userId,
+                   maxId = maxId,
+                   rnkToken = Utils.generateUUID(),
+                   cookies
+               )
+               delay((200+Random(250).nextInt().toLong()))
+           }
+       }
+        if(!maxId.isNullOrEmpty()){
+            CoroutineScope(Dispatchers.IO).launch {
+                viewModel.getUserFollowers(
+                    userId = userId,
+                    cookies = cookies,
+                    maxId = null,
+                    rnkToken = null
+                )
+                delay((200+Random(250).nextInt().toLong()))
+            }
         }
+
     }
 
 
