@@ -40,10 +40,10 @@ class MainActivity : AppCompatActivity() {
         viewModel.allFollowers.observe(this, Observer { response ->
             if (response.isSuccessful) {
 
-                    if(size<5){
+                    if(size<4){
                         size++
                         getUserList(
-                            maxId = response.body()?.nextMaxId!!,
+                            maxId = response.body()?.nextMaxId,
                             userId = "19748713375"
                             )
                     }
@@ -72,8 +72,7 @@ class MainActivity : AppCompatActivity() {
                )
                delay((200+Random(250).nextInt().toLong()))
            }
-       }
-        if(!maxId.isNullOrEmpty()){
+       }else{
             CoroutineScope(Dispatchers.IO).launch {
                 viewModel.getUserFollowers(
                     userId = userId,

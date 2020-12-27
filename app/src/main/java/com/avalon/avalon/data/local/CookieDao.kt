@@ -22,11 +22,11 @@ interface CookieDao {
     suspend fun addFollowing(followingData: FollowingData)
 
     @Query("SELECT * FROM followers_table")
-    suspend fun getFollowers(followersData: FollowersData)
+    suspend fun getFollowers():List<FollowersData>
 
     @Query("SELECT * FROM following_table")
-    suspend fun getFollowing(followingData: FollowingData)
+    suspend fun getFollowing():List<FollowingData>
 
-    @Query("SELECT * FROM followers_table EXCEPT SELECT * FROM following_table")
-    suspend fun getNotFollow(followersData: FollowersData)
+   @Query("SELECT * FROM followers_table EXCEPT SELECT * FROM following_table")
+    suspend fun getNotFollow():List<FollowersData>
 }
