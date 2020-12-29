@@ -10,6 +10,7 @@ import com.avalon.avalon.data.local.CookieDatabase
 import com.avalon.avalon.data.repository.CookieRepository
 import com.avalon.avalon.data.repository.Repository
 import com.avalon.avalon.databinding.ActivityMainBinding
+import com.avalon.avalon.preferences
 import com.avalon.avalon.utils.Utils
 import kotlinx.coroutines.*
 import java.util.*
@@ -29,13 +30,11 @@ class MainActivity : AppCompatActivity() {
         val factory = MainViewModelFactory(dbRepository, repository)
         viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
         Log.d("Response", "" + Thread.currentThread().name)
-        viewModel.getCookies()
 
-        viewModel.cookies.observe(this, { response ->
-            cookies = response.allCookie
-            initData()
-
-        })
+        if(!preferences.allCookie.isNullOrEmpty()){
+            cookies = preferences.allCookie!!
+            getUserList(userId = "19748713375")
+        }
 
         viewModel.allFollowers.observe(this, Observer { response ->
             if (response.isSuccessful) {
@@ -46,6 +45,15 @@ class MainActivity : AppCompatActivity() {
                             maxId = response.body()?.nextMaxId,
                             userId = "19748713375"
                             )
+                    }else{
+                        val timeNow:Long = System.currentTimeMillis()
+                        val date:Date = Date(System.currentTimeMillis())
+                        Log.d("Response", "time now-> $timeNow")
+                        Log.d("Response", "date-> $date")
+                        Log.d("Response", "date.gettime-> ${date.time}")
+                       // preferences.
+
+
                     }
 
 
@@ -58,9 +66,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun initData(){
-        getUserList(userId = "19748713375")
-    }
+
     fun getUserList(maxId: String? = null,userId:String){
        if(!maxId.isNullOrEmpty()){
            CoroutineScope(Dispatchers.IO).launch {
