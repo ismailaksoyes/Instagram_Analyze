@@ -5,9 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.avalon.avalon.data.local.CookieData
+import com.avalon.avalon.data.local.FollowersData
 import com.avalon.avalon.data.remote.insresponse.ApiResponseUserFollowers
 import com.avalon.avalon.data.repository.CookieRepository
 import com.avalon.avalon.data.repository.Repository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -16,7 +18,11 @@ class MainViewModel(private val dbRepository: CookieRepository, private val repo
     val cookies:MutableLiveData<CookieData> = MutableLiveData()
     val allFollowers:MutableLiveData<Response<ApiResponseUserFollowers>> = MutableLiveData()
 
-
+    fun addFollowers(followersData: FollowersData){
+        viewModelScope.launch(Dispatchers.IO) {
+            dbRepository.addFollowers(followersData)
+        }
+    }
      fun getUserFollowers(userId:String,maxId: String?,rnkToken:String?, cookies: String){
         viewModelScope.launch {
             val response:Response<ApiResponseUserFollowers> = repository.getUserFollowers(userId,maxId,rnkToken,cookies)

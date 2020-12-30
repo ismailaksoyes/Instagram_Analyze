@@ -17,9 +17,8 @@ import com.avalon.avalon.data.repository.CookieRepository
 import com.avalon.avalon.data.repository.Repository
 import com.avalon.avalon.data.repository.launchActivity
 import com.avalon.avalon.databinding.ActivityLoginBinding
-import com.avalon.avalon.preferences
+import com.avalon.avalon.PREFERENCES
 import com.avalon.avalon.ui.main.MainActivity
-import com.avalon.avalon.utils.Preferences.CookieSharedPreferences
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -80,7 +79,7 @@ class LoginActivity : AppCompatActivity() {
                     lastControl = false
                     val loginCookies = CookieManager.getInstance().getCookie(url)
                     Log.d("Response",loginCookies.toString())
-                    preferences.allCookie = loginCookies
+                    PREFERENCES.allCookie = loginCookies
                     allCookie = loginCookies
                     for (data in loginCookies.split(";")) {
                         val trim2 = data.trim()
@@ -124,7 +123,7 @@ class LoginActivity : AppCompatActivity() {
                         shbts = shbts,
                         allCookie = loginCookies
                     )
-                    Log.d("Response","allCookie->"+ preferences.allCookie)
+                    Log.d("Response","allCookie->"+ PREFERENCES.allCookie)
                     GlobalScope.launch {
                       val success1 =  insertCookiesToDatabase(cookiesData)
                       val success2 = LoginTest()

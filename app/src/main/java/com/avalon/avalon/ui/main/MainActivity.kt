@@ -10,7 +10,7 @@ import com.avalon.avalon.data.local.CookieDatabase
 import com.avalon.avalon.data.repository.CookieRepository
 import com.avalon.avalon.data.repository.Repository
 import com.avalon.avalon.databinding.ActivityMainBinding
-import com.avalon.avalon.preferences
+import com.avalon.avalon.PREFERENCES
 import com.avalon.avalon.utils.Utils
 import kotlinx.coroutines.*
 import java.util.*
@@ -29,36 +29,29 @@ class MainActivity : AppCompatActivity() {
         val repository = Repository()
         val factory = MainViewModelFactory(dbRepository, repository)
         viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
-        Log.d("Response", "" + Thread.currentThread().name)
 
-        if(!preferences.allCookie.isNullOrEmpty()){
-            cookies = preferences.allCookie!!
-            getUserList(userId = "19748713375")
+        if(!PREFERENCES.allCookie.isNullOrEmpty()){
+            cookies = PREFERENCES.allCookie!!
+           // getUserList(userId = "19748713375")
+            if(getTimeStatus(PREFERENCES.followersUpdateDate)){
+                getUserList(userId = "19748713375")
+                PREFERENCES.followersUpdateDate = System.currentTimeMillis()
+            }
         }
 
         viewModel.allFollowers.observe(this, Observer { response ->
             if (response.isSuccessful) {
 
-                    if(size<4){
-                        size++
-                        getUserList(
-                            maxId = response.body()?.nextMaxId,
-                            userId = "19748713375"
-                            )
-                    }else{
-                        val timeNow:Long = System.currentTimeMillis()
-                        val date:Date = Date(System.currentTimeMillis())
-                        Log.d("Response", "time now-> $timeNow")
-                        Log.d("Response", "date-> $date")
-                        Log.d("Response", "date.gettime-> ${date.time}")
-                       // preferences.
-
-
-                    }
-
-
+                if (!response.body()?.nextMaxId.isNullOrEmpty() && size < 7){
+                    size++
+                    getUserList(
+                        maxId = response.body()?.nextMaxId,
+                        userId = "19748713375"
+                    )
+                }
                 for (data in response.body()?.users!!){
                     Log.d("Response",""+data.username)
+                    viewModel.addFollowers(data)
                 }
                 Log.d("Response","-----------------------")
             }
@@ -66,7 +59,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
+    private fun getTimeStatus(date:Long):Boolean{
+        val timeDif = Utils.getTimeDifference(Date(date))
+        return timeDif > 1
+    }
     fun getUserList(maxId: String? = null,userId:String){
        if(!maxId.isNullOrEmpty()){
            CoroutineScope(Dispatchers.IO).launch {

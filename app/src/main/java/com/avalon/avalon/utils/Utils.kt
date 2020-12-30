@@ -15,5 +15,10 @@ object Utils {
             "?max_id=$maxId&rank_token=19748713375_${generateUUID()}"
         }
     }
+    fun getTimeDifference(time:Date):Int{
+        val timeNow:Date = Date(System.currentTimeMillis())
+        //get minutes
+        return ((( timeNow.time - time.time)/1000) % 3600 / 60).toInt()
+    }
 
 }

@@ -15,7 +15,7 @@ interface CookieDao {
     @Query("SELECT * FROM cookie_table WHERE cookieId=1")
     suspend fun readAllData(): CookieData
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun addFollowers(followersData: FollowersData)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -23,6 +23,7 @@ interface CookieDao {
 
     @Query("SELECT * FROM followers_table")
     suspend fun getFollowers():List<FollowersData>
+
 
     @Query("SELECT * FROM following_table")
     suspend fun getFollowing():List<FollowingData>
