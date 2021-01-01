@@ -1,12 +1,12 @@
 package com.avalon.avalon.ui.main
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.avalon.avalon.data.local.CookieData
 import com.avalon.avalon.data.local.FollowersData
 import com.avalon.avalon.data.remote.insresponse.ApiResponseUserFollowers
+import com.avalon.avalon.data.remote.insresponse.User
 import com.avalon.avalon.data.repository.CookieRepository
 import com.avalon.avalon.data.repository.Repository
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +30,7 @@ class MainViewModel(private val dbRepository: CookieRepository, private val repo
             //1K
         }
     }
+
     fun getCookies(){
         viewModelScope.launch {
             val cookieData:CookieData = dbRepository.getCookies()

@@ -8,16 +8,15 @@ import com.google.gson.annotations.SerializedName
 @Entity(tableName = "followers_table")
 data class FollowersData(
     @PrimaryKey(autoGenerate = true)
-    val userId:Int,
-   // val accountBadges: List<Any>,
-    val fullName: String,
-    val hasAnonymousProfilePicture: Boolean,
-    val isPrivate: Boolean,
-    val isVerified: Boolean,
-    val latestReelMedia: Int,
-    val pk: Long,
-    val profilePicUrl: String,
-    val profilePicId: String,
-   // val storyReelMediaIds: List<Any>,
-    val username: String
+    var pk: Long = 0L,
+    // val accountBadges: List<Any>,
+    var fullName: String = "",
+    var hasAnonymousProfilePicture: Boolean = false,
+    var isPrivate: Boolean = false,
+    var isVerified: Boolean = false,
+    var latestReelMedia: Int = 0,
+    var profilePicUrl: String = "",
+    var profilePicId: String = "",
+    // val storyReelMediaIds: List<Any>,
+    var username: String = ""
 )

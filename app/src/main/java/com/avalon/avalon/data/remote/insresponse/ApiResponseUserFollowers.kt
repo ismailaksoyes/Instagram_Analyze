@@ -20,5 +20,5 @@ data class ApiResponseUserFollowers(
     @SerializedName("status")
     val status: String,
     @SerializedName("users")
-    val users: List<FollowersData>
+    val users: List<User>
 )

@@ -1,12 +1,12 @@
 package com.avalon.avalon.data.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.avalon.avalon.data.local.CookieDao
 import com.avalon.avalon.data.local.CookieData
 import com.avalon.avalon.data.local.FollowersData
 import com.avalon.avalon.data.local.FollowingData
-import retrofit2.Response
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class CookieRepository(private val cookieDao: CookieDao) {
 
@@ -20,8 +20,11 @@ class CookieRepository(private val cookieDao: CookieDao) {
         return cookieDao.readAllData()
     }
 
-    suspend fun addFollowers(followersData: FollowersData){
-        cookieDao.addFollowers(followersData)
+    suspend fun addFollowers(followersData:FollowersData ){
+        CoroutineScope(Dispatchers.IO).launch {
+            cookieDao.addFollowers(followersData)
+        }
+
     }
     suspend fun addFollowing(followingData: FollowingData){
         cookieDao.addFollowing(followingData)
