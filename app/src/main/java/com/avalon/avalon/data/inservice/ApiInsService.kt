@@ -7,9 +7,18 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiInsService {
-    @GET()
+    @GET("https://i.instagram.com/api/v1/friendships/{userId}/followers/")
     suspend fun getFollowers(
-        @Url url: String,
+        @Path("userId") userId:String,
+        @Query("max_id")maxId: String?,
+        @Query("rank_token")rnkToken: String?,
+        @Header("Cookie") cookies: String
+    ):Response<ApiResponseUserFollowers>
+    @GET("https://i.instagram.com/api/v1/friendships/{userId}/following/")
+    suspend fun getFollowing(
+        @Path("userId") userId:String,
+        @Query("max_id")maxId: String?,
+        @Query("rank_token")rnkToken: String?,
         @Header("Cookie") cookies: String
     ):Response<ApiResponseUserFollowers>
     @GET()

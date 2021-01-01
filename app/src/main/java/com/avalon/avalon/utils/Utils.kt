@@ -7,13 +7,18 @@ object Utils {
 
         return UUID.randomUUID().toString().replace("-", "")
     }
-    fun getFriendShipUrl(userId:String,maxId:String?=null):String{
+    fun getFriendShipUrl(maxId:String?=null):String{
 
         return if(maxId.isNullOrEmpty()){
-            "https://i.instagram.com/api/v1/friendships/$userId/followers/"
+            ""
         }else{
-            "https://i.instagram.com/api/v1/friendships/$userId/followers/?max_id=$maxId&rank_token=19748713375_${generateUUID()}"
+            "?max_id=$maxId&rank_token=19748713375_${generateUUID()}"
         }
+    }
+    fun getTimeDifference(time:Date):Int{
+        val timeNow:Date = Date(System.currentTimeMillis())
+        //get minutes
+        return ((( timeNow.time - time.time)/1000) % 3600 / 60).toInt()
     }
 
 }

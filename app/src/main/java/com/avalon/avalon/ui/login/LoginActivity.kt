@@ -1,6 +1,7 @@
 package com.avalon.avalon.ui.login
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.webkit.CookieManager
@@ -9,7 +10,6 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import com.avalon.avalon.data.local.CookieDao
 import com.avalon.avalon.data.local.CookieData
 import com.avalon.avalon.data.local.CookieDatabase
@@ -17,12 +17,10 @@ import com.avalon.avalon.data.repository.CookieRepository
 import com.avalon.avalon.data.repository.Repository
 import com.avalon.avalon.data.repository.launchActivity
 import com.avalon.avalon.databinding.ActivityLoginBinding
+import com.avalon.avalon.PREFERENCES
 import com.avalon.avalon.ui.main.MainActivity
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import okhttp3.logging.HttpLoggingInterceptor
-import java.util.logging.Logger
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -38,13 +36,14 @@ class LoginActivity : AppCompatActivity() {
     var allCookie = ""
     var lastControl: Boolean = true
     var getCookies: Boolean = false
+    private lateinit var context: Context
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        context = this
         val dao: CookieDao = CookieDatabase.getInstance(application).cookieDao
         val dbRepository = CookieRepository(dao)
         val repository = Repository()
@@ -80,6 +79,7 @@ class LoginActivity : AppCompatActivity() {
                     lastControl = false
                     val loginCookies = CookieManager.getInstance().getCookie(url)
                     Log.d("Response",loginCookies.toString())
+                    PREFERENCES.allCookie = loginCookies
                     allCookie = loginCookies
                     for (data in loginCookies.split(";")) {
                         val trim2 = data.trim()
@@ -123,7 +123,7 @@ class LoginActivity : AppCompatActivity() {
                         shbts = shbts,
                         allCookie = loginCookies
                     )
-
+                    Log.d("Response","allCookie->"+ PREFERENCES.allCookie)
                     GlobalScope.launch {
                       val success1 =  insertCookiesToDatabase(cookiesData)
                       val success2 = LoginTest()

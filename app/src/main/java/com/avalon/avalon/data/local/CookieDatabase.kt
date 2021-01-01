@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [CookieData::class],version = 1,exportSchema = false)
+@Database(entities = [CookieData::class,FollowersData::class,FollowingData::class],version = 1,exportSchema = false)
 abstract class CookieDatabase :RoomDatabase(){
 
  abstract val cookieDao:CookieDao

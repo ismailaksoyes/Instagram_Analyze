@@ -11,8 +11,11 @@ class Repository {
         return ApiInsClient.api.getReelsTray(url,cookies)
     }
 
-     suspend fun getUserFollowers(url: String, cookies: String):Response<ApiResponseUserFollowers>{
-        return ApiInsClient.api.getFollowers(url,cookies)
+     suspend fun getUserFollowers(userId:String,maxId: String?,rnkToken:String?, cookies: String):Response<ApiResponseUserFollowers>{
+        return ApiInsClient.api.getFollowers(userId,maxId,rnkToken,cookies)
+    }
+    suspend fun getUserFollowing(userId:String,maxId: String?,rnkToken:String?, cookies: String):Response<ApiResponseUserFollowers>{
+        return ApiInsClient.api.getFollowing(userId,maxId,rnkToken,cookies)
     }
 
 }

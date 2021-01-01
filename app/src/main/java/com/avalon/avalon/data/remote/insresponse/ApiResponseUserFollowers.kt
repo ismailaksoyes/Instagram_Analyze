@@ -3,6 +3,7 @@ package com.avalon.avalon.data.remote.insresponse
 
 import com.google.gson.annotations.SerializedName
 import androidx.annotation.Keep
+import com.avalon.avalon.data.local.FollowersData
 
 @Keep
 data class ApiResponseUserFollowers(
