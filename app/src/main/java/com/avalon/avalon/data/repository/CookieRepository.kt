@@ -20,7 +20,7 @@ class CookieRepository(private val cookieDao: CookieDao) {
         return cookieDao.readAllData()
     }
 
-    suspend fun addFollowers(followersData:FollowersData ){
+    suspend fun addFollowers(followersData:List<FollowersData>){
         CoroutineScope(Dispatchers.IO).launch {
             cookieDao.addFollowers(followersData)
         }

@@ -16,7 +16,7 @@ interface CookieDao {
     suspend fun readAllData(): CookieData
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addFollowers(vararg followersData: FollowersData)
+    suspend fun addFollowers(followersData:List<FollowersData>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addFollowing(followingData: FollowingData)

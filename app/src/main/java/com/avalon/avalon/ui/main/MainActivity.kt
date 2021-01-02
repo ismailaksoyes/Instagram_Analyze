@@ -37,7 +37,10 @@ class MainActivity : AppCompatActivity() {
             cookies = PREFERENCES.allCookie!!
             // getUserList(userId = "19748713375")
             if (getTimeStatus(PREFERENCES.followersUpdateDate)) {
-                getUserList(userId = "19748713375")
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    getUserList(userId = "19748713375")
+                }
                 PREFERENCES.followersUpdateDate = System.currentTimeMillis()
             }
         }
@@ -45,12 +48,14 @@ class MainActivity : AppCompatActivity() {
         viewModel.allFollowers.observe(this, Observer { response ->
             if (response.isSuccessful) {
 
-                if (!response.body()?.nextMaxId.isNullOrEmpty() && size < 7) {
-                    size++
-                    getUserList(
-                        maxId = response.body()?.nextMaxId,
-                        userId = "19748713375"
-                    )
+                if (!response.body()?.nextMaxId.isNullOrEmpty()) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        getUserList(
+                            maxId = response.body()?.nextMaxId,
+                            userId = "19748713375"
+                        )
+                    }
+
                 } else {
                     Log.d("Response", "null max id")
                 }
@@ -61,26 +66,29 @@ class MainActivity : AppCompatActivity() {
         })
 
     }
-    private fun setRoomFollowers(followersData: ApiResponseUserFollowers?){
-        CoroutineScope(Dispatchers.Default).launch {
-            if (followersData != null) {
+
+    private fun setRoomFollowers(followersData: ApiResponseUserFollowers?) {
+
+        if (followersData != null) {
+
+            val arrList = ArrayList<FollowersData>()
+            for (data in followersData.users) {
                 val newList = FollowersData()
-                for(data in followersData.users){
-                    newList.pk= data.pk
-                    newList.fullName = data.fullName
-                    newList.profilePicUrl = data.profilePicUrl
-                    newList.hasAnonymousProfilePicture = data.hasAnonymousProfilePicture
-                    newList.isPrivate=data.isPrivate
-                    newList.isVerified = data.isPrivate
-                    newList.username = data.username
-                    viewModel.addFollowers(newList)
-                    Log.d("Response","${data.pk} ${data.fullName}")
-                }
+                newList.pk = data.pk
+                newList.fullName = data.fullName
+                newList.profilePicUrl = data.profilePicUrl
+                newList.hasAnonymousProfilePicture = data.hasAnonymousProfilePicture
+                newList.isPrivate = data.isPrivate
+                newList.isVerified = data.isPrivate
+                newList.username = data.username
+                arrList.add(newList)
 
+                Log.d("Response", "${data.pk} ${data.fullName} ${data.username}")
             }
+            viewModel.addFollowers(arrList)
 
+        }
 
-        }.start()
 
     }
 
@@ -91,27 +99,38 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    fun getUserList(maxId: String? = null, userId: String) {
+    suspend fun getUserList(maxId: String? = null, userId: String) {
         if (!maxId.isNullOrEmpty()) {
             CoroutineScope(Dispatchers.IO).launch {
+                Log.d("Delay", "delay1")
+                delay((20000 + Random(250).nextInt().toLong()))
+                // Thread.sleep((200 + Random(250).nextInt().toLong()))
+                Log.d("Delay", "delay2")
+
                 viewModel.getUserFollowers(
                     userId = userId,
                     maxId = maxId,
                     rnkToken = Utils.generateUUID(),
                     cookies
                 )
-                delay((200 + Random(250).nextInt().toLong()))
-            }.start()
+
+
+            }
+
         } else {
             CoroutineScope(Dispatchers.IO).launch {
+
+                // Thread.sleep((200 + Random(250).nextInt().toLong()))
+                delay((20000 + Random(250).nextInt().toLong()))
                 viewModel.getUserFollowers(
                     userId = userId,
                     cookies = cookies,
                     maxId = null,
                     rnkToken = null
                 )
-                delay((200 + Random(250).nextInt().toLong()))
-            }.start()
+
+            }
+
         }
 
     }

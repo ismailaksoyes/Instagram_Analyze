@@ -18,7 +18,7 @@ class MainViewModel(private val dbRepository: CookieRepository, private val repo
     val cookies:MutableLiveData<CookieData> = MutableLiveData()
     val allFollowers:MutableLiveData<Response<ApiResponseUserFollowers>> = MutableLiveData()
 
-    fun addFollowers(followersData: FollowersData){
+    fun addFollowers(followersData:List<FollowersData>){
         viewModelScope.launch(Dispatchers.IO) {
             dbRepository.addFollowers(followersData)
         }
