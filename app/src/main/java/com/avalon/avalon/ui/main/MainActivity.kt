@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var cookies: String
     private var size: Int = 0
+    private val arrList = ArrayList<FollowersData>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         if (!PREFERENCES.allCookie.isNullOrEmpty()) {
             cookies = PREFERENCES.allCookie!!
             // getUserList(userId = "19748713375")
-            if (getTimeStatus(PREFERENCES.followersUpdateDate)) {
+            if (Utils.getTimeStatus(PREFERENCES.followersUpdateDate)) {
 
                 CoroutineScope(Dispatchers.IO).launch {
                     getUserList(userId = "19748713375")
@@ -57,11 +58,12 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 } else {
-                    Log.d("Response", "null max id")
+                   // Log.d("Response", "null max id")
+                    viewModel.addFollowers(arrList)
                 }
                 setRoomFollowers(response.body())
 
-                Log.d("Response", "-----------------------")
+               // Log.d("Response", "-----------------------")
             }
         })
 
@@ -71,7 +73,6 @@ class MainActivity : AppCompatActivity() {
 
         if (followersData != null) {
 
-            val arrList = ArrayList<FollowersData>()
             for (data in followersData.users) {
                 val newList = FollowersData()
                 newList.pk = data.pk
@@ -83,20 +84,12 @@ class MainActivity : AppCompatActivity() {
                 newList.username = data.username
                 arrList.add(newList)
 
-                Log.d("Response", "${data.pk} ${data.fullName} ${data.username}")
+              //  Log.d("Response", "${data.pk} ${data.fullName} ${data.username}")
             }
-            viewModel.addFollowers(arrList)
+
 
         }
 
-
-    }
-
-
-    private fun getTimeStatus(date: Long): Boolean {
-        val timeDif = Utils.getTimeDifference(Date(date))
-        // return timeDif > 1
-        return true
     }
 
     suspend fun getUserList(maxId: String? = null, userId: String) {
@@ -119,7 +112,6 @@ class MainActivity : AppCompatActivity() {
 
         } else {
             CoroutineScope(Dispatchers.IO).launch {
-
                 // Thread.sleep((200 + Random(250).nextInt().toLong()))
                 delay((20000 + Random(250).nextInt().toLong()))
                 viewModel.getUserFollowers(
