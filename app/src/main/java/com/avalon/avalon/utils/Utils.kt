@@ -21,4 +21,9 @@ object Utils {
         return ((( timeNow.time - time.time)/1000) % 3600 / 60).toInt()
     }
 
+    fun getTimeStatus(date:Long):Boolean{
+        val timeDif = Utils.getTimeDifference(Date(date))
+        return timeDif > 300
+    }
+
 }
