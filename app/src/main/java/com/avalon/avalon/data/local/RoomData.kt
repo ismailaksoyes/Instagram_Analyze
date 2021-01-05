@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "cookie_table")
-data class CookieData(
+data class RoomData(
         @PrimaryKey(autoGenerate = true)
         val cookieId: Int,
         var csfr: String,

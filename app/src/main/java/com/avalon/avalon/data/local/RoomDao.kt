@@ -1,25 +1,30 @@
 package com.avalon.avalon.data.local
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
-interface CookieDao {
+interface RoomDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addCookie(cookieData: CookieData)
+    suspend fun addCookie(roomData: RoomData)
 
     @Query("SELECT * FROM cookie_table WHERE cookieId=1")
-    suspend fun readAllData(): CookieData
+    suspend fun readAllData(): RoomData
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addFollowers(followersData:List<FollowersData>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addFollowing(followingData: FollowingData)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun lastAddFollowers(lastFollowersData:List<LastFollowersData>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun lastAddFollowing(lastFollowingData: List<LastFollowingData>)
 
     @Query("SELECT * FROM followers_table")
     suspend fun getFollowers(): List<FollowersData>

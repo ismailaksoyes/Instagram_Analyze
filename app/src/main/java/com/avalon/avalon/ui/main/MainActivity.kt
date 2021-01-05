@@ -5,13 +5,14 @@ import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.avalon.avalon.data.local.CookieDao
-import com.avalon.avalon.data.local.CookieDatabase
-import com.avalon.avalon.data.repository.CookieRepository
+import com.avalon.avalon.data.local.RoomDao
+import com.avalon.avalon.data.local.RoomDatabase
+import com.avalon.avalon.data.repository.RoomRepository
 import com.avalon.avalon.data.repository.Repository
 import com.avalon.avalon.databinding.ActivityMainBinding
 import com.avalon.avalon.PREFERENCES
 import com.avalon.avalon.data.local.FollowersData
+import com.avalon.avalon.data.local.LastFollowersData
 import com.avalon.avalon.data.remote.insresponse.ApiResponseUserFollowers
 import com.avalon.avalon.utils.Utils
 import kotlinx.coroutines.*
@@ -22,21 +23,20 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
     private lateinit var cookies: String
-    private var size: Int = 0
-    private val arrList = ArrayList<FollowersData>()
+    private val followersList = ArrayList<FollowersData>()
+    private val followersLastList = ArrayList<LastFollowersData>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val dao: CookieDao = CookieDatabase.getInstance(application).cookieDao
-        val dbRepository = CookieRepository(dao)
+        val dao: RoomDao = RoomDatabase.getInstance(application).roomDao
+        val dbRepository = RoomRepository(dao)
         val repository = Repository()
         val factory = MainViewModelFactory(dbRepository, repository)
         viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
-
+        followersData()
         if (!PREFERENCES.allCookie.isNullOrEmpty()) {
             cookies = PREFERENCES.allCookie!!
-            // getUserList(userId = "19748713375")
             if (Utils.getTimeStatus(PREFERENCES.followersUpdateDate)) {
 
                 CoroutineScope(Dispatchers.IO).launch {
@@ -59,7 +59,8 @@ class MainActivity : AppCompatActivity() {
 
                 } else {
                    // Log.d("Response", "null max id")
-                    viewModel.addFollowers(arrList)
+
+                    followersData()
                 }
                 setRoomFollowers(response.body())
 
@@ -67,6 +68,16 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+    }
+
+    private fun followersData() {
+        if(PREFERENCES.firstLogin){
+            viewModel.addFollowers(followersList)
+            followersLastList.add(followersList)
+
+            viewModel.addLastFollowers(followersList)
+
+        }
     }
 
     private fun setRoomFollowers(followersData: ApiResponseUserFollowers?) {
@@ -82,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                 newList.isPrivate = data.isPrivate
                 newList.isVerified = data.isPrivate
                 newList.username = data.username
-                arrList.add(newList)
+                followersList.add(newList)
 
               //  Log.d("Response", "${data.pk} ${data.fullName} ${data.username}")
             }

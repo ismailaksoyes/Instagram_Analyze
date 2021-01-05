@@ -10,10 +10,10 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.avalon.avalon.data.local.CookieDao
-import com.avalon.avalon.data.local.CookieData
-import com.avalon.avalon.data.local.CookieDatabase
-import com.avalon.avalon.data.repository.CookieRepository
+import com.avalon.avalon.data.local.RoomDao
+import com.avalon.avalon.data.local.RoomData
+import com.avalon.avalon.data.local.RoomDatabase
+import com.avalon.avalon.data.repository.RoomRepository
 import com.avalon.avalon.data.repository.Repository
 import com.avalon.avalon.data.repository.launchActivity
 import com.avalon.avalon.databinding.ActivityLoginBinding
@@ -44,8 +44,8 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         context = this
-        val dao: CookieDao = CookieDatabase.getInstance(application).cookieDao
-        val dbRepository = CookieRepository(dao)
+        val dao: RoomDao = RoomDatabase.getInstance(application).roomDao
+        val dbRepository = RoomRepository(dao)
         val repository = Repository()
         val factory = LoginViewModelFactory(dbRepository,repository)
         mCookiesVewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
@@ -112,7 +112,7 @@ class LoginActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    val cookiesData = CookieData(
+                    val cookiesData = RoomData(
                         cookieId = 1,
                         csfr = csfr,
                         dsUserID = dsUserID,
@@ -141,8 +141,8 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun insertCookiesToDatabase(cookieData: CookieData):Boolean {
-        mCookiesVewModel.addCookie(cookieData)
+    private fun insertCookiesToDatabase(roomData: RoomData):Boolean {
+        mCookiesVewModel.addCookie(roomData)
         getCookies = true
         return true
     }

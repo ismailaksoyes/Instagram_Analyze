@@ -20,5 +20,10 @@ class MySharedPreferences(context: Context) {
         get() = prefs.getLong(Constants.FOLLOWING_UPDATE_DATE,-1)
         set(value) = prefs.edit().putLong(Constants.FOLLOWING_UPDATE_DATE,value).apply()
 
+    var firstLogin:Boolean
+    get() = prefs.getBoolean(Constants.FIRST_LOGIN,true)
+    set(value) = prefs.edit().putBoolean(Constants.FIRST_LOGIN,value).apply()
+
+
 
 }
