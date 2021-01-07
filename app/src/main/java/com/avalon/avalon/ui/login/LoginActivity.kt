@@ -12,7 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.avalon.avalon.data.local.RoomDao
 import com.avalon.avalon.data.local.RoomData
-import com.avalon.avalon.data.local.RoomDatabase
+import com.avalon.avalon.data.local.MyDatabase
 import com.avalon.avalon.data.repository.RoomRepository
 import com.avalon.avalon.data.repository.Repository
 import com.avalon.avalon.data.repository.launchActivity
@@ -44,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         context = this
-        val dao: RoomDao = RoomDatabase.getInstance(application).roomDao
+        val dao: RoomDao = MyDatabase.getInstance(application).roomDao
         val dbRepository = RoomRepository(dao)
         val repository = Repository()
         val factory = LoginViewModelFactory(dbRepository,repository)

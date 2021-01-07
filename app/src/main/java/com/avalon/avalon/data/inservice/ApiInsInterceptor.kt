@@ -32,7 +32,6 @@ class ApiInsInterceptor : Interceptor {
             .addHeader("Cache-Control","private, no-cache, no-store, must-revalidate")
            // .addHeader("Accept-Encoding","gzip, deflate")
             .build()
-        Log.d("Response", USER_AGENT)
         return chain.proceed(request)
     }
 

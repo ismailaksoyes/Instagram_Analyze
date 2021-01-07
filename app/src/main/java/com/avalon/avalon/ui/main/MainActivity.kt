@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.avalon.avalon.data.local.RoomDao
-import com.avalon.avalon.data.local.RoomDatabase
+import com.avalon.avalon.data.local.MyDatabase
 import com.avalon.avalon.data.repository.RoomRepository
 import com.avalon.avalon.data.repository.Repository
 import com.avalon.avalon.databinding.ActivityMainBinding
@@ -29,19 +29,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val dao: RoomDao = RoomDatabase.getInstance(application).roomDao
+        val dao: RoomDao = MyDatabase.getInstance(application).roomDao
         val dbRepository = RoomRepository(dao)
         val repository = Repository()
         val factory = MainViewModelFactory(dbRepository, repository)
         viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
-        followersData()
+        PREFERENCES.firstLogin = true
         if (!PREFERENCES.allCookie.isNullOrEmpty()) {
             cookies = PREFERENCES.allCookie!!
             if (Utils.getTimeStatus(PREFERENCES.followersUpdateDate)) {
 
-                CoroutineScope(Dispatchers.IO).launch {
-                    getUserList(userId = "19748713375")
-                }
+                getUserList(userId = "19748713375")
+
                 PREFERENCES.followersUpdateDate = System.currentTimeMillis()
             }
         }
@@ -50,41 +49,32 @@ class MainActivity : AppCompatActivity() {
             if (response.isSuccessful) {
 
                 if (!response.body()?.nextMaxId.isNullOrEmpty()) {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        getUserList(
-                            maxId = response.body()?.nextMaxId,
-                            userId = "19748713375"
-                        )
-                    }
+
+
+                    getUserList(
+                        maxId = response.body()?.nextMaxId,
+                        userId = "19748713375"
+                    )
+
 
                 } else {
-                   // Log.d("Response", "null max id")
+                    // Log.d("Response", "null max id")
 
                     followersData()
                 }
                 setRoomFollowers(response.body())
 
-               // Log.d("Response", "-----------------------")
+                // Log.d("Response", "-----------------------")
             }
         })
+
 
     }
 
     private fun followersData() {
-        if(PREFERENCES.firstLogin){
-            viewModel.addFollowers(followersList)
-            followersLastList.add(followersList)
+        if (PREFERENCES.firstLogin) {
 
-            viewModel.addLastFollowers(followersList)
-
-        }
-    }
-
-    private fun setRoomFollowers(followersData: ApiResponseUserFollowers?) {
-
-        if (followersData != null) {
-
-            for (data in followersData.users) {
+            for (data in followersLastList) {
                 val newList = FollowersData()
                 newList.pk = data.pk
                 newList.fullName = data.fullName
@@ -95,7 +85,38 @@ class MainActivity : AppCompatActivity() {
                 newList.username = data.username
                 followersList.add(newList)
 
-              //  Log.d("Response", "${data.pk} ${data.fullName} ${data.username}")
+            }
+            Log.d("Response", "list-> " + followersList.size.toString())
+            Log.d("Response", "listlast-> " + followersLastList.size.toString())
+            viewModel.addLastFollowers(followersLastList)
+            viewModel.addFollowers(followersList)
+
+            PREFERENCES.firstLogin = false
+
+        } else {
+
+
+            viewModel.addLastFollowers(followersLastList)
+
+        }
+    }
+
+    private fun setRoomFollowers(followersData: ApiResponseUserFollowers?) {
+
+        if (followersData != null) {
+
+            for (data in followersData.users) {
+                val newList = LastFollowersData()
+                newList.pk = data.pk
+                newList.fullName = data.fullName
+                newList.profilePicUrl = data.profilePicUrl
+                newList.hasAnonymousProfilePicture = data.hasAnonymousProfilePicture
+                newList.isPrivate = data.isPrivate
+                newList.isVerified = data.isPrivate
+                newList.username = data.username
+                followersLastList.add(newList)
+
+                //  Log.d("Response", "${data.pk} ${data.fullName} ${data.username}")
             }
 
 
@@ -103,41 +124,43 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    suspend fun getUserList(maxId: String? = null, userId: String) {
-        if (!maxId.isNullOrEmpty()) {
-            CoroutineScope(Dispatchers.IO).launch {
-                Log.d("Delay", "delay1")
-                delay((20000 + Random(250).nextInt().toLong()))
-                // Thread.sleep((200 + Random(250).nextInt().toLong()))
-                Log.d("Delay", "delay2")
+    fun getUserList(maxId: String? = null, userId: String): Job {
+        return CoroutineScope(Dispatchers.IO).launch {
+            delay((500 + (0..250).random()).toLong())
+            Log.d("Response", "${(20000 + Random().nextInt(250).toLong())}")
+            if (!maxId.isNullOrEmpty()) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    Log.d("Response", "testtt")
+                    viewModel.getUserFollowers(
+                        userId = userId,
+                        maxId = maxId,
+                        rnkToken = Utils.generateUUID(),
+                        cookies
+                    )
 
-                viewModel.getUserFollowers(
-                    userId = userId,
-                    maxId = maxId,
-                    rnkToken = Utils.generateUUID(),
-                    cookies
-                )
 
+                }
+
+            } else {
+                CoroutineScope(Dispatchers.IO).launch {
+                    //Thread.sleep((200 + Random(250).nextInt().toLong()))
+
+                    viewModel.getUserFollowers(
+                        userId = userId,
+                        cookies = cookies,
+                        maxId = null,
+                        rnkToken = null
+                    )
+
+                }
 
             }
-
-        } else {
-            CoroutineScope(Dispatchers.IO).launch {
-                // Thread.sleep((200 + Random(250).nextInt().toLong()))
-                delay((20000 + Random(250).nextInt().toLong()))
-                viewModel.getUserFollowers(
-                    userId = userId,
-                    cookies = cookies,
-                    maxId = null,
-                    rnkToken = null
-                )
-
-            }
-
         }
+
 
     }
 
 
 }
+
 

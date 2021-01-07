@@ -1,9 +1,6 @@
 package com.avalon.avalon.data.local
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface RoomDao {
@@ -13,6 +10,12 @@ interface RoomDao {
 
     @Query("SELECT * FROM cookie_table WHERE cookieId=1")
     suspend fun readAllData(): RoomData
+
+    @Query("DELETE FROM followers_table")
+    suspend fun deleteData()
+
+    @Query("DELETE FROM last_followers_table")
+    suspend fun deleteData1()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addFollowers(followersData:List<FollowersData>)

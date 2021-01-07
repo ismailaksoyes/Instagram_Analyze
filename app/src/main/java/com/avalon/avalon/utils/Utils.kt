@@ -23,7 +23,7 @@ object Utils {
 
     fun getTimeStatus(date:Long):Boolean{
         val timeDif = Utils.getTimeDifference(Date(date))
-        return timeDif > 300
+        return true
     }
 
 }

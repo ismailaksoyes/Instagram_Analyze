@@ -17,14 +17,20 @@ class RoomRepository(private val roomDao: RoomDao) {
         return roomDao.readAllData()
     }
 
+    suspend fun getNotFollow():List<FollowersData>{
+        return roomDao.getNotFollow()
+    }
+
     suspend fun addFollowers(followersData:List<FollowersData>){
         CoroutineScope(Dispatchers.IO).launch {
+            roomDao.deleteData()
             roomDao.addFollowers(followersData)
         }
 
     }
     suspend fun addLastFollowers(followersData: List<LastFollowersData>){
         CoroutineScope(Dispatchers.IO).launch {
+            roomDao.deleteData1()
             roomDao.lastAddFollowers(followersData)
         }
     }
