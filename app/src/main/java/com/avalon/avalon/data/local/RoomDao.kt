@@ -11,17 +11,18 @@ interface RoomDao {
     @Query("SELECT * FROM cookie_table WHERE cookieId=1")
     suspend fun readAllData(): RoomData
 
-    @Query("DELETE FROM followers_table")
-    suspend fun deleteData()
 
     @Query("DELETE FROM last_followers_table")
-    suspend fun deleteData1()
+    suspend fun deleteLastFollowers()
+
+    @Query("DELETE FROM last_following_table")
+    suspend fun deleteLastFollowing()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addFollowers(followersData:List<FollowersData>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addFollowing(followingData: FollowingData)
+    suspend fun addFollowing(followingData:List<FollowingData>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun lastAddFollowers(lastFollowersData:List<LastFollowersData>)
@@ -36,6 +37,9 @@ interface RoomDao {
     @Query("SELECT * FROM following_table")
     suspend fun getFollowing(): List<FollowingData>
 
-    @Query("SELECT * FROM followers_table EXCEPT SELECT * FROM following_table")
-    suspend fun getNotFollow(): List<FollowersData>
+    @Query("SELECT * FROM followers_table EXCEPT SELECT * FROM last_followers_table")
+    suspend fun getUnFollowers(): List<FollowersData>
+
+    @Query("SELECT * FROM last_followers_table EXCEPT SELECT * FROM followers_table")
+    suspend fun getEarnFollowers():List<FollowersData>
 }

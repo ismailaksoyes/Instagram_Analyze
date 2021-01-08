@@ -8,7 +8,6 @@ import com.google.gson.annotations.SerializedName
 data class FollowingData(
     @PrimaryKey(autoGenerate = true)
     var pk: Long = 0L,
-    // val accountBadges: List<Any>,
     var fullName: String ="",
     var hasAnonymousProfilePicture: Boolean=false,
     var isPrivate: Boolean =false,
@@ -16,7 +15,6 @@ data class FollowingData(
     var latestReelMedia: Int =0,
     var profilePicUrl: String ="",
     var profilePicId: String = "",
-    // val storyReelMediaIds: List<Any>,
     var username: String =""
 )
 

@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             cookies = PREFERENCES.allCookie!!
             if (Utils.getTimeStatus(PREFERENCES.followersUpdateDate)) {
 
-                getUserList(userId = "19748713375")
+                getFollowersList(userId = "19748713375")
 
                 PREFERENCES.followersUpdateDate = System.currentTimeMillis()
             }
@@ -47,25 +47,26 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.allFollowers.observe(this, Observer { response ->
             if (response.isSuccessful) {
-
                 if (!response.body()?.nextMaxId.isNullOrEmpty()) {
 
-
-                    getUserList(
+                    getFollowersList(
                         maxId = response.body()?.nextMaxId,
                         userId = "19748713375"
                     )
 
-
                 } else {
-                    // Log.d("Response", "null max id")
+                    Log.d("Response", "null max id")
 
                     followersData()
                 }
-                setRoomFollowers(response.body())
 
-                // Log.d("Response", "-----------------------")
+                setRoomFollowers(response.body())
             }
+        })
+
+        viewModel.noFollow.observe(this, Observer { response ->
+            Log.d("Response", "" + response.username)
+
         })
 
 
@@ -74,28 +75,17 @@ class MainActivity : AppCompatActivity() {
     private fun followersData() {
         if (PREFERENCES.firstLogin) {
 
-            for (data in followersLastList) {
-                val newList = FollowersData()
-                newList.pk = data.pk
-                newList.fullName = data.fullName
-                newList.profilePicUrl = data.profilePicUrl
-                newList.hasAnonymousProfilePicture = data.hasAnonymousProfilePicture
-                newList.isPrivate = data.isPrivate
-                newList.isVerified = data.isPrivate
-                newList.username = data.username
-                followersList.add(newList)
-
-            }
             Log.d("Response", "list-> " + followersList.size.toString())
             Log.d("Response", "listlast-> " + followersLastList.size.toString())
-            viewModel.addLastFollowers(followersLastList)
+
+            viewModel.getNotFollow()
             viewModel.addFollowers(followersList)
+            viewModel.addLastFollowers(followersLastList)
 
             PREFERENCES.firstLogin = false
 
         } else {
-
-
+            Log.d("Response", "listlast-> " + followersLastList.size.toString())
             viewModel.addLastFollowers(followersLastList)
 
         }
@@ -107,16 +97,24 @@ class MainActivity : AppCompatActivity() {
 
             for (data in followersData.users) {
                 val newList = LastFollowersData()
+                val oldList = FollowersData()
                 newList.pk = data.pk
+                oldList.pk = data.pk
                 newList.fullName = data.fullName
+                oldList.fullName = data.fullName
                 newList.profilePicUrl = data.profilePicUrl
+                oldList.profilePicUrl = data.profilePicUrl
                 newList.hasAnonymousProfilePicture = data.hasAnonymousProfilePicture
+                oldList.hasAnonymousProfilePicture = data.hasAnonymousProfilePicture
                 newList.isPrivate = data.isPrivate
-                newList.isVerified = data.isPrivate
+                oldList.isPrivate = data.isPrivate
+                newList.isVerified = data.isVerified
+                oldList.isVerified = data.isVerified
                 newList.username = data.username
+                oldList.username = data.username
                 followersLastList.add(newList)
+                followersList.add(oldList)
 
-                //  Log.d("Response", "${data.pk} ${data.fullName} ${data.username}")
             }
 
 
@@ -124,13 +122,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun getUserList(maxId: String? = null, userId: String): Job {
+    fun getFollowersList(maxId: String? = null, userId: String): Job {
         return CoroutineScope(Dispatchers.IO).launch {
             delay((500 + (0..250).random()).toLong())
-            Log.d("Response", "${(20000 + Random().nextInt(250).toLong())}")
             if (!maxId.isNullOrEmpty()) {
                 CoroutineScope(Dispatchers.IO).launch {
-                    Log.d("Response", "testtt")
                     viewModel.getUserFollowers(
                         userId = userId,
                         maxId = maxId,
@@ -143,8 +139,37 @@ class MainActivity : AppCompatActivity() {
 
             } else {
                 CoroutineScope(Dispatchers.IO).launch {
-                    //Thread.sleep((200 + Random(250).nextInt().toLong()))
+                    viewModel.getUserFollowers(
+                        userId = userId,
+                        cookies = cookies,
+                        maxId = null,
+                        rnkToken = null
+                    )
 
+                }
+
+            }
+        }
+
+
+    }
+    fun getFollowingList(maxId: String? = null, userId: String): Job {
+        return CoroutineScope(Dispatchers.IO).launch {
+            delay((500 + (0..250).random()).toLong())
+            if (!maxId.isNullOrEmpty()) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    viewModel.getUserFollowers(
+                        userId = userId,
+                        maxId = maxId,
+                        rnkToken = Utils.generateUUID(),
+                        cookies
+                    )
+
+
+                }
+
+            } else {
+                CoroutineScope(Dispatchers.IO).launch {
                     viewModel.getUserFollowers(
                         userId = userId,
                         cookies = cookies,

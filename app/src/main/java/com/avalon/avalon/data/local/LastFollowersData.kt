@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 data class LastFollowersData(
     @PrimaryKey(autoGenerate = true)
     var pk: Long = 0L,
-    // val accountBadges: List<Any>,
     var fullName: String = "",
     var hasAnonymousProfilePicture: Boolean = false,
     var isPrivate: Boolean = false,
@@ -15,6 +14,5 @@ data class LastFollowersData(
     var latestReelMedia: Int = 0,
     var profilePicUrl: String = "",
     var profilePicId: String = "",
-    // val storyReelMediaIds: List<Any>,
     var username: String = ""
 )

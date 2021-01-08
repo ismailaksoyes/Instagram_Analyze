@@ -25,7 +25,7 @@ class SplashActivity : AppCompatActivity() {
         Log.d("Response","main ->${Thread.currentThread()} has run.")
 
 
-            test()
+           // test()
 
 
 

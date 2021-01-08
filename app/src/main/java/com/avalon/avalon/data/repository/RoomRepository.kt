@@ -1,5 +1,6 @@
 package com.avalon.avalon.data.repository
 
+import android.util.Log
 import com.avalon.avalon.data.local.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,24 +19,33 @@ class RoomRepository(private val roomDao: RoomDao) {
     }
 
     suspend fun getNotFollow():List<FollowersData>{
-        return roomDao.getNotFollow()
+        return roomDao.getUnFollowers()
     }
 
     suspend fun addFollowers(followersData:List<FollowersData>){
         CoroutineScope(Dispatchers.IO).launch {
-            roomDao.deleteData()
             roomDao.addFollowers(followersData)
         }
 
     }
     suspend fun addLastFollowers(followersData: List<LastFollowersData>){
         CoroutineScope(Dispatchers.IO).launch {
-            roomDao.deleteData1()
+            Log.d("Response",followersData.size.toString())
+            roomDao.deleteLastFollowers()
             roomDao.lastAddFollowers(followersData)
         }
     }
-    suspend fun addFollowing(followingData: FollowingData){
-        roomDao.addFollowing(followingData)
+    suspend fun addFollowing(followingData: List<FollowingData>){
+        CoroutineScope(Dispatchers.IO).launch {
+            roomDao.addFollowing(followingData)
+        }
+
+    }
+    suspend fun addLastFollowing(followingData: List<LastFollowingData>){
+        CoroutineScope(Dispatchers.IO).launch {
+            roomDao.deleteLastFollowing()
+            roomDao.lastAddFollowing(followingData)
+        }
     }
     suspend fun getFollowers(): List<FollowersData> {
         return roomDao.getFollowers()
