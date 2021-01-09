@@ -21,9 +21,8 @@ interface ApiInsService {
         @Query("rank_token")rnkToken: String?,
         @Header("Cookie") cookies: String
     ):Response<ApiResponseUserFollowers>
-    @GET()
+    @GET("feed/reels_tray/")
    suspend fun getReelsTray(
-        @Url url:String,
         @Header("Cookie") cookies:String
     ):Response<ApiResponseReelsTray>
 

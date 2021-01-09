@@ -7,8 +7,8 @@ import com.avalon.avalon.data.remote.insresponse.ApiResponseUserFollowers
 import retrofit2.Response
 
 class Repository {
-     suspend fun getReelsTray(url:String, cookies:String):Response<ApiResponseReelsTray>{
-        return ApiInsClient.api.getReelsTray(url,cookies)
+     suspend fun getReelsTray(cookies:String):Response<ApiResponseReelsTray>{
+        return ApiInsClient.api.getReelsTray(cookies)
     }
 
      suspend fun getUserFollowers(userId:String,maxId: String?,rnkToken:String?, cookies: String):Response<ApiResponseUserFollowers>{

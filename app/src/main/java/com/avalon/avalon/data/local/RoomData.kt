@@ -10,7 +10,6 @@ data class RoomData(
         val cookieId: Int,
         var csfr: String,
         val dsUserID: String,
-       // val igDId: String,
         val rur: String,
         val sessID: String,
         val shbid: String,

@@ -28,9 +28,9 @@ class LoginViewModel(private val dbRepository: RoomRepository, private val repos
         }
     }
 
-    suspend fun getReelsTray(url:String,cookies:String){
+    suspend fun getReelsTray(cookies:String){
        viewModelScope.launch {
-           val response:Response<ApiResponseReelsTray> = repository.getReelsTray(url,cookies)
+           val response:Response<ApiResponseReelsTray> = repository.getReelsTray(cookies)
            reelsTray.value = response
        }
     }

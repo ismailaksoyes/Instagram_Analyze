@@ -6,15 +6,24 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import androidx.lifecycle.ViewModelProvider
 import com.avalon.avalon.R
+import com.avalon.avalon.data.repository.Repository
 import com.avalon.avalon.ui.main.MainActivity
+import com.avalon.avalon.ui.main.MainViewModel
+import com.avalon.avalon.ui.main.MainViewModelFactory
 import kotlinx.coroutines.*
 
 class SplashActivity : AppCompatActivity() {
     lateinit var button:Button
+    private lateinit var viewModel: SplashViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+
+        val repository = Repository()
+        val factory = SplashViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory).get(SplashViewModel::class.java)
         button = findViewById(R.id.button1)
         button.setOnClickListener {
             val ttt = Intent(this,MainActivity::class.java)

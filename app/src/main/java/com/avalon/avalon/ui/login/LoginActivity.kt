@@ -147,7 +147,7 @@ class LoginActivity : AppCompatActivity() {
         return true
     }
     private suspend fun LoginTest():Boolean{
-        mCookiesVewModel.getReelsTray("https://i.instagram.com/api/v1/feed/reels_tray/",allCookie)
+        mCookiesVewModel.getReelsTray(allCookie)
         return true
     }
 
