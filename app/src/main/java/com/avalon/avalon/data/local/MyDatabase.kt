@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 
-@Database(entities = [RoomData::class,FollowersData::class,FollowingData::class,LastFollowersData::class,LastFollowingData::class],version = 1,exportSchema = false)
+@Database(entities = [RoomData::class,FollowersData::class,FollowingData::class,LastFollowersData::class,LastFollowingData::class,AccountsData::class],version = 1,exportSchema = false)
 abstract class MyDatabase :RoomDatabase(){
 
  abstract val roomDao:RoomDao

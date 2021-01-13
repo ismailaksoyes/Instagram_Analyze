@@ -8,6 +8,10 @@ class MySharedPreferences(context: Context) {
 
     private val prefs = context.getSharedPreferences(fileName,Context.MODE_PRIVATE)
 
+    var selectedAccount : Long
+    get() = prefs.getLong(Constants.SELECTED_ACCOUNT,-1)
+    set(value) = prefs.edit().putLong(Constants.SELECTED_ACCOUNT,value).apply()
+
     var allCookie: String?
     get() = prefs.getString(Constants.ALL_COOKIES,"")
     set(value) = prefs.edit().putString(Constants.ALL_COOKIES,value).apply()
