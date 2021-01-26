@@ -3,17 +3,27 @@ package com.avalon.avalon.ui.main
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
+import androidx.core.view.size
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.avalon.avalon.data.local.RoomDao
 import com.avalon.avalon.data.local.MyDatabase
 import com.avalon.avalon.data.repository.RoomRepository
 import com.avalon.avalon.data.repository.Repository
 import com.avalon.avalon.databinding.ActivityMainBinding
 import com.avalon.avalon.PREFERENCES
+import com.avalon.avalon.R
 import com.avalon.avalon.data.local.FollowersData
 import com.avalon.avalon.data.local.LastFollowersData
 import com.avalon.avalon.data.remote.insresponse.ApiResponseUserFollowers
+import com.avalon.avalon.ui.main.fragments.MainViewPagerAdapter
+import com.avalon.avalon.ui.main.fragments.analyze.AnalyzeFragment
+import com.avalon.avalon.ui.main.fragments.profile.ProfileFragment
+import com.avalon.avalon.ui.main.fragments.settings.SettingsFragment
 import com.avalon.avalon.utils.Utils
 import kotlinx.coroutines.*
 import java.util.*
@@ -23,12 +33,65 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
     private lateinit var cookies: String
+    private lateinit var profileFragment: ProfileFragment
+    private lateinit var analyzeFragment: AnalyzeFragment
+    private lateinit var settingsFragment: SettingsFragment
+    private lateinit var prevMenuItem:MenuItem
+    private lateinit var viewPager: ViewPager
+    private lateinit var adapter:MainViewPagerAdapter
     private val followersList = ArrayList<FollowersData>()
     private val followersLastList = ArrayList<LastFollowersData>()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        viewPager = binding.viewPager
+        binding.bottomNavigation.itemIconTintList = null
+
+        binding.bottomNavigation.setOnNavigationItemSelectedListener { item->
+            when(item.itemId){
+
+                R.id.profile->{
+                    viewPager.currentItem = 0
+                    true
+                }
+                R.id.analyze->{
+                    viewPager.currentItem = 1
+                    true
+                }
+                R.id.settings->{
+                    viewPager.currentItem = 2
+                    true
+                }
+                else ->{
+                    false
+                }
+
+            }
+        }
+        binding.viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+
+                binding.bottomNavigation.menu.getItem(position).isChecked = true
+                prevMenuItem = binding.bottomNavigation.menu.getItem(position);
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+        })
+        setupViewPager(binding.viewPager);
         val dao: RoomDao = MyDatabase.getInstance(application).roomDao
         val dbRepository = RoomRepository(dao)
         val repository = Repository()
@@ -39,9 +102,9 @@ class MainActivity : AppCompatActivity() {
             cookies = PREFERENCES.allCookie!!
             if (Utils.getTimeStatus(PREFERENCES.followersUpdateDate)) {
 
-                getFollowersList(userId = "19748713375")
+              //  getFollowersList(userId = "19748713375")
 
-                PREFERENCES.followersUpdateDate = System.currentTimeMillis()
+               // PREFERENCES.followersUpdateDate = System.currentTimeMillis()
             }
         }
 
@@ -72,6 +135,16 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    fun setupViewPager(viewPager :ViewPager){
+    adapter = MainViewPagerAdapter(supportFragmentManager)
+    profileFragment = ProfileFragment()
+        analyzeFragment = AnalyzeFragment()
+        settingsFragment = SettingsFragment()
+        adapter.AddFragment(profileFragment)
+        adapter.AddFragment(analyzeFragment)
+        adapter.AddFragment(settingsFragment)
+        viewPager.adapter = adapter
+    }
     private fun followersData() {
         if (PREFERENCES.firstLogin) {
 
@@ -153,6 +226,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
     fun getFollowingList(maxId: String? = null, userId: String): Job {
         return CoroutineScope(Dispatchers.IO).launch {
             delay((500 + (0..250).random()).toLong())
