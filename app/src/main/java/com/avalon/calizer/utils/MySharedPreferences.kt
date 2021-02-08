@@ -1,8 +1,12 @@
 package com.avalon.calizer.utils
 
 import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MySharedPreferences(context: Context) {
+@Singleton
+class MySharedPreferences @Inject constructor(@ApplicationContext context: Context) {
 
     private val fileName = "my_prefs"
 
