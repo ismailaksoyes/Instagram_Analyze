@@ -1,5 +1,6 @@
 package com.avalon.calizer.ui.splash
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class SplashViewModel(private val repository: Repository):ViewModel() {
+class SplashViewModel @ViewModelInject constructor(private val repository: Repository):ViewModel() {
     val reelsTray : MutableLiveData<Response<ApiResponseReelsTray>> = MutableLiveData()
 
     suspend fun getReelsTray(cookies:String){
