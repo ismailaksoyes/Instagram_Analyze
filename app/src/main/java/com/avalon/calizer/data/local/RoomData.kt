@@ -5,8 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "cookie_table")
 data class RoomData(
-        @PrimaryKey(autoGenerate = true)
-        val cookieId: Int,
         var csfr: String,
         val dsUserID: String,
         val rur: String,
@@ -15,4 +13,7 @@ data class RoomData(
         val shbts: String,
         val mid: String,
         val allCookie:String
-)
+){
+        @PrimaryKey(autoGenerate = true)
+        val id: Int = 0
+}

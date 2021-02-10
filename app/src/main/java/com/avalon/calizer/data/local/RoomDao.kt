@@ -8,7 +8,7 @@ interface RoomDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addCookie(roomData: RoomData)
 
-    @Query("SELECT * FROM cookie_table WHERE cookieId=1")
+    @Query("SELECT * FROM cookie_table ")
     suspend fun readAllData(): RoomData
 
 
