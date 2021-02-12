@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.HiltAndroidApp
 
-val PREFERENCES: MySharedPreferences by lazy { App.prefs!! }
+//val PREFERENCES: MySharedPreferences by lazy { App.prefs!! }
 
 @HiltAndroidApp
 class App : Application() {
@@ -16,7 +16,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        prefs = MySharedPreferences(applicationContext)
+       // prefs = MySharedPreferences(applicationContext)
 
     }
 

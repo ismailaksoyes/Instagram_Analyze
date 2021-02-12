@@ -30,9 +30,9 @@ class ProfileFragment : Fragment() {
     }
 
     private lateinit var viewModel: ProfileViewModel
-    private lateinit var binding:ProfileFragmentBinding
+    private lateinit var binding: ProfileFragmentBinding
     private lateinit var pieChart: PieChart
-    private lateinit var chartList :List<PieData>
+    private lateinit var chartList: List<PieData>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,28 +41,30 @@ class ProfileFragment : Fragment() {
         binding = ProfileFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
-    private fun runImageFaceDetector(bitmap: Bitmap){
+
+    private fun runImageFaceDetector(bitmap: Bitmap) {
         val image = FirebaseVisionImage.fromBitmap(bitmap)
         val options = FirebaseVisionFaceDetectorOptions.Builder()
             .setClassificationMode(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
+            .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
+            .setPerformanceMode(FirebaseVisionFaceDetectorOptions.ACCURATE)
+            .setContourMode(FirebaseVisionFaceDetectorOptions.ALL_CONTOURS)
             .build()
         val detc = FirebaseVision.getInstance().getVisionFaceDetector(options)
         detc.detectInImage(image).addOnSuccessListener { faces ->
             val peopleSize = faces.size
-            Log.d("Response",""+peopleSize)
+            Log.d("Response", "" + peopleSize)
 
-            for (face in faces){
-                if(face.smilingProbability < 0.7){
-                    Log.d("Response", "Kullanici Mutsuz")
-                }else{
-                    Log.d("Response", "Kullanici Mutlu")
-                }
+            for (face in faces) {
+                Log.d("Response", "$face")
 
-              //  Log.d("Response","Yuz Algilandi")
+                Log.d("Response", "${face.smilingProbability}")
+
 
             }
         }
     }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
@@ -70,12 +72,12 @@ class ProfileFragment : Fragment() {
         binding.ivProfilePageIm.loadPPUrl("https://www.harikalardiyari.com/wp-content/uploads/2018/08/Selfie-%C3%87ekmenin-P%C3%BCf-Noktalar%C4%B1.jpg")
         pieChart = binding.chartPie
 
-         Glide.with(this)
+        Glide.with(this)
             .asBitmap()
-            .load("https://cdn.dxomark.com/wp-content/uploads/medias/post-46226/CloserDetailsOutdoor_AppleiPhone11.jpg")
-            .into( object : SimpleTarget<Bitmap>(){
+            .load("http://ia.tmgrup.com.tr/38e546/0/0/0/0/2048/1363?u=http://i.tmgrup.com.tr/samdan/2020/08/27/brad-pitt-kendisinden-29-yas-kucuk-sevgilisi-nicole-poturalski-ile-birlikte-guney-fransaya-gitti-1598532967538.jpg")
+            .into(object : SimpleTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                 runImageFaceDetector(resource)
+                    runImageFaceDetector(resource)
 
                 }
             })
@@ -91,21 +93,20 @@ class ProfileFragment : Fragment() {
         for (type in typeAmountMap.keys) {
             typeAmountMap[type]?.toFloat()?.let { PieEntry(it, type) }?.let { pieEntries.add(it) }
         }
-       val pieDataSet = PieDataSet(pieEntries,"label");
+        val pieDataSet = PieDataSet(pieEntries, "label");
         val colors = ArrayList<Int>();
         colors.add(Color.parseColor("#2ecc71"))
         colors.add(Color.parseColor("#e74c3c"))
         colors.add(Color.parseColor("#f39c12"))
 
         pieDataSet.valueTextSize = 9f
-        pieDataSet.colors =colors
+        pieDataSet.colors = colors
 
         val pieData = PieData(pieDataSet);
         pieData.setDrawValues(true);
 
         pieChart.data = pieData;
         pieChart.invalidate();
-
 
 
     }

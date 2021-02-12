@@ -17,7 +17,7 @@ import com.avalon.calizer.data.repository.RoomRepository
 import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.data.repository.launchActivity
 import com.avalon.calizer.databinding.ActivityLoginBinding
-import com.avalon.calizer.PREFERENCES
+
 import com.avalon.calizer.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
@@ -83,7 +83,7 @@ class LoginActivity : AppCompatActivity() {
                     lastControl = false
                     val loginCookies = CookieManager.getInstance().getCookie(url)
                     Log.d("Response",loginCookies.toString())
-                    PREFERENCES.allCookie = loginCookies
+                   // PREFERENCES.allCookie = loginCookies
                     allCookie = loginCookies
                     for (data in loginCookies.split(";")) {
                         val trim2 = data.trim()
@@ -126,7 +126,7 @@ class LoginActivity : AppCompatActivity() {
                         shbts = shbts,
                         allCookie = loginCookies
                     )
-                    Log.d("Response","allCookie->"+ PREFERENCES.allCookie)
+                   // Log.d("Response","allCookie->"+ PREFERENCES.allCookie)
                     GlobalScope.launch {
                       val success1 =  insertCookiesToDatabase(cookiesData)
                       val success2 = LoginTest()

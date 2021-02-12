@@ -1,11 +1,14 @@
 package com.avalon.calizer.di
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import androidx.room.Room
 import com.avalon.calizer.data.local.MyDatabase
 import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.utils.Constants.USER_DATABASE
+import com.avalon.calizer.utils.MySharedPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,10 +36,12 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun mySharedPreferences(@ApplicationContext context: Context):SharedPreferences{
-        return context.getSharedPreferences(
+    fun mySharedPreferences(@ApplicationContext app: Context):SharedPreferences{
+        return app.getSharedPreferences(
             "my_prefs",
             Context.MODE_PRIVATE
         )
     }
+
+
 }
