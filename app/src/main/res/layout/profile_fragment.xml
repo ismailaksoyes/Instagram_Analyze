@@ -1,126 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.main.fragments.profile.ProfileFragment"
-    android:background="@color/white">
+    android:background="@color/white"
+    tools:context=".ui.main.fragments.profile.ProfileFragment">
 
-    <androidx.cardview.widget.CardView
+
+    <ImageView
         android:id="@+id/cv_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:cardElevation="8dp"
-        android:background="@drawable/radius_rect"
+        android:layout_gravity="center"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-           android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:src="@drawable/ic_menu"
-            />
-    </androidx.cardview.widget.CardView>
-    <androidx.cardview.widget.CardView
+        android:src="@drawable/ic_menu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-       app:layout_constraintEnd_toEndOf="parent"
-        app:cardElevation="8dp"
-        android:background="@drawable/radius_rect"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp">
-            <ImageView
-                android:id="@+id/iv_acc_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginTop="2dp"
-                android:src="@drawable/ic_acc_open"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_acc_list"
-                android:fontFamily="@font/ibm_plex_sans_bold"
-                android:textColor="@color/navigationTextColor"
-                android:layout_marginStart="5dp"
-                android:text="testkullanici"/>
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/iv_acc_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:src="@drawable/ic_acc_open"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:fontFamily="@font/ibm_plex_sans_bold"
+            android:text="testkullanici"
+            android:textColor="@color/navigationTextColor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_acc_list"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_profile_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardElevation="12dp"
-        android:background="@color/colorTrans"
         android:layout_marginStart="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cv_menu"
         android:layout_marginTop="30dp"
-        app:cardCornerRadius="75dp">
+        app:cardCornerRadius="70dp"
+        android:layout_centerHorizontal="true"
+        android:shape="ring"
+        android:background="@color/colorTrans"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cv_menu">
+
         <ImageView
             android:id="@+id/iv_profile_page_im"
             android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_gravity="center"/>
+            android:layout_height="75dp" />
     </androidx.cardview.widget.CardView>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/cv_profile_image"
         app:layout_constraintBottom_toBottomOf="@id/cv_profile_image"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/cv_profile_image"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="@id/cv_profile_image">
+
         <TextView
             android:id="@+id/tv_profile_followers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:fontFamily="@font/ibm_plex_sans_bold"
+            android:text="350"
+            android:textColor="@color/navigationTextColor"
             app:layout_constraintBottom_toTopOf="@id/tv_followers_title"
             app:layout_constraintEnd_toStartOf="@id/tv_profile_following"
-            android:text="350"
-            android:fontFamily="@font/ibm_plex_sans_bold"
-            android:textColor="@color/navigationTextColor"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/tv_profile_following"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/tv_profile_followers"
-            app:layout_constraintTop_toTopOf="parent"
-           app:layout_constraintBottom_toTopOf="@id/tv_following_title"
-            app:layout_constraintEnd_toStartOf="@id/tv_profile_posts"
-            android:text="350"
             android:fontFamily="@font/ibm_plex_sans_bold"
-            android:textColor="@color/navigationTextColor"/>
+            android:text="350"
+            android:textColor="@color/navigationTextColor"
+            app:layout_constraintBottom_toTopOf="@id/tv_following_title"
+            app:layout_constraintEnd_toStartOf="@id/tv_profile_posts"
+            app:layout_constraintStart_toEndOf="@id/tv_profile_followers"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/tv_profile_posts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/tv_profile_following"
-            app:layout_constraintTop_toTopOf="parent"
+            android:fontFamily="@font/ibm_plex_sans_bold"
+            android:text="350"
+            android:textColor="@color/navigationTextColor"
             app:layout_constraintBottom_toTopOf="@id/tv_posts_title"
             app:layout_constraintEnd_toEndOf="parent"
-            android:text="350"
-            android:fontFamily="@font/ibm_plex_sans_bold"
-            android:textColor="@color/navigationTextColor"/>
+            app:layout_constraintStart_toEndOf="@id/tv_profile_following"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_followers_title"
@@ -133,28 +126,30 @@
             app:layout_constraintEnd_toEndOf="@id/tv_profile_followers"
             app:layout_constraintStart_toStartOf="@id/tv_profile_followers"
             app:layout_constraintTop_toBottomOf="@id/tv_profile_followers" />
+
         <TextView
             android:id="@+id/tv_following_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/tv_profile_following"
-            app:layout_constraintEnd_toEndOf="@id/tv_profile_following"
-            app:layout_constraintTop_toBottomOf="@id/tv_profile_following"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:text="Following"
             android:fontFamily="@font/ibm_plex_sans_medium"
-            android:textColor="@color/navigationTextColor"/>
+            android:text="Following"
+            android:textColor="@color/navigationTextColor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/tv_profile_following"
+            app:layout_constraintStart_toStartOf="@id/tv_profile_following"
+            app:layout_constraintTop_toBottomOf="@id/tv_profile_following" />
+
         <TextView
             android:id="@+id/tv_posts_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/tv_profile_posts"
-            app:layout_constraintEnd_toEndOf="@id/tv_profile_posts"
-            app:layout_constraintTop_toBottomOf="@id/tv_profile_posts"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:text="Posts"
             android:fontFamily="@font/ibm_plex_sans_medium"
-            android:textColor="@color/navigationTextColor"/>
+            android:text="Posts"
+            android:textColor="@color/navigationTextColor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/tv_profile_posts"
+            app:layout_constraintStart_toStartOf="@id/tv_profile_posts"
+            app:layout_constraintTop_toBottomOf="@id/tv_profile_posts" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -162,10 +157,10 @@
         android:id="@+id/chart_pie"
         android:layout_width="300dp"
         android:layout_height="200dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cv_profile_image"
-        android:layout_marginTop="20dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cv_profile_image" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

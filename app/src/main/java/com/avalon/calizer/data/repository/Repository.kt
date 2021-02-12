@@ -4,8 +4,9 @@ import com.avalon.calizer.data.inservice.ApiInsClient
 import com.avalon.calizer.data.remote.insresponse.ApiResponseReelsTray
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollowers
 import retrofit2.Response
+import javax.inject.Inject
 
-class Repository {
+class Repository @Inject constructor() {
      suspend fun getReelsTray(cookies:String):Response<ApiResponseReelsTray>{
         return ApiInsClient.api.getReelsTray(cookies)
     }

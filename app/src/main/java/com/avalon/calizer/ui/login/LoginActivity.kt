@@ -19,12 +19,17 @@ import com.avalon.calizer.data.repository.launchActivity
 import com.avalon.calizer.databinding.ActivityLoginBinding
 import com.avalon.calizer.PREFERENCES
 import com.avalon.calizer.ui.main.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var mCookiesVewModel: LoginViewModel
+    @Inject
+    lateinit var roomDao: RoomDao
     var csfr = ""
     var dsUserID = ""
     var igDId = ""
@@ -44,8 +49,7 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         context = this
-        val dao: RoomDao = MyDatabase.getInstance(application).roomDao
-        val dbRepository = RoomRepository(dao)
+        val dbRepository = RoomRepository(roomDao)
         val repository = Repository()
         val factory = LoginViewModelFactory(dbRepository,repository)
         mCookiesVewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
@@ -113,7 +117,6 @@ class LoginActivity : AppCompatActivity() {
                         }
                     }
                     val cookiesData = RoomData(
-                        cookieId = 1,
                         csfr = csfr,
                         dsUserID = dsUserID,
                         mid = mid,

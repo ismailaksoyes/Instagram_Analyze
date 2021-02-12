@@ -22,14 +22,19 @@ import com.avalon.calizer.ui.main.fragments.analyze.AnalyzeFragment
 import com.avalon.calizer.ui.main.fragments.profile.ProfileFragment
 import com.avalon.calizer.ui.main.fragments.settings.SettingsFragment
 import com.avalon.calizer.utils.Utils
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import java.util.*
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
     private lateinit var cookies: String
+    @Inject
+    lateinit var roomDao: RoomDao
     private lateinit var profileFragment: ProfileFragment
     private lateinit var analyzeFragment: AnalyzeFragment
     private lateinit var settingsFragment: SettingsFragment
@@ -46,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         viewPager = binding.viewPager
         binding.bottomNavigation.itemIconTintList = null
-
+        Log.d("RoomHash","${roomDao.hashCode()}")
         binding.bottomNavigation.setOnNavigationItemSelectedListener { item->
             when(item.itemId){
 
@@ -89,8 +94,8 @@ class MainActivity : AppCompatActivity() {
 
         })
         setupViewPager(binding.viewPager);
-        val dao: RoomDao = MyDatabase.getInstance(application).roomDao
-        val dbRepository = RoomRepository(dao)
+
+        val dbRepository = RoomRepository(roomDao)
         val repository = Repository()
         val factory = MainViewModelFactory(dbRepository, repository)
         viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)

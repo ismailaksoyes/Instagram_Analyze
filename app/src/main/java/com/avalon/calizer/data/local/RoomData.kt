@@ -6,14 +6,14 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "cookie_table")
 data class RoomData(
         var csfr: String,
-        val dsUserID: String,
-        val rur: String,
-        val sessID: String,
-        val shbid: String,
-        val shbts: String,
-        val mid: String,
-        val allCookie:String
+        var dsUserID: String,
+        var rur: String,
+        var sessID: String,
+        var shbid: String,
+        var shbts: String,
+        var mid: String,
+        var allCookie:String
 ){
         @PrimaryKey(autoGenerate = true)
-        val id: Int = 0
+        var usernumber: Int? = null
 }

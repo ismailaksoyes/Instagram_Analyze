@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 class RoomRepository(private val roomDao: RoomDao) {
 
 
-
     suspend fun addCookie(roomData: RoomData){
       roomDao.addCookie(roomData)
     }
