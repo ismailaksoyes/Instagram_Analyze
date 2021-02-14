@@ -21,6 +21,8 @@ import com.github.mikephil.charting.data.PieEntry
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.*
 import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 
 class ProfileFragment : Fragment() {
@@ -66,12 +68,22 @@ class ProfileFragment : Fragment() {
                 val leftCheek = face.getLandmark(FaceLandmark.LEFT_CHEEK)
                 val rightCheek = face.getLandmark(FaceLandmark.RIGHT_CHEEK)
 
-                val leftEarPosition = leftEar.position.x
-                val rightEarPosition = rightEar.position.y
-                val leftEyePosition = leftEye.position.x
-                val rightEyePosition = leftEye.position.y
-                val earWeight = leftEarPosition - rightEarPosition
-                val eyesWeight = leftEyePosition - rightEyePosition
+                val leftEarPosition = leftEar.position
+                val rightEarPosition = rightEar.position
+                val leftEyePosition = leftEye.position
+                val rightEyePosition = rightEye.position
+                val earWeight = findDistance(
+                    x1 = leftEarPosition.x,
+                    y1 = leftEarPosition.y,
+                    x2 = rightEarPosition.x,
+                    y2 = rightEarPosition.y
+                )
+                val eyesWeight = findDistance(
+                    x1 = leftEyePosition.x,
+                    y1 = leftEyePosition.y,
+                    x2 = rightEyePosition.x,
+                    y2 = rightEyePosition.y
+                )
                 val gozkulakarasi = (earWeight - eyesWeight) / 2
                 var oranH: Float = (gozkulakarasi * 5) / earWeight
                 val oran = abs(oranH)
@@ -80,9 +92,6 @@ class ProfileFragment : Fragment() {
                 Log.d("Response", "sol kulak ${leftEarPosition}")
                 Log.d("Response", "kulaklar arasi mesafe ${earWeight}")
                 Log.d("Response", "sag kulak ${rightEarPosition}")
-                Log.d("Response", "face angle x ${face.headEulerAngleX}")
-                Log.d("Response", "face angle y ${face.headEulerAngleY}")
-                Log.d("Response", "face angle z ${face.headEulerAngleZ}")
                 Log.d("Response", "oran ${oran}")
                 binding.oranTest.text = oran.toString()
                 Log.d("Response", "${face.smilingProbability}")
@@ -96,10 +105,12 @@ class ProfileFragment : Fragment() {
 
     }
 
+    fun findDistance(x1:Float,y1:Float,x2:Float,y2:Float):Float = sqrt((x2 - x1).pow(2) + (y2 - y1).pow(2))
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
-        val imageUrl: String = "https://i4.hurimg.com/i/hurriyet/75/750x422/5d78dd5245d2a023a0d3d9d7.jpg"
+        val imageUrl: String = "http://c12.incisozluk.com.tr/res/incisozluk//11508/0/1222220_o7eed.jpg"
         // TODO: Use the ViewModel
         binding.ivProfilePageIm.loadPPUrl(imageUrl)
         pieChart = binding.chartPie
@@ -144,3 +155,5 @@ class ProfileFragment : Fragment() {
     }
 
 }
+
+
