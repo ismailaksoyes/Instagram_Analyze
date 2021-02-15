@@ -1,17 +1,14 @@
 package com.avalon.calizer.ui.main
 
-import android.content.SharedPreferences
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.ui.setupWithNavController
 import androidx.viewpager.widget.ViewPager
-import com.avalon.calizer.data.local.RoomDao
-import com.avalon.calizer.data.local.MyDatabase
-import com.avalon.calizer.data.repository.RoomRepository
-import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.databinding.ActivityMainBinding
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.FollowersData
@@ -25,19 +22,17 @@ import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels()
     private lateinit var cookies: String
     @Inject
-    lateinit var roomDao: RoomDao
-    @Inject
     lateinit var prefs:MySharedPreferences
+
     private lateinit var profileFragment: ProfileFragment
     private lateinit var analyzeFragment: AnalyzeFragment
     private lateinit var settingsFragment: SettingsFragment
@@ -55,12 +50,14 @@ class MainActivity : AppCompatActivity() {
         viewPager = binding.viewPager
         viewPager.offscreenPageLimit = 3
         binding.bottomNavigation.itemIconTintList = null
-        Log.d("RoomHash","${roomDao.hashCode()}")
         prefs.selectedAccount = 1000L
         Log.d("RoomHash","${prefs.selectedAccount}")
+
+       // binding.bottomNavigation.setupWithNavController(binding.navHostFragment.findNavController())
+
+
         binding.bottomNavigation.setOnNavigationItemSelectedListener { item->
             when(item.itemId){
-
                 R.id.profile->{
                     viewPager.currentItem = 0
                     true
@@ -101,10 +98,10 @@ class MainActivity : AppCompatActivity() {
         })
         setupViewPager(binding.viewPager);
 
-        val dbRepository = RoomRepository(roomDao)
-        val repository = Repository()
-        val factory = MainViewModelFactory(dbRepository, repository)
-        viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
+        //val dbRepository = RoomRepository(roomDao)
+        //val repository = Repository()
+       // val factory = MainViewModelFactory(dbRepository, repository)
+       // viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
        // PREFERENCES.firstLogin = true
        // if (!PREFERENCES.allCookie.isNullOrEmpty()) {
         //    cookies = PREFERENCES.allCookie!!

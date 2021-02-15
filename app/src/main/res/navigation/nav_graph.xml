@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/profileFragment">
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.profile.ProfileFragment"
+        android:label="profile_fragment"
+        tools:layout="@layout/profile_fragment" />
+    <fragment
+        android:id="@+id/analyzeFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.AnalyzeFragment"
+        android:label="analyze_fragment"
+        tools:layout="@layout/analyze_fragment" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.settings.SettingsFragment"
+        android:label="settings_fragment"
+        tools:layout="@layout/settings_fragment" />
+</navigation>

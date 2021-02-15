@@ -1,5 +1,6 @@
 package com.avalon.calizer.ui.main
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,8 +14,9 @@ import com.avalon.calizer.data.repository.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import javax.inject.Inject
 
-class MainViewModel(private val dbRepository: RoomRepository, private val repository: Repository):ViewModel() {
+class MainViewModel @ViewModelInject constructor(private val dbRepository: RoomRepository, private val repository: Repository):ViewModel() {
 
 
     val allFollowers:MutableLiveData<Response<ApiResponseUserFollowers>> = MutableLiveData()

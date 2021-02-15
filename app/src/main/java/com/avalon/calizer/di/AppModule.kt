@@ -7,8 +7,10 @@ import android.preference.PreferenceManager
 import androidx.room.Room
 import com.avalon.calizer.data.local.MyDatabase
 import com.avalon.calizer.data.repository.Repository
+import com.avalon.calizer.data.repository.RoomRepository
 import com.avalon.calizer.utils.Constants.USER_DATABASE
 import com.avalon.calizer.utils.MySharedPreferences
+import com.bumptech.glide.Glide
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,6 +35,13 @@ object AppModule {
     @Singleton
     @Provides
     fun provideRoomDao(db:MyDatabase) = db.roomDao
+
+    @Singleton
+    @Provides
+    fun provideGlide(
+        @ApplicationContext app :Context
+    )= Glide.with(app)
+
 
     @Provides
     @Singleton

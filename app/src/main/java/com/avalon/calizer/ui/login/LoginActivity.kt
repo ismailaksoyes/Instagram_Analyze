@@ -7,6 +7,7 @@ import android.util.Log
 import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -27,9 +28,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var mCookiesVewModel: LoginViewModel
-    @Inject
-    lateinit var roomDao: RoomDao
+    private val mCookiesVewModel: LoginViewModel by viewModels()
+
+
     var csfr = ""
     var dsUserID = ""
     var igDId = ""
@@ -49,10 +50,6 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         context = this
-        val dbRepository = RoomRepository(roomDao)
-        val repository = Repository()
-        val factory = LoginViewModelFactory(dbRepository,repository)
-        mCookiesVewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
 
         mCookiesVewModel.cookies.observe(this, Observer { data->
             Log.d("Response", "data geldi bro")
