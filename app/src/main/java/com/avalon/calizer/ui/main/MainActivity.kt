@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.viewpager.widget.ViewPager
 import com.avalon.calizer.databinding.ActivityMainBinding
@@ -53,50 +55,17 @@ class MainActivity : AppCompatActivity() {
         prefs.selectedAccount = 1000L
         Log.d("RoomHash","${prefs.selectedAccount}")
 
-       // binding.bottomNavigation.setupWithNavController(binding.navHostFragment.findNavController())
+        binding.bottomNavigation.setupWithNavController(binding.navHostFragment.findNavController())
 
-
-        binding.bottomNavigation.setOnNavigationItemSelectedListener { item->
-            when(item.itemId){
-                R.id.profile->{
-                    viewPager.currentItem = 0
-                    true
-                }
-                R.id.analyze->{
-                    viewPager.currentItem = 1
-                    true
-                }
-                R.id.settings->{
-                    viewPager.currentItem = 2
-                    true
-                }
-                else ->{
-                    false
-                }
-
+        binding.navHostFragment.findNavController().addOnDestinationChangedListener { _, destination, _ ->
+            when(destination.id){
+                R.id.profileFragment,R.id.analyzeFragment,R.id.settingsFragment ->
+                    binding.bottomNavigation.visibility = View.VISIBLE
+                else -> binding.bottomNavigation.visibility = View.GONE
             }
         }
-        binding.viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
 
-            }
 
-            override fun onPageSelected(position: Int) {
-
-                binding.bottomNavigation.menu.getItem(position).isChecked = true
-                prevMenuItem = binding.bottomNavigation.menu.getItem(position);
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {
-
-            }
-
-        })
-        setupViewPager(binding.viewPager);
 
         //val dbRepository = RoomRepository(roomDao)
         //val repository = Repository()
