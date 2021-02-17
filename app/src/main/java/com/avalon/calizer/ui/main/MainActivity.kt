@@ -9,6 +9,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.viewpager.widget.ViewPager
 import com.avalon.calizer.databinding.ActivityMainBinding
@@ -23,6 +24,7 @@ import com.avalon.calizer.ui.main.fragments.settings.SettingsFragment
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -55,9 +57,10 @@ class MainActivity : AppCompatActivity() {
         prefs.selectedAccount = 1000L
         Log.d("RoomHash","${prefs.selectedAccount}")
 
-        binding.bottomNavigation.setupWithNavController(binding.navHostFragment.findNavController())
+       // binding.bottomNavigation.setupWithNavController(binding.navHostFragment.findNavController())
+        bottomNavigation.setupWithNavController(navHostFragment.findNavController())
 
-        binding.navHostFragment.findNavController().addOnDestinationChangedListener { _, destination, _ ->
+        navHostFragment.findNavController().addOnDestinationChangedListener { _, destination, _ ->
             when(destination.id){
                 R.id.profileFragment,R.id.analyzeFragment,R.id.settingsFragment ->
                     binding.bottomNavigation.visibility = View.VISIBLE
