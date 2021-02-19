@@ -8,7 +8,8 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.findNavController
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.viewpager.widget.ViewPager
@@ -46,7 +47,13 @@ class MainActivity : AppCompatActivity() {
     private val followersList = ArrayList<FollowersData>()
     private val followersLastList = ArrayList<LastFollowersData>()
 
+    private fun setupBottomNavigationMenu(navController: NavController){
+        binding.bottomNavigation?.let {
 
+        }
+
+
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -57,12 +64,14 @@ class MainActivity : AppCompatActivity() {
         prefs.selectedAccount = 1000L
         Log.d("RoomHash","${prefs.selectedAccount}")
 
+        val navController = Navigation.findNavController(this,R.id.navHostFragment)
+
        // binding.bottomNavigation.setupWithNavController(binding.navHostFragment.findNavController())
         bottomNavigation.setupWithNavController(navHostFragment.findNavController())
 
         navHostFragment.findNavController().addOnDestinationChangedListener { _, destination, _ ->
             when(destination.id){
-                R.id.profileFragment,R.id.analyzeFragment,R.id.settingsFragment ->
+                R.id.destination_profile,R.id.destination_analyze,R.id.destination_settings ->
                     binding.bottomNavigation.visibility = View.VISIBLE
                 else -> binding.bottomNavigation.visibility = View.GONE
             }
