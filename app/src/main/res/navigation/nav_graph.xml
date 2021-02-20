@@ -10,18 +10,14 @@
         android:name="com.avalon.calizer.ui.main.fragments.profile.ProfileFragment"
         android:label="profile_fragment"
         tools:layout="@layout/profile_fragment" >
-        <action
-            android:id="@+id/action_profileFragment_to_analyzeFragment"
-            app:destination="@id/destination_analyze" />
+
     </fragment>
     <fragment
         android:id="@+id/destination_analyze"
         android:name="com.avalon.calizer.ui.main.fragments.analyze.AnalyzeFragment"
         android:label="analyze_fragment"
         tools:layout="@layout/analyze_fragment" >
-        <action
-            android:id="@+id/action_analyzeFragment_to_settingsFragment"
-            app:destination="@id/destination_settings" />
+       
     </fragment>
     <fragment
         android:id="@+id/destination_settings"

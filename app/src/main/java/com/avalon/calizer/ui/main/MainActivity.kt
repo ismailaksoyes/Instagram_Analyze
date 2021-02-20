@@ -10,7 +10,10 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import androidx.viewpager.widget.ViewPager
 import com.avalon.calizer.databinding.ActivityMainBinding
@@ -24,6 +27,7 @@ import com.avalon.calizer.ui.main.fragments.profile.ProfileFragment
 import com.avalon.calizer.ui.main.fragments.settings.SettingsFragment
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Utils
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
@@ -35,25 +39,33 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
     private lateinit var cookies: String
+
     @Inject
-    lateinit var prefs:MySharedPreferences
+    lateinit var prefs: MySharedPreferences
 
     private lateinit var profileFragment: ProfileFragment
     private lateinit var analyzeFragment: AnalyzeFragment
     private lateinit var settingsFragment: SettingsFragment
-    private lateinit var prevMenuItem:MenuItem
+    private lateinit var prevMenuItem: MenuItem
     private lateinit var viewPager: ViewPager
-    private lateinit var adapter:MainViewPagerAdapter
+    private lateinit var adapter: MainViewPagerAdapter
     private val followersList = ArrayList<FollowersData>()
     private val followersLastList = ArrayList<LastFollowersData>()
 
-    private fun setupBottomNavigationMenu(navController: NavController){
+    private fun setupBottomNavigationMenu(navController: NavController) {
         binding.bottomNavigation?.let {
-
+            NavigationUI.setupWithNavController(it, navController)
         }
 
 
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item) || item.onNavDestinationSelected(findNavController(R.id.navHostFragment))
+    }
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -62,37 +74,26 @@ class MainActivity : AppCompatActivity() {
         viewPager.offscreenPageLimit = 3
         binding.bottomNavigation.itemIconTintList = null
         prefs.selectedAccount = 1000L
-        Log.d("RoomHash","${prefs.selectedAccount}")
+        Log.d("RoomHash", "${prefs.selectedAccount}")
 
-        val navController = Navigation.findNavController(this,R.id.navHostFragment)
-
-       // binding.bottomNavigation.setupWithNavController(binding.navHostFragment.findNavController())
-        bottomNavigation.setupWithNavController(navHostFragment.findNavController())
-
-        navHostFragment.findNavController().addOnDestinationChangedListener { _, destination, _ ->
-            when(destination.id){
-                R.id.destination_profile,R.id.destination_analyze,R.id.destination_settings ->
-                    binding.bottomNavigation.visibility = View.VISIBLE
-                else -> binding.bottomNavigation.visibility = View.GONE
-            }
-        }
-
+        val navController = Navigation.findNavController(this, R.id.navHostFragment)
+        setupBottomNavigationMenu(navController)
 
 
         //val dbRepository = RoomRepository(roomDao)
         //val repository = Repository()
-       // val factory = MainViewModelFactory(dbRepository, repository)
-       // viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
-       // PREFERENCES.firstLogin = true
-       // if (!PREFERENCES.allCookie.isNullOrEmpty()) {
+        // val factory = MainViewModelFactory(dbRepository, repository)
+        // viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
+        // PREFERENCES.firstLogin = true
+        // if (!PREFERENCES.allCookie.isNullOrEmpty()) {
         //    cookies = PREFERENCES.allCookie!!
         //    if (Utils.getTimeStatus(PREFERENCES.followersUpdateDate)) {
 
-              //  getFollowersList(userId = "19748713375")
+        //  getFollowersList(userId = "19748713375")
 
-               // PREFERENCES.followersUpdateDate = System.currentTimeMillis()
-      //      }
-     //   }
+        // PREFERENCES.followersUpdateDate = System.currentTimeMillis()
+        //      }
+        //   }
 
         viewModel.allFollowers.observe(this, Observer { response ->
             if (response.isSuccessful) {
@@ -121,9 +122,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun setupViewPager(viewPager :ViewPager){
-    adapter = MainViewPagerAdapter(supportFragmentManager)
-    profileFragment = ProfileFragment()
+    fun setupViewPager(viewPager: ViewPager) {
+        adapter = MainViewPagerAdapter(supportFragmentManager)
+        profileFragment = ProfileFragment()
         analyzeFragment = AnalyzeFragment()
         settingsFragment = SettingsFragment()
         adapter.AddFragment(profileFragment)
@@ -131,9 +132,10 @@ class MainActivity : AppCompatActivity() {
         adapter.AddFragment(settingsFragment)
         viewPager.adapter = adapter
     }
+
     private fun followersData() {
-       // if (PREFERENCES.firstLogin) {
-            if (10>20) {
+        // if (PREFERENCES.firstLogin) {
+        if (10 > 20) {
             Log.d("Response", "list-> " + followersList.size.toString())
             Log.d("Response", "listlast-> " + followersLastList.size.toString())
 
@@ -141,7 +143,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.addFollowers(followersList)
             viewModel.addLastFollowers(followersLastList)
 
-          //  PREFERENCES.firstLogin = false
+            //  PREFERENCES.firstLogin = false
 
         } else {
             Log.d("Response", "listlast-> " + followersLastList.size.toString())
