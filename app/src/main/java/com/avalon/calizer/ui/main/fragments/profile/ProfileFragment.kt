@@ -14,10 +14,11 @@ import com.avalon.calizer.utils.loadPPUrl
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.*
 import kotlin.math.abs
@@ -33,7 +34,7 @@ class ProfileFragment : Fragment() {
 
     private lateinit var viewModel: ProfileViewModel
     private lateinit var binding: ProfileFragmentBinding
-    private lateinit var pieChart: PieChart
+    private lateinit var barChart: BarChart
     private lateinit var chartList: List<PieData>
 
     override fun onCreateView(
@@ -107,14 +108,74 @@ class ProfileFragment : Fragment() {
 
     fun findDistance(x1:Float,y1:Float,x2:Float,y2:Float):Float = sqrt((x2 - x1).pow(2) + (y2 - y1).pow(2))
 
+    private fun setBarChart(){
+        val entries = ArrayList<BarEntry>()
+        entries.add(BarEntry(0f,5f))
+        entries.add(BarEntry(1f,9f))
+        entries.add(BarEntry(2f,4f))
+        entries.add(BarEntry(3f,6f))
+        entries.add(BarEntry(4f,7f))
+        val barDataSet = BarDataSet(entries,"Test")
+        val barDataSetColors = ArrayList<Int>()
+        barDataSetColors.add(Color.BLACK)
+        barDataSetColors.add(Color.GRAY)
+        barDataSetColors.add(Color.BLUE)
+        barDataSetColors.add(Color.RED)
+        barDataSetColors.add(Color.YELLOW)
+
+        barDataSet.colors = barDataSetColors
+        val entries2 = ArrayList<BarEntry>()
+        entries2.add(BarEntry(0f,9f))
+        entries2.add(BarEntry(2f,5f))
+        entries2.add(BarEntry(3.5f,2f))
+        entries2.add(BarEntry(5f,3f))
+        entries2.add(BarEntry(6.5f,4f))
+
+        val barDataSet2 = BarDataSet(entries2,"Test")
+
+        val allDataSet = ArrayList<BarDataSet>()
+        allDataSet.add(barDataSet)
+        allDataSet.add(barDataSet2)
+
+        val labels = ArrayList<String>()
+        labels.add("test1")
+        labels.add("test2")
+        labels.add("test3")
+        val data = BarData(allDataSet as List<IBarDataSet>?)
+        barChart.data = data
+        barChart.setTouchEnabled(false)
+        barChart.isDoubleTapToZoomEnabled = false
+        barChart.setDrawBorders(false)
+        barChart.legend.isEnabled = false
+
+        barChart.setDrawGridBackground(false)
+        barChart.description.isEnabled = false
+
+        barChart.axisLeft.setDrawGridLines(false)
+        barChart.axisLeft.setDrawLabels(false)
+        barChart.axisLeft.setDrawAxisLine(false)
+
+        barChart.axisRight.setDrawGridLines(false)
+        barChart.axisRight.setDrawLabels(false)
+        barChart.axisRight.setDrawAxisLine(false)
+
+        barChart.xAxis.setDrawGridLines(false)
+        barChart.xAxis.setDrawLabels(false)
+        barChart.xAxis.setDrawAxisLine(false)
+
+        barChart.setPinchZoom(false)
+        barChart.setDrawBarShadow(false)
+        barChart.animateY(5000)
+
+    }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         val imageUrl: String = "http://c12.incisozluk.com.tr/res/incisozluk//11508/0/1222220_o7eed.jpg"
         // TODO: Use the ViewModel
         binding.ivProfilePageIm.loadPPUrl(imageUrl)
-        pieChart = binding.chartPie
-
+        barChart = binding.chartPie
+        setBarChart()
         Glide.with(this)
             .asBitmap()
             .load(imageUrl)
@@ -126,30 +187,7 @@ class ProfileFragment : Fragment() {
             })
 
         binding.drawTest.loadPPUrl(imageUrl)
-        val pieEntries: ArrayList<PieEntry> = ArrayList()
 
-        val typeAmountMap = HashMap<String, Int>()
-
-        typeAmountMap.put("Kaybedilen", 200)
-        typeAmountMap.put("Kazanilan", 230)
-        typeAmountMap.put("Engelleyenler", 100)
-        for (type in typeAmountMap.keys) {
-            typeAmountMap[type]?.toFloat()?.let { PieEntry(it, type) }?.let { pieEntries.add(it) }
-        }
-        val pieDataSet = PieDataSet(pieEntries, "label");
-        val colors = ArrayList<Int>();
-        colors.add(Color.parseColor("#2ecc71"))
-        colors.add(Color.parseColor("#e74c3c"))
-        colors.add(Color.parseColor("#f39c12"))
-
-        pieDataSet.valueTextSize = 9f
-        pieDataSet.colors = colors
-
-        val pieData = PieData(pieDataSet);
-        pieData.setDrawValues(true);
-
-        pieChart.data = pieData;
-        pieChart.invalidate();
 
 
     }

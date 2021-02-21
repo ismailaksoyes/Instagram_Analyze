@@ -11,13 +11,19 @@
         android:label="profile_fragment"
         tools:layout="@layout/profile_fragment" >
 
+        <action
+            android:id="@+id/action_destination_profile_self"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/destination_profile"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/destination_analyze"
         android:name="com.avalon.calizer.ui.main.fragments.analyze.AnalyzeFragment"
         android:label="analyze_fragment"
         tools:layout="@layout/analyze_fragment" >
-       
+
     </fragment>
     <fragment
         android:id="@+id/destination_settings"
