@@ -110,12 +110,12 @@ class ProfileFragment : Fragment() {
 
     private fun setBarChart(){
         val entries = ArrayList<BarEntry>()
-        entries.add(BarEntry(0f,5f))
-        entries.add(BarEntry(1f,9f))
-        entries.add(BarEntry(2f,4f))
-        entries.add(BarEntry(3f,6f))
-        entries.add(BarEntry(4f,7f))
+        entries.add(BarEntry(1f,5f))
+        entries.add(BarEntry(2f,9f))
+        entries.add(BarEntry(3f,4f))
+
         val barDataSet = BarDataSet(entries,"Test")
+
         val barDataSetColors = ArrayList<Int>()
         barDataSetColors.add(Color.BLACK)
         barDataSetColors.add(Color.GRAY)
@@ -125,11 +125,9 @@ class ProfileFragment : Fragment() {
 
         barDataSet.colors = barDataSetColors
         val entries2 = ArrayList<BarEntry>()
-        entries2.add(BarEntry(0f,9f))
+        entries2.add(BarEntry(1f,9f))
         entries2.add(BarEntry(2f,5f))
-        entries2.add(BarEntry(3.5f,2f))
-        entries2.add(BarEntry(5f,3f))
-        entries2.add(BarEntry(6.5f,4f))
+        entries2.add(BarEntry(3f,2f))
 
         val barDataSet2 = BarDataSet(entries2,"Test")
 
@@ -137,12 +135,15 @@ class ProfileFragment : Fragment() {
         allDataSet.add(barDataSet)
         allDataSet.add(barDataSet2)
 
-        val labels = ArrayList<String>()
-        labels.add("test1")
-        labels.add("test2")
-        labels.add("test3")
         val data = BarData(allDataSet as List<IBarDataSet>?)
+        val groupSpace = 0.1f
+        val barSpace = 0f
+        val barWidth = 0.45f
+        data.barWidth = barWidth
         barChart.data = data
+        barChart.xAxis.axisMinimum= 0f
+        barChart.xAxis.axisMaximum = 3f
+        barChart.groupBars(0f,groupSpace,barSpace)
         barChart.setTouchEnabled(false)
         barChart.isDoubleTapToZoomEnabled = false
         barChart.setDrawBorders(false)
@@ -165,13 +166,15 @@ class ProfileFragment : Fragment() {
 
         barChart.setPinchZoom(false)
         barChart.setDrawBarShadow(false)
+        barChart.setScaleEnabled(false)
         barChart.animateY(5000)
+        barChart.invalidate()
 
     }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
-        val imageUrl: String = "http://c12.incisozluk.com.tr/res/incisozluk//11508/0/1222220_o7eed.jpg"
+        val imageUrl: String = "https://thispersondoesnotexist.com/image"
         // TODO: Use the ViewModel
         binding.ivProfilePageIm.loadPPUrl(imageUrl)
         barChart = binding.chartPie
