@@ -6,6 +6,7 @@
     tools:context=".ui.main.fragments.settings.SettingsFragment">
 
     <TextView
+        android:id="@+id/tv_settings"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="settings"
