@@ -6,45 +6,34 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-
-import android.view.animation.TranslateAnimation
 import android.widget.TextView
-
 import androidx.core.view.isVisible
-
 import androidx.viewpager2.widget.ViewPager2
 import com.avalon.calizer.R
 import com.avalon.calizer.databinding.FragmentTutorialBinding
 import com.avalon.calizer.databinding.FragmentViewPagerBinding
 
 
-class TutorialFragment : Fragment() {
-    private lateinit var binding: FragmentTutorialBinding
-
+class ViewPagerFragment : Fragment() {
+    private lateinit var viewPager: ViewPager2
+    private lateinit var binding: FragmentViewPagerBinding
+    private val tutorialAdapter by lazy { TutorialPagerAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
+        viewPager = binding.viewPager2
+        viewPager.adapter = tutorialAdapter
+      //  viewPagerControl()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentTutorialBinding.inflate(inflater, container, false)
-        return binding.root
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_view_pager, container, false)
     }
 
 
-
-
 }
-

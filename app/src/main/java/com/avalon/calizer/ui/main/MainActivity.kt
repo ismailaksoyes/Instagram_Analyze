@@ -70,8 +70,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewPager = binding.viewPager
-        viewPager.offscreenPageLimit = 3
+       
         binding.bottomNavigation.itemIconTintList = null
         prefs.selectedAccount = 1000L
         Log.d("RoomHash", "${prefs.selectedAccount}")
