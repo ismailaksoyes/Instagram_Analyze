@@ -31,12 +31,12 @@
         android:label="settings_fragment"
         tools:layout="@layout/settings_fragment" >
         <action
-            android:id="@+id/action_destination_settings_to_destination_tutorial"
+            android:id="@+id/action_destination_settings_to_viewPagerFragment"
             app:destination="@id/destination_tutorial" />
     </fragment>
     <fragment
         android:id="@+id/destination_tutorial"
-        android:name="com.avalon.calizer.ui.tutorial.TutorialFragment"
-        android:label="fragment_tutorial"
-        tools:layout="@layout/fragment_tutorial" />
+        android:name="com.avalon.calizer.ui.tutorial.ViewPagerFragment"
+        android:label="fragment_view_pager"
+        tools:layout="@layout/fragment_view_pager" />
 </navigation>

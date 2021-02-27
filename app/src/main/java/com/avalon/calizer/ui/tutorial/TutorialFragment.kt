@@ -11,29 +11,31 @@ import android.view.animation.AnimationUtils
 
 import android.view.animation.TranslateAnimation
 import android.widget.TextView
+import androidx.core.os.bundleOf
 
 import androidx.core.view.isVisible
 
 import androidx.viewpager2.widget.ViewPager2
 import com.avalon.calizer.R
+import com.avalon.calizer.data.local.TutorialData
 import com.avalon.calizer.databinding.FragmentTutorialBinding
 import com.avalon.calizer.databinding.FragmentViewPagerBinding
 
 
 class TutorialFragment : Fragment() {
+
+    companion object {
+        private const val ARG_POSITION = "ARG_POSITION"
+
+        fun getInstance(position: Int) = TutorialFragment().apply {
+            arguments = bundleOf(ARG_POSITION to position)
+        }
+
+    }
+
     private lateinit var binding: FragmentTutorialBinding
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +43,30 @@ class TutorialFragment : Fragment() {
     ): View? {
         binding = FragmentTutorialBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val position = requireArguments().getInt(ARG_POSITION)
+        val getData = getTutorialData()
+        with(binding){
+            tvIntroDesc.text = getData[position].descText
+            ivIntroView.setImageResource(getData[position].drawable)
+        }
+       // Log.d("position","$position")
+
+    }
+
+
+
+
+    private fun getTutorialData():ArrayList<TutorialData>{
+        val dataList = ArrayList<TutorialData>()
+        dataList.add(TutorialData(R.drawable.common_google_signin_btn_icon_dark,"Test1"))
+        dataList.add(TutorialData(R.drawable.common_google_signin_btn_icon_dark,"Test2"))
+        dataList.add(TutorialData(R.drawable.common_google_signin_btn_icon_dark,"Test3"))
+        //notifyDataSetChanged()
+        return dataList
     }
 
 
