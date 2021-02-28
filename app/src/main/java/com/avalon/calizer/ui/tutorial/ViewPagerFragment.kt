@@ -2,6 +2,7 @@ package com.avalon.calizer.ui.tutorial
 
 import android.animation.ValueAnimator
 import android.app.ActionBar
+import android.icu.util.Measure
 import android.os.Bundle
 import android.service.autofill.FieldClassification
 import android.util.Log
@@ -75,10 +76,27 @@ class ViewPagerFragment : Fragment() {
 
             }
             2->{
-                binding.tvStartNow.visibility = View.VISIBLE
 
-                    binding.clStartNowNext.openAnim()
 
+                   // binding.clStartNowNext.openAnim()
+                val getParams = binding.clStartNowNext.layoutParams
+
+
+               // binding.clStartNowNext.layoutParams = getParams
+                    val constraintLayout:ConstraintLayout = binding.clStartNowNext
+                    constraintLayout.measure(ConstraintLayout.LayoutParams.MATCH_PARENT,50)
+                    getParams.width = constraintLayout.measuredWidth
+                    binding.clStartNowNext.pivotY = 100f
+                    val anim = ValueAnimator.ofInt(0,getParams.width)
+                    anim.duration = 300
+                    anim.addUpdateListener {
+                        Log.d("anim","${it.animatedValue}")
+                        getParams.width = it.animatedValue as Int
+                   //   binding.clStartNowNext.layoutParams = getParams
+                    }
+                    anim.start()
+
+               // binding.tvStartNow.visibility = View.VISIBLE
 
 
             }
