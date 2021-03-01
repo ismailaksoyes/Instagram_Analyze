@@ -1,5 +1,7 @@
 package com.avalon.calizer.ui.tutorial
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.app.ActionBar
 import android.icu.util.Measure
@@ -11,10 +13,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Constraints
 import androidx.core.view.isVisible
+import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.viewpager2.widget.ViewPager2
 import com.avalon.calizer.R
 import com.avalon.calizer.databinding.FragmentTutorialBinding
@@ -27,14 +31,26 @@ class ViewPagerFragment : Fragment() {
     private val tutorialAdapter by lazy { TutorialPagerAdapter(this) }
 
 
-
-    private var onTutorialPageChangeCallBack= object  : ViewPager2.OnPageChangeCallback() {
+    private var onTutorialPageChangeCallBack = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
             getTutorialAnim(position)
-            Log.d("position","ccc $position")
+           binding.clStartNowNext.setOnClickListener {
+               when(position){
+                   0->{
+                       viewPager.setCurrentItem(1,true)
+                   }
+                   1->{
+                       viewPager.setCurrentItem(2,true)
+                   }
+                   else->{
+                       Log.d("anim","click")
+                   }
+               }
+           }
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,6 +65,7 @@ class ViewPagerFragment : Fragment() {
         viewPager.orientation - ViewPager2.ORIENTATION_HORIZONTAL
         viewPager.adapter = tutorialAdapter
         viewPager.registerOnPageChangeCallback(onTutorialPageChangeCallBack)
+       setupPagerClick()
 
     }
 
@@ -56,47 +73,36 @@ class ViewPagerFragment : Fragment() {
         binding.viewPager2.unregisterOnPageChangeCallback(onTutorialPageChangeCallBack)
         super.onDestroy()
     }
+    fun setupPagerClick(){
+        binding.tvNextIntro.setOnClickListener {
+            viewPager.setCurrentItem(2,true)
+        }
+    }
 
-    fun getTutorialAnim(position:Int){
-        when(position){
+    fun getTutorialAnim(position: Int) {
+        when (position) {
             0 -> {
-            if(!binding.tvNextIntro.isVisible){
-                binding.tvNextIntro.textAnimVisible()
-            }
-               // binding.tvStartNow.visibility = View.GONE
-                binding.tvStartNow.visibility = View.GONE
-                binding.clStartNowNext.layoutParams.width = 0
+                if (!binding.tvNextIntro.isVisible) {
+                    binding.tvNextIntro.textAnimVisible()
+                }
+                // binding.tvStartNow.visibility = View.GONE
+
 
 
             }
             1 -> {
-                if(binding.tvNextIntro.isVisible){
+                if (binding.tvNextIntro.isVisible) {
                     binding.tvNextIntro.textAnimGone()
                 }
+                if(binding.tvStartNow.isVisible){
+                    binding.clStartNowNext.closeAnim()
+                }
+
 
             }
-            2->{
+            2 -> {
 
-
-                   // binding.clStartNowNext.openAnim()
-                val getParams = binding.clStartNowNext.layoutParams
-
-
-               // binding.clStartNowNext.layoutParams = getParams
-                    val constraintLayout:ConstraintLayout = binding.clStartNowNext
-                    constraintLayout.measure(ConstraintLayout.LayoutParams.MATCH_PARENT,50)
-                    getParams.width = constraintLayout.measuredWidth
-                    binding.clStartNowNext.pivotY = 100f
-                    val anim = ValueAnimator.ofInt(0,getParams.width)
-                    anim.duration = 300
-                    anim.addUpdateListener {
-                        Log.d("anim","${it.animatedValue}")
-                        getParams.width = it.animatedValue as Int
-                   //   binding.clStartNowNext.layoutParams = getParams
-                    }
-                    anim.start()
-
-               // binding.tvStartNow.visibility = View.VISIBLE
+               binding.clStartNowNext.openAnim()
 
 
             }
@@ -104,33 +110,62 @@ class ViewPagerFragment : Fragment() {
 
         }
     }
-    fun ConstraintLayout.openAnim(){
-        post {
-            val mes = Constraints.LayoutParams.MATCH_PARENT
-            val anim = ValueAnimator.ofInt(0,350)
-            anim.duration = 300
+
+    fun ConstraintLayout.openAnim() {
+
+            val getParams = this.layoutParams
+
+            val view: LinearLayout = binding.viewMeasure
+            getParams.width = view.width - 20
+            val anim = ValueAnimator.ofInt(150, getParams.width)
+            anim.duration = 500
             anim.addUpdateListener {
-                Log.d("anim","${it.animatedValue}")
-                this.layoutParams.width = it.animatedValue as Int
+                getParams.width = it.animatedValue as Int
+                this.layoutParams = getParams
+
             }
+            anim.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    binding.tvStartNow.textAnimVisible()
+                }
+            })
             anim.start()
 
+
+    }
+    fun ConstraintLayout.closeAnim() {
+        binding.tvStartNow.textAnimGone()
+        val getParams = this.layoutParams
+
+        val anim = ValueAnimator.ofInt(getParams.width, 150)
+        anim.duration = 600
+        anim.addUpdateListener {
+            getParams.width = it.animatedValue as Int
+            this.layoutParams = getParams
+
         }
 
-    }
-    fun TextView.textAnimVisible(){
-        visibility = View.VISIBLE
-        val anim = AnimationUtils.loadAnimation(this.context,R.anim.fade_in)
-        this.startAnimation(anim)
-    }
-    fun TextView.textAnimGone(){
-        val anim = AnimationUtils.loadAnimation(this.context,R.anim.fade_out)
-        this.startAnimation(anim)
-        postDelayed({
-            visibility = View.INVISIBLE
-        },500)
+        anim.start()
+
+
     }
 
+
+    fun TextView.textAnimVisible() {
+        visibility = View.VISIBLE
+        val anim = AnimationUtils.loadAnimation(this.context, R.anim.fade_in)
+        this.startAnimation(anim)
+    }
+
+    fun TextView.textAnimGone() {
+        val anim = AnimationUtils.loadAnimation(this.context, R.anim.fade_out)
+        this.startAnimation(anim)
+        postDelayed({
+            visibility = View.GONE
+        }, 500)
+    }
 
 
 }
+

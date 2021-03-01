@@ -9,6 +9,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -43,12 +44,6 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var prefs: MySharedPreferences
 
-    private lateinit var profileFragment: ProfileFragment
-    private lateinit var analyzeFragment: AnalyzeFragment
-    private lateinit var settingsFragment: SettingsFragment
-    private lateinit var prevMenuItem: MenuItem
-    private lateinit var viewPager: ViewPager
-    private lateinit var adapter: MainViewPagerAdapter
     private val followersList = ArrayList<FollowersData>()
     private val followersLastList = ArrayList<LastFollowersData>()
 
@@ -61,22 +56,37 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return super.onOptionsItemSelected(item) || item.onNavDestinationSelected(findNavController(R.id.navHostFragment))
+        return super.onOptionsItemSelected(item) || item.onNavDestinationSelected(
+            findNavController(
+                R.id.navHostFragment
+            )
+        )
     }
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-       
+
         binding.bottomNavigation.itemIconTintList = null
         prefs.selectedAccount = 1000L
         Log.d("RoomHash", "${prefs.selectedAccount}")
 
         val navController = Navigation.findNavController(this, R.id.navHostFragment)
         setupBottomNavigationMenu(navController)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.destination_profile or
+                        R.id.destination_analyze or
+                        R.id.destination_settings -> {
+                    binding.bottomNavigation.visibility = View.GONE
+                }
+                else -> {
+                    binding.bottomNavigation.visibility = View.VISIBLE
+                }
+            }
+        }
 
 
         //val dbRepository = RoomRepository(roomDao)
@@ -121,16 +131,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun setupViewPager(viewPager: ViewPager) {
-        adapter = MainViewPagerAdapter(supportFragmentManager)
-        profileFragment = ProfileFragment()
-        analyzeFragment = AnalyzeFragment()
-        settingsFragment = SettingsFragment()
-        adapter.AddFragment(profileFragment)
-        adapter.AddFragment(analyzeFragment)
-        adapter.AddFragment(settingsFragment)
-        viewPager.adapter = adapter
-    }
 
     private fun followersData() {
         // if (PREFERENCES.firstLogin) {
