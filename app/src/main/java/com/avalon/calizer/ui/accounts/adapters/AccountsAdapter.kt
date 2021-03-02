@@ -3,7 +3,9 @@ package com.avalon.calizer.ui.accounts.adapters
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.avalon.calizer.R
 import com.avalon.calizer.data.local.AccountsList
 import com.avalon.calizer.databinding.AccountsItemBinding
 import com.avalon.calizer.utils.loadPPUrl
@@ -18,6 +20,7 @@ class AccountsAdapter(): RecyclerView.Adapter<AccountsAdapter.MainViewHolder>() 
             binding.tvAccountsUsername.text = accountsList.userName
             binding.cvAccounts.setOnClickListener {
               Log.d("Response",accountsList.pk.toString())
+                it.findNavController().navigate(R.id.action_destination_accounts_to_destination_profile)
             }
         }
     }

@@ -36,6 +36,7 @@
         app:labelVisibilityMode="selected"
         android:elevation="4dp"
         android:clipChildren="false"
+        android:visibility="gone"
         app:itemTextColor="@color/navigationTextColor" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -76,16 +76,15 @@ class MainActivity : AppCompatActivity() {
         val navController = Navigation.findNavController(this, R.id.navHostFragment)
         setupBottomNavigationMenu(navController)
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.destination_profile or
-                        R.id.destination_analyze or
-                        R.id.destination_settings -> {
-                    binding.bottomNavigation.visibility = View.GONE
-                }
-                else -> {
-                    binding.bottomNavigation.visibility = View.VISIBLE
-                }
+            if(destination.id == R.id.destination_profile ||destination.id == R.id.destination_analyze ||destination.id == R.id.destination_settings){
+
+                binding.bottomNavigation.visibility = View.VISIBLE
+
+            }else{
+                binding.bottomNavigation.visibility = View.GONE
+
             }
+
         }
 
 

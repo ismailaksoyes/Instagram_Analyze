@@ -31,7 +31,7 @@ class SettingsFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
 
         tv_settings.setOnClickListener {
-            it.findNavController().navigate(R.id.action_destination_settings_to_viewPagerFragment)
+           // it.findNavController().navigate(R.id.action_destination_settings_to_viewPagerFragment)
 
         }
 

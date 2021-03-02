@@ -19,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Constraints
 import androidx.core.view.isVisible
 import androidx.dynamicanimation.animation.DynamicAnimation
+import androidx.navigation.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.avalon.calizer.R
 import com.avalon.calizer.databinding.FragmentTutorialBinding
@@ -44,7 +45,7 @@ class ViewPagerFragment : Fragment() {
                        viewPager.setCurrentItem(2,true)
                    }
                    else->{
-                       Log.d("anim","click")
+                       it.findNavController().navigate(R.id.action_destination_accounts_to_destination_profile)
                    }
                }
            }
