@@ -45,7 +45,8 @@
         android:label="AccountsFragment" >
         <action
             android:id="@+id/action_destination_accounts_to_destination_profile"
-            app:destination="@id/destination_profile" />
+            app:destination="@id/destination_profile"
+            app:launchSingleTop="false" />
     </fragment>
     <fragment
         android:id="@+id/splashFragment"

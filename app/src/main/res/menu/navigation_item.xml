@@ -5,16 +5,19 @@
         android:id="@+id/destination_profile"
         android:title="Profile"
         android:contentDescription="Profile"
+        android:menuCategory="secondary"
         android:icon="@drawable/ic_profile"
         />
     <item
         android:id="@+id/destination_analyze"
         android:title="Analyze"
         android:contentDescription="Analyze"
+        android:menuCategory="secondary"
         android:icon="@drawable/ic_analyze"/>
     <item
         android:id="@+id/destination_settings"
         android:title="Settings"
         android:contentDescription="Settings"
+        android:menuCategory="secondary"
         android:icon="@drawable/ic_settings"/>
 </menu>

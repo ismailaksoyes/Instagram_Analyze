@@ -45,7 +45,7 @@ class ViewPagerFragment : Fragment() {
                        viewPager.setCurrentItem(2,true)
                    }
                    else->{
-                       it.findNavController().navigate(R.id.action_destination_accounts_to_destination_profile)
+                       it.findNavController().navigate(R.id.action_destination_tutorial_to_destination_accounts)
                    }
                }
            }
