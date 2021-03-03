@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Ps4</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="analyze_title_stories">Stories</string>
+    <string name="analyze_title_posts">Posts</string>
+    <string name="analyze_title_blockers">Blockers</string>
+    <string name="analyze_title_new_followers">New Followers</string>
+    <string name="analyze_title_new_unfollowers">UnFollowers</string>
 </resources>
