@@ -62,9 +62,9 @@ class TutorialFragment : Fragment() {
 
     private fun getTutorialData():ArrayList<TutorialData>{
         val dataList = ArrayList<TutorialData>()
-        dataList.add(TutorialData(R.drawable.common_google_signin_btn_icon_dark,"Test1"))
-        dataList.add(TutorialData(R.drawable.common_google_signin_btn_icon_dark,"Test2"))
-        dataList.add(TutorialData(R.drawable.common_google_signin_btn_icon_dark,"Test3"))
+        dataList.add(TutorialData(R.drawable.ic_tutorial1_ico,"Test1"))
+        dataList.add(TutorialData(R.drawable.ic_tutorial2_ico,"Test2"))
+        dataList.add(TutorialData(R.drawable.ic_tutorial3_ico,"Test3"))
         //notifyDataSetChanged()
         return dataList
     }

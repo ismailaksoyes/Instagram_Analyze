@@ -102,7 +102,9 @@ class ViewPagerFragment : Fragment() {
 
             }
             2 -> {
-
+                if (binding.tvNextIntro.isVisible) {
+                    binding.tvNextIntro.textAnimGone()
+                }
                binding.clStartNowNext.openAnim()
 
 
