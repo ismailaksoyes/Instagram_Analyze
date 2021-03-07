@@ -54,15 +54,23 @@ class AnalyzeFragment : Fragment() {
             ),
             AnalyzeViewData(
                 uri = R.drawable.common_full_open_on_phone,
-                title = resources.getString(R.string.analyze_title_stories)
+                title = resources.getString(R.string.analyze_title_posts)
             ),
             AnalyzeViewData(
                 uri = R.drawable.common_full_open_on_phone,
-                title = resources.getString(R.string.analyze_title_stories)
+                title = resources.getString(R.string.analyze_title_new_followers)
             ),
             AnalyzeViewData(
                 uri = R.drawable.common_full_open_on_phone,
-                title = resources.getString(R.string.analyze_title_stories)
+                title = resources.getString(R.string.analyze_title_new_unfollowers)
+            ),
+            AnalyzeViewData(
+                uri = R.drawable.common_full_open_on_phone,
+                title = resources.getString(R.string.analyze_title_new_following)
+            ),
+            AnalyzeViewData(
+                uri = R.drawable.common_full_open_on_phone,
+                title = resources.getString(R.string.analyze_title_new_unfollowing)
             )
 
 
