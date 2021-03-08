@@ -49,7 +49,7 @@ class AnalyzeFragment : Fragment() {
     fun viewList(resources: Resources):ArrayList<AnalyzeViewData>{
         return arrayListOf(
             AnalyzeViewData(
-                uri = R.drawable.common_full_open_on_phone,
+                uri = R.drawable.ic_story_ico,
                 title = resources.getString(R.string.analyze_title_stories)
             ),
             AnalyzeViewData(
@@ -57,19 +57,19 @@ class AnalyzeFragment : Fragment() {
                 title = resources.getString(R.string.analyze_title_posts)
             ),
             AnalyzeViewData(
-                uri = R.drawable.common_full_open_on_phone,
+                uri = R.drawable.ic_follow_poz_ico,
                 title = resources.getString(R.string.analyze_title_new_followers)
             ),
             AnalyzeViewData(
-                uri = R.drawable.common_full_open_on_phone,
+                uri = R.drawable.ic_follow_neg_ico,
                 title = resources.getString(R.string.analyze_title_new_unfollowers)
             ),
             AnalyzeViewData(
-                uri = R.drawable.common_full_open_on_phone,
+                uri = R.drawable.ic_follow_poz_ico,
                 title = resources.getString(R.string.analyze_title_new_following)
             ),
             AnalyzeViewData(
-                uri = R.drawable.common_full_open_on_phone,
+                uri = R.drawable.ic_follow_neg_ico,
                 title = resources.getString(R.string.analyze_title_new_unfollowing)
             )
 
