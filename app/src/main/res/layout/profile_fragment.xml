@@ -160,7 +160,8 @@
         android:layout_marginTop="20dp"
         android:text="Profil Analizi"
         android:fontFamily="@font/ibm_plex_sans_bold"
-        app:layout_constraintTop_toBottomOf="@id/chart_pie"
+        app:layout_constraintTop_toBottomOf="@id/cv_profile_image"
+        app:layout_constraintBottom_toTopOf="@id/chart_pie"
         app:layout_constraintStart_toStartOf="parent"
         android:textColor="@color/navigationTextColor"/>
 
@@ -173,7 +174,7 @@
         android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cv_profile_image" />
+        app:layout_constraintTop_toBottomOf="@id/tv_chart_analyze" />
     <TextView
         android:id="@+id/tv_iv_analyze"
         android:layout_width="wrap_content"

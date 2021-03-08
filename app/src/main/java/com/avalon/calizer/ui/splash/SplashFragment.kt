@@ -45,7 +45,7 @@ class SplashFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.tvSplash.setOnClickListener {
+        binding.ivCalizerLogo.setOnClickListener {
             it.findNavController().navigate(R.id.action_splashFragment_to_destination_tutorial)
         }
     }
