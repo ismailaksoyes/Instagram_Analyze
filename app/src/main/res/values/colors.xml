@@ -8,6 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="darkBlue">#2c3e50</color>
+    <color name="green">#27ae60</color>
+    <color name="lightRed">#f65757</color>
     <color name="navigationTextColor">#333333</color>
     <color name="colorTrans">#00FFFFFF</color>
 

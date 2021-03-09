@@ -4,11 +4,13 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 fun ImageView.loadPPUrl(url:String){
     Glide.with(context)
         .load(url)
         .circleCrop()
+        .diskCacheStrategy(DiskCacheStrategy.NONE)
         .into(this)
 }
 

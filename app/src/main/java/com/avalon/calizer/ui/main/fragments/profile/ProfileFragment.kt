@@ -94,7 +94,7 @@ class ProfileFragment : Fragment() {
                 Log.d("Response", "kulaklar arasi mesafe ${earWeight}")
                 Log.d("Response", "sag kulak ${rightEarPosition}")
                 Log.d("Response", "oran ${oran}")
-                binding.oranTest.text = oran.toString()
+                binding.tvFaceOdds.text = oran.toString()
                 Log.d("Response", "${face.smilingProbability}")
             }
 
@@ -189,7 +189,7 @@ class ProfileFragment : Fragment() {
                 }
             })
 
-        binding.drawTest.loadPPUrl(imageUrl)
+        binding.ivPpAnalyze.loadPPUrl(imageUrl)
 
 
 
