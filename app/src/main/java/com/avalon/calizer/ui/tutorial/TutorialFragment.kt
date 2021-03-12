@@ -20,6 +20,8 @@ import com.avalon.calizer.R
 import com.avalon.calizer.data.local.TutorialData
 import com.avalon.calizer.databinding.FragmentTutorialBinding
 import com.avalon.calizer.databinding.FragmentViewPagerBinding
+import com.avalon.calizer.utils.MySharedPreferences
+import javax.inject.Inject
 
 
 class TutorialFragment : Fragment() {
@@ -34,6 +36,8 @@ class TutorialFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentTutorialBinding
+    @Inject
+    lateinit var prefs: MySharedPreferences
 
 
 

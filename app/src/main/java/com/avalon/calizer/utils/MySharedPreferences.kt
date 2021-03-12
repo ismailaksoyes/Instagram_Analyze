@@ -33,6 +33,10 @@ class MySharedPreferences @Inject constructor(var prefs:SharedPreferences) {
         get() = prefs.getBoolean(Constants.FIRST_LOGIN, true)
         set(value) = prefs.edit().putBoolean(Constants.FIRST_LOGIN,value).apply()
 
+    var showIntro: Boolean
+        get() = prefs.getBoolean(Constants.SHOW_INTRO, true)
+        set(value) = prefs.edit().putBoolean(Constants.SHOW_INTRO,value).apply()
+
 
 
 

@@ -24,11 +24,15 @@ import androidx.viewpager2.widget.ViewPager2
 import com.avalon.calizer.R
 import com.avalon.calizer.databinding.FragmentTutorialBinding
 import com.avalon.calizer.databinding.FragmentViewPagerBinding
+import com.avalon.calizer.utils.MySharedPreferences
+import javax.inject.Inject
 
 
 class ViewPagerFragment : Fragment() {
     private lateinit var viewPager: ViewPager2
     private lateinit var binding: FragmentViewPagerBinding
+    @Inject
+    lateinit var prefs: MySharedPreferences
     private val tutorialAdapter by lazy { TutorialPagerAdapter(this) }
 
 
@@ -45,6 +49,7 @@ class ViewPagerFragment : Fragment() {
                        viewPager.setCurrentItem(2,true)
                    }
                    else->{
+                       prefs.showIntro = false
                        it.findNavController().navigate(R.id.action_destination_tutorial_to_destination_accounts)
                    }
                }
