@@ -5,6 +5,15 @@ import androidx.room.*
 @Dao
 interface RoomDao {
 
+    //accounts data
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addAccount(accountsData: AccountsData)
+
+    @Query("SELECT * FROM accounts_table")
+    suspend fun getAllAccountDetails():List<AccountsData>
+
+
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addCookie(roomData: RoomData)
 

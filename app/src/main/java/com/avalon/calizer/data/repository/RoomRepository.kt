@@ -11,6 +11,10 @@ import javax.inject.Inject
 class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
 
 
+    suspend fun addAccount(accountsData: AccountsData){
+        roomDao.addAccount(accountsData)
+    }
+
     suspend fun addCookie(roomData: RoomData){
       roomDao.addCookie(roomData)
     }
