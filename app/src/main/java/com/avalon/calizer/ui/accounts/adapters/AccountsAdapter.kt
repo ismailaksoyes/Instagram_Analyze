@@ -6,17 +6,18 @@ import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.R
+import com.avalon.calizer.data.local.AccountsData
 import com.avalon.calizer.data.local.AccountsList
 import com.avalon.calizer.databinding.AccountsItemBinding
 import com.avalon.calizer.utils.loadPPUrl
 
 class AccountsAdapter(): RecyclerView.Adapter<AccountsAdapter.MainViewHolder>() {
-    private var _accountsList = emptyList<AccountsList>()
+    private var _accountsList = emptyList<AccountsData>()
 
 
     class MainViewHolder(var binding: AccountsItemBinding):RecyclerView.ViewHolder(binding.root){
-        fun bind(accountsList: AccountsList){
-            binding.ivProfileImage.loadPPUrl(accountsList.url)
+        fun bind(accountsList: AccountsData){
+            binding.ivProfileImage.loadPPUrl(accountsList.profilePic)
             binding.tvAccountsUsername.text = accountsList.userName
             binding.cvAccounts.setOnClickListener {
               Log.d("Response",accountsList.pk.toString())
@@ -37,7 +38,7 @@ class AccountsAdapter(): RecyclerView.Adapter<AccountsAdapter.MainViewHolder>() 
     override fun getItemCount(): Int {
         return _accountsList.size
     }
-    fun setData(accountsList:List<AccountsList> ){
+    fun setData(accountsList:List<AccountsData> ){
        _accountsList = accountsList
         notifyDataSetChanged()
 

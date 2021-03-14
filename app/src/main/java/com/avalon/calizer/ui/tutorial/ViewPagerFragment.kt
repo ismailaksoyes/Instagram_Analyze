@@ -25,9 +25,10 @@ import com.avalon.calizer.R
 import com.avalon.calizer.databinding.FragmentTutorialBinding
 import com.avalon.calizer.databinding.FragmentViewPagerBinding
 import com.avalon.calizer.utils.MySharedPreferences
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class ViewPagerFragment : Fragment() {
     private lateinit var viewPager: ViewPager2
     private lateinit var binding: FragmentViewPagerBinding

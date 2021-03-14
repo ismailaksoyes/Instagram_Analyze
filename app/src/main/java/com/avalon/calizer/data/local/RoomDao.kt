@@ -1,5 +1,6 @@
 package com.avalon.calizer.data.local
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
@@ -9,9 +10,8 @@ interface RoomDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAccount(accountsData: AccountsData)
 
-    @Query("SELECT * FROM accounts_table")
-    suspend fun getAllAccountDetails():List<AccountsData>
-
+    @get:Query("SELECT * FROM accounts_table")
+    val getAllAccountDetails : LiveData<List<AccountsData>>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -1,6 +1,7 @@
 package com.avalon.calizer.data.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import com.avalon.calizer.data.local.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +14,10 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
 
     suspend fun addAccount(accountsData: AccountsData){
         roomDao.addAccount(accountsData)
+    }
+
+     fun getAccounts(): LiveData<List<AccountsData>> {
+        return roomDao.getAllAccountDetails
     }
 
     suspend fun addCookie(roomData: RoomData){
