@@ -11,7 +11,7 @@ interface RoomDao {
     suspend fun addAccount(accountsData: AccountsData)
 
     @get:Query("SELECT * FROM accounts_table")
-    val getAllAccountDetails : LiveData<List<AccountsData>>
+    val getAllAccountDetails : List<AccountsData>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

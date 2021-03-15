@@ -13,14 +13,12 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 
 class AccountsViewModel @ViewModelInject constructor(private val roomRepository: RoomRepository):ViewModel() {
-    val allAccounts: MutableLiveData<LiveData<List<AccountsData>>> = MutableLiveData()
+    val allAccounts: MutableLiveData<List<AccountsData>> = MutableLiveData()
 
-    init {
-        allAccounts.value = roomRepository.getAccounts()
-    }
+
     fun getAccountList(){
         viewModelScope.launch(Dispatchers.IO) {
-            allAccounts.value = roomRepository.getAccounts()
+            allAccounts.postValue(roomRepository.getAccounts())
         }
     }
 

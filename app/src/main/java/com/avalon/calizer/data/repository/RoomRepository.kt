@@ -16,7 +16,7 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
         roomDao.addAccount(accountsData)
     }
 
-     fun getAccounts(): LiveData<List<AccountsData>> {
+     fun getAccounts(): List<AccountsData> {
         return roomDao.getAllAccountDetails
     }
 

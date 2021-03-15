@@ -20,6 +20,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 @AndroidEntryPoint
 class AccountsFragment : Fragment() {
@@ -41,10 +42,10 @@ class AccountsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerview()
-
+        viewModel.getAccountList()
         viewModel.allAccounts.observe(viewLifecycleOwner, Observer {
-           // accountsAdapter.setData(it)
-            Log.d("list","${it.value}")
+            accountsAdapter.setData(it)
+           // Log.d("list","${it.value}")
         })
         val newlist = ArrayList<AccountsList>()
 
@@ -61,11 +62,11 @@ class AccountsFragment : Fragment() {
 
             CoroutineScope(Dispatchers.IO).launch {
                 viewModel.addAccount(AccountsData(
-                    profilePic = "https://pbs.twimg.com/profile_images/1092891292609249281/cJfKotNP_400x400.jpg",
+                    profilePic = "https://thispersondoesnotexist.com/image",
                     userName = "denemeuyelik",
-                    pk = 1010100L
+                    pk = Random.nextLong(1,500)
                 ))
-               // viewModel.getAccountList()
+               viewModel.getAccountList()
             }
 
         }
