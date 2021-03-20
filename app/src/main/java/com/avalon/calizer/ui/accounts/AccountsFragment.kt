@@ -25,6 +25,15 @@ import kotlin.random.Random
 @AndroidEntryPoint
 class AccountsFragment : Fragment() {
     private lateinit var binding: FragmentAccountsBinding
+    var csfr = ""
+    var dsUserID = ""
+    var igDId = ""
+    var rur = ""
+    var sessID = ""
+    var shbid = ""
+    var shbts = ""
+    var mid = ""
+    var allCookie = ""
 
     private val accountsAdapter by lazy { AccountsAdapter() }
 
@@ -80,5 +89,10 @@ class AccountsFragment : Fragment() {
 
     }
 
+    private fun addAccountWeb(){
+        binding.cvAccountsAdd.setOnClickListener {
+
+        }
+    }
 
 }
