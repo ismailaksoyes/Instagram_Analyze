@@ -47,6 +47,9 @@
             android:id="@+id/action_destination_accounts_to_destination_profile"
             app:destination="@id/destination_profile"
             app:launchSingleTop="false" />
+        <action
+            android:id="@+id/action_destination_accounts_to_webLoginFragment"
+            app:destination="@id/webLoginFragment" />
     </fragment>
     <fragment
         android:id="@+id/splashFragment"
@@ -59,5 +62,14 @@
         <action
             android:id="@+id/action_splashFragment_to_destination_tutorial"
             app:destination="@id/destination_tutorial" />
+    </fragment>
+    <fragment
+        android:id="@+id/webLoginFragment"
+        android:name="com.avalon.calizer.ui.accounts.WebLoginFragment"
+        android:label="fragment_web_login"
+        tools:layout="@layout/fragment_web_login" >
+        <action
+            android:id="@+id/action_webLoginFragment_to_destination_accounts"
+            app:destination="@id/destination_accounts" />
     </fragment>
 </navigation>

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.AccountsData
@@ -25,15 +26,7 @@ import kotlin.random.Random
 @AndroidEntryPoint
 class AccountsFragment : Fragment() {
     private lateinit var binding: FragmentAccountsBinding
-    var csfr = ""
-    var dsUserID = ""
-    var igDId = ""
-    var rur = ""
-    var sessID = ""
-    var shbid = ""
-    var shbts = ""
-    var mid = ""
-    var allCookie = ""
+
 
     private val accountsAdapter by lazy { AccountsAdapter() }
 
@@ -69,17 +62,20 @@ class AccountsFragment : Fragment() {
         }
         binding.cvAccountsAdd.setOnClickListener {
 
-            CoroutineScope(Dispatchers.IO).launch {
-                viewModel.addAccount(AccountsData(
-                    profilePic = "https://thispersondoesnotexist.com/image",
-                    userName = "denemeuyelik",
-                    pk = Random.nextLong(1,500)
-                ))
-               viewModel.getAccountList()
-            }
+            it.findNavController().navigate(R.id.action_destination_accounts_to_webLoginFragment)
 
         }
 
+    }
+    fun setsdfsd(){
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.addAccount(AccountsData(
+                profilePic = "https://thispersondoesnotexist.com/image",
+                userName = "denemeuyelik",
+                pk = Random.nextLong(1,500)
+            ))
+            viewModel.getAccountList()
+        }
     }
 
     private fun setupRecyclerview() {
