@@ -70,10 +70,8 @@ class WebLoginFragment : Fragment() {
             Log.d("Response", "data geldi bro")
         })
 
-        mCookiesVewModel.reelsTray.observe(viewLifecycleOwner, Observer { response ->
-            if(response.isSuccessful){
-                Log.d("Response",response.body()?.status.toString()!!)
-            }
+        viewModel.res.observe(viewLifecycleOwner, Observer {
+            Log.d("Response", "data geldi bro")
         })
 
 
@@ -128,16 +126,7 @@ class WebLoginFragment : Fragment() {
                             }
                         }
                     }
-                    val cookiesData = RoomData(
-                        csfr = csfr,
-                        dsUserID = dsUserID,
-                        mid = mid,
-                        rur = rur,
-                        sessID = sessID,
-                        shbid = shbid,
-                        shbts = shbts,
-                        allCookie = loginCookies
-                    )
+
                     val accountData = AccountsData(
                         csfr = csfr,
                         dsUserID = dsUserID,
@@ -174,6 +163,7 @@ class WebLoginFragment : Fragment() {
     }
     private suspend fun LoginTest():Boolean{
        // mCookiesVewModel.getReelsTray(allCookie)
+        viewModel.getReelsTray(allCookie)
         return true
     }
 

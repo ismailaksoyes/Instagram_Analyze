@@ -1,11 +1,11 @@
-package com.avalon.calizer.data.inservice
+package com.avalon.calizer.data.api
 
 import com.avalon.calizer.data.remote.insresponse.ApiResponseReelsTray
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollowers
 import retrofit2.Response
 import retrofit2.http.*
 
-interface ApiInsService {
+interface ApiService {
     @GET("friendships/{userId}/followers/")
     suspend fun getFollowers(
         @Path("userId") userId:String,

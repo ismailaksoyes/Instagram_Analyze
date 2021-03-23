@@ -1,4 +1,4 @@
-package com.avalon.calizer.data.inservice
+package com.avalon.calizer.data.api
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -6,12 +6,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-object ApiInsClient {
+object ApiClient {
     private var logging:HttpLoggingInterceptor = HttpLoggingInterceptor()
     val suc = logging.setLevel(HttpLoggingInterceptor.Level.BODY)
     private val client = OkHttpClient.Builder().apply {
         addNetworkInterceptor(suc)
-        addInterceptor(ApiInsInterceptor())
+        addInterceptor(ApiInterceptor())
 
             .connectTimeout(1, TimeUnit.MINUTES)
             .readTimeout(30, TimeUnit.SECONDS)
@@ -25,9 +25,9 @@ object ApiInsClient {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-    val  api: ApiInsService by lazy {
+    val  API: ApiService by lazy {
         retrofit.create(
-          ApiInsService::class.java
+          ApiService::class.java
         )
 
     }

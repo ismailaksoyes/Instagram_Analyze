@@ -1,9 +1,9 @@
-package com.avalon.calizer.data.inservice
+package com.avalon.calizer.data.api
 
 import okhttp3.Interceptor
 import okhttp3.Response
 
-class ApiInsInterceptor : Interceptor {
+class ApiInterceptor : Interceptor {
     private val DEVICE_ANDROID_RELEASE = "6.0.1"
     private val DEVICE_ANDROID_VERSION = "23"
     private val DEVICE_MANUFACTURER = "samsung"

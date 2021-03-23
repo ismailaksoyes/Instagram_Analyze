@@ -1,21 +1,26 @@
 package com.avalon.calizer.di
 
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import androidx.room.Room
+import com.avalon.calizer.data.api.ApiHelper
+import com.avalon.calizer.data.api.ApiHelperImpl
+import com.avalon.calizer.data.api.ApiInterceptor
+import com.avalon.calizer.data.api.ApiService
 import com.avalon.calizer.data.local.MyDatabase
-import com.avalon.calizer.data.repository.Repository
-import com.avalon.calizer.data.repository.RoomRepository
+import com.avalon.calizer.utils.Constants
 import com.avalon.calizer.utils.Constants.USER_DATABASE
-import com.avalon.calizer.utils.MySharedPreferences
 import com.bumptech.glide.Glide
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -23,9 +28,12 @@ import javax.inject.Singleton
 object AppModule {
 
     @Provides
+    fun provideBaseUrl() = Constants.BASE_URL
+
+    @Provides
     @Singleton
     fun provideMyDatabase(
-       @ApplicationContext app:Context
+        @ApplicationContext app: Context
     ) = Room.databaseBuilder(
         app,
         MyDatabase::class.java,
@@ -34,18 +42,60 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRoomDao(db:MyDatabase) = db.roomDao
+    fun provideRoomDao(db: MyDatabase) = db.roomDao
+
+    @Singleton
+    @Provides
+    fun provideApiService(retrofit: Retrofit) = retrofit.create(ApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideRetrofit(okHttpClient: OkHttpClient, BASE_URL: String): Retrofit = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    private var logging: HttpLoggingInterceptor = HttpLoggingInterceptor()
+    val suc = logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+    private val client = OkHttpClient.Builder().apply {
+        addNetworkInterceptor(suc)
+        addInterceptor(ApiInterceptor())
+
+            .connectTimeout(1, TimeUnit.MINUTES)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(15, TimeUnit.SECONDS)
+    }.build()
+
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(): OkHttpClient {
+        val logging = HttpLoggingInterceptor()
+        logging.level = HttpLoggingInterceptor.Level.BODY
+        return OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .connectTimeout(1, TimeUnit.MINUTES)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(15, TimeUnit.SECONDS)
+            .build()
+    }
+
+
+    @Singleton
+    @Provides
+    fun provideApiHelper(apiHelper: ApiHelperImpl): ApiHelper = apiHelper
+
 
     @Singleton
     @Provides
     fun provideGlide(
-        @ApplicationContext app :Context
-    )= Glide.with(app)
+        @ApplicationContext app: Context
+    ) = Glide.with(app)
 
 
     @Provides
     @Singleton
-    fun mySharedPreferences(@ApplicationContext app: Context):SharedPreferences{
+    fun mySharedPreferences(@ApplicationContext app: Context): SharedPreferences {
         return app.getSharedPreferences(
             "my_prefs",
             Context.MODE_PRIVATE
