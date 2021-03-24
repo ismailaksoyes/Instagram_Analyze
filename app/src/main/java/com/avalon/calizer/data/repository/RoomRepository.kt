@@ -11,56 +11,63 @@ import javax.inject.Inject
 
 class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
 
+    // birden fazla cookie listelenmesi icin birden fazla hesap
+    // hesaplar unq icin pk id
 
-    suspend fun addAccount(accountsData: AccountsData){
+    suspend fun addAccount(accountsData: AccountsData) {
         roomDao.addAccount(accountsData)
     }
 
-     fun getAccounts(): List<AccountsData> {
+    fun getAccounts(): List<AccountsData> {
         return roomDao.getAllAccountDetails
     }
 
-    suspend fun addCookie(roomData: RoomData){
-      roomDao.addCookie(roomData)
+    suspend fun addCookie(roomData: RoomData) {
+        roomDao.addCookie(roomData)
     }
 
-     suspend fun getCookies():RoomData{
+    suspend fun getCookies(): RoomData {
         return roomDao.readAllData()
     }
 
-    suspend fun getNotFollow():List<FollowersData>{
+    suspend fun getNotFollow(): List<FollowersData> {
         return roomDao.getUnFollowers()
     }
 
-    suspend fun addFollowers(followersData:List<FollowersData>){
+    suspend fun addFollowers(followersData: List<FollowersData>) {
         CoroutineScope(Dispatchers.IO).launch {
             roomDao.addFollowers(followersData)
         }
 
     }
-    suspend fun addLastFollowers(followersData: List<LastFollowersData>){
+
+    suspend fun addLastFollowers(followersData: List<LastFollowersData>) {
         CoroutineScope(Dispatchers.IO).launch {
-            Log.d("Response",followersData.size.toString())
+            Log.d("Response", followersData.size.toString())
             roomDao.deleteLastFollowers()
             roomDao.lastAddFollowers(followersData)
         }
     }
-    suspend fun addFollowing(followingData: List<FollowingData>){
+
+    suspend fun addFollowing(followingData: List<FollowingData>) {
         CoroutineScope(Dispatchers.IO).launch {
             roomDao.addFollowing(followingData)
         }
 
     }
-    suspend fun addLastFollowing(followingData: List<LastFollowingData>){
+
+    suspend fun addLastFollowing(followingData: List<LastFollowingData>) {
         CoroutineScope(Dispatchers.IO).launch {
             roomDao.deleteLastFollowing()
             roomDao.lastAddFollowing(followingData)
         }
     }
+
     suspend fun getFollowers(): List<FollowersData> {
         return roomDao.getFollowers()
     }
-    suspend fun getFollowing():List<FollowingData>{
+
+    suspend fun getFollowing(): List<FollowingData> {
         return roomDao.getFollowing()
     }
 
