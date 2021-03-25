@@ -71,7 +71,7 @@ class WebLoginFragment : Fragment() {
         })
 
         viewModel.res.observe(viewLifecycleOwner, Observer {
-            Log.d("Response", "data geldi bro")
+            Log.d("Response", "${it.data}")
         })
 
 

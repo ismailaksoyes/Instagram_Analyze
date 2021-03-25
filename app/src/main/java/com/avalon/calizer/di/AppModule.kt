@@ -10,12 +10,14 @@ import com.avalon.calizer.data.api.ApiService
 import com.avalon.calizer.data.local.MyDatabase
 import com.avalon.calizer.utils.Constants
 import com.avalon.calizer.utils.Constants.USER_DATABASE
+import com.avalon.calizer.utils.Utils
 import com.bumptech.glide.Glide
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -29,6 +31,8 @@ object AppModule {
 
     @Provides
     fun provideBaseUrl() = Constants.BASE_URL
+
+
 
     @Provides
     @Singleton
@@ -56,24 +60,15 @@ object AppModule {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    private var logging: HttpLoggingInterceptor = HttpLoggingInterceptor()
-    val suc = logging.setLevel(HttpLoggingInterceptor.Level.BODY)
-    private val client = OkHttpClient.Builder().apply {
-        addNetworkInterceptor(suc)
-        addInterceptor(ApiInterceptor())
-
-            .connectTimeout(1, TimeUnit.MINUTES)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
-    }.build()
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(apiInterceptor: Interceptor): OkHttpClient {
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
             .addInterceptor(logging)
+            .addInterceptor(apiInterceptor)
             .connectTimeout(1, TimeUnit.MINUTES)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(15, TimeUnit.SECONDS)
@@ -84,6 +79,10 @@ object AppModule {
     @Singleton
     @Provides
     fun provideApiHelper(apiHelper: ApiHelperImpl): ApiHelper = apiHelper
+
+    @Singleton
+    @Provides
+    fun provideApiInterceptor(apiInterceptor: ApiInterceptor):Interceptor = apiInterceptor
 
 
     @Singleton
