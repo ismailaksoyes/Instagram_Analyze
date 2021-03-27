@@ -1,6 +1,7 @@
 package com.avalon.calizer.data.api
 
 import com.avalon.calizer.data.remote.insresponse.ApiResponseReelsTray
+import com.avalon.calizer.data.remote.insresponse.ApiResponseUserDetails
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollowers
 import retrofit2.Response
 import retrofit2.http.*
@@ -24,6 +25,12 @@ interface ApiService {
    suspend fun getReelsTray(
         @Header("Cookie") cookies:String
     ):Response<ApiResponseReelsTray>
+
+    @GET("friendships/{userId}/following/")
+    suspend fun getUserDetails(
+        @Path("userId") userId:String,
+        @Header("Cookie") cookies: String
+    ):Response<ApiResponseUserDetails>
 
 
 }

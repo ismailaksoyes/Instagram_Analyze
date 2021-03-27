@@ -1,7 +1,9 @@
 package com.avalon.calizer.data.api
 
+import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.Response
+import okhttp3.internal.userAgent
 import javax.inject.Inject
 
 class ApiInterceptor @Inject constructor() : Interceptor {
@@ -22,6 +24,7 @@ class ApiInterceptor @Inject constructor() : Interceptor {
     )
 
 
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
             .newBuilder()
@@ -32,6 +35,7 @@ class ApiInterceptor @Inject constructor() : Interceptor {
             .addHeader("Cache-Control","private, no-cache, no-store, must-revalidate")
            // .addHeader("Accept-Encoding","gzip, deflate")
             .build()
+        Log.d("useragent", USER_AGENT)
         return chain.proceed(request)
     }
 
