@@ -27,6 +27,7 @@ import kotlin.random.Random
 class AccountsFragment : Fragment() {
     private lateinit var binding: FragmentAccountsBinding
 
+    //resimler gozukmuyor. Isteklerden sonra kontrol et
 
     private val accountsAdapter by lazy { AccountsAdapter() }
 

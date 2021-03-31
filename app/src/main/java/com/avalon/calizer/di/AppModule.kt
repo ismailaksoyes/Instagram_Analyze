@@ -33,7 +33,6 @@ object AppModule {
     fun provideBaseUrl() = Constants.BASE_URL
 
 
-
     @Provides
     @Singleton
     fun provideMyDatabase(

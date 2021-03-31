@@ -7,6 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object ApiClient {
+    //bu sayfa silinecek kontrol edildikten sonra sil
     private var logging:HttpLoggingInterceptor = HttpLoggingInterceptor()
     val suc = logging.setLevel(HttpLoggingInterceptor.Level.BODY)
     private val client = OkHttpClient.Builder().apply {
