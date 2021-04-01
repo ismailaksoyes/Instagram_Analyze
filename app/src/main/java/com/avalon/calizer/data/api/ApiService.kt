@@ -26,7 +26,7 @@ interface ApiService {
         @Header("Cookie") cookies:String
     ):Response<ApiResponseReelsTray>
 
-    @GET("friendships/{userId}/following/")
+    @GET("users/{userId}/info/")
     suspend fun getUserDetails(
         @Path("userId") userId:String,
         @Header("Cookie") cookies: String

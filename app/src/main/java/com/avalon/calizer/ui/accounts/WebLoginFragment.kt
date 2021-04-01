@@ -167,7 +167,7 @@ class WebLoginFragment : Fragment() {
     private suspend fun LoginTest():Boolean{
        // mCookiesVewModel.getReelsTray(allCookie)
        // viewModel.getReelsTray(allCookie)
-        viewModel.getUserDetails(allCookie,dsUserID)
+       // viewModel.getUserDetails(allCookie,dsUserID)
         return true
     }
 

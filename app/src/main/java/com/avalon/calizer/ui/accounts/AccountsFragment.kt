@@ -56,6 +56,16 @@ class AccountsFragment : Fragment() {
                 )
             }
         })
+        viewModel.userDetails.observe(viewLifecycleOwner, Observer {
+            Log.d("Response","${it.data?.user?.profilePicUrl}")
+            val accountData = AccountsData(
+                profilePic = it.data?.user?.profilePicUrl.toString(),
+                userName = it.data?.user?.username.toString(),
+                dsUserID = it.data?.user?.pk.toString()
+            )
+            updateAccount(accountData)
+
+        })
 
         binding.cvAccountsAdd.setOnClickListener {
 
@@ -64,7 +74,11 @@ class AccountsFragment : Fragment() {
         }
 
     }
-
+     fun updateAccount(accountsData: AccountsData){
+         CoroutineScope(Dispatchers.IO).launch {
+             viewModel.addAccount(accountsData)
+         }
+    }
 
     private fun setupRecyclerview() {
         binding.rcAccountsList.adapter = accountsAdapter
