@@ -50,17 +50,7 @@ class AccountsFragment : Fragment() {
             accountsAdapter.setData(it)
            // Log.d("list","${it.value}")
         })
-        val newlist = ArrayList<AccountsList>()
 
-        for (i in 0..1){
-            val eelist = AccountsList(
-                url = "https://pbs.twimg.com/profile_images/1092891292609249281/cJfKotNP_400x400.jpg",
-                userName = "testtts1",
-                pk = 110101L
-            )
-
-            newlist.add(eelist)
-        }
         binding.cvAccountsAdd.setOnClickListener {
 
             it.findNavController().navigate(R.id.action_destination_accounts_to_webLoginFragment)
@@ -68,16 +58,7 @@ class AccountsFragment : Fragment() {
         }
 
     }
-    fun setsdfsd(){
-        CoroutineScope(Dispatchers.IO).launch {
-            viewModel.addAccount(AccountsData(
-                profilePic = "https://thispersondoesnotexist.com/image",
-                userName = "denemeuyelik",
-                pk = Random.nextLong(1,500)
-            ))
-            viewModel.getAccountList()
-        }
-    }
+
 
     private fun setupRecyclerview() {
         binding.rcAccountsList.adapter = accountsAdapter
