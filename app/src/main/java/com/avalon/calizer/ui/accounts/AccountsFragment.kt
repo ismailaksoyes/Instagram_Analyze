@@ -49,6 +49,12 @@ class AccountsFragment : Fragment() {
         viewModel.allAccounts.observe(viewLifecycleOwner, Observer {
             accountsAdapter.setData(it)
            // Log.d("list","${it.value}")
+            for(data in it){
+                viewModel.getUserDetails(
+                    cookies = data.allCookie,
+                    userId = data.dsUserID
+                )
+            }
         })
 
         binding.cvAccountsAdd.setOnClickListener {

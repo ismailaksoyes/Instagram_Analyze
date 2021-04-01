@@ -70,8 +70,11 @@ class WebLoginFragment : Fragment() {
             Log.d("Response", "data geldi bro")
         })
 
-        viewModel.res.observe(viewLifecycleOwner, Observer {
+        viewModel.reelsTray.observe(viewLifecycleOwner, Observer {
             Log.d("Response", "${it.data}")
+        })
+        viewModel.userDetails.observe(viewLifecycleOwner, Observer {
+            Log.d("Response", "${it.data?.user?.profilePicUrl}")
         })
 
 
@@ -163,7 +166,8 @@ class WebLoginFragment : Fragment() {
     }
     private suspend fun LoginTest():Boolean{
        // mCookiesVewModel.getReelsTray(allCookie)
-        viewModel.getReelsTray(allCookie)
+       // viewModel.getReelsTray(allCookie)
+        viewModel.getUserDetails(allCookie,dsUserID)
         return true
     }
 

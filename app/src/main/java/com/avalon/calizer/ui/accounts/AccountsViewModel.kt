@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.avalon.calizer.data.local.AccountsData
 import com.avalon.calizer.data.remote.insresponse.ApiResponseReelsTray
+import com.avalon.calizer.data.remote.insresponse.ApiResponseUserDetails
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollowers
 import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.data.repository.RoomRepository
@@ -21,21 +22,36 @@ class AccountsViewModel @ViewModelInject constructor(
 ) : ViewModel() {
     val allAccounts: MutableLiveData<List<AccountsData>> = MutableLiveData()
 
-    private val _res = MutableLiveData<Resource<ApiResponseReelsTray>>()
-    val res :LiveData<Resource<ApiResponseReelsTray>>
-    get() = _res
+    private val _reelsTray = MutableLiveData<Resource<ApiResponseReelsTray>>()
+    val reelsTray :LiveData<Resource<ApiResponseReelsTray>>
+    get() = _reelsTray
+
+    private val _userDetails = MutableLiveData<Resource<ApiResponseUserDetails>>()
+    val userDetails:LiveData<Resource<ApiResponseUserDetails>>
+    get() = _userDetails
 
 
      fun getReelsTray(cookies:String) = viewModelScope.launch {
-        _res.postValue(Resource.loading(null))
+        _reelsTray.postValue(Resource.loading(null))
         repository.getReelsTray(cookies).let {
             if (it.isSuccessful){
-                _res.postValue(Resource.success(it.body()))
+                _reelsTray.postValue(Resource.success(it.body()))
             }else{
-                _res.postValue(Resource.error(it.errorBody().toString(),null))
+                _reelsTray.postValue(Resource.error(it.errorBody().toString(),null))
             }
         }
 
+    }
+
+    fun getUserDetails(cookies: String,userId:String) = viewModelScope.launch {
+        _userDetails.postValue(Resource.loading(null))
+        repository.getUserDetails(cookies,userId).let {
+            if (it.isSuccessful){
+                _userDetails.postValue(Resource.success(it.body()))
+            }else{
+                _userDetails.postValue(Resource.error(it.errorBody().toString(),null))
+            }
+        }
     }
 
     fun getAccountList() {
