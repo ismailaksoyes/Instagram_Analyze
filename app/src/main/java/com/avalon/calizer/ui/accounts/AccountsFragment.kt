@@ -27,7 +27,6 @@ import kotlin.random.Random
 class AccountsFragment : Fragment() {
     private lateinit var binding: FragmentAccountsBinding
 
-    //resimler gozukmuyor. Isteklerden sonra kontrol et
 
     private val accountsAdapter by lazy { AccountsAdapter() }
 
@@ -50,20 +49,22 @@ class AccountsFragment : Fragment() {
             accountsAdapter.setData(it)
            // Log.d("list","${it.value}")
             for(data in it){
-                viewModel.getUserDetails(
-                    cookies = data.allCookie,
-                    userId = data.dsUserID
-                )
+                //viewModel.getUserDetails(
+                 //   cookies = data.allCookie,
+               //     userId = data.dsUserID
+                //)
             }
         })
         viewModel.userDetails.observe(viewLifecycleOwner, Observer {
             Log.d("Response","${it.data?.user?.profilePicUrl}")
-            val accountData = AccountsData(
-                profilePic = it.data?.user?.profilePicUrl.toString(),
-                userName = it.data?.user?.username.toString(),
-                dsUserID = it.data?.user?.pk.toString()
+
+            updateAccount(
+                profile_Pic = it.data?.user?.profilePicUrl,
+                pk = it.data?.user?.pk?.toLong(),
+                user_name = it.data?.user?.username.toString(),
+                ds_userId = it.data?.user?.pk?.toString()
             )
-            updateAccount(accountData)
+
 
         })
 
@@ -74,9 +75,9 @@ class AccountsFragment : Fragment() {
         }
 
     }
-     fun updateAccount(accountsData: AccountsData){
+     fun updateAccount(profile_Pic : String?,pk : Long?, user_name:String?, ds_userId:String?){
          CoroutineScope(Dispatchers.IO).launch {
-             viewModel.addAccount(accountsData)
+             viewModel.updateAccount(profile_Pic,pk,user_name,ds_userId)
          }
     }
 

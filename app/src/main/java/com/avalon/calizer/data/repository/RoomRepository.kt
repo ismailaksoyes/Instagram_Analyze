@@ -11,8 +11,6 @@ import javax.inject.Inject
 
 class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
 
-    // birden fazla cookie listelenmesi icin birden fazla hesap
-    // hesaplar unq icin pk id
 
     suspend fun addAccount(accountsData: AccountsData) {
         roomDao.addAccount(accountsData)
@@ -20,6 +18,10 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
 
     fun getAccounts(): List<AccountsData> {
         return roomDao.getAllAccountDetails
+    }
+
+    suspend fun updateAccount(profile_Pic : String?,pk : Long?, user_name:String?, ds_userId:String?){
+        roomDao.updateAccountData(profile_Pic,pk,user_name,ds_userId)
     }
 
     suspend fun addCookie(roomData: RoomData) {

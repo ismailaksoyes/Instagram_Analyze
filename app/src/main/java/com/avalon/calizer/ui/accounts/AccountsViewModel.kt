@@ -63,4 +63,7 @@ class AccountsViewModel @ViewModelInject constructor(
     suspend fun addAccount(accountsData: AccountsData) {
         roomRepository.addAccount(accountsData)
     }
+    suspend fun updateAccount(profilePicture:String?,pk:Long?,user_name:String?,dsUserId:String?){
+        roomRepository.updateAccount(profilePicture,pk,user_name,dsUserId)
+    }
 }

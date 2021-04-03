@@ -76,6 +76,9 @@ class MainActivity : AppCompatActivity() {
 
         val navController = Navigation.findNavController(this, R.id.navHostFragment)
         setupBottomNavigationMenu(navController)
+        binding.bottomNavigation.setOnNavigationItemReselectedListener {
+
+        }
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if(destination.id == R.id.destination_profile ||destination.id == R.id.destination_analyze ||destination.id == R.id.destination_settings){
 
@@ -245,6 +248,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
 
 
 }

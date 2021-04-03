@@ -10,6 +10,9 @@ interface RoomDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAccount(accountsData: AccountsData)
 
+    @Query("UPDATE accounts_table SET profilePic = :profile_Pic,pk = :pk, username = :user_name WHERE dsUserID = :ds_userId")
+    suspend fun updateAccountData(profile_Pic : String?,pk : Long?, user_name:String?, ds_userId:String?)
+
     @get:Query("SELECT * FROM accounts_table")
     val getAllAccountDetails : List<AccountsData>
 
