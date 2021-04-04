@@ -31,7 +31,7 @@ class AccountsFragment : Fragment() {
     private val accountsAdapter by lazy { AccountsAdapter() }
 
     private val viewModel: AccountsViewModel by viewModels()
-
+    private var isUpdate: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,22 +41,28 @@ class AccountsFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerview()
         viewModel.getAccountList()
         viewModel.allAccounts.observe(viewLifecycleOwner, Observer {
-            accountsAdapter.setData(it)
-           // Log.d("list","${it.value}")
-            for(data in it){
-                //viewModel.getUserDetails(
-                 //   cookies = data.allCookie,
-               //     userId = data.dsUserID
-                //)
-            }
+
+                for (data in it) {
+                    viewModel.getUserDetails(
+                        cookies = data.allCookie,
+                        userId = data.dsUserID
+                    )
+                }
+
+                accountsAdapter.setData(it)
+
+
+            // Log.d("list","${it.value}")
+
         })
         viewModel.userDetails.observe(viewLifecycleOwner, Observer {
-            Log.d("Response","${it.data?.user?.profilePicUrl}")
+            Log.d("Response", "${it.data?.user?.profilePicUrl}")
 
             updateAccount(
                 profile_Pic = it.data?.user?.profilePicUrl,
@@ -65,7 +71,7 @@ class AccountsFragment : Fragment() {
                 ds_userId = it.data?.user?.pk?.toString()
             )
 
-
+            viewModel.getAccountList()
         })
 
         binding.cvAccountsAdd.setOnClickListener {
@@ -75,20 +81,23 @@ class AccountsFragment : Fragment() {
         }
 
     }
-     fun updateAccount(profile_Pic : String?,pk : Long?, user_name:String?, ds_userId:String?){
-         CoroutineScope(Dispatchers.IO).launch {
-             viewModel.updateAccount(profile_Pic,pk,user_name,ds_userId)
-         }
+
+    fun updateAccount(profile_Pic: String?, pk: Long?, user_name: String?, ds_userId: String?) {
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.updateAccount(profile_Pic, pk, user_name, ds_userId)
+        }
     }
 
     private fun setupRecyclerview() {
         binding.rcAccountsList.adapter = accountsAdapter
-        binding.rcAccountsList.layoutManager = LinearLayoutManager(this.context,
-            LinearLayoutManager.VERTICAL,false)
+        binding.rcAccountsList.layoutManager = LinearLayoutManager(
+            this.context,
+            LinearLayoutManager.VERTICAL, false
+        )
 
     }
 
-    private fun addAccountWeb(){
+    private fun addAccountWeb() {
         binding.cvAccountsAdd.setOnClickListener {
 
         }
