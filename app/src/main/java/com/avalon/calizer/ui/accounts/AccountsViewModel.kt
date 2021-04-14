@@ -24,12 +24,14 @@ class AccountsViewModel @ViewModelInject constructor(
 ) : ViewModel() {
     //val allAccounts: MutableLiveData<List<AccountsData>> = MutableLiveData()
 
-    private val _allAccounts=  MutableStateFlow<LastAccountsState>(LastAccountsState.Empty)
+    private val _allAccounts = MutableStateFlow<LastAccountsState>(LastAccountsState.Empty)
     val allAccounts: StateFlow<LastAccountsState> = _allAccounts
 
     sealed class LastAccountsState {
         data class Success(var allAccounts: List<AccountsData>) : LastAccountsState()
+        data class UpdateData(var allAccounts: List<AccountsData>) : LastAccountsState()
         data class Error(val error: String) : LastAccountsState()
+        object Loading : LastAccountsState()
         object Empty : LastAccountsState()
     }
 
@@ -67,6 +69,14 @@ class AccountsViewModel @ViewModelInject constructor(
 
     fun getAccountList() {
         viewModelScope.launch(Dispatchers.IO) {
+            _allAccounts.value = LastAccountsState.Loading
+            _allAccounts.value = LastAccountsState.UpdateData(roomRepository.getAccounts())
+        }
+    }
+
+    fun getLastAccountList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _allAccounts.value = LastAccountsState.Loading
             _allAccounts.value = LastAccountsState.Success(roomRepository.getAccounts())
         }
     }

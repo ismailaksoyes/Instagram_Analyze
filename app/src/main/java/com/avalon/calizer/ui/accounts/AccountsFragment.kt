@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.avalon.calizer.R
@@ -20,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
@@ -47,21 +49,38 @@ class AccountsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerview()
         viewModel.getAccountList()
-        viewModel.allAccounts.observe(viewLifecycleOwner, Observer {
+        lifecycleScope.launchWhenStarted {
+            viewModel.allAccounts.collect {
+                when(it){
+                    is AccountsViewModel.LastAccountsState.Loading->{
+                        Log.d("StateTest", "Loading")
+                    }
+                    is AccountsViewModel.LastAccountsState.Success->{
+                        Log.d("StateTest", "Loading")
 
-                for (data in it) {
-                    viewModel.getUserDetails(
-                        cookies = data.allCookie,
-                        userId = data.dsUserID
-                    )
+                    }
+                    is AccountsViewModel.LastAccountsState.Error->{
+                        Log.d("StateTest", "Loading")
+                    }
                 }
+            }
+        }
 
-                accountsAdapter.setData(it)
-
-
-            // Log.d("list","${it.value}")
-
-        })
+//        viewModel.allAccounts.observe(viewLifecycleOwner, Observer {
+//
+//                for (data in it) {
+//                    viewModel.getUserDetails(
+//                        cookies = data.allCookie,
+//                        userId = data.dsUserID
+//                    )
+//                }
+//
+//                accountsAdapter.setData(it)
+//
+//
+//            // Log.d("list","${it.value}")
+//
+//        })
         viewModel.userDetails.observe(viewLifecycleOwner, Observer {
             Log.d("Response", "${it.data?.user?.profilePicUrl}")
 
