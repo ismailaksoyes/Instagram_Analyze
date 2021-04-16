@@ -36,7 +36,7 @@ class WebLoginFragment : Fragment() {
 
 
     var csfr = ""
-    var dsUserID = ""
+    var dsUserID = 0L
     var igDId = ""
     var rur = ""
     var sessID = ""
@@ -66,9 +66,9 @@ class WebLoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        viewModel.allAccounts.observe(viewLifecycleOwner, Observer { data->
-            Log.d("Response", "data geldi bro")
-        })
+//        viewModel.allAccounts.observe(viewLifecycleOwner, Observer { data->
+//            Log.d("Response", "data geldi bro")
+//        })
 
         viewModel.reelsTray.observe(viewLifecycleOwner, Observer {
             Log.d("Response", "${it.data}")
@@ -107,7 +107,7 @@ class WebLoginFragment : Fragment() {
                                 sessID = datalast[1]
                             }
                             trim2.startsWith("ds_user_id") -> {
-                                dsUserID = datalast[1]
+                                dsUserID = datalast[1].toLong()
                             }
                             trim2.startsWith("ig_did") -> {
                                 igDId = datalast[1]

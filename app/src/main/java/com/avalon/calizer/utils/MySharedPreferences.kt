@@ -21,6 +21,10 @@ class MySharedPreferences @Inject constructor(var prefs:SharedPreferences) {
         get() = prefs.getString(Constants.ALL_COOKIES, "")
         set(value) = prefs.edit().putString(Constants.ALL_COOKIES, value).apply()
 
+    var userName :String?
+    get() = prefs.getString(Constants.USER_NAME,"")
+    set(value) = prefs.edit().putString(Constants.USER_NAME,value).apply()
+
     var followersUpdateDate: Long
         get() = prefs.getLong(Constants.FOLLOWERS_UPDATE_DATE, -1)
         set(value) = prefs.edit().putLong(Constants.FOLLOWERS_UPDATE_DATE, value).apply()

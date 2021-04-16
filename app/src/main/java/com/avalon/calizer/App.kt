@@ -10,9 +10,7 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class App : Application() {
-    companion object{
-        var prefs: MySharedPreferences? = null
-    }
+
 
     override fun onCreate() {
         super.onCreate()

@@ -9,14 +9,14 @@ import retrofit2.http.*
 interface ApiService {
     @GET("friendships/{userId}/followers/")
     suspend fun getFollowers(
-        @Path("userId") userId:String,
+        @Path("userId") userId:Long,
         @Query("max_id")maxId: String?,
         @Query("rank_token")rnkToken: String?,
         @Header("Cookie") cookies: String
     ):Response<ApiResponseUserFollowers>
     @GET("friendships/{userId}/following/")
     suspend fun getFollowing(
-        @Path("userId") userId:String,
+        @Path("userId") userId:Long,
         @Query("max_id")maxId: String?,
         @Query("rank_token")rnkToken: String?,
         @Header("Cookie") cookies: String
@@ -28,7 +28,7 @@ interface ApiService {
 
     @GET("users/{userId}/info/")
     suspend fun getUserDetails(
-        @Path("userId") userId:String,
+        @Path("userId") userId:Long,
         @Header("Cookie") cookies: String
     ):Response<ApiResponseUserDetails>
 

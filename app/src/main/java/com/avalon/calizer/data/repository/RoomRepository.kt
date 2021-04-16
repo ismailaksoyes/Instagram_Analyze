@@ -20,8 +20,8 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
         return roomDao.getAllAccountDetails
     }
 
-    suspend fun updateAccount(profile_Pic : String?,pk : Long?, user_name:String?, ds_userId:String?){
-        roomDao.updateAccountData(profile_Pic,pk,user_name,ds_userId)
+    suspend fun updateAccount(profile_Pic : String?, user_name:String?, ds_userId:String?){
+        roomDao.updateAccountData(profile_Pic,user_name,ds_userId)
     }
 
     suspend fun addCookie(roomData: RoomData) {

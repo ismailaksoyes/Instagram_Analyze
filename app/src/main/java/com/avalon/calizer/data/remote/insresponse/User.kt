@@ -23,9 +23,9 @@ data class User(
     @SerializedName("profile_pic_url")
     val profilePicUrl: String,
     @SerializedName("profile_pic_id")
-    val profilePicİd: String,
+    val profilePicId: String,
     @SerializedName("story_reel_media_ids")
-    val storyReelMediaİds: List<Any>,
+    val storyReelMediaIds: List<Any>,
     @SerializedName("username")
     val username: String
 )

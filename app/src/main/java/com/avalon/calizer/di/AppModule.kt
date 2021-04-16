@@ -12,6 +12,7 @@ import com.avalon.calizer.utils.Constants
 import com.avalon.calizer.utils.Constants.USER_DATABASE
 import com.avalon.calizer.utils.Utils
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -84,11 +85,14 @@ object AppModule {
     fun provideApiInterceptor(apiInterceptor: ApiInterceptor):Interceptor = apiInterceptor
 
 
-    @Singleton
-    @Provides
+   @Singleton
+   @Provides
     fun provideGlide(
         @ApplicationContext app: Context
-    ) = Glide.with(app)
+   ) = Glide.with(app).setDefaultRequestOptions(
+       RequestOptions()
+           .circleCrop()
+   )
 
 
     @Provides

@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
 
                     getFollowersList(
                         maxId = response.body()?.nextMaxId,
-                        userId = "19748713375"
+                        userId = 19748713375
                     )
 
                 } else {
@@ -185,7 +185,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun getFollowersList(maxId: String? = null, userId: String): Job {
+    fun getFollowersList(maxId: String? = null, userId: Long): Job {
         return CoroutineScope(Dispatchers.IO).launch {
             delay((500 + (0..250).random()).toLong())
             if (!maxId.isNullOrEmpty()) {
@@ -217,7 +217,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun getFollowingList(maxId: String? = null, userId: String): Job {
+    fun getFollowingList(maxId: String? = null, userId: Long): Job {
         return CoroutineScope(Dispatchers.IO).launch {
             delay((500 + (0..250).random()).toLong())
             if (!maxId.isNullOrEmpty()) {

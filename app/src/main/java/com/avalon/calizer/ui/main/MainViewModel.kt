@@ -51,7 +51,7 @@ class MainViewModel @ViewModelInject constructor(private val dbRepository: RoomR
             dbRepository.getNotFollow()
         }
     }
-     fun getUserFollowers(userId:String,maxId: String?,rnkToken:String?, cookies: String){
+     fun getUserFollowers(userId:Long,maxId: String?,rnkToken:String?, cookies: String){
         viewModelScope.launch {
             val response:Response<ApiResponseUserFollowers> = repository.getUserFollowers(userId,maxId,rnkToken,cookies)
             allFollowers.value = response

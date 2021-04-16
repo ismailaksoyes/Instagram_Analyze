@@ -6,6 +6,6 @@ import retrofit2.Response
 
 interface ApiHelper{
     suspend fun getReelsTray(cookies:String):Response<ApiResponseReelsTray>
-    suspend fun getUserDetails(cookies: String,userId:String):Response<ApiResponseUserDetails>
+    suspend fun getUserDetails(cookies: String,userId:Long):Response<ApiResponseUserDetails>
     //usercase update details
 }

@@ -28,11 +28,15 @@ class AccountsViewModel @ViewModelInject constructor(
     val allAccounts: StateFlow<LastAccountsState> = _allAccounts
 
     sealed class LastAccountsState {
-        data class Success(var allAccounts: List<AccountsData>) : LastAccountsState()
-        data class UpdateData(var allAccounts: List<AccountsData>) : LastAccountsState()
-        data class Error(val error: String) : LastAccountsState()
-        object Loading : LastAccountsState()
         object Empty : LastAccountsState()
+        data class Success(var allAccounts: List<AccountsData>) : LastAccountsState()
+        object Loading : LastAccountsState()
+        data class OldData(var allAccounts: List<AccountsData>) : LastAccountsState()
+        data class UserDetails(var userDetails: Resource<ApiResponseUserDetails>) : LastAccountsState()
+        object UpdateData : LastAccountsState()
+        data class Error(val error: String) : LastAccountsState()
+
+
     }
 
     private val _reelsTray = MutableLiveData<Resource<ApiResponseReelsTray>>()
@@ -56,13 +60,14 @@ class AccountsViewModel @ViewModelInject constructor(
 
     }
 
-    fun getUserDetails(cookies: String, userId: String) = viewModelScope.launch {
-        _userDetails.postValue(Resource.loading(null))
+    fun getUserDetails(cookies: String, userId: Long) = viewModelScope.launch(Dispatchers.IO) {
         repository.getUserDetails(cookies, userId).let {
             if (it.isSuccessful) {
-                _userDetails.postValue(Resource.success(it.body()))
+                _allAccounts.value = LastAccountsState.UserDetails(Resource.success(it.body()))
+                _allAccounts.value = LastAccountsState.UpdateData
             } else {
-                _userDetails.postValue(Resource.error(it.errorBody().toString(), null))
+                _allAccounts.value =
+                    LastAccountsState.UserDetails(Resource.error(it.errorBody().toString(), null))
             }
         }
     }
@@ -70,13 +75,19 @@ class AccountsViewModel @ViewModelInject constructor(
     fun getAccountList() {
         viewModelScope.launch(Dispatchers.IO) {
             _allAccounts.value = LastAccountsState.Loading
-            _allAccounts.value = LastAccountsState.UpdateData(roomRepository.getAccounts())
+            val data = roomRepository.getAccounts()
+            if (data.isEmpty()) {
+                _allAccounts.value = LastAccountsState.Empty
+            } else {
+
+                _allAccounts.value = LastAccountsState.OldData(roomRepository.getAccounts())
+            }
+
         }
     }
 
     fun getLastAccountList() {
         viewModelScope.launch(Dispatchers.IO) {
-            _allAccounts.value = LastAccountsState.Loading
             _allAccounts.value = LastAccountsState.Success(roomRepository.getAccounts())
         }
     }
@@ -88,10 +99,10 @@ class AccountsViewModel @ViewModelInject constructor(
 
     suspend fun updateAccount(
         profilePicture: String?,
-        pk: Long?,
         user_name: String?,
         dsUserId: String?
     ) {
-        roomRepository.updateAccount(profilePicture, pk, user_name, dsUserId)
+        roomRepository.updateAccount(profilePicture , user_name, dsUserId)
+        _allAccounts.value = LastAccountsState.UpdateData
     }
 }
