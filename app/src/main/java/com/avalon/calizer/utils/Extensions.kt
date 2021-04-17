@@ -12,7 +12,6 @@ fun ImageView.loadPPUrl(url:String){
     Glide.with(context)
         .load(url)
         .circleCrop()
-        .diskCacheStrategy(DiskCacheStrategy.NONE)
         .into(this)
 }
 

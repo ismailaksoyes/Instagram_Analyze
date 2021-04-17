@@ -9,11 +9,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.AccountsData
 import com.avalon.calizer.databinding.FragmentAccountsBinding
 import com.avalon.calizer.ui.accounts.adapters.AccountsAdapter
+import com.avalon.calizer.ui.accounts.adapters.SelectedUserInterface
+import com.avalon.calizer.utils.MySharedPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,16 +25,30 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AccountsFragment : Fragment() {
+class AccountsFragment  : Fragment() {
     private lateinit var binding: FragmentAccountsBinding
 
+    @Inject
+    lateinit var prefs: MySharedPreferences
 
-    private val accountsAdapter by lazy { AccountsAdapter() }
+    private val accountsAdapter by lazy {
+        AccountsAdapter(object : SelectedUserInterface {
+            override fun getData(accountsData: AccountsData) {
+                super.getData(accountsData)
+                nextMain(accountsData)
+            }
+        })
+    }
 
     private val viewModel: AccountsViewModel by viewModels()
-    private var isUpdate: Boolean = false
 
 
+    fun nextMain(accountsData: AccountsData) {
+        prefs.userName = accountsData.userName
+        prefs.selectedAccount = accountsData.dsUserID
+        prefs.allCookie = accountsData.allCookie
+        findNavController().navigate(R.id.action_destination_accounts_to_destination_profile)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,24 +72,24 @@ class AccountsFragment : Fragment() {
                     }
                     is AccountsViewModel.LastAccountsState.Success -> {
                         Log.d("StateTest", "Success")
-                       // accountsAdapter.setData(it.allAccounts)
+                        // accountsAdapter.setData(it.allAccounts)
                         setAdapterData(it.allAccounts)
 
                     }
                     is AccountsViewModel.LastAccountsState.Error -> {
                         Log.d("StateTest", "Error")
                     }
-                    is AccountsViewModel.LastAccountsState.UpdateData->{
+                    is AccountsViewModel.LastAccountsState.UpdateData -> {
                         Log.d("StateTest", "Data Update")
                         viewModel.getLastAccountList()
                     }
-                    is AccountsViewModel.LastAccountsState.UserDetails->{
+                    is AccountsViewModel.LastAccountsState.UserDetails -> {
                         Log.d("StateTest", "User Details  ${it.userDetails.data?.user?.pk}")
                         updateAccount(
                             profile_Pic = it.userDetails.data?.user?.profilePicUrl,
-                          user_name = it.userDetails.data?.user?.username.toString(),
-                           ds_userId = it.userDetails.data?.user?.pk?.toString()
-                       )
+                            user_name = it.userDetails.data?.user?.username.toString(),
+                            ds_userId = it.userDetails.data?.user?.pk?.toString()
+                        )
                     }
                     is AccountsViewModel.LastAccountsState.OldData -> {
                         Log.d("StateTest", "Old Data List -> ${it.allAccounts}")
@@ -82,7 +99,7 @@ class AccountsFragment : Fragment() {
                                 cookies = data.allCookie,
                                 userId = data.dsUserID
                             )
-                         }
+                        }
 
                     }
                     else -> {
@@ -92,22 +109,6 @@ class AccountsFragment : Fragment() {
             }
         }
 
-//        viewModel.allAccounts.observe(viewLifecycleOwner, Observer {
-//
-//                for (data in it) {
-//                    viewModel.getUserDetails(
-//                        cookies = data.allCookie,
-//                        userId = data.dsUserID
-//                    )
-//                }
-//
-//                accountsAdapter.setData(it)
-//
-//
-//            // Log.d("list","${it.value}")
-//
-//        })
-
 
         binding.cvAccountsAdd.setOnClickListener {
 
@@ -116,12 +117,13 @@ class AccountsFragment : Fragment() {
         }
 
     }
-    suspend fun setAdapterData(accountsData: List<AccountsData> ){
-        Log.d("StateTest",".........")
+
+    suspend fun setAdapterData(accountsData: List<AccountsData>) {
+        Log.d("StateTest", ".........")
         lifecycleScope.launchWhenStarted {
             accountsAdapter.setData(accountsData)
         }
-        
+
     }
 
 
