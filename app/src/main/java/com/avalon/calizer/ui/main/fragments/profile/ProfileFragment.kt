@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.avalon.calizer.databinding.ProfileFragmentBinding
+import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.loadPPUrl
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
@@ -21,11 +22,13 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.*
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
     companion object {
@@ -36,6 +39,9 @@ class ProfileFragment : Fragment() {
     private lateinit var binding: ProfileFragmentBinding
     private lateinit var barChart: BarChart
     private lateinit var chartList: List<PieData>
+
+    @Inject
+    lateinit var prefs:MySharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -190,6 +196,7 @@ class ProfileFragment : Fragment() {
             })
 
         binding.ivPpAnalyze.loadPPUrl(imageUrl)
+        binding.tvProfileUsername.text = prefs.userName?:"nll"
 
 
 

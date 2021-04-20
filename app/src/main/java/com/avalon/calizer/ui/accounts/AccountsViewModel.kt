@@ -13,12 +13,14 @@ import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.data.repository.RoomRepository
 import com.avalon.calizer.utils.Resource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import javax.inject.Inject
 
-class AccountsViewModel @ViewModelInject constructor(
+class AccountsViewModel @Inject constructor(
     private val roomRepository: RoomRepository,
     private val repository: Repository
 ) : ViewModel() {
@@ -64,7 +66,7 @@ class AccountsViewModel @ViewModelInject constructor(
         repository.getUserDetails(cookies, userId).let {
             if (it.isSuccessful) {
                 _allAccounts.value = LastAccountsState.UserDetails(Resource.success(it.body()))
-                _allAccounts.value = LastAccountsState.UpdateData
+             //   _allAccounts.value = LastAccountsState.UpdateData
             } else {
                 _allAccounts.value =
                     LastAccountsState.UserDetails(Resource.error(it.errorBody().toString(), null))
@@ -103,6 +105,7 @@ class AccountsViewModel @ViewModelInject constructor(
         dsUserId: String?
     ) {
         roomRepository.updateAccount(profilePicture , user_name, dsUserId)
+        delay(1000L)
         _allAccounts.value = LastAccountsState.UpdateData
     }
 }

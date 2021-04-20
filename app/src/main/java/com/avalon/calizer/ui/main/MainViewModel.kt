@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
 
-class MainViewModel @ViewModelInject constructor(private val dbRepository: RoomRepository, private val repository: Repository):ViewModel() {
+class MainViewModel @Inject constructor(private val dbRepository: RoomRepository, private val repository: Repository):ViewModel() {
 
 
     val allFollowers:MutableLiveData<Response<ApiResponseUserFollowers>> = MutableLiveData()
@@ -51,7 +51,7 @@ class MainViewModel @ViewModelInject constructor(private val dbRepository: RoomR
             dbRepository.getNotFollow()
         }
     }
-     fun getUserFollowers(userId:Long,maxId: String?,rnkToken:String?, cookies: String){
+     fun getUserFollowers(userId:Long,maxId: String?,rnkToken:String?, cookies: String?){
         viewModelScope.launch {
             val response:Response<ApiResponseUserFollowers> = repository.getUserFollowers(userId,maxId,rnkToken,cookies)
             allFollowers.value = response

@@ -16,22 +16,32 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
-class AccountsAdapter(var selectedUserInterface: SelectedUserInterface) : RecyclerView.Adapter<AccountsAdapter.MainViewHolder>() {
+class AccountsAdapter(var selectedUserInterface: SelectedUserInterface) :
+    RecyclerView.Adapter<AccountsAdapter.MainViewHolder>() {
     private var _accountsList = emptyList<AccountsData>()
 
     @Inject
     lateinit var prefs: MySharedPreferences
 
 
-    class MainViewHolder(var binding: AccountsItemBinding, val selectedUserInterface: SelectedUserInterface) :
+    class MainViewHolder(
+        var binding: AccountsItemBinding,
+        val selectedUserInterface: SelectedUserInterface
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(accountsList: AccountsData) {
-            kotlin.run {
+            Log.d("UserId","${accountsList.dsUserID}")
+            if(accountsList.profilePic.isEmpty() && accountsList.userName.isEmpty()){
+                binding.ivProfileImage.loadPPUrl("https://slangit.com/img/slang/pp_4215.jpg")
+                binding.tvAccountsUsername.text = "bir hata olustu!"
+            }else{
                 binding.ivProfileImage.loadPPUrl(accountsList.profilePic)
+                binding.tvAccountsUsername.text = accountsList.userName
             }
-            binding.tvAccountsUsername.text = accountsList.userName
+           // binding.ivProfileImage.loadPPUrl(accountsList.profilePic?:"https://slangit.com/img/slang/pp_4215.jpg")
+           // binding.tvAccountsUsername.text = accountsList.userName
             binding.cvAccounts.setOnClickListener {
-                val sendData  = AccountsData(
+                val sendData = AccountsData(
                     userName = accountsList.userName,
                     allCookie = accountsList.allCookie,
                     dsUserID = accountsList.dsUserID

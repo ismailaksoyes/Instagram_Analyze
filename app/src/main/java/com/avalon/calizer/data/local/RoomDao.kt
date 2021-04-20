@@ -1,5 +1,6 @@
 package com.avalon.calizer.data.local
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.*
 
@@ -10,7 +11,7 @@ interface RoomDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAccount(accountsData: AccountsData)
 
-    @Query("UPDATE accounts_table SET profilePic = :profile_Pic, username = :user_name WHERE dsUserID = :ds_userId")
+    @Query("UPDATE accounts_table SET profilePic = :profile_Pic, userName = :user_name WHERE dsUserID = :ds_userId")
     suspend fun updateAccountData(profile_Pic : String?, user_name:String?, ds_userId:String?)
 
     @get:Query("SELECT * FROM accounts_table")

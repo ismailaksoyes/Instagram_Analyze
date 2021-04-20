@@ -12,24 +12,24 @@ interface ApiService {
         @Path("userId") userId:Long,
         @Query("max_id")maxId: String?,
         @Query("rank_token")rnkToken: String?,
-        @Header("Cookie") cookies: String
+        @Header("Cookie") cookies: String?
     ):Response<ApiResponseUserFollowers>
     @GET("friendships/{userId}/following/")
     suspend fun getFollowing(
         @Path("userId") userId:Long,
         @Query("max_id")maxId: String?,
         @Query("rank_token")rnkToken: String?,
-        @Header("Cookie") cookies: String
+        @Header("Cookie") cookies: String?
     ):Response<ApiResponseUserFollowers>
     @GET("feed/reels_tray/")
    suspend fun getReelsTray(
-        @Header("Cookie") cookies:String
+        @Header("Cookie") cookies:String?
     ):Response<ApiResponseReelsTray>
 
     @GET("users/{userId}/info/")
     suspend fun getUserDetails(
         @Path("userId") userId:Long,
-        @Header("Cookie") cookies: String
+        @Header("Cookie") cookies: String?
     ):Response<ApiResponseUserDetails>
 
 

@@ -26,13 +26,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.random.Random
 
 
 @AndroidEntryPoint
 class WebLoginFragment : Fragment() {
    private lateinit var binding: FragmentWebLoginBinding
-    private val viewModel: AccountsViewModel by viewModels()
+   @Inject
+    lateinit var viewModel: AccountsViewModel
 
 
     var csfr = ""

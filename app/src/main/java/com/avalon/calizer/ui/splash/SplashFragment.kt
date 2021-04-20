@@ -48,7 +48,7 @@ class SplashFragment : Fragment() {
     }
     fun navOto(){
         lifecycleScope.launch {
-            delay(3000)
+            delay(1000)
             if (prefs.showIntro) findNavController().navigate(R.id.action_splashFragment_to_destination_tutorial) else findNavController().navigate(R.id.action_splashFragment_to_destination_accounts)
         }
 

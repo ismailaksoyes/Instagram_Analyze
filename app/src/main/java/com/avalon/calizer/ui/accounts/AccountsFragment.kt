@@ -31,6 +31,8 @@ class AccountsFragment  : Fragment() {
     @Inject
     lateinit var prefs: MySharedPreferences
 
+    @Inject lateinit var viewModel: AccountsViewModel
+
     private val accountsAdapter by lazy {
         AccountsAdapter(object : SelectedUserInterface {
             override fun getData(accountsData: AccountsData) {
@@ -40,7 +42,6 @@ class AccountsFragment  : Fragment() {
         })
     }
 
-    private val viewModel: AccountsViewModel by viewModels()
 
 
     fun nextMain(accountsData: AccountsData) {

@@ -38,8 +38,10 @@ import kotlin.collections.ArrayList
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val viewModel: MainViewModel by viewModels()
-    private lateinit var cookies: String
+   // private val viewModel: MainViewModel by viewModels()
+    @Inject
+    lateinit var viewModel:MainViewModel
+    private var getFirstData = true
 
     @Inject
     lateinit var prefs: MySharedPreferences
@@ -71,8 +73,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.bottomNavigation.itemIconTintList = null
-        prefs.selectedAccount = 1000L
-        Log.d("RoomHash", "${prefs.selectedAccount}")
+
+
 
         val navController = Navigation.findNavController(this, R.id.navHostFragment)
         setupBottomNavigationMenu(navController)
@@ -83,6 +85,10 @@ class MainActivity : AppCompatActivity() {
             if(destination.id == R.id.destination_profile ||destination.id == R.id.destination_analyze ||destination.id == R.id.destination_settings){
 
                 binding.bottomNavigation.visibility = View.VISIBLE
+                if (getFirstData){
+                    getFirstData= false
+                    Log.d("RoomHash", "${prefs.selectedAccount}")
+                }
 
             }else{
                 binding.bottomNavigation.visibility = View.GONE
@@ -194,7 +200,7 @@ class MainActivity : AppCompatActivity() {
                         userId = userId,
                         maxId = maxId,
                         rnkToken = Utils.generateUUID(),
-                        cookies
+                        prefs.allCookie
                     )
 
 
@@ -204,7 +210,7 @@ class MainActivity : AppCompatActivity() {
                 CoroutineScope(Dispatchers.IO).launch {
                     viewModel.getUserFollowers(
                         userId = userId,
-                        cookies = cookies,
+                        cookies = prefs.allCookie,
                         maxId = null,
                         rnkToken = null
                     )
@@ -226,7 +232,7 @@ class MainActivity : AppCompatActivity() {
                         userId = userId,
                         maxId = maxId,
                         rnkToken = Utils.generateUUID(),
-                        cookies
+                        prefs.allCookie
                     )
 
 
@@ -236,7 +242,7 @@ class MainActivity : AppCompatActivity() {
                 CoroutineScope(Dispatchers.IO).launch {
                     viewModel.getUserFollowers(
                         userId = userId,
-                        cookies = cookies,
+                        cookies = prefs.allCookie,
                         maxId = null,
                         rnkToken = null
                     )

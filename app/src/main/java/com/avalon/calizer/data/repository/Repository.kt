@@ -13,7 +13,7 @@ class Repository @Inject constructor(private val apiHelper: ApiHelper) {
 
     suspend fun getUserDetails(cookies: String,userId: Long) = apiHelper.getUserDetails(cookies,userId)
 
-     suspend fun getUserFollowers(userId:Long,maxId: String?,rnkToken:String?, cookies: String):Response<ApiResponseUserFollowers>{
+     suspend fun getUserFollowers(userId:Long,maxId: String?,rnkToken:String?, cookies: String?):Response<ApiResponseUserFollowers>{
         return ApiClient.API.getFollowers(userId,maxId,rnkToken,cookies)
     }
     suspend fun getUserFollowing(userId:Long,maxId: String?,rnkToken:String?, cookies: String):Response<ApiResponseUserFollowers>{
