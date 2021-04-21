@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.AccountsData
+import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.databinding.FragmentAccountsBinding
 import com.avalon.calizer.ui.accounts.adapters.AccountsAdapter
 import com.avalon.calizer.ui.accounts.adapters.SelectedUserInterface
@@ -48,6 +49,7 @@ class AccountsFragment  : Fragment() {
         prefs.userName = accountsData.userName
         prefs.selectedAccount = accountsData.dsUserID
         prefs.allCookie = accountsData.allCookie
+
         findNavController().navigate(R.id.action_destination_accounts_to_destination_profile)
     }
 
@@ -86,6 +88,15 @@ class AccountsFragment  : Fragment() {
                     }
                     is AccountsViewModel.LastAccountsState.UserDetails -> {
                         Log.d("StateTest", "User Details  ${it.userDetails.data?.user?.pk}")
+                        val accountInfo = AccountsInfoData(
+                            profilePic = it.userDetails.data?.user?.profilePicUrl,
+                            userName =  it.userDetails.data?.user?.username.toString(),
+                            userId =  it.userDetails.data?.user?.pk,
+                            followers = it.userDetails.data?.user?.followerCount?.toLong(),
+                            following = it.userDetails.data?.user?.followingCount?.toLong(),
+                            posts = it.userDetails.data?.user?.mediaCount?.toLong()
+                        )
+                        viewModel.setAccountInfo(accountInfo)
                         updateAccount(
                             profile_Pic = it.userDetails.data?.user?.profilePicUrl,
                             user_name = it.userDetails.data?.user?.username.toString(),

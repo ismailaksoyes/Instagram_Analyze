@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.avalon.calizer.databinding.ProfileFragmentBinding
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.loadPPUrl
@@ -23,6 +24,7 @@ import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.pow
@@ -31,11 +33,8 @@ import kotlin.math.sqrt
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = ProfileFragment()
-    }
 
-    private lateinit var viewModel: ProfileViewModel
+    @Inject lateinit var viewModel: ProfileViewModel
     private lateinit var binding: ProfileFragmentBinding
     private lateinit var barChart: BarChart
     private lateinit var chartList: List<PieData>
@@ -114,6 +113,27 @@ class ProfileFragment : Fragment() {
 
     fun findDistance(x1:Float,y1:Float,x2:Float,y2:Float):Float = sqrt((x2 - x1).pow(2) + (y2 - y1).pow(2))
 
+    fun initData(){
+       lifecycleScope.launchWhenStarted {
+           viewModel.userData.collect {
+               when(it){
+                   is  ProfileViewModel.UserDataFlow.Empty ->{
+
+                   }
+                   is ProfileViewModel.UserDataFlow.GetUserDetails->{
+
+                   }
+
+
+               }
+
+
+           }
+       }
+
+
+    }
+
     private fun setBarChart(){
         val entries = ArrayList<BarEntry>()
         entries.add(BarEntry(1f,5f))
@@ -179,10 +199,16 @@ class ProfileFragment : Fragment() {
     }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
+
         val imageUrl: String = "https://thispersondoesnotexist.com/image"
-        // TODO: Use the ViewModel
-        binding.ivProfilePageIm.loadPPUrl(imageUrl)
+       viewModel.getUserDetails(prefs.selectedAccount)
+        lifecycleScope.launchWhenStarted {
+            viewModel.userModel.collect {
+                Log.d("datatest","$it")
+            }
+        }
+
+      //  binding.ivProfilePageIm.loadPPUrl(imageUrl)
         barChart = binding.chartPie
         setBarChart()
         Glide.with(this)

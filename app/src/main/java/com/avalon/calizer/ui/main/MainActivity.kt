@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.Navigation
@@ -32,6 +34,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
@@ -71,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        initData()
         binding.bottomNavigation.itemIconTintList = null
 
 
@@ -87,6 +90,7 @@ class MainActivity : AppCompatActivity() {
                 binding.bottomNavigation.visibility = View.VISIBLE
                 if (getFirstData){
                     getFirstData= false
+                    viewModel.getUserDetails(prefs.selectedAccount)
                     Log.d("RoomHash", "${prefs.selectedAccount}")
                 }
 
@@ -140,6 +144,23 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    fun initData(){
+
+        lifecycleScope.launchWhenStarted {
+           viewModel.userData.collect {
+               when(it){
+                   is MainViewModel.UserDataFlow.GetUserDetails ->{
+                     Log.d("userDetails","${it.accountsInfoData}")
+
+                   }
+                   is MainViewModel.UserDataFlow.Empty->{
+
+                   }
+               }
+           }
+        }
+
+    }
 
     private fun followersData() {
         // if (PREFERENCES.firstLogin) {

@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey
 data class FollowersData(
     @PrimaryKey(autoGenerate = true)
     var pk: Long = 0L,
+    var analyzeUserId:Long = -1L,
+    var dsUserID: Long = -1L,
     var fullName: String = "",
     var hasAnonymousProfilePicture: Boolean = false,
     var isPrivate: Boolean = false,

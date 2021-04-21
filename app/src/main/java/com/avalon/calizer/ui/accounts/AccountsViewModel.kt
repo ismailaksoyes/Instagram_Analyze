@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.avalon.calizer.data.local.AccountsData
+import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.data.remote.insresponse.ApiResponseReelsTray
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserDetails
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollowers
@@ -60,6 +61,12 @@ class AccountsViewModel @Inject constructor(
             }
         }
 
+    }
+
+    fun setAccountInfo(accountsInfoData: AccountsInfoData){
+        viewModelScope.launch {
+            roomRepository.addAccountInfo(accountsInfoData)
+        }
     }
 
     fun getUserDetails(cookies: String, userId: Long) = viewModelScope.launch(Dispatchers.IO) {

@@ -3,6 +3,7 @@ package com.avalon.calizer.data.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.avalon.calizer.data.local.*
+import com.avalon.calizer.data.local.profile.AccountsInfoData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -10,6 +11,15 @@ import javax.inject.Inject
 
 
 class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
+
+
+    suspend fun addAccountInfo(accountsInfoData: AccountsInfoData){
+        roomDao.addAccountInfo(accountsInfoData)
+    }
+
+    suspend fun getUserInfo(userId:Long):AccountsInfoData{
+       return roomDao.getUserInfo(userId)
+    }
 
 
     suspend fun addAccount(accountsData: AccountsData) {

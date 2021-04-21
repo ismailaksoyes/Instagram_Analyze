@@ -8,10 +8,13 @@ import com.avalon.calizer.data.local.FollowersData
 import com.avalon.calizer.data.local.FollowingData
 import com.avalon.calizer.data.local.LastFollowersData
 import com.avalon.calizer.data.local.LastFollowingData
+import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollowers
 import com.avalon.calizer.data.repository.RoomRepository
 import com.avalon.calizer.data.repository.Repository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
@@ -21,6 +24,22 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
 
     val allFollowers:MutableLiveData<Response<ApiResponseUserFollowers>> = MutableLiveData()
     val noFollow:MutableLiveData<FollowingData> = MutableLiveData()
+
+    private val _userData = MutableStateFlow<UserDataFlow>(UserDataFlow.Empty)
+    val userData : StateFlow<UserDataFlow> = _userData
+
+
+    sealed class UserDataFlow{
+        object Empty : UserDataFlow()
+        data class GetUserDetails(var accountsInfoData: AccountsInfoData) :UserDataFlow()
+
+    }
+
+    fun getUserDetails(userId: Long){
+        viewModelScope.launch {
+            _userData.value = UserDataFlow.GetUserDetails(dbRepository.getUserInfo(userId))
+        }
+    }
 
     fun addFollowers(followersData:List<FollowersData>){
         viewModelScope.launch(Dispatchers.IO) {
