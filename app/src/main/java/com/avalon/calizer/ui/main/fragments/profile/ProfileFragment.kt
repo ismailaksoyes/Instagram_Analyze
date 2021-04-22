@@ -7,9 +7,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.avalon.calizer.R
+import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import com.avalon.calizer.databinding.ProfileFragmentBinding
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.loadPPUrl
@@ -143,13 +148,14 @@ class ProfileFragment : Fragment() {
         val barDataSet = BarDataSet(entries,"Test")
 
         val barDataSetColors = ArrayList<Int>()
-        barDataSetColors.add(Color.BLACK)
-        barDataSetColors.add(Color.GRAY)
-        barDataSetColors.add(Color.BLUE)
-        barDataSetColors.add(Color.RED)
-        barDataSetColors.add(Color.YELLOW)
 
-        barDataSet.colors = barDataSetColors
+//        barDataSetColors.add(Color.BLACK)
+//        barDataSetColors.add(Color.GRAY)
+//        barDataSetColors.add(Color.BLUE)
+//        barDataSetColors.add(Color.RED)
+//        barDataSetColors.add(Color.YELLOW)
+        barDataSet.setGradientColor(ContextCompat.getColor(requireContext(),R.color.graChartStart),ContextCompat.getColor(requireContext(),R.color.graChartEnd))
+      //  barDataSet.colors = barDataSetColors
         val entries2 = ArrayList<BarEntry>()
         entries2.add(BarEntry(1f,9f))
         entries2.add(BarEntry(2f,5f))
@@ -193,7 +199,7 @@ class ProfileFragment : Fragment() {
         barChart.setPinchZoom(false)
         barChart.setDrawBarShadow(false)
         barChart.setScaleEnabled(false)
-        barChart.animateY(5000)
+       // barChart.animateY(5000)
         barChart.invalidate()
 
     }
@@ -201,10 +207,17 @@ class ProfileFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val imageUrl: String = "https://thispersondoesnotexist.com/image"
+
        viewModel.getUserDetails(prefs.selectedAccount)
+
+        binding.clGoAccounts.setOnClickListener {
+            it.findNavController().navigate(R.id.action_destination_profile_to_destination_accounts)
+        }
+
         lifecycleScope.launchWhenStarted {
             viewModel.userModel.collect {
                 Log.d("datatest","$it")
+                binding.viewmodel = viewModel
             }
         }
 
@@ -221,8 +234,8 @@ class ProfileFragment : Fragment() {
                 }
             })
 
-        binding.ivPpAnalyze.loadPPUrl(imageUrl)
-        binding.tvProfileUsername.text = prefs.userName?:"nll"
+       // binding.ivPpAnalyze.loadPPUrl(imageUrl)
+       // binding.tvProfileUsername.text = prefs.userName?:"nll"
 
 
 

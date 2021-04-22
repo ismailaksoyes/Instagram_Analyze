@@ -17,6 +17,9 @@
             app:exitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@id/destination_profile"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_destination_profile_to_destination_accounts"
+            app:destination="@id/destination_accounts" />
     </fragment>
     <fragment
         android:id="@+id/destination_analyze"

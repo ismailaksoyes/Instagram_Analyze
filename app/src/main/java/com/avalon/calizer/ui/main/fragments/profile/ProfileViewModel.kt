@@ -1,5 +1,6 @@
 package com.avalon.calizer.ui.main.fragments.profile
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.avalon.calizer.data.local.profile.AccountsInfoData
@@ -15,8 +16,11 @@ class ProfileViewModel @Inject constructor(private val dbRepository: RoomReposit
     private val _userData = MutableStateFlow<UserDataFlow>(UserDataFlow.Empty)
     val userData : StateFlow<UserDataFlow> = _userData
 
+    val userDetailsData = MutableLiveData<AccountsInfoData>()
+
     private val _userModel  = MutableStateFlow(AccountsInfoData())
     val userModel : StateFlow<AccountsInfoData> = _userModel
+
 
 
     sealed class UserDataFlow{
@@ -27,7 +31,8 @@ class ProfileViewModel @Inject constructor(private val dbRepository: RoomReposit
 
     fun getUserDetails(userId: Long){
         viewModelScope.launch {
-            _userModel.value = dbRepository.getUserInfo(userId)
+            _userModel.emit(dbRepository.getUserInfo(userId))
+
         }
     }
 

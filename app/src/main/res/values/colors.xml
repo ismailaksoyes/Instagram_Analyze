@@ -12,5 +12,7 @@
     <color name="lightRed">#f65757</color>
     <color name="navigationTextColor">#333333</color>
     <color name="colorTrans">#00FFFFFF</color>
+    <color name="graChartStart">#bdc3c7</color>
+    <color name="graChartEnd">#2c3e50</color>
 
 </resources>
