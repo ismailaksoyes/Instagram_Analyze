@@ -14,5 +14,9 @@
     <color name="colorTrans">#00FFFFFF</color>
     <color name="graChartStart">#bdc3c7</color>
     <color name="graChartEnd">#2c3e50</color>
+    <color name="colorGrey">#b2bec3</color>
+    <color name="pieRed">#FF5B60</color>
+    <color name="pieBlue">#22C5FA</color>
+    <color name="piePurple">#9A59F5</color>
 
 </resources>

@@ -1,33 +1,29 @@
 package com.avalon.calizer.ui.main.fragments.profile
 
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.avalon.calizer.R
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
+import com.avalon.calizer.R
 import com.avalon.calizer.databinding.ProfileFragmentBinding
 import com.avalon.calizer.utils.MySharedPreferences
-import com.avalon.calizer.utils.loadPPUrl
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
-import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.charts.RadarChart
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.face.*
+import com.google.mlkit.vision.face.FaceDetection
+import com.google.mlkit.vision.face.FaceDetectorOptions
+import com.google.mlkit.vision.face.FaceLandmark
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
@@ -35,17 +31,19 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
+
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
 
-    @Inject lateinit var viewModel: ProfileViewModel
+    @Inject
+    lateinit var viewModel: ProfileViewModel
     private lateinit var binding: ProfileFragmentBinding
-    private lateinit var barChart: BarChart
+    private lateinit var radarChart: RadarChart
     private lateinit var chartList: List<PieData>
 
     @Inject
-    lateinit var prefs:MySharedPreferences
+    lateinit var prefs: MySharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -116,52 +114,93 @@ class ProfileFragment : Fragment() {
 
     }
 
-    fun findDistance(x1:Float,y1:Float,x2:Float,y2:Float):Float = sqrt((x2 - x1).pow(2) + (y2 - y1).pow(2))
+    fun findDistance(x1: Float, y1: Float, x2: Float, y2: Float): Float = sqrt(
+        (x2 - x1).pow(2) + (y2 - y1).pow(
+            2
+        )
+    )
 
-    fun initData(){
-       lifecycleScope.launchWhenStarted {
-           viewModel.userData.collect {
-               when(it){
-                   is  ProfileViewModel.UserDataFlow.Empty ->{
+    fun initData() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.userData.collect {
+                when (it) {
+                    is ProfileViewModel.UserDataFlow.Empty -> {
 
-                   }
-                   is ProfileViewModel.UserDataFlow.GetUserDetails->{
+                    }
+                    is ProfileViewModel.UserDataFlow.GetUserDetails -> {
 
-                   }
-
-
-               }
+                    }
 
 
-           }
-       }
+                }
+
+
+            }
+        }
 
 
     }
 
-    private fun setBarChart(){
-        val entries = ArrayList<BarEntry>()
-        entries.add(BarEntry(1f,5f))
-        entries.add(BarEntry(2f,9f))
-        entries.add(BarEntry(3f,4f))
-
-        val barDataSet = BarDataSet(entries,"Test")
+    private fun setupPieChart() {
+        radarChart = binding.chartPie
+        val radarEntires = ArrayList<RadarEntry>()
+        radarEntires.add(RadarEntry(90F))
+        radarEntires.add(RadarEntry(10F))
+        radarEntires.add(RadarEntry(30F))
+        radarEntires.add(RadarEntry(30F))
+        radarEntires.add(RadarEntry(30F))
 
         val barDataSetColors = ArrayList<Int>()
+        barDataSetColors.add(ContextCompat.getColor(requireContext(),R.color.pieRed))
+        barDataSetColors.add(ContextCompat.getColor(requireContext(),R.color.pieBlue))
+        barDataSetColors.add(ContextCompat.getColor(requireContext(),R.color.colorGrey))
 
+
+        val radarDataSet = RadarDataSet(radarEntires, "Test")
+        radarDataSet.colors = barDataSetColors
+        val radarData = RadarData(radarDataSet)
+        radarChart.data = radarData
+        // pieChart.setTouchEnabled(false)
+        radarChart.description.isEnabled = false
+        radarChart.legend.isEnabled = false
+
+
+
+
+
+
+
+    }
+
+    private fun setBarChart() {
+        val entries = ArrayList<BarEntry>()
+        entries.add(BarEntry(1f, 5f))
+        entries.add(BarEntry(2f, 9f))
+        entries.add(BarEntry(3f, 4f))
+
+        val barDataSet = BarDataSet(entries, "Test")
+
+        val barDataSetColors = ArrayList<Int>()
 //        barDataSetColors.add(Color.BLACK)
 //        barDataSetColors.add(Color.GRAY)
 //        barDataSetColors.add(Color.BLUE)
 //        barDataSetColors.add(Color.RED)
 //        barDataSetColors.add(Color.YELLOW)
-        barDataSet.setGradientColor(ContextCompat.getColor(requireContext(),R.color.graChartStart),ContextCompat.getColor(requireContext(),R.color.graChartEnd))
-      //  barDataSet.colors = barDataSetColors
-        val entries2 = ArrayList<BarEntry>()
-        entries2.add(BarEntry(1f,9f))
-        entries2.add(BarEntry(2f,5f))
-        entries2.add(BarEntry(3f,2f))
 
-        val barDataSet2 = BarDataSet(entries2,"Test")
+
+        barDataSet.setGradientColor(
+            ContextCompat.getColor(requireContext(), R.color.graChartStart), ContextCompat.getColor(
+                requireContext(),
+                R.color.graChartEnd
+            )
+        )
+        //  barDataSet.colors = barDataSetColors
+        val entries2 = ArrayList<BarEntry>()
+        entries2.add(BarEntry(1f, 9f))
+        entries2.add(BarEntry(2f, 5f))
+        entries2.add(BarEntry(3f, 2f))
+
+        val barDataSet2 = BarDataSet(entries2, "Test")
 
         val allDataSet = ArrayList<BarDataSet>()
         allDataSet.add(barDataSet)
@@ -172,43 +211,45 @@ class ProfileFragment : Fragment() {
         val barSpace = 0f
         val barWidth = 0.45f
         data.barWidth = barWidth
-        barChart.data = data
-        barChart.xAxis.axisMinimum= 0f
-        barChart.xAxis.axisMaximum = 3f
-        barChart.groupBars(0f,groupSpace,barSpace)
-        barChart.setTouchEnabled(false)
-        barChart.isDoubleTapToZoomEnabled = false
-        barChart.setDrawBorders(false)
-        barChart.legend.isEnabled = false
-
-        barChart.setDrawGridBackground(false)
-        barChart.description.isEnabled = false
-
-        barChart.axisLeft.setDrawGridLines(false)
-        barChart.axisLeft.setDrawLabels(false)
-        barChart.axisLeft.setDrawAxisLine(false)
-
-        barChart.axisRight.setDrawGridLines(false)
-        barChart.axisRight.setDrawLabels(false)
-        barChart.axisRight.setDrawAxisLine(false)
-
-        barChart.xAxis.setDrawGridLines(false)
-        barChart.xAxis.setDrawLabels(false)
-        barChart.xAxis.setDrawAxisLine(false)
-
-        barChart.setPinchZoom(false)
-        barChart.setDrawBarShadow(false)
-        barChart.setScaleEnabled(false)
-       // barChart.animateY(5000)
-        barChart.invalidate()
+//        barChart.data = data
+//        barChart.xAxis.axisMinimum= 0f
+//        barChart.xAxis.axisMaximum = 3f
+//        barChart.groupBars(0f,groupSpace,barSpace)
+//        barChart.setTouchEnabled(false)
+//        barChart.isDoubleTapToZoomEnabled = false
+//        barChart.setDrawBorders(false)
+//        barChart.legend.isEnabled = false
+//
+//        barChart.setDrawGridBackground(false)
+//        barChart.description.isEnabled = false
+//
+//        barChart.axisLeft.setDrawGridLines(false)
+//        barChart.axisLeft.setDrawLabels(false)
+//        barChart.axisLeft.setDrawAxisLine(false)
+//
+//        barChart.axisRight.setDrawGridLines(false)
+//        barChart.axisRight.setDrawLabels(false)
+//        barChart.axisRight.setDrawAxisLine(false)
+//
+//        barChart.xAxis.setDrawGridLines(false)
+//        barChart.xAxis.setDrawLabels(false)
+//        barChart.xAxis.setDrawAxisLine(false)
+//
+//        barChart.setPinchZoom(false)
+//        barChart.setDrawBarShadow(false)
+//        barChart.setScaleEnabled(false)
+//       // barChart.animateY(5000)
+//        barChart.invalidate()
 
     }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         val imageUrl: String = "https://thispersondoesnotexist.com/image"
 
-       viewModel.getUserDetails(prefs.selectedAccount)
+        viewModel.getUserDetails(prefs.selectedAccount)
+        setupPieChart()
 
         binding.clGoAccounts.setOnClickListener {
             it.findNavController().navigate(R.id.action_destination_profile_to_destination_accounts)
@@ -216,14 +257,12 @@ class ProfileFragment : Fragment() {
 
         lifecycleScope.launchWhenStarted {
             viewModel.userModel.collect {
-                Log.d("datatest","$it")
+                Log.d("datatest", "$it")
                 binding.viewmodel = viewModel
             }
         }
 
-      //  binding.ivProfilePageIm.loadPPUrl(imageUrl)
-        barChart = binding.chartPie
-        setBarChart()
+
         Glide.with(this)
             .asBitmap()
             .load(imageUrl)
@@ -233,10 +272,6 @@ class ProfileFragment : Fragment() {
 
                 }
             })
-
-       // binding.ivPpAnalyze.loadPPUrl(imageUrl)
-       // binding.tvProfileUsername.text = prefs.userName?:"nll"
-
 
 
     }

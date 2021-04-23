@@ -167,7 +167,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:textColor="@color/navigationTextColor"/>
 
-    <com.github.mikephil.charting.charts.BarChart
+    <com.github.mikephil.charting.charts.RadarChart
         android:id="@+id/chart_pie"
         android:layout_width="match_parent"
         android:layout_height="200dp"
