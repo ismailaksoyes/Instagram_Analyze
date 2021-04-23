@@ -20,6 +20,7 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.charts.RadarChart
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
+import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
@@ -143,12 +144,18 @@ class ProfileFragment : Fragment() {
 
     private fun setupPieChart() {
         radarChart = binding.chartPie
-        val radarEntires = ArrayList<RadarEntry>()
-        radarEntires.add(RadarEntry(90F))
-        radarEntires.add(RadarEntry(10F))
-        radarEntires.add(RadarEntry(30F))
-        radarEntires.add(RadarEntry(30F))
-        radarEntires.add(RadarEntry(30F))
+        val radarEntires1 = ArrayList<RadarEntry>()
+        radarEntires1.add(RadarEntry(10F))
+        radarEntires1.add(RadarEntry(10F))
+        radarEntires1.add(RadarEntry(70F))
+        radarEntires1.add(RadarEntry(60F))
+        radarEntires1.add(RadarEntry(50F))
+        val radarEntires2 = ArrayList<RadarEntry>()
+        radarEntires2.add(RadarEntry(20F))
+        radarEntires2.add(RadarEntry(15F))
+        radarEntires2.add(RadarEntry(70F))
+        radarEntires2.add(RadarEntry(40F))
+        radarEntires2.add(RadarEntry(5F))
 
         val barDataSetColors = ArrayList<Int>()
         barDataSetColors.add(ContextCompat.getColor(requireContext(),R.color.pieRed))
@@ -156,13 +163,33 @@ class ProfileFragment : Fragment() {
         barDataSetColors.add(ContextCompat.getColor(requireContext(),R.color.colorGrey))
 
 
-        val radarDataSet = RadarDataSet(radarEntires, "Test")
-        radarDataSet.colors = barDataSetColors
-        val radarData = RadarData(radarDataSet)
+
+        val radarDataSet1 = RadarDataSet(radarEntires1, "")
+        val radarDataSet2= RadarDataSet(radarEntires2, "")
+        radarDataSet1.fillColor = ContextCompat.getColor(requireContext(),R.color.pieRed)
+        radarDataSet1.setDrawFilled(true)
+        radarDataSet1.setDrawHighlightIndicators(false)
+        radarDataSet1.isDrawHighlightCircleEnabled = true
+        radarDataSet1.lineWidth = 2f
+        radarDataSet1.fillAlpha =180
+        radarDataSet2.fillColor = ContextCompat.getColor(requireContext(),R.color.pieBlue)
+        radarDataSet2.setDrawFilled(true)
+        radarDataSet2.setDrawHighlightIndicators(false)
+        radarDataSet2.isDrawHighlightCircleEnabled = true
+        radarDataSet2.lineWidth = 2f
+        radarDataSet2.fillAlpha =180
+        val radarDataArray = ArrayList<RadarDataSet>()
+        radarDataArray.add(radarDataSet1)
+        radarDataArray.add(radarDataSet2)
+
+        val radarData = RadarData(radarDataArray as List<IRadarDataSet>?)
+        radarData.setDrawValues(false)
         radarChart.data = radarData
         // pieChart.setTouchEnabled(false)
         radarChart.description.isEnabled = false
         radarChart.legend.isEnabled = false
+        radarChart.invalidate()
+        radarChart.webLineWidth = 1f
 
 
 
