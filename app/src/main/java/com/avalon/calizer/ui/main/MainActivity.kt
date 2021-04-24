@@ -78,7 +78,6 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.itemIconTintList = null
 
 
-
         val navController = Navigation.findNavController(this, R.id.navHostFragment)
         setupBottomNavigationMenu(navController)
         binding.bottomNavigation.setOnNavigationItemReselectedListener {
@@ -100,7 +99,27 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+        lifecycleScope.launchWhenStarted {
+            viewModel.followersData.collect {
+                when(it){
+                    is MainViewModel.FollowersDataFlow.GetFollowersDataSync ->{
+                        it.followers.data?.users.let { users->
+                            for (data in users!!){
+                                Log.d("Users",data.toString())
+                            }
+                        }
 
+                    }
+                    is MainViewModel.FollowersDataFlow.GetFollowersDataSuccess->{
+                        it.followers.data?.users.let { users->
+                            for (data in users!!){
+                                Log.d("Users",data.toString())
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         //val dbRepository = RoomRepository(roomDao)
         //val repository = Repository()
@@ -150,7 +169,7 @@ class MainActivity : AppCompatActivity() {
            viewModel.userData.collect {
                when(it){
                    is MainViewModel.UserDataFlow.GetUserDetails ->{
-                     Log.d("userDetails","${it.accountsInfoData}")
+
 
                    }
                    is MainViewModel.UserDataFlow.Empty->{
@@ -212,9 +231,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun getFollowersList(maxId: String? = null, userId: Long): Job {
-        return CoroutineScope(Dispatchers.IO).launch {
-            delay((500 + (0..250).random()).toLong())
+    fun getFollowersList(maxId: String? = null, userId: Long) {
+
+
             if (!maxId.isNullOrEmpty()) {
                 CoroutineScope(Dispatchers.IO).launch {
                     viewModel.getUserFollowers(
@@ -242,7 +261,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-    }
 
     fun getFollowingList(maxId: String? = null, userId: Long): Job {
         return CoroutineScope(Dispatchers.IO).launch {
