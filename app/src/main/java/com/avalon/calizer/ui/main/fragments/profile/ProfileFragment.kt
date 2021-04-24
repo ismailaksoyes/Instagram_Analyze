@@ -1,6 +1,7 @@
 package com.avalon.calizer.ui.main.fragments.profile
 
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -145,34 +146,34 @@ class ProfileFragment : Fragment() {
     private fun setupPieChart() {
         radarChart = binding.chartPie
         val radarEntires1 = ArrayList<RadarEntry>()
-        radarEntires1.add(RadarEntry(10F))
-        radarEntires1.add(RadarEntry(10F))
-        radarEntires1.add(RadarEntry(70F))
-        radarEntires1.add(RadarEntry(60F))
-        radarEntires1.add(RadarEntry(50F))
         val radarEntires2 = ArrayList<RadarEntry>()
-        radarEntires2.add(RadarEntry(20F))
-        radarEntires2.add(RadarEntry(15F))
-        radarEntires2.add(RadarEntry(70F))
-        radarEntires2.add(RadarEntry(40F))
-        radarEntires2.add(RadarEntry(5F))
+
+        for(i in 1..5){
+            val val1 = (Math.random() * 80) + 20
+            radarEntires1.add(RadarEntry(val1.toFloat()))
+            val val2 = (Math.random() * 80) + 20
+            radarEntires2.add(RadarEntry(val2.toFloat()))
+        }
 
         val barDataSetColors = ArrayList<Int>()
         barDataSetColors.add(ContextCompat.getColor(requireContext(),R.color.pieRed))
         barDataSetColors.add(ContextCompat.getColor(requireContext(),R.color.pieBlue))
-        barDataSetColors.add(ContextCompat.getColor(requireContext(),R.color.colorGrey))
+      //  barDataSetColors.add(ContextCompat.getColor(requireContext(),R.color.colorGrey))
 
 
 
         val radarDataSet1 = RadarDataSet(radarEntires1, "")
         val radarDataSet2= RadarDataSet(radarEntires2, "")
-        radarDataSet1.fillColor = ContextCompat.getColor(requireContext(),R.color.pieRed)
+        radarDataSet1.fillColor = Color.rgb(103, 110, 129)
+        radarDataSet1.color = Color.rgb(103, 110, 129)
         radarDataSet1.setDrawFilled(true)
         radarDataSet1.setDrawHighlightIndicators(false)
         radarDataSet1.isDrawHighlightCircleEnabled = true
         radarDataSet1.lineWidth = 2f
         radarDataSet1.fillAlpha =180
-        radarDataSet2.fillColor = ContextCompat.getColor(requireContext(),R.color.pieBlue)
+
+        radarDataSet2.fillColor = Color.rgb(121, 162, 175)
+        radarDataSet2.color = Color.rgb(121, 162, 175)
         radarDataSet2.setDrawFilled(true)
         radarDataSet2.setDrawHighlightIndicators(false)
         radarDataSet2.isDrawHighlightCircleEnabled = true
@@ -183,13 +184,15 @@ class ProfileFragment : Fragment() {
         radarDataArray.add(radarDataSet2)
 
         val radarData = RadarData(radarDataArray as List<IRadarDataSet>?)
-        radarData.setDrawValues(false)
+       radarData.setDrawValues(false)
         radarChart.data = radarData
-        // pieChart.setTouchEnabled(false)
         radarChart.description.isEnabled = false
         radarChart.legend.isEnabled = false
-        radarChart.invalidate()
         radarChart.webLineWidth = 1f
+        radarChart.setTouchEnabled(false)
+        radarChart.yAxis.setDrawLabels(false)
+        radarChart.invalidate()
+
 
 
 
