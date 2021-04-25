@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
     private val followersLastList = ArrayList<LastFollowersData>()
 
     private fun setupBottomNavigationMenu(navController: NavController) {
-        binding.bottomNavigation?.let {
+        binding.bottomNavigation.let {
             NavigationUI.setupWithNavController(it, navController)
         }
 
@@ -90,7 +90,16 @@ class MainActivity : AppCompatActivity() {
                 if (getFirstData){
                     getFirstData= false
                     viewModel.getUserDetails(prefs.selectedAccount)
-                    Log.d("RoomHash", "${prefs.selectedAccount}")
+                    val timeControl:Boolean = true
+                    if(timeControl){
+                        viewModel.getUserFollowers(
+                            userId = prefs.selectedAccount,
+                            maxId = null,
+                            rnkToken = null,
+                            cookies = prefs.allCookie
+                        )
+                    }
+
                 }
 
             }else{
@@ -99,42 +108,53 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
         lifecycleScope.launchWhenStarted {
             viewModel.followersData.collect {
                 when(it){
                     is MainViewModel.FollowersDataFlow.GetFollowersDataSync ->{
-                        it.followers.data?.users.let { users->
-                            for (data in users!!){
-                                Log.d("Users",data.toString())
+                        delay((5000 + (0..250).random()).toLong())
+                        it.followers.data?.let { users->
+                            viewModel.getUserFollowers(
+                                userId = prefs.selectedAccount,
+                                maxId = users.nextMaxId,
+                                rnkToken = Utils.generateUUID(),
+                                cookies = prefs.allCookie
+                            )
+                            addFollowersList(users)
+                            for (data in users.users){
+                               // Log.d("Users",data.toString())
+
                             }
                         }
 
                     }
                     is MainViewModel.FollowersDataFlow.GetFollowersDataSuccess->{
-                        it.followers.data?.users.let { users->
-                            for (data in users!!){
-                                Log.d("Users",data.toString())
+                        it.followers.data?.let { users->
+                            addFollowersList(users)
+                            for (data in users.users){
+                               // Log.d("Users",data.toString())
                             }
+                        }
+                    }
+                    is MainViewModel.FollowersDataFlow.GetUserCookies->{
+                        it.accountsData.let { userInfo->
+                            viewModel.getUserFollowers(
+                                userId = userInfo.dsUserID,
+                                maxId = null,
+                                cookies = userInfo.allCookie,
+                                rnkToken = null
+                            )
                         }
                     }
                 }
             }
         }
 
-        //val dbRepository = RoomRepository(roomDao)
-        //val repository = Repository()
-        // val factory = MainViewModelFactory(dbRepository, repository)
-        // viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
-        // PREFERENCES.firstLogin = true
-        // if (!PREFERENCES.allCookie.isNullOrEmpty()) {
-        //    cookies = PREFERENCES.allCookie!!
+
         //    if (Utils.getTimeStatus(PREFERENCES.followersUpdateDate)) {
-
-        //  getFollowersList(userId = "19748713375")
-
         // PREFERENCES.followersUpdateDate = System.currentTimeMillis()
-        //      }
-        //   }
+
 
         viewModel.allFollowers.observe(this, Observer { response ->
             if (response.isSuccessful) {
@@ -151,7 +171,7 @@ class MainActivity : AppCompatActivity() {
                     followersData()
                 }
 
-                setRoomFollowers(response.body())
+              //  setRoomFollowers(response.body())
             }
         })
 
@@ -200,7 +220,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setRoomFollowers(followersData: ApiResponseUserFollowers?) {
+    private fun addFollowersList(followersData: ApiResponseUserFollowers?) {
 
         if (followersData != null) {
 
@@ -223,9 +243,10 @@ class MainActivity : AppCompatActivity() {
                 oldList.username = data.username
                 followersLastList.add(newList)
                 followersList.add(oldList)
-
             }
 
+            Log.d("Users","last data -> ${followersLastList.size}")
+            Log.d("Users","data -> ${followersList.size}")
 
         }
 

@@ -4,10 +4,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.avalon.calizer.data.local.FollowersData
-import com.avalon.calizer.data.local.FollowingData
-import com.avalon.calizer.data.local.LastFollowersData
-import com.avalon.calizer.data.local.LastFollowingData
+import com.avalon.calizer.data.local.*
 import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollowers
 import com.avalon.calizer.data.repository.RoomRepository
@@ -42,6 +39,7 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
 
     sealed class FollowersDataFlow{
         object Empty : FollowersDataFlow()
+        data class GetUserCookies(var accountsData: AccountsData):FollowersDataFlow()
         data class GetFollowersDataSync(var followers:  Resource<ApiResponseUserFollowers>) :FollowersDataFlow()
         data class GetFollowersDataSuccess(var followers:  Resource<ApiResponseUserFollowers>) :FollowersDataFlow()
         data class Error(val error: String) : FollowersDataFlow()
@@ -50,6 +48,12 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
     fun getUserDetails(userId: Long){
         viewModelScope.launch {
             _userData.value = UserDataFlow.GetUserDetails(dbRepository.getUserInfo(userId))
+        }
+    }
+
+    fun getUserCookies(userId: Long){
+        viewModelScope.launch(Dispatchers.IO) {
+            _followersData.value = FollowersDataFlow.GetUserCookies(dbRepository.getAccountCookies(userId))
         }
     }
 
@@ -83,11 +87,13 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
         }
     }
      fun getUserFollowers(userId:Long,maxId: String?,rnkToken:String?, cookies: String?){
+
         viewModelScope.launch(Dispatchers.IO) {
+
             repository.getUserFollowers(userId,maxId,rnkToken,cookies).let {
                 if (it.isSuccessful){
                     if (!it.body()?.nextMaxId.isNullOrEmpty()){
-                        delay((500 + (0..250).random()).toLong())
+
                         _followersData.value = FollowersDataFlow.GetFollowersDataSync(Resource.success(it.body()))
                     }else{
                         _followersData.value = FollowersDataFlow.GetFollowersDataSuccess(Resource.success(it.body()))

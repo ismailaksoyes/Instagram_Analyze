@@ -21,6 +21,10 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
        return roomDao.getUserInfo(userId)
     }
 
+    suspend fun getAccountCookies(userId: Long):AccountsData{
+        return roomDao.getUserCookies(userId)
+    }
+
 
     suspend fun addAccount(accountsData: AccountsData) {
         roomDao.addAccount(accountsData)

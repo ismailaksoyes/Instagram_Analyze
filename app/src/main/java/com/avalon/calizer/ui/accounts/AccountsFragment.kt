@@ -75,7 +75,6 @@ class AccountsFragment  : Fragment() {
                     }
                     is AccountsViewModel.LastAccountsState.Success -> {
                         Log.d("StateTest", "Success")
-                        // accountsAdapter.setData(it.allAccounts)
                         setAdapterData(it.allAccounts)
 
                     }
