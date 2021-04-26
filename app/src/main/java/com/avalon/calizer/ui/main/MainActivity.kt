@@ -1,42 +1,30 @@
 package com.avalon.calizer.ui.main
 
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
-import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
-import androidx.navigation.ui.setupWithNavController
-import androidx.viewpager.widget.ViewPager
-import com.avalon.calizer.databinding.ActivityMainBinding
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.FollowersData
 import com.avalon.calizer.data.local.LastFollowersData
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollowers
-import com.avalon.calizer.ui.main.fragments.MainViewPagerAdapter
-import com.avalon.calizer.ui.main.fragments.analyze.AnalyzeFragment
-import com.avalon.calizer.ui.main.fragments.profile.ProfileFragment
-import com.avalon.calizer.ui.main.fragments.settings.SettingsFragment
+import com.avalon.calizer.databinding.ActivityMainBinding
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Utils
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -51,6 +39,7 @@ class MainActivity : AppCompatActivity() {
 
     private val followersList = ArrayList<FollowersData>()
     private val followersLastList = ArrayList<LastFollowersData>()
+    private val followersHashMap = HashMap<String, String>()
 
     private fun setupBottomNavigationMenu(navController: NavController) {
         binding.bottomNavigation.let {
@@ -112,9 +101,9 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launchWhenStarted {
             viewModel.followersData.collect {
                 when(it){
-                    is MainViewModel.FollowersDataFlow.GetFollowersDataSync ->{
+                    is MainViewModel.FollowersDataFlow.GetFollowersDataSync -> {
                         delay((5000 + (0..250).random()).toLong())
-                        it.followers.data?.let { users->
+                        it.followers.data?.let { users ->
                             viewModel.getUserFollowers(
                                 userId = prefs.selectedAccount,
                                 maxId = users.nextMaxId,
@@ -122,23 +111,17 @@ class MainActivity : AppCompatActivity() {
                                 cookies = prefs.allCookie
                             )
                             addFollowersList(users)
-                            for (data in users.users){
-                               // Log.d("Users",data.toString())
 
-                            }
                         }
 
                     }
-                    is MainViewModel.FollowersDataFlow.GetFollowersDataSuccess->{
-                        it.followers.data?.let { users->
+                    is MainViewModel.FollowersDataFlow.GetFollowersDataSuccess -> {
+                        it.followers.data?.let { users ->
                             addFollowersList(users)
-                            for (data in users.users){
-                               // Log.d("Users",data.toString())
-                            }
                         }
                     }
-                    is MainViewModel.FollowersDataFlow.GetUserCookies->{
-                        it.accountsData.let { userInfo->
+                    is MainViewModel.FollowersDataFlow.GetUserCookies -> {
+                        it.accountsData.let { userInfo ->
                             viewModel.getUserFollowers(
                                 userId = userInfo.dsUserID,
                                 maxId = null,
@@ -171,7 +154,7 @@ class MainActivity : AppCompatActivity() {
                     followersData()
                 }
 
-              //  setRoomFollowers(response.body())
+                //  setRoomFollowers(response.body())
             }
         })
 
@@ -188,11 +171,11 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launchWhenStarted {
            viewModel.userData.collect {
                when(it){
-                   is MainViewModel.UserDataFlow.GetUserDetails ->{
+                   is MainViewModel.UserDataFlow.GetUserDetails -> {
 
 
                    }
-                   is MainViewModel.UserDataFlow.Empty->{
+                   is MainViewModel.UserDataFlow.Empty -> {
 
                    }
                }
@@ -224,7 +207,9 @@ class MainActivity : AppCompatActivity() {
 
         if (followersData != null) {
 
+
             for (data in followersData.users) {
+
                 val newList = LastFollowersData()
                 val oldList = FollowersData()
                 newList.pk = data.pk
@@ -245,8 +230,8 @@ class MainActivity : AppCompatActivity() {
                 followersList.add(oldList)
             }
 
-            Log.d("Users","last data -> ${followersLastList.size}")
-            Log.d("Users","data -> ${followersList.size}")
+            Log.d("Users", "last data -> ${followersLastList.size}")
+            Log.d("Users", "data -> ${followersList.size}")
 
         }
 
