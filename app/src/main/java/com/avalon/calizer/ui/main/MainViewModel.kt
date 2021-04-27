@@ -1,6 +1,5 @@
 package com.avalon.calizer.ui.main
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,10 +8,8 @@ import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollowers
 import com.avalon.calizer.data.repository.RoomRepository
 import com.avalon.calizer.data.repository.Repository
-import com.avalon.calizer.ui.accounts.AccountsViewModel
 import com.avalon.calizer.utils.Resource
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -23,7 +20,7 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
 
 
     val allFollowers:MutableLiveData<Response<ApiResponseUserFollowers>> = MutableLiveData()
-    val noFollow:MutableLiveData<FollowingData> = MutableLiveData()
+   // val noFollow:MutableLiveData<FollowingData> = MutableLiveData()
 
     private val _userData = MutableStateFlow<UserDataFlow>(UserDataFlow.Empty)
     val userData : StateFlow<UserDataFlow> = _userData
@@ -57,12 +54,14 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
         }
     }
 
-    fun addFollowers(followersData:List<FollowersData>){
+    fun addFollowers(followData:List<FollowData>){
         viewModelScope.launch(Dispatchers.IO) {
 
-            dbRepository.addFollowers(followersData)
+            dbRepository.addFollowers(followData)
         }
     }
+
+    /**
     fun addLastFollowers(followersData: List<LastFollowersData>){
         viewModelScope.launch(Dispatchers.IO) {
 
@@ -86,6 +85,7 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
             dbRepository.getNotFollow()
         }
     }
+    **/
      fun getUserFollowers(userId:Long,maxId: String?,rnkToken:String?, cookies: String?){
 
         viewModelScope.launch(Dispatchers.IO) {

@@ -1,7 +1,6 @@
 package com.avalon.calizer.data.repository
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import com.avalon.calizer.data.local.*
 import com.avalon.calizer.data.local.profile.AccountsInfoData
 import kotlinx.coroutines.CoroutineScope
@@ -38,25 +37,19 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
         roomDao.updateAccountData(profile_Pic,user_name,ds_userId)
     }
 
-    suspend fun addCookie(roomData: RoomData) {
-        roomDao.addCookie(roomData)
-    }
 
-    suspend fun getCookies(): RoomData {
-        return roomDao.readAllData()
-    }
 
-    suspend fun getNotFollow(): List<FollowersData> {
-        return roomDao.getUnFollowers()
-    }
+//    suspend fun getNotFollow(): List<FollowData> {
+//        return roomDao.getUnFollowers()
+//    }
 
-    suspend fun addFollowers(followersData: List<FollowersData>) {
+    suspend fun addFollowers(followData: List<FollowData>) {
         CoroutineScope(Dispatchers.IO).launch {
-            roomDao.addFollowers(followersData)
+            roomDao.addFollowers(followData)
         }
 
     }
-
+    /**
     suspend fun addLastFollowers(followersData: List<LastFollowersData>) {
         CoroutineScope(Dispatchers.IO).launch {
             Log.d("Response", followersData.size.toString())
@@ -79,12 +72,12 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
         }
     }
 
-    suspend fun getFollowers(): List<FollowersData> {
+    suspend fun getFollowers(): List<FollowData> {
         return roomDao.getFollowers()
     }
 
     suspend fun getFollowing(): List<FollowingData> {
         return roomDao.getFollowing()
     }
-
+    **/
 }

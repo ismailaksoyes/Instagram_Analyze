@@ -14,8 +14,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
 import com.avalon.calizer.R
-import com.avalon.calizer.data.local.FollowersData
-import com.avalon.calizer.data.local.LastFollowersData
+import com.avalon.calizer.data.local.FollowData
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollowers
 import com.avalon.calizer.databinding.ActivityMainBinding
 import com.avalon.calizer.utils.MySharedPreferences
@@ -37,9 +36,8 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var prefs: MySharedPreferences
 
-    private val followersList = ArrayList<FollowersData>()
-    private val followersLastList = ArrayList<LastFollowersData>()
-    private val followersHashMap = HashMap<String, String>()
+    private val followersList = ArrayList<FollowData>()
+    private var followersHashMap = HashMap<String, String>()
 
     private fun setupBottomNavigationMenu(navController: NavController) {
         binding.bottomNavigation.let {
@@ -158,10 +156,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.noFollow.observe(this, Observer { response ->
-            Log.d("Response", "" + response.username)
 
-        })
 
 
     }
@@ -188,17 +183,17 @@ class MainActivity : AppCompatActivity() {
         // if (PREFERENCES.firstLogin) {
         if (10 > 20) {
             Log.d("Response", "list-> " + followersList.size.toString())
-            Log.d("Response", "listlast-> " + followersLastList.size.toString())
+           // Log.d("Response", "listlast-> " + followersLastList.size.toString())
 
-            viewModel.getNotFollow()
+
             viewModel.addFollowers(followersList)
-            viewModel.addLastFollowers(followersLastList)
+
 
             //  PREFERENCES.firstLogin = false
 
         } else {
-            Log.d("Response", "listlast-> " + followersLastList.size.toString())
-            viewModel.addLastFollowers(followersLastList)
+           // Log.d("Response", "listlast-> " + followersLastList.size.toString())
+           // viewModel.addLastFollowers(followersLastList)
 
         }
     }
@@ -208,10 +203,10 @@ class MainActivity : AppCompatActivity() {
         if (followersData != null) {
 
 
+        /**
             for (data in followersData.users) {
-
                 val newList = LastFollowersData()
-                val oldList = FollowersData()
+                val oldList = FollowData()
                 newList.pk = data.pk
                 oldList.pk = data.pk
                 newList.fullName = data.fullName
@@ -229,9 +224,8 @@ class MainActivity : AppCompatActivity() {
                 followersLastList.add(newList)
                 followersList.add(oldList)
             }
+**/
 
-            Log.d("Users", "last data -> ${followersLastList.size}")
-            Log.d("Users", "data -> ${followersList.size}")
 
         }
 

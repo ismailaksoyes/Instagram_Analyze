@@ -10,12 +10,6 @@ import android.webkit.WebViewClient
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.avalon.calizer.data.local.RoomDao
-import com.avalon.calizer.data.local.RoomData
-import com.avalon.calizer.data.local.MyDatabase
-import com.avalon.calizer.data.repository.RoomRepository
-import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.data.repository.launchActivity
 import com.avalon.calizer.databinding.ActivityLoginBinding
 
@@ -23,7 +17,6 @@ import com.avalon.calizer.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
@@ -51,9 +44,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
         context = this
 
-        mCookiesVewModel.cookies.observe(this, Observer { data->
-            Log.d("Response", "data geldi bro")
-        })
+
 
         mCookiesVewModel.reelsTray.observe(this, Observer { response ->
             if(response.isSuccessful){
@@ -113,26 +104,8 @@ class LoginActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    val cookiesData = RoomData(
-                        csfr = csfr,
-                        dsUserID = dsUserID,
-                        mid = mid,
-                        rur = rur,
-                        sessID = sessID,
-                        shbid = shbid,
-                        shbts = shbts,
-                        allCookie = loginCookies
-                    )
-                   // Log.d("Response","allCookie->"+ PREFERENCES.allCookie)
-                    GlobalScope.launch {
-                      val success1 =  insertCookiesToDatabase(cookiesData)
-                      val success2 = LoginTest()
 
-                      if(success1&&success2){
-                          Log.d("Response","BASARILI")
-                      }
 
-                    }
 
 
                 }
@@ -141,11 +114,7 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun insertCookiesToDatabase(roomData: RoomData):Boolean {
-        mCookiesVewModel.addCookie(roomData)
-        getCookies = true
-        return true
-    }
+
     private suspend fun LoginTest():Boolean{
         mCookiesVewModel.getReelsTray(allCookie)
         return true

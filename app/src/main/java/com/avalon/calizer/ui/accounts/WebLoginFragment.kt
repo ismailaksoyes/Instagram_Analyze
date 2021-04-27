@@ -1,7 +1,6 @@
 package com.avalon.calizer.ui.accounts
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,23 +10,15 @@ import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.activity.viewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.avalon.calizer.R
 import com.avalon.calizer.data.local.AccountsData
-import com.avalon.calizer.data.local.RoomData
-import com.avalon.calizer.data.repository.launchActivity
 import com.avalon.calizer.databinding.FragmentWebLoginBinding
-import com.avalon.calizer.ui.login.LoginViewModel
-import com.avalon.calizer.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.random.Random
 
 
 @AndroidEntryPoint
