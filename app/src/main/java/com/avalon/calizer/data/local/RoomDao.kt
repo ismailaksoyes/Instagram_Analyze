@@ -26,10 +26,8 @@ interface RoomDao {
     val getAllAccountDetails : List<AccountsData>
 
 
-
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addFollowers(followData:List<FollowData>)
+    suspend fun addFollowData(followData:List<FollowData>)
 
 
 /**

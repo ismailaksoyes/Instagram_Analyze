@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 import androidx.annotation.Keep
 
 @Keep
-data class ApiResponseUserFollowers(
+data class ApiResponseUserFollow(
     @SerializedName("big_list")
     val bigList: Boolean,
     @SerializedName("global_blacklist_sample")

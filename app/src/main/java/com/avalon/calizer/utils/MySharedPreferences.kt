@@ -41,6 +41,14 @@ class MySharedPreferences @Inject constructor(var prefs:SharedPreferences) {
         get() = prefs.getBoolean(Constants.SHOW_INTRO, true)
         set(value) = prefs.edit().putBoolean(Constants.SHOW_INTRO,value).apply()
 
+    var followersType:Long
+    get() = prefs.getLong(Constants.FOLLOWERS_TYPE,0)
+    set(value) = prefs.edit().putLong(Constants.FOLLOWERS_TYPE,value).apply()
+
+    var followingType:Long
+        get() = prefs.getLong(Constants.FOLLOWING_TYPE,2)
+        set(value) = prefs.edit().putLong(Constants.FOLLOWING_TYPE,value).apply()
+
 
 
 

@@ -43,9 +43,9 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
 //        return roomDao.getUnFollowers()
 //    }
 
-    suspend fun addFollowers(followData: List<FollowData>) {
+    suspend fun addFollowData(followData: List<FollowData>) {
         CoroutineScope(Dispatchers.IO).launch {
-            roomDao.addFollowers(followData)
+            roomDao.addFollowData(followData)
         }
 
     }

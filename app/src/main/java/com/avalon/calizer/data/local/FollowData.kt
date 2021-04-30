@@ -6,16 +6,16 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "follow_table")
 data class FollowData(
     @PrimaryKey(autoGenerate = true)
-    var pk: Long? ,
-    var type:Long? ,
-    var analyzeUserId:Long? ,
-    var dsUserID: Long? ,
-    var fullName: String?,
-    var hasAnonymousProfilePicture: Boolean? ,
-    var isPrivate: Boolean? ,
-    var isVerified: Boolean? ,
-    var latestReelMedia: Int? ,
-    var profilePicUrl: String? ,
-    var profilePicId: String? ,
-    var username: String?
+    var pk: Long? = null ,
+    var type:Long? = null ,
+    var analyzeUserId:Long? = null ,
+    var dsUserID: Long? = null ,
+    var fullName: String?= null ,
+    var hasAnonymousProfilePicture: Boolean? = null ,
+    var isPrivate: Boolean? = null ,
+    var isVerified: Boolean? = null ,
+    var latestReelMedia: Int? = null ,
+    var profilePicUrl: String? = null ,
+    var profilePicId: String? = null ,
+    var username: String?= null
 )

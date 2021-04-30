@@ -1,6 +1,5 @@
 package com.avalon.calizer.ui.accounts
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +8,6 @@ import com.avalon.calizer.data.local.AccountsData
 import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.data.remote.insresponse.ApiResponseReelsTray
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserDetails
-import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollowers
 import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.data.repository.RoomRepository
 import com.avalon.calizer.utils.Resource
@@ -18,7 +16,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import javax.inject.Inject
 
 class AccountsViewModel @Inject constructor(
