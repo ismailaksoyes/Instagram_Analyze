@@ -108,9 +108,15 @@ class MainActivity : AppCompatActivity() {
                         prefs.followersType.let { type ->
                             if (type == 0L) {
                                 val list = followDataList
-                                list.filter {data-> data.type == 0L }.forEach {last-> last.type = 1L }
+                                list.filter { data -> data.type == 0L }
+                                    .forEach { last -> last.type = 1L
+                                    followDataList.add(last)}
+                                followDataList.forEach { print->
+                                    //listenin uzerine eklemis fakat orjinal liste type 1 seklinde guncellemis.
+                                    Log.d("UserList - > ", print.toString())
+                                }
 
-                            }else{
+                            } else {
 
                             }
                         }
