@@ -22,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
+import kotlin.random.Random
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -62,8 +63,35 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.itemIconTintList = null
         initData()
         initNavController()
+        val testData = ArrayList<FollowData>()
+        for (i in 1..10){
+            testData.add( FollowData(
+                pk = Random.nextLong()+1,
+                type = 0L,
+                fullName = "usertest1 ${Random.nextInt()+1}",
+                username = "usernametest1"
+            ))
+        }
 
+        prefs.followersType.let { type->
+            if (type==0L){
+                val list = testData
+                list.filter { data -> data.type == 0L }
+                    .forEach { last ->
+                       // Log.d("UserList - > ", " ->> $last.toString()")
+                        last.type = 1L }
+               // testData.addAll(list)
+                list.forEach { print->
+                    //listenin uzerine eklemis fakat orjinal liste type 1 seklinde guncellemis.
+                    Log.d("UserList", print.toString())
+                }
+                testData.forEach { print->
+                    //listenin uzerine eklemis fakat orjinal liste type 1 seklinde guncellemis.
+                    Log.d("UserList", print.toString())
+                }
+            }
 
+        }
 
         lifecycleScope.launchWhenStarted {
             viewModel.followData.collect {
@@ -147,12 +175,12 @@ class MainActivity : AppCompatActivity() {
                     viewModel.getUserDetails(prefs.selectedAccount)
                     val timeControl: Boolean = true
                     if (timeControl) {
-                        viewModel.getUserFollowers(
-                            userId = prefs.selectedAccount,
-                            maxId = null,
-                            rnkToken = null,
-                            cookies = prefs.allCookie
-                        )
+//                        viewModel.getUserFollowers(
+//                            userId = prefs.selectedAccount,
+//                            maxId = null,
+//                            rnkToken = null,
+//                            cookies = prefs.allCookie
+//                        )
                     }
 
                 }
