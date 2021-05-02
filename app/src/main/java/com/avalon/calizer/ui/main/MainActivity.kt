@@ -64,35 +64,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.itemIconTintList = null
         initData()
         initNavController()
-        val testData = ArrayList<FollowData>()
-        for (i in 1..10) {
-            testData.add(
-                FollowData(
-                    pk = Random.nextLong() + 1,
-                    type = 0L,
-                    fullName = "usertest1 ${Random.nextInt() + 1}",
-                    username = "usernametest1"
-                )
-            )
-        }
 
-        prefs.followersType.let { type ->
-            if (type == 0L) {
-                val list = testData.map { it.copy() }
-                list.filter { data -> data.type == 0L }
-                    .forEach { last ->
-
-                        last.type = 1L
-                    }
-                testData.addAll(list)
-
-                testData.forEach { print ->
-
-                    Log.d("UserList", print.toString())
-                }
-            }
-
-        }
 
         lifecycleScope.launchWhenStarted {
             viewModel.followData.collect {
@@ -115,6 +87,31 @@ class MainActivity : AppCompatActivity() {
                         it.follow.data?.let { users ->
                             addFollowList(users, prefs.followersType)
                         }
+                        viewModel.getUserFollowing(
+                            userId = prefs.selectedAccount,
+                            maxId = null,
+                            rnkToken = null,
+                            cookies = prefs.allCookie
+                        )
+                    }
+                    is MainViewModel.FollowDataFlow.GetFollowingDataSync->{
+                        delay((500 + (0..250).random()).toLong())
+                        it.following.data?.let { users ->
+                            viewModel.getUserFollowing(
+                                userId = prefs.selectedAccount,
+                                maxId = users.nextMaxId,
+                                rnkToken = Utils.generateUUID(),
+                                cookies = prefs.allCookie
+                            )
+                            addFollowList(users, prefs.followingType)
+
+                        }
+
+                    }
+                    is MainViewModel.FollowDataFlow.GetFollowingDataSuccess->{
+                        it.following.data?.let { users->
+                            addFollowList(users,prefs.followingType)
+                        }
                     }
                     is MainViewModel.FollowDataFlow.GetUserCookies -> {
                         it.accountsData.let { userInfo ->
@@ -126,7 +123,7 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                     }
-                    is MainViewModel.FollowDataFlow.SaveFollowers -> {
+                    is MainViewModel.FollowDataFlow.SaveFollow -> {
                         Log.d("StateSave", "Back")
                         /**
                          * eger type 0-1 ise followers
@@ -144,6 +141,7 @@ class MainActivity : AppCompatActivity() {
                                         last.type = FollowSaveType.FOLLOWERS_LAST.type
                                     }
                                 followDataList.addAll(list)
+                                prefs.followersType = FollowSaveType.FOLLOWERS_LAST.type
 
                             }
                         }
@@ -156,9 +154,11 @@ class MainActivity : AppCompatActivity() {
                                         last.type = FollowSaveType.FOLLOWING_LAST.type
                                     }
                                 followDataList.addAll(list)
+                                prefs.followersType = FollowSaveType.FOLLOWING_LAST.type
 
                             }
                         }
+                        saveFollowRoom(followDataList)
                     }
                 }
             }
@@ -186,12 +186,12 @@ class MainActivity : AppCompatActivity() {
                     viewModel.getUserDetails(prefs.selectedAccount)
                     val timeControl: Boolean = true
                     if (timeControl) {
-//                        viewModel.getUserFollowers(
-//                            userId = prefs.selectedAccount,
-//                            maxId = null,
-//                            rnkToken = null,
-//                            cookies = prefs.allCookie
-//                        )
+                       viewModel.getUserFollowers(
+                           userId = prefs.selectedAccount,
+                            maxId = null,
+                            rnkToken = null,
+                            cookies = prefs.allCookie
+                       )
                     }
 
                 }
@@ -224,6 +224,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    fun saveFollowRoom(followData:ArrayList<FollowData>){
+        viewModel.addFollow(followData)
+    }
+
     private fun followersData() {
         // if (PREFERENCES.firstLogin) {
         if (10 > 20) {
@@ -231,7 +235,7 @@ class MainActivity : AppCompatActivity() {
             // Log.d("Response", "listlast-> " + followersLastList.size.toString())
 
 
-            viewModel.addFollowers(followDataList)
+          //  viewModel.addFollowers(followDataList)
 
 
             //  PREFERENCES.firstLogin = false
@@ -268,67 +272,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun getFollowersList(maxId: String? = null, userId: Long) {
 
-
-        if (!maxId.isNullOrEmpty()) {
-            CoroutineScope(Dispatchers.IO).launch {
-                viewModel.getUserFollowers(
-                    userId = userId,
-                    maxId = maxId,
-                    rnkToken = Utils.generateUUID(),
-                    prefs.allCookie
-                )
-
-
-            }
-
-        } else {
-            CoroutineScope(Dispatchers.IO).launch {
-                viewModel.getUserFollowers(
-                    userId = userId,
-                    cookies = prefs.allCookie,
-                    maxId = null,
-                    rnkToken = null
-                )
-
-            }
-
-        }
-    }
-
-
-    fun getFollowingList(maxId: String? = null, userId: Long): Job {
-        return CoroutineScope(Dispatchers.IO).launch {
-            delay((500 + (0..250).random()).toLong())
-            if (!maxId.isNullOrEmpty()) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    viewModel.getUserFollowers(
-                        userId = userId,
-                        maxId = maxId,
-                        rnkToken = Utils.generateUUID(),
-                        prefs.allCookie
-                    )
-
-
-                }
-
-            } else {
-                CoroutineScope(Dispatchers.IO).launch {
-                    viewModel.getUserFollowers(
-                        userId = userId,
-                        cookies = prefs.allCookie,
-                        maxId = null,
-                        rnkToken = null
-                    )
-
-                }
-
-            }
-        }
-
-
-    }
 
 
 }

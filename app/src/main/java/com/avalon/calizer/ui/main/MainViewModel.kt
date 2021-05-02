@@ -39,7 +39,7 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
         data class GetUserCookies(var accountsData: AccountsData):FollowDataFlow()
         data class GetFollowDataSync(var follow:  Resource<ApiResponseUserFollow>) :FollowDataFlow()
         data class GetFollowDataSuccess(var follow:  Resource<ApiResponseUserFollow>) :FollowDataFlow()
-        object SaveFollowers : FollowDataFlow()
+        object SaveFollow : FollowDataFlow()
         data class GetFollowingDataSync(var following:Resource<ApiResponseUserFollow>) :FollowDataFlow()
         data class GetFollowingDataSuccess(var following:Resource<ApiResponseUserFollow>) :FollowDataFlow()
         object SaveFollowing : FollowDataFlow()
@@ -58,7 +58,7 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
         }
     }
 
-    fun addFollowers(followData:List<FollowData>){
+    fun addFollow(followData:List<FollowData>){
         viewModelScope.launch(Dispatchers.IO) {
             dbRepository.addFollowData(followData)
         }
@@ -100,7 +100,7 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
                         _followersData.value = FollowDataFlow.GetFollowDataSync(Resource.success(it.body()))
                     }else{
                         _followersData.value = FollowDataFlow.GetFollowDataSuccess(Resource.success(it.body()))
-                        _followersData.value = FollowDataFlow.SaveFollowers
+
                     }
                 }else{
                     _followersData.value = FollowDataFlow.Error(it.errorBody().toString())
@@ -120,6 +120,7 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
                         _followersData.value = FollowDataFlow.GetFollowingDataSync(Resource.success(it.body()))
                     }else{
                         _followersData.value = FollowDataFlow.GetFollowingDataSuccess(Resource.success(it.body()))
+                        _followersData.value = FollowDataFlow.SaveFollow
                     }
                 }else{
                     _followersData.value = FollowDataFlow.Error(it.errorBody().toString())

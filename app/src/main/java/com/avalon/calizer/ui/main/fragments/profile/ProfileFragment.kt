@@ -293,15 +293,15 @@ class ProfileFragment : Fragment() {
         }
 
 
-        Glide.with(this)
-            .asBitmap()
-            .load(imageUrl)
-            .into(object : SimpleTarget<Bitmap>() {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    runImageFaceDetector(resource)
-
-                }
-            })
+//        Glide.with(this)
+//            .asBitmap()
+//            .load(imageUrl)
+//            .into(object : SimpleTarget<Bitmap>() {
+//                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+//                    runImageFaceDetector(resource)
+//
+//                }
+//            })
 
 
     }
