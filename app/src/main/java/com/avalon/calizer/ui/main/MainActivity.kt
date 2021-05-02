@@ -16,6 +16,7 @@ import com.avalon.calizer.R
 import com.avalon.calizer.data.local.FollowData
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollow
 import com.avalon.calizer.databinding.ActivityMainBinding
+import com.avalon.calizer.utils.FollowSaveType
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
@@ -64,29 +65,29 @@ class MainActivity : AppCompatActivity() {
         initData()
         initNavController()
         val testData = ArrayList<FollowData>()
-        for (i in 1..10){
-            testData.add( FollowData(
-                pk = Random.nextLong()+1,
-                type = 0L,
-                fullName = "usertest1 ${Random.nextInt()+1}",
-                username = "usernametest1"
-            ))
+        for (i in 1..10) {
+            testData.add(
+                FollowData(
+                    pk = Random.nextLong() + 1,
+                    type = 0L,
+                    fullName = "usertest1 ${Random.nextInt() + 1}",
+                    username = "usernametest1"
+                )
+            )
         }
 
-        prefs.followersType.let { type->
-            if (type==0L){
-                val list = testData
+        prefs.followersType.let { type ->
+            if (type == 0L) {
+                val list = testData.map { it.copy() }
                 list.filter { data -> data.type == 0L }
                     .forEach { last ->
-                       // Log.d("UserList - > ", " ->> $last.toString()")
-                        last.type = 1L }
-               // testData.addAll(list)
-                list.forEach { print->
-                    //listenin uzerine eklemis fakat orjinal liste type 1 seklinde guncellemis.
-                    Log.d("UserList", print.toString())
-                }
-                testData.forEach { print->
-                    //listenin uzerine eklemis fakat orjinal liste type 1 seklinde guncellemis.
+
+                        last.type = 1L
+                    }
+                testData.addAll(list)
+
+                testData.forEach { print ->
+
                     Log.d("UserList", print.toString())
                 }
             }
@@ -134,17 +135,27 @@ class MainActivity : AppCompatActivity() {
                          * kaydet...
                          */
                         prefs.followersType.let { type ->
-                            if (type == 0L) {
-                                val list = followDataList
-                                list.filter { data -> data.type == 0L }
-                                    .forEach { last -> last.type = 1L
-                                    followDataList.add(last)}
-                                followDataList.forEach { print->
-                                    //listenin uzerine eklemis fakat orjinal liste type 1 seklinde guncellemis.
-                                    Log.d("UserList - > ", print.toString())
-                                }
 
-                            } else {
+
+                            if (type == FollowSaveType.FOLLOWERS_FIRST.type) {
+                                val list = followDataList.map { followData -> followData.copy() }
+                                list.filter { data -> data.type == FollowSaveType.FOLLOWERS_FIRST.type }
+                                    .forEach { last ->
+                                        last.type = FollowSaveType.FOLLOWERS_LAST.type
+                                    }
+                                followDataList.addAll(list)
+
+                            }
+                        }
+                        prefs.followingType.let { type ->
+
+                            if (type == FollowSaveType.FOLLOWING_FIRST.type) {
+                                val list = followDataList.map { followData -> followData.copy() }
+                                list.filter { data -> data.type == FollowSaveType.FOLLOWING_FIRST.type }
+                                    .forEach { last ->
+                                        last.type = FollowSaveType.FOLLOWING_LAST.type
+                                    }
+                                followDataList.addAll(list)
 
                             }
                         }
