@@ -95,9 +95,10 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
 
             repository.getUserFollowers(userId,maxId,rnkToken,cookies).let {
                 if (it.isSuccessful){
+                    _followersData.value = FollowDataFlow.Error(it.body().toString())
                     if (!it.body()?.nextMaxId.isNullOrEmpty()){
-
-                        _followersData.value = FollowDataFlow.GetFollowDataSync(Resource.success(it.body()))
+                        _followersData.value = FollowDataFlow.GetFollowDataSuccess(Resource.success(it.body()))
+                       // _followersData.value = FollowDataFlow.GetFollowDataSync(Resource.success(it.body()))
                     }else{
                         _followersData.value = FollowDataFlow.GetFollowDataSuccess(Resource.success(it.body()))
 
@@ -115,6 +116,7 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
 
             repository.getUserFollowing(userId,maxId,rnkToken,cookies).let {
                 if (it.isSuccessful){
+                    _followersData.value = FollowDataFlow.Error(it.body().toString())
                     if (!it.body()?.nextMaxId.isNullOrEmpty()){
 
                         _followersData.value = FollowDataFlow.GetFollowingDataSync(Resource.success(it.body()))

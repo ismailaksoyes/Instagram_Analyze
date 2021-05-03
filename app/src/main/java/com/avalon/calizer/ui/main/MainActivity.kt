@@ -109,7 +109,12 @@ class MainActivity : AppCompatActivity() {
 
                     }
                     is MainViewModel.FollowDataFlow.GetFollowingDataSuccess->{
+                        Log.d("usergeldi","${it.following.message}")
                         it.following.data?.let { users->
+                            users.users.forEach { hele->
+                                Log.d("usergeldi","$hele")
+
+                            }
                             addFollowList(users,prefs.followingType)
                         }
                     }
@@ -141,7 +146,7 @@ class MainActivity : AppCompatActivity() {
                                         last.type = FollowSaveType.FOLLOWERS_LAST.type
                                     }
                                 followDataList.addAll(list)
-                                prefs.followersType = FollowSaveType.FOLLOWERS_LAST.type
+                               // prefs.followersType = FollowSaveType.FOLLOWERS_LAST.type
 
                             }
                         }
@@ -154,11 +159,14 @@ class MainActivity : AppCompatActivity() {
                                         last.type = FollowSaveType.FOLLOWING_LAST.type
                                     }
                                 followDataList.addAll(list)
-                                prefs.followersType = FollowSaveType.FOLLOWING_LAST.type
+                               // prefs.followersType = FollowSaveType.FOLLOWING_LAST.type
 
                             }
                         }
                         saveFollowRoom(followDataList)
+                    }
+                    is MainViewModel.FollowDataFlow.Error->{
+                        Log.d("usergeldi","${it.error}")
                     }
                 }
             }
@@ -225,7 +233,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun saveFollowRoom(followData:ArrayList<FollowData>){
-        viewModel.addFollow(followData)
+        //viewModel.addFollow(followData)
+        followData.forEach {
+            Log.d("followSaveData",it.toString())
+        }
+        for (size in 0..3){
+            followData.filter {data->
+                data.type==size.toLong()
+            }.let { size->
+                Log.d("followSaveData", size.size.toString())
+            }
+        }
+
+
     }
 
     private fun followersData() {
@@ -250,7 +270,6 @@ class MainActivity : AppCompatActivity() {
     private fun addFollowList(followData: ApiResponseUserFollow?, type: Long?) {
 
         if (followData != null) {
-
 
             for (data in followData.users) {
 
