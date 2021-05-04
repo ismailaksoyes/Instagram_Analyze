@@ -65,7 +65,6 @@ class MainActivity : AppCompatActivity() {
         initData()
         initNavController()
 
-
         lifecycleScope.launchWhenStarted {
             viewModel.followData.collect {
                 when (it) {
@@ -84,6 +83,9 @@ class MainActivity : AppCompatActivity() {
 
                     }
                     is MainViewModel.FollowDataFlow.GetFollowDataSuccess -> {
+                        Log.d("ResponseData","okFollewers")
+                        delay((5005 + (0..250).random()).toLong())
+                        Log.d("usergeldi","${it.follow}")
                         it.follow.data?.let { users ->
                             addFollowList(users, prefs.followersType)
                         }
@@ -109,12 +111,10 @@ class MainActivity : AppCompatActivity() {
 
                     }
                     is MainViewModel.FollowDataFlow.GetFollowingDataSuccess->{
-                        Log.d("usergeldi","${it.following.message}")
+                        Log.d("usergeldi","${it.following}")
+                        Log.d("ResponseData","okFollowing")
+                        delay((500 + (0..250).random()).toLong())
                         it.following.data?.let { users->
-                            users.users.forEach { hele->
-                                Log.d("usergeldi","$hele")
-
-                            }
                             addFollowList(users,prefs.followingType)
                         }
                     }
@@ -136,8 +136,8 @@ class MainActivity : AppCompatActivity() {
                          * eger type 0-2 ise ekstra type degistir ve listenin uzerine ekle
                          * kaydet...
                          */
+                        Log.d("ResponseData","okSave")
                         prefs.followersType.let { type ->
-
 
                             if (type == FollowSaveType.FOLLOWERS_FIRST.type) {
                                 val list = followDataList.map { followData -> followData.copy() }
@@ -163,10 +163,14 @@ class MainActivity : AppCompatActivity() {
 
                             }
                         }
+                        delay(2000)
                         saveFollowRoom(followDataList)
                     }
                     is MainViewModel.FollowDataFlow.Error->{
-                        Log.d("usergeldi","${it.error}")
+                        Log.d("errortest", it.toString())
+                    }
+                    else->{
+                        Log.d("errortest", "nulllll")
                     }
                 }
             }
@@ -234,16 +238,18 @@ class MainActivity : AppCompatActivity() {
 
     fun saveFollowRoom(followData:ArrayList<FollowData>){
         //viewModel.addFollow(followData)
-        followData.forEach {
-            Log.d("followSaveData",it.toString())
-        }
-        for (size in 0..3){
-            followData.filter {data->
-                data.type==size.toLong()
-            }.let { size->
-                Log.d("followSaveData", size.size.toString())
+
+        lifecycleScope.launchWhenStarted {
+            delay(1000)
+            for (sizeTR in 0..3){
+                followDataList.filter {data->
+                    data.type==sizeTR.toLong()
+                }.let { sizeC->
+                    Log.d("followSaveData","$sizeTR -> "+ sizeC.size.toString())
+                }
             }
         }
+
 
 
     }

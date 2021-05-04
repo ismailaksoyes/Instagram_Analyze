@@ -1,5 +1,6 @@
 package com.avalon.calizer.ui.main
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -42,7 +43,6 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
         object SaveFollow : FollowDataFlow()
         data class GetFollowingDataSync(var following:Resource<ApiResponseUserFollow>) :FollowDataFlow()
         data class GetFollowingDataSuccess(var following:Resource<ApiResponseUserFollow>) :FollowDataFlow()
-        object SaveFollowing : FollowDataFlow()
         data class Error(val error: String) : FollowDataFlow()
     }
 
@@ -52,11 +52,6 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
         }
     }
 
-    fun getUserCookies(userId: Long){
-        viewModelScope.launch(Dispatchers.IO) {
-            _followersData.value = FollowDataFlow.GetUserCookies(dbRepository.getAccountCookies(userId))
-        }
-    }
 
     fun addFollow(followData:List<FollowData>){
         viewModelScope.launch(Dispatchers.IO) {
@@ -94,8 +89,9 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
         viewModelScope.launch(Dispatchers.IO) {
 
             repository.getUserFollowers(userId,maxId,rnkToken,cookies).let {
+                Log.d("ResponseData","${it.body()}")
                 if (it.isSuccessful){
-                    _followersData.value = FollowDataFlow.Error(it.body().toString())
+
                     if (!it.body()?.nextMaxId.isNullOrEmpty()){
                         _followersData.value = FollowDataFlow.GetFollowDataSuccess(Resource.success(it.body()))
                        // _followersData.value = FollowDataFlow.GetFollowDataSync(Resource.success(it.body()))
@@ -115,14 +111,16 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
         viewModelScope.launch(Dispatchers.IO) {
 
             repository.getUserFollowing(userId,maxId,rnkToken,cookies).let {
+
+                Log.d("ResponseData","${it.body()}")
                 if (it.isSuccessful){
-                    _followersData.value = FollowDataFlow.Error(it.body().toString())
+
                     if (!it.body()?.nextMaxId.isNullOrEmpty()){
 
                         _followersData.value = FollowDataFlow.GetFollowingDataSync(Resource.success(it.body()))
                     }else{
                         _followersData.value = FollowDataFlow.GetFollowingDataSuccess(Resource.success(it.body()))
-                        _followersData.value = FollowDataFlow.SaveFollow
+                         _followersData.value = FollowDataFlow.SaveFollow
                     }
                 }else{
                     _followersData.value = FollowDataFlow.Error(it.errorBody().toString())
