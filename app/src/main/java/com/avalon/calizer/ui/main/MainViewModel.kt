@@ -11,6 +11,7 @@ import com.avalon.calizer.data.repository.RoomRepository
 import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.utils.Resource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -107,11 +108,12 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
         }
     }
     fun getUserFollowing(userId:Long,maxId: String?,rnkToken:String?, cookies: String?){
+        Log.d("StateSave", "getUserFollowing Request")
 
         viewModelScope.launch(Dispatchers.IO) {
 
             repository.getUserFollowing(userId,maxId,rnkToken,cookies).let {
-
+                Log.d("StateSave", "getUserFollowing response")
                 Log.d("ResponseData","${it.body()}")
                 if (it.isSuccessful){
 
@@ -119,7 +121,9 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
 
                         _followersData.value = FollowDataFlow.GetFollowingDataSync(Resource.success(it.body()))
                     }else{
+                        Log.d("StateSave", "getUserFollowing OK VALUE")
                         _followersData.value = FollowDataFlow.GetFollowingDataSuccess(Resource.success(it.body()))
+                        delay(1000)
                          _followersData.value = FollowDataFlow.SaveFollow
                     }
                 }else{

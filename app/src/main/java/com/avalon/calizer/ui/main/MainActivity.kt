@@ -29,7 +29,6 @@ import kotlin.random.Random
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
-    // private val viewModel: MainViewModel by viewModels()
     @Inject
     lateinit var viewModel: MainViewModel
     private var getFirstData = true
@@ -83,9 +82,7 @@ class MainActivity : AppCompatActivity() {
 
                     }
                     is MainViewModel.FollowDataFlow.GetFollowDataSuccess -> {
-                        Log.d("ResponseData","okFollewers")
                         delay((5005 + (0..250).random()).toLong())
-                        Log.d("usergeldi","${it.follow}")
                         it.follow.data?.let { users ->
                             addFollowList(users, prefs.followersType)
                         }
@@ -95,6 +92,7 @@ class MainActivity : AppCompatActivity() {
                             rnkToken = null,
                             cookies = prefs.allCookie
                         )
+                        Log.d("StateSave", "getUserFollowing")
                     }
                     is MainViewModel.FollowDataFlow.GetFollowingDataSync->{
                         delay((500 + (0..250).random()).toLong())
@@ -111,12 +109,12 @@ class MainActivity : AppCompatActivity() {
 
                     }
                     is MainViewModel.FollowDataFlow.GetFollowingDataSuccess->{
-                        Log.d("usergeldi","${it.following}")
-                        Log.d("ResponseData","okFollowing")
                         delay((500 + (0..250).random()).toLong())
+                        Log.d("StateSave", "FollowingOK")
                         it.following.data?.let { users->
                             addFollowList(users,prefs.followingType)
                         }
+
                     }
                     is MainViewModel.FollowDataFlow.GetUserCookies -> {
                         it.accountsData.let { userInfo ->
@@ -136,16 +134,25 @@ class MainActivity : AppCompatActivity() {
                          * eger type 0-2 ise ekstra type degistir ve listenin uzerine ekle
                          * kaydet...
                          */
-                        Log.d("ResponseData","okSave")
+                        Log.d("NewList","okSave")
+                        delay(3000)
+                        Log.d("NewList","okSave")
+                        followDataList.forEach { getData->
+                            Log.d("NewList",getData.type.toString())
+
+                        }
                         prefs.followersType.let { type ->
 
                             if (type == FollowSaveType.FOLLOWERS_FIRST.type) {
-                                val list = followDataList.map { followData -> followData.copy() }
-                                list.filter { data -> data.type == FollowSaveType.FOLLOWERS_FIRST.type }
+                                val listFollowers = followDataList.map { followData -> followData.copy() }
+                                listFollowers.filter { data -> data.type == FollowSaveType.FOLLOWERS_FIRST.type }
                                     .forEach { last ->
                                         last.type = FollowSaveType.FOLLOWERS_LAST.type
                                     }
-                                followDataList.addAll(list)
+                                followDataList.addAll(listFollowers)
+                                listFollowers.forEach { list->
+                                    Log.d("NewList","1-> ${list.type}")
+                                }
                                // prefs.followersType = FollowSaveType.FOLLOWERS_LAST.type
 
                             }
@@ -159,11 +166,14 @@ class MainActivity : AppCompatActivity() {
                                         last.type = FollowSaveType.FOLLOWING_LAST.type
                                     }
                                 followDataList.addAll(list)
+                                list.forEach { list->
+                                    Log.d("NewList","2-> ${list.type}")
+                                }
                                // prefs.followersType = FollowSaveType.FOLLOWING_LAST.type
 
                             }
                         }
-                        delay(2000)
+
                         saveFollowRoom(followDataList)
                     }
                     is MainViewModel.FollowDataFlow.Error->{
