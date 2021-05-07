@@ -85,7 +85,7 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
         }
     }
     **/
-     fun getUserFollowers(userId:Long,maxId: String?,rnkToken:String?, cookies: String?){
+     suspend fun getUserFollowers(userId:Long,maxId: String?,rnkToken:String?, cookies: String?){
 
         viewModelScope.launch(Dispatchers.IO) {
 
@@ -107,7 +107,7 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
 
         }
     }
-    fun getUserFollowing(userId:Long,maxId: String?,rnkToken:String?, cookies: String?){
+    suspend fun getUserFollowing(userId:Long,maxId: String?,rnkToken:String?, cookies: String?){
         Log.d("StateSave", "getUserFollowing Request")
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -123,8 +123,6 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
                     }else{
                         Log.d("StateSave", "getUserFollowing OK VALUE")
                         _followersData.value = FollowDataFlow.GetFollowingDataSuccess(Resource.success(it.body()))
-                        delay(1000)
-                         _followersData.value = FollowDataFlow.SaveFollow
                     }
                 }else{
                     _followersData.value = FollowDataFlow.Error(it.errorBody().toString())
@@ -133,6 +131,10 @@ class MainViewModel @Inject constructor(private val dbRepository: RoomRepository
 
         }
     }
+    fun stateSaveLaunch(){
+        viewModelScope.launch(Dispatchers.IO) { _followersData.value = FollowDataFlow.SaveFollow  }
+    }
+
 
 
 

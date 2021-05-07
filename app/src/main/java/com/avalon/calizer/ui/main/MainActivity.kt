@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                         )
                         Log.d("StateSave", "getUserFollowing")
                     }
-                    is MainViewModel.FollowDataFlow.GetFollowingDataSync->{
+                    is MainViewModel.FollowDataFlow.GetFollowingDataSync -> {
                         delay((500 + (0..250).random()).toLong())
                         it.following.data?.let { users ->
                             viewModel.getUserFollowing(
@@ -108,12 +108,13 @@ class MainActivity : AppCompatActivity() {
                         }
 
                     }
-                    is MainViewModel.FollowDataFlow.GetFollowingDataSuccess->{
+                    is MainViewModel.FollowDataFlow.GetFollowingDataSuccess -> {
                         delay((500 + (0..250).random()).toLong())
                         Log.d("StateSave", "FollowingOK")
-                        it.following.data?.let { users->
-                            addFollowList(users,prefs.followingType)
+                        it.following.data?.let { users ->
+                            addFollowList(users, prefs.followingType)
                         }
+                        viewModel.stateSaveLaunch()
 
                     }
                     is MainViewModel.FollowDataFlow.GetUserCookies -> {
@@ -134,52 +135,47 @@ class MainActivity : AppCompatActivity() {
                          * eger type 0-2 ise ekstra type degistir ve listenin uzerine ekle
                          * kaydet...
                          */
-                        Log.d("NewList","okSave")
-                        delay(3000)
-                        Log.d("NewList","okSave")
-                        followDataList.forEach { getData->
-                            Log.d("NewList",getData.type.toString())
+                        Log.d("NewList", "okSave ${prefs.followersType} ${prefs.followingType}")
 
-                        }
                         prefs.followersType.let { type ->
 
-                            if (type == FollowSaveType.FOLLOWERS_FIRST.type) {
-                                val listFollowers = followDataList.map { followData -> followData.copy() }
+                            if (type != FollowSaveType.FOLLOWERS_FIRST.type) {
+                                val listFollowers =
+                                    followDataList.map { followData -> followData.copy() }
                                 listFollowers.filter { data -> data.type == FollowSaveType.FOLLOWERS_FIRST.type }
                                     .forEach { last ->
                                         last.type = FollowSaveType.FOLLOWERS_LAST.type
                                     }
                                 followDataList.addAll(listFollowers)
-                                listFollowers.forEach { list->
-                                    Log.d("NewList","1-> ${list.type}")
+                                listFollowers.forEach { list ->
+                                    Log.d("NewList", "1-> ${list.type}")
                                 }
-                               // prefs.followersType = FollowSaveType.FOLLOWERS_LAST.type
+                                // prefs.followersType = FollowSaveType.FOLLOWERS_LAST.type
 
                             }
                         }
+                        //prefs.followersType = 2
                         prefs.followingType.let { type ->
 
                             if (type == FollowSaveType.FOLLOWING_FIRST.type) {
-                                val list = followDataList.map { followData -> followData.copy() }
-                                list.filter { data -> data.type == FollowSaveType.FOLLOWING_FIRST.type }
-                                    .forEach { last ->
-                                        last.type = FollowSaveType.FOLLOWING_LAST.type
-                                    }
-                                followDataList.addAll(list)
-                                list.forEach { list->
-                                    Log.d("NewList","2-> ${list.type}")
+                                //  val list = followDataList.map { followData -> followData.copy() }
+                                val cacheFollowersList = followDataList.map { fol->
+                                    fol.copy(type=3)
                                 }
-                               // prefs.followersType = FollowSaveType.FOLLOWING_LAST.type
+
+                                followDataList.addAll(cacheFollowersList)
+
+                                // prefs.followersType = FollowSaveType.FOLLOWING_LAST.type
 
                             }
                         }
 
                         saveFollowRoom(followDataList)
                     }
-                    is MainViewModel.FollowDataFlow.Error->{
+                    is MainViewModel.FollowDataFlow.Error -> {
                         Log.d("errortest", it.toString())
                     }
-                    else->{
+                    else -> {
                         Log.d("errortest", "nulllll")
                     }
                 }
@@ -208,12 +204,15 @@ class MainActivity : AppCompatActivity() {
                     viewModel.getUserDetails(prefs.selectedAccount)
                     val timeControl: Boolean = true
                     if (timeControl) {
-                       viewModel.getUserFollowers(
-                           userId = prefs.selectedAccount,
-                            maxId = null,
-                            rnkToken = null,
-                            cookies = prefs.allCookie
-                       )
+                        lifecycleScope.launchWhenStarted {
+                            viewModel.getUserFollowers(
+                                userId = prefs.selectedAccount,
+                                maxId = null,
+                                rnkToken = null,
+                                cookies = prefs.allCookie
+                            )
+                        }
+
                     }
 
                 }
@@ -246,20 +245,19 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun saveFollowRoom(followData:ArrayList<FollowData>){
+    fun saveFollowRoom(followData: ArrayList<FollowData>) {
         //viewModel.addFollow(followData)
 
         lifecycleScope.launchWhenStarted {
             delay(1000)
-            for (sizeTR in 0..3){
-                followDataList.filter {data->
-                    data.type==sizeTR.toLong()
-                }.let { sizeC->
-                    Log.d("followSaveData","$sizeTR -> "+ sizeC.size.toString())
+            for (sizeTR in 0..3) {
+                followDataList.filter { data ->
+                    data.type == sizeTR.toLong()
+                }.let { sizeC ->
+                    Log.d("followSaveData", "$sizeTR -> " + sizeC.size.toString())
                 }
             }
         }
-
 
 
     }
@@ -271,7 +269,7 @@ class MainActivity : AppCompatActivity() {
             // Log.d("Response", "listlast-> " + followersLastList.size.toString())
 
 
-          //  viewModel.addFollowers(followDataList)
+            //  viewModel.addFollowers(followDataList)
 
 
             //  PREFERENCES.firstLogin = false
@@ -283,7 +281,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun addFollowList(followData: ApiResponseUserFollow?, type: Long?) {
+    private suspend fun addFollowList(followData: ApiResponseUserFollow?, type: Long?) {
 
         if (followData != null) {
 
@@ -306,8 +304,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
-
 
 
 }
