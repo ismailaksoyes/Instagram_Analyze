@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                                 rnkToken = Utils.generateUUID(),
                                 cookies = prefs.allCookie
                             )
-                            addFollowList(users, prefs.followersType)
+                            addFollowList(users, 1)
 
                         }
 
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
                     is MainViewModel.FollowDataFlow.GetFollowDataSuccess -> {
                         delay((5005 + (0..250).random()).toLong())
                         it.follow.data?.let { users ->
-                            addFollowList(users, prefs.followersType)
+                            addFollowList(users, 1)
                         }
                         viewModel.getUserFollowing(
                             userId = prefs.selectedAccount,
@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
                                 rnkToken = Utils.generateUUID(),
                                 cookies = prefs.allCookie
                             )
-                            addFollowList(users, prefs.followingType)
+                            addFollowList(users, 3)
 
                         }
 
@@ -112,9 +112,9 @@ class MainActivity : AppCompatActivity() {
                         delay((500 + (0..250).random()).toLong())
                         Log.d("StateSave", "FollowingOK")
                         it.following.data?.let { users ->
-                            addFollowList(users, prefs.followingType)
+                            addFollowList(users, 3)
                         }
-                        viewModel.stateSaveLaunch()
+                        viewModel.stateSaveLaunch(prefs.selectedAccount)
 
                     }
                     is MainViewModel.FollowDataFlow.GetUserCookies -> {
@@ -128,6 +128,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     is MainViewModel.FollowDataFlow.SaveFollow -> {
+
                         Log.d("StateSave", "Back")
                         /**
                          * eger type 0-1 ise followers
@@ -135,37 +136,70 @@ class MainActivity : AppCompatActivity() {
                          * eger type 0-2 ise ekstra type degistir ve listenin uzerine ekle
                          * kaydet...
                          */
-                        Log.d("NewList", "okSave ${prefs.followersType} ${prefs.followingType}")
+                        Log.d(
+                            "NewList",
+                            "okSave ${it.userInfo.followersType} ${it.userInfo.followingType}"
+                        )
 
-                        prefs.followersType.let { type ->
+                        it.userInfo.followersType.let { type ->
+                            Log.d("hash",type.toString())
+                            if (type == FollowSaveType.FOLLOWERS_FIRST.type) {
+                                val cacheList = ArrayList<FollowData>()
+                                Log.d("hash",cacheList.hashCode().toString())
+                                followDataList.filter { data-> data.type == FollowSaveType.FOLLOWERS_LAST.type }.forEach { item->
+                                    cacheList.add(
+                                        FollowData(
+                                            pk = item.pk,
+                                            type = 0L,
+                                            analyzeUserId = item.analyzeUserId,
+                                            dsUserID = item.dsUserID,
+                                            fullName = item.fullName,
+                                            hasAnonymousProfilePicture = item.hasAnonymousProfilePicture,
+                                            isPrivate = item.isPrivate,
+                                            isVerified = item.isVerified,
+                                            latestReelMedia = item.latestReelMedia,
+                                            profilePicUrl = item.profilePicUrl,
+                                            profilePicId = item.profilePicId,
+                                            username = item.username
 
-                            if (type != FollowSaveType.FOLLOWERS_FIRST.type) {
-                                val listFollowers =
-                                    followDataList.map { followData -> followData.copy() }
-                                listFollowers.filter { data -> data.type == FollowSaveType.FOLLOWERS_FIRST.type }
-                                    .forEach { last ->
-                                        last.type = FollowSaveType.FOLLOWERS_LAST.type
-                                    }
-                                followDataList.addAll(listFollowers)
-                                listFollowers.forEach { list ->
-                                    Log.d("NewList", "1-> ${list.type}")
+                                        )
+                                    )
+
                                 }
+                                followDataList.addAll(cacheList)
+
                                 // prefs.followersType = FollowSaveType.FOLLOWERS_LAST.type
 
                             }
                         }
                         //prefs.followersType = 2
-                        prefs.followingType.let { type ->
-
+                        it.userInfo.followingType.let { type ->
+                            Log.d("hash2",type.toString())
                             if (type == FollowSaveType.FOLLOWING_FIRST.type) {
                                 //  val list = followDataList.map { followData -> followData.copy() }
-                                val cacheFollowersList = followDataList.map { fol->
-                                    fol.copy(type=3)
+                                val cacheList = ArrayList<FollowData>()
+                                Log.d("hash2",cacheList.hashCode().toString())
+                                followDataList.filter { data-> data.type == FollowSaveType.FOLLOWING_LAST.type }.forEach { item->
+                                    cacheList.add(
+                                        FollowData(
+                                            pk = item.pk,
+                                            type = 2L,
+                                            analyzeUserId = item.analyzeUserId,
+                                            dsUserID = item.dsUserID,
+                                            fullName = item.fullName,
+                                            hasAnonymousProfilePicture = item.hasAnonymousProfilePicture,
+                                            isPrivate = item.isPrivate,
+                                            isVerified = item.isVerified,
+                                            latestReelMedia = item.latestReelMedia,
+                                            profilePicUrl = item.profilePicUrl,
+                                            profilePicId = item.profilePicId,
+                                            username = item.username
+
+                                        )
+                                    )
+
                                 }
-
-                                followDataList.addAll(cacheFollowersList)
-
-                                // prefs.followersType = FollowSaveType.FOLLOWING_LAST.type
+                                followDataList.addAll(cacheList)
 
                             }
                         }

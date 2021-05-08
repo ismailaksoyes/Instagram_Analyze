@@ -12,5 +12,7 @@ data class AccountsInfoData(
     var followers:Long? = -1L,
     var following:Long? = -1L,
     var posts:Long? = -1L,
-    var userId:Long? = -1L
+    var userId:Long? = -1L,
+    var followersType:Long? = 0L,
+    var followingType:Long? = 2L
 )
