@@ -16,6 +16,9 @@ interface RoomDao {
     @Query("SELECT * FROM accounts_info WHERE userId= :userId")
     suspend fun getUserInfo(userId:Long):AccountsInfoData
 
+    @Query("UPDATE accounts_info SET followersType = :followersType, followingType =:followingType WHERE userId  = :userId")
+    suspend fun updateUserType(userId:Long,followersType:Long,followingType:Long)
+
     @Query("SELECT * FROM accounts_table WHERE dsUserID= :userId")
     suspend fun getUserCookies(userId:Long):AccountsData
 
