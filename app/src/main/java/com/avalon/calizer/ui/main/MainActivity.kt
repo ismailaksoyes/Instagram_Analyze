@@ -204,7 +204,14 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
-                        saveFollowRoom(followDataList)
+                        it.userInfo.followingType?.let { it1 ->
+                            it.userInfo.followersType?.let { it2 ->
+                                saveFollowRoom(
+                                    it2,
+                                    it1
+                                )
+                            }
+                        }
                     }
                     is MainViewModel.FollowDataFlow.Error -> {
                         Log.d("errortest", it.toString())
@@ -279,9 +286,16 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun saveFollowRoom(followData: ArrayList<FollowData>) {
-        //viewModel.addFollow(followData)
-
+    private fun saveFollowRoom(followersType:Long, followingType:Long) {
+        if(followersType==FollowSaveType.FOLLOWERS_FIRST.type&&followingType==FollowSaveType.FOLLOWING_FIRST.type){
+            lifecycleScope.launchWhenStarted {
+                viewModel.updateUserType(
+                    userId = prefs.selectedAccount,
+                    followersType = FollowSaveType.FOLLOWERS_LAST.type,
+                    followingType = FollowSaveType.FOLLOWING_LAST.type
+                )
+            }
+        }
         lifecycleScope.launchWhenStarted {
             delay(1000)
             for (sizeTR in 0..3) {
@@ -291,6 +305,7 @@ class MainActivity : AppCompatActivity() {
                     Log.d("followSaveData", "$sizeTR -> " + sizeC.size.toString())
                 }
             }
+            viewModel.addFollow(followDataList,prefs.selectedAccount)
         }
 
 
@@ -318,12 +333,12 @@ class MainActivity : AppCompatActivity() {
     private suspend fun addFollowList(followData: ApiResponseUserFollow?, type: Long?) {
 
         if (followData != null) {
-
+            val analyzeUserId = prefs.selectedAccount
             for (data in followData.users) {
-
                 val followUpdateList = FollowData()
                 followUpdateList.pk = data.pk
                 followUpdateList.type = type
+                followUpdateList.analyzeUserId = analyzeUserId
                 followUpdateList.fullName = data.fullName
                 followUpdateList.profilePicUrl = data.profilePicUrl
                 followUpdateList.hasAnonymousProfilePicture = data.hasAnonymousProfilePicture

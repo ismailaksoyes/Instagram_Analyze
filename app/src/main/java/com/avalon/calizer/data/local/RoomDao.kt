@@ -32,6 +32,9 @@ interface RoomDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addFollowData(followData:List<FollowData>)
 
+    @Query("DELETE FROM follow_table WHERE (type=1 OR type=3) AND analyzeUserId=:userId")
+    suspend fun deleteLastData(userId: Long)
+
 
 /**
     @Query("SELECT * FROM followers_table EXCEPT SELECT * FROM last_followers_table")

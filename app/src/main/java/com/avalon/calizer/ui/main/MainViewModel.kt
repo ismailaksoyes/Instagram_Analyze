@@ -63,9 +63,9 @@ class MainViewModel @Inject constructor(
     }
 
 
-    fun addFollow(followData: List<FollowData>) {
+    fun addFollow(followData: List<FollowData>,userId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            dbRepository.addFollowData(followData)
+            dbRepository.addFollowData(followData,userId)
         }
     }
 
@@ -162,6 +162,12 @@ class MainViewModel @Inject constructor(
                 _followersData.value = FollowDataFlow.SaveFollow(it)
             }
         }
+    }
+    suspend fun updateUserType(userId:Long,followersType:Long,followingType:Long){
+        viewModelScope.launch(Dispatchers.IO) {
+            dbRepository.updateUserType(userId,followersType, followingType)
+        }
+
     }
 
 
