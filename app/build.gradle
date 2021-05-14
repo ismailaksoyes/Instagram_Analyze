@@ -1,11 +1,9 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
-    id 'dagger.hilt.android.plugin'
-    id "androidx.navigation.safeargs.kotlin"
+//    id 'dagger.hilt.android.plugin'
 
 
 }
@@ -56,7 +54,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation('com.android.support:multidex:1.0.3')
     //Kotlin components
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -67,7 +65,7 @@ dependencies {
     implementation("com.squareup.retrofit2:adapter-rxjava:$retrofitVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
     // Room components
-    def roomVersion = "2.2.6"
+    def roomVersion = "2.3.0"
     implementation "androidx.room:room-ktx:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
     androidTestImplementation "androidx.room:room-testing:$roomVersion"
@@ -85,23 +83,22 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:1.1.2"
 
     //glide
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
-    kapt 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    kapt 'com.github.bumptech.glide:compiler:4.12.0'
 
     //graph
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
-    implementation 'com.google.mlkit:face-detection:16.0.6'
+    implementation 'com.google.mlkit:face-detection:16.0.7'
 
     //Dagger - Hilt
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
-
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
-    kapt "androidx.hilt:hilt-compiler:1.0.0-beta01"
+    implementation "androidx.hilt:hilt-navigation-fragment:$hilt_version"
+    implementation "androidx.hilt:hilt-work:$hilt_version"
+    kapt "androidx.hilt:hilt-compiler:$hilt_version"
+    annotationProcessor 'androidx.hilt:hilt-compiler:1.0.0'
 
     // Activity KTX for viewModels()
-    implementation "androidx.activity:activity-ktx:1.2.2"
+    implementation "androidx.activity:activity-ktx:1.2.3"
 
     //navigation comp
     def nav_version = "2.3.5"

@@ -15,10 +15,6 @@ import com.avalon.calizer.R
 import com.avalon.calizer.databinding.FragmentSplashBinding
 import com.avalon.calizer.utils.MySharedPreferences
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_view_pager.view.*
-import kotlinx.android.synthetic.main.settings_fragment.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
