@@ -25,9 +25,9 @@ class MySharedPreferences @Inject constructor(var prefs:SharedPreferences) {
     get() = prefs.getString(Constants.USER_NAME,"")
     set(value) = prefs.edit().putString(Constants.USER_NAME,value).apply()
 
-    var followersUpdateDate: Long
-        get() = prefs.getLong(Constants.FOLLOWERS_UPDATE_DATE, -1)
-        set(value) = prefs.edit().putLong(Constants.FOLLOWERS_UPDATE_DATE, value).apply()
+    var followUpdateDate: Long
+        get() = prefs.getLong(Constants.FOLLOW_UPDATE_DATE, -1)
+        set(value) = prefs.edit().putLong(Constants.FOLLOW_UPDATE_DATE, value).apply()
 
     var followingUpdateDate: Long
         get() = prefs.getLong(Constants.FOLLOWING_UPDATE_DATE, -1)

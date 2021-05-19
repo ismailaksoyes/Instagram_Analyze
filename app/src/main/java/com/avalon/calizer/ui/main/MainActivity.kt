@@ -22,7 +22,9 @@ import com.avalon.calizer.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 import kotlin.random.Random
 
 @AndroidEntryPoint
@@ -244,7 +246,9 @@ class MainActivity : AppCompatActivity() {
                     getFirstData = false
                     viewModel.getUserDetails(prefs.selectedAccount)
                     val timeControl: Boolean = true
-                    if (timeControl) {
+                   // val analyzeTime: Date = Date(System.currentTimeMillis())
+                     val analyzeTime: Date = Date(prefs.followUpdateDate)
+                    if (Utils.getTimeDifference(analyzeTime)) {
                         lifecycleScope.launchWhenStarted {
                             viewModel.getUserFollowers(
                                 userId = prefs.selectedAccount,
@@ -311,24 +315,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun followersData() {
-        // if (PREFERENCES.firstLogin) {
-        if (10 > 20) {
-            Log.d("Response", "list-> " + followDataList.size.toString())
-            // Log.d("Response", "listlast-> " + followersLastList.size.toString())
-
-
-            //  viewModel.addFollowers(followDataList)
-
-
-            //  PREFERENCES.firstLogin = false
-
-        } else {
-            // Log.d("Response", "listlast-> " + followersLastList.size.toString())
-            // viewModel.addLastFollowers(followersLastList)
-
-        }
-    }
 
     private suspend fun addFollowList(followData: ApiResponseUserFollow?, type: Long?) {
 

@@ -1,5 +1,6 @@
 package com.avalon.calizer.ui.accounts
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -70,7 +71,9 @@ class AccountsViewModel @Inject constructor(
         repository.getUserDetails(cookies, userId).let {
             if (it.isSuccessful) {
                 _allAccounts.value = LastAccountsState.UserDetails(Resource.success(it.body()))
-             //   _allAccounts.value = LastAccountsState.UpdateData
+             //   _allAccounts.value = LastAccountsState.UpdateDataa
+               // val date = it.headers()
+                Log.d("GetHeader","${it.headers()}")
             } else {
                 _allAccounts.value =
                     LastAccountsState.UserDetails(Resource.error(it.errorBody().toString(), null))

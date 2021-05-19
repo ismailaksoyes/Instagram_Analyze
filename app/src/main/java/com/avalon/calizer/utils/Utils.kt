@@ -8,19 +8,17 @@ object Utils {
         return UUID.randomUUID().toString().replace("-", "")
     }
 
-    fun getFriendShipUrl(maxId: String? = null): String {
 
-        return if (maxId.isNullOrEmpty()) {
-            ""
-        } else {
-            "?max_id=$maxId&rank_token=19748713375_${generateUUID()}"
-        }
-    }
-
-    fun getTimeDifference(time: Date): Int {
+    fun getTimeDifference(time: Date): Boolean {
         val timeNow: Date = Date(System.currentTimeMillis())
         //get minutes
-        return (((timeNow.time - time.time) / 1000) % 3600 / 60).toInt()
+        return if (time.time <= -1){
+            true
+        }else{
+            (((timeNow.time - time.time) / 1000) % 3600 / 60).toInt() < 30
+        }
+
+
     }
 
     fun getTimeStatus(date: Long): Boolean {
