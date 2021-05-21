@@ -18,5 +18,8 @@
     <color name="pieRed">#FF5B60</color>
     <color name="pieBlue">#22C5FA</color>
     <color name="piePurple">#9A59F5</color>
+    <color name="backColorNew">#252A2D</color>
+    <color name="backMidColorNew">#7385EF</color>
+    <color name="backTopColorNew">#272E32</color>
 
 </resources>

@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                                 rnkToken = Utils.generateUUID(),
                                 cookies = prefs.allCookie
                             )
-                            addFollowList(users, 1)
+                            addFollowList(users, FollowSaveType.FOLLOWERS_LAST.type)
 
                         }
 
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                     is MainViewModel.FollowDataFlow.GetFollowDataSuccess -> {
                         delay((5005 + (0..250).random()).toLong())
                         it.follow.data?.let { users ->
-                            addFollowList(users, 1)
+                            addFollowList(users, FollowSaveType.FOLLOWERS_LAST.type)
                         }
                         viewModel.getUserFollowing(
                             userId = prefs.selectedAccount,
@@ -94,7 +94,6 @@ class MainActivity : AppCompatActivity() {
                             rnkToken = null,
                             cookies = prefs.allCookie
                         )
-                        Log.d("StateSave", "getUserFollowing")
                     }
                     is MainViewModel.FollowDataFlow.GetFollowingDataSync -> {
                         delay((500 + (0..250).random()).toLong())
@@ -105,16 +104,15 @@ class MainActivity : AppCompatActivity() {
                                 rnkToken = Utils.generateUUID(),
                                 cookies = prefs.allCookie
                             )
-                            addFollowList(users, 3)
+                            addFollowList(users, FollowSaveType.FOLLOWING_LAST.type)
 
                         }
 
                     }
                     is MainViewModel.FollowDataFlow.GetFollowingDataSuccess -> {
                         delay((500 + (0..250).random()).toLong())
-                        Log.d("StateSave", "FollowingOK")
                         it.following.data?.let { users ->
-                            addFollowList(users, 3)
+                            addFollowList(users, FollowSaveType.FOLLOWING_LAST.type)
                         }
                         viewModel.stateSaveLaunch(prefs.selectedAccount)
 
@@ -131,23 +129,10 @@ class MainActivity : AppCompatActivity() {
                     }
                     is MainViewModel.FollowDataFlow.SaveFollow -> {
 
-                        Log.d("StateSave", "Back")
-                        /**
-                         * eger type 0-1 ise followers
-                         * eger type 2-3 ise following
-                         * eger type 0-2 ise ekstra type degistir ve listenin uzerine ekle
-                         * kaydet...
-                         */
-                        Log.d(
-                            "NewList",
-                            "okSave ${it.userInfo.followersType} ${it.userInfo.followingType}"
-                        )
-
                         it.userInfo.followersType.let { type ->
                             Log.d("hash",type.toString())
                             if (type == FollowSaveType.FOLLOWERS_FIRST.type) {
                                 val cacheList = ArrayList<FollowData>()
-                                Log.d("hash",cacheList.hashCode().toString())
                                 followDataList.filter { data-> data.type == FollowSaveType.FOLLOWERS_LAST.type }.forEach { item->
                                     cacheList.add(
                                         FollowData(
@@ -170,11 +155,9 @@ class MainActivity : AppCompatActivity() {
                                 }
                                 followDataList.addAll(cacheList)
 
-                                // prefs.followersType = FollowSaveType.FOLLOWERS_LAST.type
-
                             }
                         }
-                        //prefs.followersType = 2
+
                         it.userInfo.followingType.let { type ->
                             Log.d("hash2",type.toString())
                             if (type == FollowSaveType.FOLLOWING_FIRST.type) {
@@ -226,10 +209,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        //    if (Utils.getTimeStatus(PREFERENCES.followersUpdateDate)) {
-        // PREFERENCES.followersUpdateDate = System.currentTimeMillis()
-
-
     }
 
     private fun initNavController() {
@@ -245,17 +224,19 @@ class MainActivity : AppCompatActivity() {
                 if (getFirstData) {
                     getFirstData = false
                     viewModel.getUserDetails(prefs.selectedAccount)
-                    val timeControl: Boolean = true
-                   // val analyzeTime: Date = Date(System.currentTimeMillis())
-                     val analyzeTime: Date = Date(prefs.followUpdateDate)
+
+                    val analyzeTime: Date = Date(prefs.followUpdateDate)
                     if (Utils.getTimeDifference(analyzeTime)) {
                         lifecycleScope.launchWhenStarted {
+                            /**
                             viewModel.getUserFollowers(
                                 userId = prefs.selectedAccount,
                                 maxId = null,
                                 rnkToken = null,
                                 cookies = prefs.allCookie
                             )
+                            **/
+
                         }
 
                     }
@@ -298,8 +279,10 @@ class MainActivity : AppCompatActivity() {
                     followersType = FollowSaveType.FOLLOWERS_LAST.type,
                     followingType = FollowSaveType.FOLLOWING_LAST.type
                 )
+
             }
         }
+
         lifecycleScope.launchWhenStarted {
             delay(1000)
             for (sizeTR in 0..3) {
@@ -308,8 +291,10 @@ class MainActivity : AppCompatActivity() {
                 }.let { sizeC ->
                     Log.d("followSaveData", "$sizeTR -> " + sizeC.size.toString())
                 }
+
             }
             viewModel.addFollow(followDataList,prefs.selectedAccount)
+            prefs.followUpdateDate = System.currentTimeMillis()
         }
 
 

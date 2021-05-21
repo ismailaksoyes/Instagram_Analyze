@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimarySurface">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_accounts_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -13,7 +14,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:text="Hesaplarım"
         android:fontFamily="@font/ibm_plex_sans_bold"
-        android:textColor="@color/darkBlue"
         android:textSize="24sp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
@@ -21,16 +21,16 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rc_accounts_list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constrainedHeight="true"
         app:layout_constraintTop_toBottomOf="@id/tv_accounts_text"
-        app:layout_constraintBottom_toTopOf="@id/cv_accounts_add"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp" />
+        android:layout_marginEnd="10dp"
+        android:overScrollMode="never"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_accounts_add"
@@ -44,7 +44,6 @@
         android:focusable="true"
         android:foreground="?selectableItemBackground"
         app:cardElevation="6dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rc_accounts_list">
@@ -66,14 +65,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_accounts_add_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:fontFamily="@font/ibm_plex_sans_medium"
                 android:text="Hesap Ekle"
-                android:textColor="@color/darkBlue"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_plus_ico"
                 app:layout_constraintTop_toTopOf="parent" />

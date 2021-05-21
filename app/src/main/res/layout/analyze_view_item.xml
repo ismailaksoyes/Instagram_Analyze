@@ -37,7 +37,7 @@
             app:layout_constraintStart_toEndOf="@id/iv_view_icon"
             android:text="title"
             android:fontFamily="@font/ibm_plex_sans_medium"
-            android:textColor="@color/darkBlue"
+            android:textColor="@color/white"
             android:layout_marginStart="20dp"/>
 
 

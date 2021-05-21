@@ -39,6 +39,9 @@ class MainViewModel @Inject constructor(
 
     }
 
+    fun sdfds(){
+
+    }
     sealed class FollowDataFlow {
         object Empty : FollowDataFlow()
         data class GetUserCookies(var accountsData: AccountsData) : FollowDataFlow()
@@ -104,13 +107,11 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
 
             repository.getUserFollowers(userId, maxId, rnkToken, cookies).let {
-                Log.d("ResponseData", "${it.body()}")
                 if (it.isSuccessful) {
 
                     if (!it.body()?.nextMaxId.isNullOrEmpty()) {
-                        _followersData.value =
-                            FollowDataFlow.GetFollowDataSuccess(Resource.success(it.body()))
-                        // _followersData.value = FollowDataFlow.GetFollowDataSync(Resource.success(it.body()))
+
+                         _followersData.value = FollowDataFlow.GetFollowDataSync(Resource.success(it.body()))
                     } else {
                         _followersData.value =
                             FollowDataFlow.GetFollowDataSuccess(Resource.success(it.body()))
@@ -130,13 +131,12 @@ class MainViewModel @Inject constructor(
         rnkToken: String?,
         cookies: String?
     ) {
-        Log.d("StateSave", "getUserFollowing Request")
+
 
         viewModelScope.launch(Dispatchers.IO) {
 
             repository.getUserFollowing(userId, maxId, rnkToken, cookies).let {
-                Log.d("StateSave", "getUserFollowing response")
-                Log.d("ResponseData", "${it.body()}")
+
                 if (it.isSuccessful) {
 
                     if (!it.body()?.nextMaxId.isNullOrEmpty()) {
@@ -144,7 +144,7 @@ class MainViewModel @Inject constructor(
                         _followersData.value =
                             FollowDataFlow.GetFollowingDataSync(Resource.success(it.body()))
                     } else {
-                        Log.d("StateSave", "getUserFollowing OK VALUE")
+
                         _followersData.value =
                             FollowDataFlow.GetFollowingDataSuccess(Resource.success(it.body()))
                     }
