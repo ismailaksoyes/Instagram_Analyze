@@ -17,7 +17,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:background="?colorSecondary">
 
         <ImageView
             android:id="@+id/iv_profile_image"
@@ -35,6 +36,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_profile_image"
             android:text="-"
+            android:textColor="?colorOnSecondary"
             android:fontFamily="@font/ibm_plex_sans_medium"
             android:layout_marginStart="20dp"/>
 

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -21,6 +22,7 @@ import com.avalon.calizer.utils.MySharedPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -64,7 +66,13 @@ class AccountsFragment  : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if(savedInstanceState ==null){
+            lifecycleScope.launchWhenStarted {
 
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
+            }
+        }
         setupRecyclerview()
         viewModel.getAccountList()
         lifecycleScope.launchWhenStarted {
@@ -119,6 +127,8 @@ class AccountsFragment  : Fragment() {
                 }
             }
         }
+
+
 
 
         binding.cvAccountsAdd.setOnClickListener {

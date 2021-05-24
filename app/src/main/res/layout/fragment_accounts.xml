@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimarySurface">
+    android:background="?colorPrimary">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_accounts_text"
@@ -13,6 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:text="Hesaplarım"
+        android:textColor="?colorOnPrimary"
         android:fontFamily="@font/ibm_plex_sans_bold"
         android:textSize="24sp"
         android:layout_marginStart="20dp"
@@ -42,8 +43,7 @@
         android:layout_marginBottom="20dp"
         android:clickable="true"
         android:focusable="true"
-        android:foreground="?selectableItemBackground"
-        app:cardElevation="6dp"
+        app:cardElevation="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rc_accounts_list">
@@ -51,7 +51,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:background="?colorSecondary">
 
 
             <ImageView
@@ -72,6 +73,7 @@
                 android:layout_marginStart="20dp"
                 android:fontFamily="@font/ibm_plex_sans_medium"
                 android:text="Hesap Ekle"
+                android:textColor="?colorOnSecondary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_plus_ico"
                 app:layout_constraintTop_toTopOf="parent" />
