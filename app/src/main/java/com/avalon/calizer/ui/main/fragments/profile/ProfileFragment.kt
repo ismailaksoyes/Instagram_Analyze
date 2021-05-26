@@ -143,143 +143,13 @@ class ProfileFragment : Fragment() {
 
     }
 
-    private fun setupPieChart() {
-        radarChart = binding.chartPie
-        val radarEntires1 = ArrayList<RadarEntry>()
-        val radarEntires2 = ArrayList<RadarEntry>()
 
-        for(i in 1..5){
-            val val1 = (Math.random() * 80) + 20
-            radarEntires1.add(RadarEntry(val1.toFloat()))
-            val val2 = (Math.random() * 80) + 20
-            radarEntires2.add(RadarEntry(val2.toFloat()))
-        }
-
-        val barDataSetColors = ArrayList<Int>()
-        barDataSetColors.add(ContextCompat.getColor(requireContext(),R.color.pieRed))
-        barDataSetColors.add(ContextCompat.getColor(requireContext(),R.color.pieBlue))
-      //  barDataSetColors.add(ContextCompat.getColor(requireContext(),R.color.colorGrey))
-
-
-
-        val radarDataSet1 = RadarDataSet(radarEntires1, "")
-        val radarDataSet2= RadarDataSet(radarEntires2, "")
-        radarDataSet1.fillColor = Color.rgb(103, 110, 129)
-        radarDataSet1.color = Color.rgb(103, 110, 129)
-        radarDataSet1.setDrawFilled(true)
-        radarDataSet1.setDrawHighlightIndicators(false)
-        radarDataSet1.isDrawHighlightCircleEnabled = true
-        radarDataSet1.lineWidth = 2f
-        radarDataSet1.fillAlpha =180
-
-        radarDataSet2.fillColor = Color.rgb(121, 162, 175)
-        radarDataSet2.color = Color.rgb(121, 162, 175)
-        radarDataSet2.setDrawFilled(true)
-        radarDataSet2.setDrawHighlightIndicators(false)
-        radarDataSet2.isDrawHighlightCircleEnabled = true
-        radarDataSet2.lineWidth = 2f
-        radarDataSet2.fillAlpha =180
-        val radarDataArray = ArrayList<RadarDataSet>()
-        radarDataArray.add(radarDataSet1)
-        radarDataArray.add(radarDataSet2)
-
-        val radarData = RadarData(radarDataArray as List<IRadarDataSet>?)
-       radarData.setDrawValues(false)
-        radarChart.data = radarData
-        radarChart.description.isEnabled = false
-        radarChart.legend.isEnabled = false
-        radarChart.webLineWidth = 1f
-        radarChart.setTouchEnabled(false)
-        radarChart.yAxis.setDrawLabels(false)
-        radarChart.invalidate()
-
-
-
-
-
-
-
-
-    }
-
-    private fun setBarChart() {
-        val entries = ArrayList<BarEntry>()
-        entries.add(BarEntry(1f, 5f))
-        entries.add(BarEntry(2f, 9f))
-        entries.add(BarEntry(3f, 4f))
-
-        val barDataSet = BarDataSet(entries, "Test")
-
-        val barDataSetColors = ArrayList<Int>()
-//        barDataSetColors.add(Color.BLACK)
-//        barDataSetColors.add(Color.GRAY)
-//        barDataSetColors.add(Color.BLUE)
-//        barDataSetColors.add(Color.RED)
-//        barDataSetColors.add(Color.YELLOW)
-
-
-        barDataSet.setGradientColor(
-            ContextCompat.getColor(requireContext(), R.color.graChartStart), ContextCompat.getColor(
-                requireContext(),
-                R.color.graChartEnd
-            )
-        )
-        //  barDataSet.colors = barDataSetColors
-        val entries2 = ArrayList<BarEntry>()
-        entries2.add(BarEntry(1f, 9f))
-        entries2.add(BarEntry(2f, 5f))
-        entries2.add(BarEntry(3f, 2f))
-
-        val barDataSet2 = BarDataSet(entries2, "Test")
-
-        val allDataSet = ArrayList<BarDataSet>()
-        allDataSet.add(barDataSet)
-        allDataSet.add(barDataSet2)
-
-        val data = BarData(allDataSet as List<IBarDataSet>?)
-        val groupSpace = 0.1f
-        val barSpace = 0f
-        val barWidth = 0.45f
-        data.barWidth = barWidth
-//        barChart.data = data
-//        barChart.xAxis.axisMinimum= 0f
-//        barChart.xAxis.axisMaximum = 3f
-//        barChart.groupBars(0f,groupSpace,barSpace)
-//        barChart.setTouchEnabled(false)
-//        barChart.isDoubleTapToZoomEnabled = false
-//        barChart.setDrawBorders(false)
-//        barChart.legend.isEnabled = false
-//
-//        barChart.setDrawGridBackground(false)
-//        barChart.description.isEnabled = false
-//
-//        barChart.axisLeft.setDrawGridLines(false)
-//        barChart.axisLeft.setDrawLabels(false)
-//        barChart.axisLeft.setDrawAxisLine(false)
-//
-//        barChart.axisRight.setDrawGridLines(false)
-//        barChart.axisRight.setDrawLabels(false)
-//        barChart.axisRight.setDrawAxisLine(false)
-//
-//        barChart.xAxis.setDrawGridLines(false)
-//        barChart.xAxis.setDrawLabels(false)
-//        barChart.xAxis.setDrawAxisLine(false)
-//
-//        barChart.setPinchZoom(false)
-//        barChart.setDrawBarShadow(false)
-//        barChart.setScaleEnabled(false)
-//       // barChart.animateY(5000)
-//        barChart.invalidate()
-
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val imageUrl: String = "https://thispersondoesnotexist.com/image"
 
         viewModel.getUserDetails(prefs.selectedAccount)
-        setupPieChart()
 
         binding.clGoAccounts.setOnClickListener {
             it.findNavController().navigate(R.id.action_destination_profile_to_destination_accounts)
@@ -302,9 +172,8 @@ class ProfileFragment : Fragment() {
 //
 //                }
 //            })
-
-
     }
+
 
 }
 

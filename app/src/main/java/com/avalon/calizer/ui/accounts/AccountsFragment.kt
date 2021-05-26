@@ -66,13 +66,7 @@ class AccountsFragment  : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if(savedInstanceState ==null){
-            lifecycleScope.launchWhenStarted {
 
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-
-            }
-        }
         setupRecyclerview()
         viewModel.getAccountList()
         lifecycleScope.launchWhenStarted {
