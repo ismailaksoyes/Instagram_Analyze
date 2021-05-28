@@ -159,11 +159,8 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         it.userInfo.followingType.let { type ->
-                            Log.d("hash2",type.toString())
                             if (type == FollowSaveType.FOLLOWING_FIRST.type) {
-                                //  val list = followDataList.map { followData -> followData.copy() }
                                 val cacheList = ArrayList<FollowData>()
-                                Log.d("hash2",cacheList.hashCode().toString())
                                 followDataList.filter { data-> data.type == FollowSaveType.FOLLOWING_LAST.type }.forEach { item->
                                     cacheList.add(
                                         FollowData(
@@ -228,14 +225,14 @@ class MainActivity : AppCompatActivity() {
                     val analyzeTime: Date = Date(prefs.followUpdateDate)
                     if (Utils.getTimeDifference(analyzeTime)) {
                         lifecycleScope.launchWhenStarted {
-                            /**
+
                             viewModel.getUserFollowers(
                                 userId = prefs.selectedAccount,
                                 maxId = null,
                                 rnkToken = null,
                                 cookies = prefs.allCookie
                             )
-                            **/
+
 
                         }
 
