@@ -36,6 +36,9 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
     fun getAccounts(): List<AccountsData> {
         return roomDao.getAllAccountDetails
     }
+   suspend fun getFollowersData():List<FollowData>{
+        return roomDao.getFollowersData()
+    }
 
     suspend fun updateAccount(profile_Pic : String?, user_name:String?, ds_userId:String?){
         roomDao.updateAccountData(profile_Pic,user_name,ds_userId)

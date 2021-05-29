@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cv_accounts"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="2dp"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/iv_view_pp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_pp_username"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
+        <TextView
+            android:id="@+id/tv_pp_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_view_pp"
+            android:text="title"
+            android:fontFamily="@font/ibm_plex_sans_medium"
+            android:textColor="?colorOnSecondary"
+            android:layout_marginStart="20dp"/>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_pp_fullname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_pp_username"
+        app:layout_constraintStart_toEndOf="@id/iv_view_pp"
+        android:text="title title"
+        android:fontFamily="@font/ibm_plex_sans_light"
+        android:textColor="?colorOnSecondary"
+        android:layout_marginStart="20dp"/>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_follow_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="UnFollow"
+        android:fontFamily="@font/ibm_plex_sans_medium"
+        android:textColor="?colorOnSecondary"
+        app:strokeColor="?colorOnSecondary"
+       />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+

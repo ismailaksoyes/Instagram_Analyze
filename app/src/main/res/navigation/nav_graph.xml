@@ -27,6 +27,9 @@
         android:label="analyze_fragment"
         tools:layout="@layout/analyze_fragment" >
 
+        <action
+            android:id="@+id/action_destination_analyze_to_allFollowersFragment"
+            app:destination="@id/allFollowersFragment" />
     </fragment>
     <fragment
         android:id="@+id/destination_settings"
@@ -75,4 +78,9 @@
             android:id="@+id/action_webLoginFragment_to_destination_accounts"
             app:destination="@id/destination_accounts" />
     </fragment>
+    <fragment
+        android:id="@+id/allFollowersFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.AllFollowersFragment"
+        android:label="fragment_all_followers"
+        tools:layout="@layout/fragment_all_followers" />
 </navigation>

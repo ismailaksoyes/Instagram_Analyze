@@ -136,7 +136,6 @@ class MainActivity : AppCompatActivity() {
                                 followDataList.filter { data-> data.type == FollowSaveType.FOLLOWERS_LAST.type }.forEach { item->
                                     cacheList.add(
                                         FollowData(
-                                            pk = item.pk,
                                             type = 0L,
                                             analyzeUserId = item.analyzeUserId,
                                             dsUserID = item.dsUserID,
@@ -164,7 +163,6 @@ class MainActivity : AppCompatActivity() {
                                 followDataList.filter { data-> data.type == FollowSaveType.FOLLOWING_LAST.type }.forEach { item->
                                     cacheList.add(
                                         FollowData(
-                                            pk = item.pk,
                                             type = 2L,
                                             analyzeUserId = item.analyzeUserId,
                                             dsUserID = item.dsUserID,
@@ -304,7 +302,7 @@ class MainActivity : AppCompatActivity() {
             val analyzeUserId = prefs.selectedAccount
             for (data in followData.users) {
                 val followUpdateList = FollowData()
-                followUpdateList.pk = data.pk
+                followUpdateList.dsUserID = data.pk
                 followUpdateList.type = type
                 followUpdateList.analyzeUserId = analyzeUserId
                 followUpdateList.fullName = data.fullName

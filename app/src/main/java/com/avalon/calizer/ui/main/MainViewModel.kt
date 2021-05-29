@@ -39,9 +39,6 @@ class MainViewModel @Inject constructor(
 
     }
 
-    fun sdfds(){
-
-    }
     sealed class FollowDataFlow {
         object Empty : FollowDataFlow()
         data class GetUserCookies(var accountsData: AccountsData) : FollowDataFlow()

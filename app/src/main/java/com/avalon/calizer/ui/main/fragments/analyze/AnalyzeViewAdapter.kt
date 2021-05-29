@@ -2,6 +2,8 @@ package com.avalon.calizer.ui.main.fragments.analyze
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.R
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.data.local.analyze.AnalyzeViewData
 import com.avalon.calizer.databinding.AnalyzeViewItemBinding
@@ -15,6 +17,9 @@ class AnalyzeViewAdapter() : RecyclerView.Adapter<AnalyzeViewAdapter.MainViewHol
         fun bind(viewList: AnalyzeViewData) {
             binding.tvAnalyzeTitle.text = viewList.title
             binding.ivViewIcon.setImageResource(viewList.uri)
+            binding.cvAccounts.setOnClickListener {
+                it.findNavController().navigate(com.avalon.calizer.R.id.action_destination_analyze_to_allFollowersFragment)
+            }
         }
     }
 

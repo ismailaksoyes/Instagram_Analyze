@@ -28,6 +28,9 @@ interface RoomDao {
     @get:Query("SELECT * FROM accounts_table")
     val getAllAccountDetails : List<AccountsData>
 
+    @Query("SELECT * FROM follow_table WHERE type=1")
+    suspend fun getFollowersData():List<FollowData>
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addFollowData(followData:List<FollowData>)

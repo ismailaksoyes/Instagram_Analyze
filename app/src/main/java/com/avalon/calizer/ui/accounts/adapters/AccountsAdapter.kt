@@ -38,8 +38,7 @@ class AccountsAdapter(var selectedUserInterface: SelectedUserInterface) :
                 binding.ivProfileImage.loadPPUrl(accountsList.profilePic)
                 binding.tvAccountsUsername.text = accountsList.userName
             }
-           // binding.ivProfileImage.loadPPUrl(accountsList.profilePic?:"https://slangit.com/img/slang/pp_4215.jpg")
-           // binding.tvAccountsUsername.text = accountsList.userName
+
             binding.cvAccounts.setOnClickListener {
                 val sendData = AccountsData(
                     userName = accountsList.userName,
@@ -48,7 +47,7 @@ class AccountsAdapter(var selectedUserInterface: SelectedUserInterface) :
                 )
                 selectedUserInterface.getData(sendData)
 
-                //   it.findNavController().navigate(R.id.action_destination_accounts_to_destination_profile)
+                 // it.findNavController().navigate(R.id.action_destination_analyze_to_allFollowersFragment)
             }
         }
     }
