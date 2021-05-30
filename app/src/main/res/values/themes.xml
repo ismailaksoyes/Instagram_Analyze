@@ -9,6 +9,8 @@
         <item name="colorOnBackground">@color/white</item>
         <item name="colorAccent">#272E32</item>
         <item name="colorPrimaryVariant">@color/darkBlue</item>
+        <item name="colorPrimaryDark">#252a2d</item>
+
 
         <!-- Secondary brand color. -->
 
@@ -18,7 +20,8 @@
     </style>
     <style name="Base.Theme.Calizer" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 
-        <item name="android:statusBarColor" tools:targetApi="l">?colorPrimary</item>
+        <item name="android:statusBarColor" >?colorPrimary</item>
+        <item name="android:windowLightStatusBar"
         <!-- Customize your theme here. -->
 
     </style>
