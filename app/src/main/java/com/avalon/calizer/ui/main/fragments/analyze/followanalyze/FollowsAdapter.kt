@@ -1,5 +1,6 @@
 package com.avalon.calizer.ui.main.fragments.analyze.followanalyze
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -11,11 +12,12 @@ class FollowsAdapter:RecyclerView.Adapter<FollowsAdapter.MainViewHolder>() {
     private var _accountsList = emptyList<FollowData>()
 
     class MainViewHolder(var binding:FollowViewItemBinding):RecyclerView.ViewHolder(binding.root){
+        @SuppressLint("SetTextI18n")
         fun bind(followList:FollowData){
             followList.let {
                 binding.ivViewPp.loadPPUrl(followList.profilePicUrl)
                 binding.tvPpFullname.text = followList.fullName
-                binding.tvPpUsername.text = followList.username
+                binding.tvPpUsername.text = "@$followList.username"
             }
 
         }

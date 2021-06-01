@@ -6,6 +6,8 @@
     <string name="analyze_title_posts">Gonderiler</string>
     <string name="analyze_title_blockers">Engelleyenler</string>
     <string name="analyze_title_new_followers">Yeni Takipciler</string>
+    <string name="analyze_title_all_followers">Takipciler</string>
+    <string name="analyze_title_all_following">Takip Edilenler</string>
     <string name="analyze_title_new_following">Yeni Takip Ettiklerim</string>
     <string name="analyze_title_new_unfollowing">Yeni Takipten Ciktiklarim</string>
     <string name="analyze_title_new_unfollowers">Takipten Cikanlar</string>

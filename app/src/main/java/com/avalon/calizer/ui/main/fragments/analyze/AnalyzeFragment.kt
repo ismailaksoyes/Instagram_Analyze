@@ -61,6 +61,10 @@ class AnalyzeFragment : Fragment() {
                 title = resources.getString(R.string.analyze_title_new_followers)
             ),
             AnalyzeViewData(
+                uri = R.drawable.ic_follow_poz_ico,
+                title = resources.getString(R.string.analyze_title_new_followers)
+            ),
+            AnalyzeViewData(
                 uri = R.drawable.ic_follow_neg_ico,
                 title = resources.getString(R.string.analyze_title_new_unfollowers)
             ),
