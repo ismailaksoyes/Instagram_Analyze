@@ -63,7 +63,7 @@ class AnalyzeFragment : Fragment() {
             AnalyzeViewData(
                 uri = R.drawable.ic_follow_poz_ico,
                 title = resources.getString(R.string.analyze_title_all_followers),
-                type = AnalyzeAdapterType.ALL_FOLLOWERS.type
+                type = R.id.action_destination_analyze_to_allFollowersFragment
             ),
             AnalyzeViewData(
                 uri = R.drawable.ic_follow_poz_ico,

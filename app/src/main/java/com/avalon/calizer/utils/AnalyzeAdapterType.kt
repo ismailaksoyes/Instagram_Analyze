@@ -1,11 +1,11 @@
 package com.avalon.calizer.utils
 
-enum class AnalyzeAdapterType(val type:Long) {
-    STORY_VIEWS(0L),
-    ALL_POST(1L),
-    ALL_FOLLOWERS(2L),
-    ALL_FOLLOWING(3L),
-    NEW_FOLLOWERS(4L),
-    NEW_FOLLOWING(5L),
-    UNFOLLOWING(6L)
+enum class AnalyzeAdapterType(val type:Int) {
+    STORY_VIEWS(0),
+    ALL_POST(1),
+    ALL_FOLLOWERS(2),
+    ALL_FOLLOWING(3),
+    NEW_FOLLOWERS(4),
+    NEW_FOLLOWING(5),
+    UNFOLLOWING(6)
 }

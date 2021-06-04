@@ -6,7 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.data.local.FollowData
 import com.avalon.calizer.databinding.FollowViewItemBinding
+import com.avalon.calizer.utils.clearRecycled
 import com.avalon.calizer.utils.loadPPUrl
+import com.bumptech.glide.Glide
 
 class FollowsAdapter:RecyclerView.Adapter<FollowsAdapter.MainViewHolder>() {
     private var _accountsList = emptyList<FollowData>()
@@ -17,7 +19,7 @@ class FollowsAdapter:RecyclerView.Adapter<FollowsAdapter.MainViewHolder>() {
             followList.let {
                 binding.ivViewPp.loadPPUrl(followList.profilePicUrl)
                 binding.tvPpFullname.text = followList.fullName
-                binding.tvPpUsername.text = "@$followList.username"
+                binding.tvPpUsername.text = "@${followList.username}"
             }
 
         }
@@ -26,6 +28,10 @@ class FollowsAdapter:RecyclerView.Adapter<FollowsAdapter.MainViewHolder>() {
 
     }
 
+    override fun onViewRecycled(holder: MainViewHolder) {
+        holder.binding.ivViewPp.clearRecycled()
+        super.onViewRecycled(holder)
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
        val binding = FollowViewItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return MainViewHolder(binding)

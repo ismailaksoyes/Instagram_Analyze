@@ -15,6 +15,11 @@ fun  ImageView.loadPPUrl(url:String?){
         .into(this)
 }
 
+fun ImageView.clearRecycled(){
+    Glide.with(context)
+        .clear(this)
+}
+
 fun getBitmap(context: Context,url: String?):Bitmap{
    return Glide.with(context)
         .asBitmap()

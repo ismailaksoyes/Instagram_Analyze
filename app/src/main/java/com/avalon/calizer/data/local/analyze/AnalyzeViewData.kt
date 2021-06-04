@@ -7,6 +7,6 @@ data class AnalyzeViewData(
     @DrawableRes
     var uri:Int = 0,
     var title:String = "",
-    var type:Long = 0L
+    var type:Int = 0
 
 )

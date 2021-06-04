@@ -22,6 +22,8 @@ import com.avalon.calizer.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
+import okio.ByteString.Companion.decodeBase64
+import okio.Utf8
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -65,7 +67,6 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.itemIconTintList = null
         initData()
         initNavController()
-
         lifecycleScope.launchWhenStarted {
             viewModel.followData.collect {
                 when (it) {
@@ -130,7 +131,6 @@ class MainActivity : AppCompatActivity() {
                     is MainViewModel.FollowDataFlow.SaveFollow -> {
 
                         it.userInfo.followersType.let { type ->
-                            Log.d("hash",type.toString())
                             if (type == FollowSaveType.FOLLOWERS_FIRST.type) {
                                 val cacheList = ArrayList<FollowData>()
                                 followDataList.filter { data-> data.type == FollowSaveType.FOLLOWERS_LAST.type }.forEach { item->
@@ -184,11 +184,11 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
-                        it.userInfo.followingType?.let { it1 ->
-                            it.userInfo.followersType?.let { it2 ->
+                        it.userInfo.followingType?.let { type1 ->
+                            it.userInfo.followersType?.let { type2 ->
                                 saveFollowRoom(
-                                    it2,
-                                    it1
+                                    type2,
+                                    type1
                                 )
                             }
                         }

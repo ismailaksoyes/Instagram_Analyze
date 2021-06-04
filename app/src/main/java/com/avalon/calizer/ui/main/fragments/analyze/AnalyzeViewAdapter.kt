@@ -1,5 +1,6 @@
 package com.avalon.calizer.ui.main.fragments.analyze
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.R
@@ -14,11 +15,13 @@ class AnalyzeViewAdapter() : RecyclerView.Adapter<AnalyzeViewAdapter.MainViewHol
 
     class MainViewHolder(var binding: AnalyzeViewItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("ResourceType")
         fun bind(viewList: AnalyzeViewData) {
             binding.tvAnalyzeTitle.text = viewList.title
             binding.ivViewIcon.setImageResource(viewList.uri)
             binding.cvAccounts.setOnClickListener {
-                it.findNavController().navigate(com.avalon.calizer.R.id.action_destination_analyze_to_allFollowersFragment)
+                    it.findNavController().navigate(viewList.type)
+
             }
         }
     }
