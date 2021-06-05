@@ -1,5 +1,6 @@
 package com.avalon.calizer.data.local
 
+import androidx.paging.PagingSource
 import androidx.room.*
 import com.avalon.calizer.data.local.profile.AccountsInfoData
 
@@ -29,7 +30,10 @@ interface RoomDao {
     val getAllAccountDetails : List<AccountsData>
 
     @Query("SELECT * FROM follow_table WHERE type=1")
-    suspend fun getFollowersData():List<FollowData>
+    suspend fun getFollowersData():PagingSource<Int,FollowData>
+
+    @Query("DELETE FROM remotekeys")
+    suspend fun clearRemoteKeys()
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
