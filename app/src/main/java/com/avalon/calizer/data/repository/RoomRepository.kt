@@ -1,6 +1,7 @@
 package com.avalon.calizer.data.repository
 
 import android.util.Log
+import androidx.paging.PagingSource
 import com.avalon.calizer.data.local.*
 import com.avalon.calizer.data.local.profile.AccountsInfoData
 import kotlinx.coroutines.CoroutineScope
@@ -36,7 +37,7 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
     fun getAccounts(): List<AccountsData> {
         return roomDao.getAllAccountDetails
     }
-   suspend fun getFollowersData():List<FollowData>{
+   suspend fun getFollowersData():PagingSource<Int,FollowData>{
         return roomDao.getFollowersData()
     }
 
