@@ -66,7 +66,7 @@ class AccountsFragment  : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.d("ResDeep",savedInstanceState.toString())
         setupRecyclerview()
         viewModel.getAccountList()
         lifecycleScope.launchWhenStarted {

@@ -3,6 +3,8 @@ package com.avalon.calizer.ui.main.fragments.analyze.followanalyze
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.data.local.FollowData
 import com.avalon.calizer.databinding.FollowViewItemBinding
@@ -10,16 +12,27 @@ import com.avalon.calizer.utils.clearRecycled
 import com.avalon.calizer.utils.loadPPUrl
 import com.bumptech.glide.Glide
 
-class FollowsAdapter:RecyclerView.Adapter<FollowsAdapter.MainViewHolder>() {
-    private var _accountsList = emptyList<FollowData>()
+class FollowsAdapter:PagingDataAdapter<FollowData,RecyclerView.ViewHolder>(REPO_COMPARATOR) {
+
+    companion object{
+        private val REPO_COMPARATOR = object :DiffUtil.ItemCallback<FollowData>(){
+            override fun areItemsTheSame(oldItem: FollowData, newItem: FollowData): Boolean =
+              oldItem == newItem
+
+
+            override fun areContentsTheSame(oldItem: FollowData, newItem: FollowData): Boolean =
+                oldItem == newItem
+
+        }
+    }
 
     class MainViewHolder(var binding:FollowViewItemBinding):RecyclerView.ViewHolder(binding.root){
         @SuppressLint("SetTextI18n")
-        fun bind(followList:FollowData){
-            followList.let {
-                binding.ivViewPp.loadPPUrl(followList.profilePicUrl)
-                binding.tvPpFullname.text = followList.fullName
-                binding.tvPpUsername.text = "@${followList.username}"
+        fun bind(followList:FollowData?){
+            followList?.let { data->
+                binding.ivViewPp.loadPPUrl(data.profilePicUrl)
+                binding.tvPpFullname.text = data.fullName
+                binding.tvPpUsername.text = "@${data.username}"
             }
 
         }
@@ -28,24 +41,13 @@ class FollowsAdapter:RecyclerView.Adapter<FollowsAdapter.MainViewHolder>() {
 
     }
 
-    override fun onViewRecycled(holder: MainViewHolder) {
-        holder.binding.ivViewPp.clearRecycled()
-        super.onViewRecycled(holder)
-    }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
        val binding = FollowViewItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return MainViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
-       holder.bind(_accountsList[position])
-    }
 
-    override fun getItemCount(): Int {
-        return _accountsList.size
-    }
-    fun setData(followList: List<FollowData>){
-        _accountsList = followList
-        notifyDataSetChanged()
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as? MainViewHolder)?.bind(followList = getItem(position))
     }
 }

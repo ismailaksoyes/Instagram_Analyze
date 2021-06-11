@@ -31,7 +31,7 @@ class AllFollowersFragment : Fragment() {
             viewModel.userData.collect {
                 when(it){
                     is FollowViewModel.UserDataFlow.GetFollowData->{
-                        followsAdapter.setData(it.accountsData)
+                        followsAdapter.submitData(it.accountsData)
                     }
                     is FollowViewModel.UserDataFlow.Empty->{
 

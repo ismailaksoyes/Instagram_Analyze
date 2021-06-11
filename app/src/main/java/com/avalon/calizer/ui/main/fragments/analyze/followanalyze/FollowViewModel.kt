@@ -2,6 +2,7 @@ package com.avalon.calizer.ui.main.fragments.analyze.followanalyze
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.avalon.calizer.data.local.FollowData
 import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.data.repository.RoomRepository
@@ -17,13 +18,13 @@ class FollowViewModel @Inject constructor(private val dbRepository: RoomReposito
 
     sealed class UserDataFlow {
         object Empty : UserDataFlow()
-        data class GetFollowData(var accountsData:List<FollowData>) : UserDataFlow()
+        data class GetFollowData(var accountsData:PagingData<FollowData>) : UserDataFlow()
 
     }
 
     fun followData(){
         viewModelScope.launch {
-            _userData.value = UserDataFlow.GetFollowData(dbRepository.getFollowersData())
+            _userData.value = UserDataFlow.GetFollowData(dbRepository.m)
         }
     }
 
