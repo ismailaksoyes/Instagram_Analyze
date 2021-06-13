@@ -24,7 +24,7 @@ class FollowViewModel @Inject constructor(private val dbRepository: RoomReposito
 
     fun followData(){
         viewModelScope.launch {
-            _userData.value = UserDataFlow.GetFollowData(dbRepository.m)
+            _userData.value = UserDataFlow.GetFollowData(dbRepository.getFollowersData())
         }
     }
 

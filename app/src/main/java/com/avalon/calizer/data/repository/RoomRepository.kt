@@ -37,8 +37,8 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
     fun getAccounts(): List<AccountsData> {
         return roomDao.getAllAccountDetails
     }
-   suspend fun getFollowersData(prev:Int,next:Int):List<FollowData>{
-        return roomDao.getFollowersData(prev, next)
+   suspend fun getFollowersData():PagingSource<Int,FollowData>{
+        return roomDao.getFollowersData()
     }
 
     suspend fun updateAccount(profile_Pic : String?, user_name:String?, ds_userId:String?){

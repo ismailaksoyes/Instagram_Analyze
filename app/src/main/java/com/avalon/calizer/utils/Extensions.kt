@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import com.avalon.calizer.data.local.FollowData
 import com.bumptech.glide.Glide
 
 

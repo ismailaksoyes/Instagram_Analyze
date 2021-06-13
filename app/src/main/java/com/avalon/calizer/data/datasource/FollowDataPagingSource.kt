@@ -13,7 +13,7 @@ class FollowDataPagingSource @Inject constructor(private val repository: RoomRep
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, FollowData> {
        val position = params.key ?: STARTING_INDEX
-        val follow = repository.getFollowersData(0,params.loadSize)
+        val follow = repository.getFollowersData()
        return LoadResult.Page(
             data = follow,
            prevKey = if (position == STARTING_INDEX) null else position -1,
