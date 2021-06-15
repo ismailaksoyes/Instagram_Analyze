@@ -11,6 +11,7 @@ import com.avalon.calizer.R
 import com.avalon.calizer.databinding.FragmentAllFollowersBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,18 +27,10 @@ class AllFollowersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerview()
-        viewModel.followData()
+
         lifecycleScope.launchWhenStarted {
-            viewModel.userData.collect {
-                when(it){
-                    is FollowViewModel.UserDataFlow.GetFollowData->{
-                        followsAdapter.submitData(it.accountsData)
-                    }
-                    is FollowViewModel.UserDataFlow.Empty->{
-
-                    }
-
-                }
+            viewModel.followers.collectLatest {
+              followsAdapter.submitData(it)
             }
         }
     }

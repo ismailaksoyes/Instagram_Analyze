@@ -29,8 +29,8 @@ interface RoomDao {
     @get:Query("SELECT * FROM accounts_table")
     val getAllAccountDetails : List<AccountsData>
 
-    @Query("SELECT * FROM follow_table WHERE type=1")
-    suspend fun getFollowersData():PagingSource<Int,FollowData>
+    @Query("SELECT * FROM follow_table WHERE type=1 ORDER BY RANDOM() LIMIT 5")
+    suspend fun getFollowersData():List<FollowData>
 
     @Query("DELETE FROM remotekeys")
     suspend fun clearRemoteKeys()
