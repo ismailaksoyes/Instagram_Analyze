@@ -56,6 +56,8 @@
         android:fontFamily="@font/ibm_plex_sans_medium"
         android:textColor="?colorOnSecondary"
         app:strokeColor="?colorOnSecondary"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
        />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

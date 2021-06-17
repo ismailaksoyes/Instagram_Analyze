@@ -79,7 +79,7 @@ data class ApiResponseUserDetails(
         @SerializedName("city_name")
         val cityName: String,
         @SerializedName("city_id")
-        val cityId: Int,
+        val cityId: Long,
         @SerializedName("contact_phone_number")
         val contactPhoneNumber: String,
         @SerializedName("direct_messaging")

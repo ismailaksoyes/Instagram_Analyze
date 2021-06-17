@@ -56,7 +56,7 @@ class MainViewModel @Inject constructor(
         data class Error(val error: String) : FollowDataFlow()
     }
 
-    fun getUserDetails(userId: Long) {
+   suspend fun getUserDetails(userId: Long) {
         viewModelScope.launch {
             _userData.value = UserDataFlow.GetUserDetails(dbRepository.getUserInfo(userId))
         }

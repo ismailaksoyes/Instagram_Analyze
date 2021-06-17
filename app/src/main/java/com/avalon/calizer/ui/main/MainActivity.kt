@@ -218,7 +218,10 @@ class MainActivity : AppCompatActivity() {
                 binding.bottomNavigation.visibility = View.VISIBLE
                 if (getFirstData) {
                     getFirstData = false
-                    viewModel.getUserDetails(prefs.selectedAccount)
+                    lifecycleScope.launchWhenStarted {
+                        viewModel.getUserDetails(prefs.selectedAccount)
+                    }
+
 
                     val analyzeTime: Date = Date(prefs.followUpdateDate)
                     if (Utils.getTimeDifference(analyzeTime)) {

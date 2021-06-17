@@ -2,6 +2,7 @@ package com.avalon.calizer.ui.main.fragments.analyze.followanalyze
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -31,8 +32,12 @@ class FollowsAdapter:PagingDataAdapter<FollowData,RecyclerView.ViewHolder>(REPO_
         fun bind(followList:FollowData?){
             followList?.let { data->
                 binding.ivViewPp.loadPPUrl(data.profilePicUrl)
-                binding.tvPpFullname.text = data.fullName
                 binding.tvPpUsername.text = "@${data.username}"
+                if (!data.fullName.isNullOrEmpty()){
+                    binding.tvPpFullname.text = data.fullName
+                }else{
+                    binding.tvPpFullname.visibility = View.GONE
+                }
             }
 
         }

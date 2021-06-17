@@ -8,44 +8,52 @@ import com.avalon.calizer.data.local.RoomDao
 import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.data.repository.RoomRepository
 import com.avalon.calizer.utils.MySharedPreferences
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
-class FollowDataPagingSource (private val roomDb: RoomRepository,private val repository: Repository,private val prefs:MySharedPreferences):PagingSource<Int, FollowData>() {
+class FollowDataPagingSource(
+    private val roomDb: RoomRepository,
+    private val repository: Repository,
+    private val prefs: MySharedPreferences
+) : PagingSource<Int, FollowData>() {
 
 
     override fun getRefreshKey(state: PagingState<Int, FollowData>): Int? = null
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, FollowData> {
-       val position = params.key ?: STARTING_INDEX
-        Log.d("Position","  $position")
+        val position = params.key ?: STARTING_INDEX
         val follow = roomDb.getFollowersData(position)
-        Log.d("Position","Data->  $follow")
-
         val userCookie = roomDb.getAccountCookies(prefs.selectedAccount)
-       follow.forEach { usersData->
+        follow.forEach { usersData ->
+            follow.map { userData ->
+                val userGetData =
+                    userData.dsUserID?.let {
+                        repository.getUserDetails(
+                            userCookie.allCookie,
+                            it
+                        )
+                    }
+                val ppUrl = userGetData?.body()?.user?.profilePicUrl
 
-           follow.map { userData->
-               userData.profilePicUrl = ppUrl?.body()?.user?.profilePicUrl
-               }
-
-           }
+                userData.profilePicUrl = ppUrl
 
 
-       return LoadResult.Page(
+            }
+
+
+        }
+        return LoadResult.Page(
             data = follow,
-           prevKey = if (position == STARTING_INDEX) null else position -6,
-           nextKey = if (follow.isNullOrEmpty()) null else position +6
+            prevKey = if (position == STARTING_INDEX) null else position - 1,
+            nextKey = if (follow.isNullOrEmpty()) null else position + 1
 
         )
     }
-companion object{const val STARTING_INDEX = 0}
-    suspend fun getPpUrl(dsUserId:Long,userCookie:String):String?{
-        val userGetData = repository.getUserDetails(userCookie,dsUserId)
-        val ppUrl = if (userGetData.isSuccessful){
-            userGetData.body()?.user?.profilePicUrl
-        }else{
-            null
-        }
-        return ppUrl
+
+    companion object {
+        const val STARTING_INDEX = 0
     }
+
+
 }

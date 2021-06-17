@@ -29,14 +29,24 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rc_follow_data"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cl_top_allfollow"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:overScrollMode="never"/>
+    <ProgressBar
+        android:id="@+id/pb_follow_data"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rc_follow_data"
+        android:layout_marginTop="15dp"
+        android:indeterminateTint="?colorOnSecondary"
+
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

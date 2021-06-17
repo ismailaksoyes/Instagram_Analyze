@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 class FollowViewModel @Inject constructor(private val dbRepository: RoomRepository,private val repository: Repository,private val prefs:MySharedPreferences):ViewModel() {
 
-    val followers : Flow<PagingData<FollowData>> = Pager(PagingConfig(pageSize = 1)){
+    val followers : Flow<PagingData<FollowData>> = Pager(PagingConfig(pageSize = 2)){
         FollowDataPagingSource(dbRepository,repository,prefs)
     }.flow.cachedIn(viewModelScope)
 
