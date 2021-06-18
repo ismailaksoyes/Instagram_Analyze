@@ -14,6 +14,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.FollowData
 import com.avalon.calizer.databinding.FragmentAllFollowersBinding
@@ -36,29 +37,44 @@ class AllFollowersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerview()
+        lifecycleScope.launch {
+            viewModel.updateFlow()
+            viewModel.getFollowData(0)
+        }
+        binding.rcFollowData.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                recyclerView?.let {
+                    Log.d("Recyc"," childcount-> ${it.layoutManager?.childCount}")
+                    Log.d("Recyc"," itemcount-> ${it.layoutManager?.itemCount}")
+                    Log.d("Recyc","${it.layoutManager?.findViewByPosition(0)}")
+                }
+
+            }
+
+        })
+
 
         lifecycleScope.launchWhenStarted {
-            viewModel.followers.collectLatest {
-            //  followsAdapter.submitData(it)
-            }
-        }
-        lifecycleScope.launchWhenStarted {
-            viewModel.followers.collectLatest {
-               Log.d("DataCollect","${it.map { data-> data.fullName.toString() }}")
-                followsAdapter.submitData(it)
-            }
-        }
-        binding.rcFollowData.setOnClickListener {
-            val followData = FollowData(username = "AGFDFGSDFSD")
-            viewModel.followers
+            viewModel.allFollow.collectLatest {
+                binding.pbFollowData.isVisible = it is FollowViewModel.FollowState.Loading
+                when(it){
 
+                    is FollowViewModel.FollowState.Success->{
+                        followsAdapter.setData(it.followData)
+                    }else->{}
+                }
+
+            }
         }
+
+        /**
         lifecycleScope.launch {
             followsAdapter.loadStateFlow.collectLatest {loadStates ->
                 binding.pbFollowData.isVisible = loadStates.refresh is LoadState.Loading
             }
         }
-
+        **/
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

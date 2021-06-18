@@ -7,25 +7,15 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.avalon.calizer.data.local.AccountsData
 import com.avalon.calizer.data.local.FollowData
 import com.avalon.calizer.databinding.FollowViewItemBinding
 import com.avalon.calizer.utils.clearRecycled
 import com.avalon.calizer.utils.loadPPUrl
 import com.bumptech.glide.Glide
 
-class FollowsAdapter:PagingDataAdapter<FollowData,RecyclerView.ViewHolder>(REPO_COMPARATOR) {
-
-    companion object{
-        private val REPO_COMPARATOR = object :DiffUtil.ItemCallback<FollowData>(){
-            override fun areItemsTheSame(oldItem: FollowData, newItem: FollowData): Boolean =
-              oldItem == newItem
-
-
-            override fun areContentsTheSame(oldItem: FollowData, newItem: FollowData): Boolean =
-                oldItem == newItem
-
-        }
-    }
+class FollowsAdapter:RecyclerView.Adapter<FollowsAdapter.MainViewHolder>() {
+    private var _followsList = emptyList<FollowData>()
 
     class MainViewHolder(var binding:FollowViewItemBinding):RecyclerView.ViewHolder(binding.root){
         @SuppressLint("SetTextI18n")
@@ -46,13 +36,23 @@ class FollowsAdapter:PagingDataAdapter<FollowData,RecyclerView.ViewHolder>(REPO_
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
        val binding = FollowViewItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return MainViewHolder(binding)
     }
 
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as? MainViewHolder)?.bind(followList = getItem(position))
+
+    override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
+       holder.bind(_followsList[position])
+    }
+
+    override fun getItemCount(): Int {
+        return _followsList.size
+    }
+
+    fun setData(followList:List<FollowData>){
+        _followsList = followList
+        notifyDataSetChanged()
     }
 }

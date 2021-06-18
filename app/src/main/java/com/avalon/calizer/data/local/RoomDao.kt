@@ -29,7 +29,7 @@ interface RoomDao {
     @get:Query("SELECT * FROM accounts_table")
     val getAllAccountDetails : List<AccountsData>
 
-    @Query("SELECT * FROM follow_table WHERE type=1 ORDER BY pk ASC LIMIT 1 OFFSET :position")
+    @Query("SELECT * FROM follow_table WHERE type=1 ORDER BY pk ASC LIMIT 100 OFFSET :position")
     suspend fun getFollowersData(position:Int):List<FollowData>
 
     @Query("DELETE FROM remotekeys")
