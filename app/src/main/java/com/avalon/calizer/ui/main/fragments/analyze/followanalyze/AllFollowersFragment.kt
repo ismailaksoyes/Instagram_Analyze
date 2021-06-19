@@ -31,12 +31,16 @@ class AllFollowersFragment : Fragment() {
     @Inject
     lateinit var viewModel: FollowViewModel
     private val followsAdapter by lazy { FollowsAdapter() }
+    private lateinit var layoutManager: LinearLayoutManager
+    private var isLoading: Boolean = false
 
 
     @SuppressLint("ShowToast")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerview()
+        layoutManager = LinearLayoutManager(view.context)
+        binding.rcFollowData.layoutManager =  layoutManager
         lifecycleScope.launch {
             viewModel.updateFlow()
             viewModel.getFollowData(0)
@@ -44,10 +48,10 @@ class AllFollowersFragment : Fragment() {
         binding.rcFollowData.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                recyclerView?.let {
-                    Log.d("Recyc"," childcount-> ${it.layoutManager?.childCount}")
-                    Log.d("Recyc"," itemcount-> ${it.layoutManager?.itemCount}")
-                    Log.d("Recyc","${it.layoutManager?.findViewByPosition(0)}")
+                if (!isLoading && recyclerView.layoutManager?.itemCount ==(layoutManager.findLastVisibleItemPosition()+1)){
+                    Log.d("LoadData","isLoading...")
+                    addLoadMoreData()
+                    isLoading = true
                 }
 
             }
