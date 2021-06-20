@@ -34,25 +34,31 @@ class AllFollowersFragment : Fragment() {
     private lateinit var layoutManager: LinearLayoutManager
     private var isLoading: Boolean = false
 
-
+    fun loadData(startItem:Int){
+        lifecycleScope.launch {
+            viewModel.updateFlow()
+            viewModel.getFollowData(startItem)
+        }
+    }
     @SuppressLint("ShowToast")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerview()
         layoutManager = LinearLayoutManager(view.context)
         binding.rcFollowData.layoutManager =  layoutManager
-        lifecycleScope.launch {
-            viewModel.updateFlow()
-            viewModel.getFollowData(0)
-        }
+        loadData(0)
         binding.rcFollowData.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (!isLoading && recyclerView.layoutManager?.itemCount ==(layoutManager.findLastVisibleItemPosition()+1)){
-                    Log.d("LoadData","isLoading...")
-                    addLoadMoreData()
-                    isLoading = true
+                if (recyclerView.layoutManager != null){
+                    if (!isLoading && recyclerView.layoutManager?.itemCount ==(layoutManager.findLastVisibleItemPosition()+1)){
+                        Log.d("LoadData","isLoading...")
+                        // addLoadMoreData()
+                        loadData(recyclerView.layoutManager!!.itemCount)
+                        isLoading = true
+                    }
                 }
+
 
             }
 
@@ -63,9 +69,9 @@ class AllFollowersFragment : Fragment() {
             viewModel.allFollow.collectLatest {
                 binding.pbFollowData.isVisible = it is FollowViewModel.FollowState.Loading
                 when(it){
-
                     is FollowViewModel.FollowState.Success->{
                         followsAdapter.setData(it.followData)
+                        isLoading = false
                     }else->{}
                 }
 
