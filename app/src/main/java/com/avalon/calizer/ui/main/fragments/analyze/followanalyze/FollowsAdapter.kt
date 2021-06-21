@@ -1,6 +1,7 @@
 package com.avalon.calizer.ui.main.fragments.analyze.followanalyze
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,13 +20,15 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         const val VIEW_TYPE_LOADING = 1
-        const val VIEW_TYPE_ITEM = 0
     }
 
     private var _followsList = arrayListOf<FollowData>()
 
     class LoadingViewHolder(var binding: FollowItemLoadingBinding) :
         RecyclerView.ViewHolder(binding.root) {
+            fun bind(followList: FollowData){
+
+            }
 
     }
 
@@ -48,43 +51,57 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     }
 
+    override fun getItemViewType(position: Int): Int {
+        _followsList[position].let {
+            return if (it.type?.toInt()==5){1}else{0}
+        }
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        Log.d("ViewType",viewType.toString())
 
-        return if (viewType == VIEW_TYPE_ITEM) {
-            val binding =
-                FollowViewItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            MainViewHolder(binding)
-        } else {
+        return if (viewType == VIEW_TYPE_LOADING) {
             val binding =
                 FollowItemLoadingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             LoadingViewHolder(binding)
+        } else {
 
+            val binding =
+                FollowViewItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            MainViewHolder(binding)
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        holder.bind(_followsList[position])
-        if (holder.itemViewType == VIEW_TYPE_ITEM) {
-            holder.it
-        }
-
-        override fun getItemCount(): Int {
-            return _followsList.size
-        }
-
-        fun removeLoadingView() {
-            if (_followsList.size != 0) {
-                _followsList.removeAt(_followsList.size - 1)
-                notifyItemRemoved(_followsList.size)
+        _followsList[position].let {data->
+            if (data.type?.toInt()==5){
+                (holder as LoadingViewHolder).bind(_followsList[position])
+            }else{
+                (holder as MainViewHolder).bind(_followsList[position])
             }
+
         }
 
-        fun setData(followList: List<FollowData>) {
-            _followsList.addAll(followList)
-            notifyDataSetChanged()
+    }
+
+    override fun getItemCount(): Int {
+       return _followsList.size
+    }
+
+
+    fun removeLoadingView() {
+        if (_followsList.size != 0) {
+            _followsList.removeAt(_followsList.size - 1)
+            notifyItemRemoved(_followsList.size)
         }
+    }
 
-
+    fun setData(followList: List<FollowData>) {
+        _followsList.addAll(followList)
+        notifyDataSetChanged()
+    }
+    fun setLoading(followList: FollowData){
+        _followsList.add(followList)
+        notifyDataSetChanged()
     }
 }
 

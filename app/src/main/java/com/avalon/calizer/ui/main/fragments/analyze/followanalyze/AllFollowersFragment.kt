@@ -67,12 +67,17 @@ class AllFollowersFragment : Fragment() {
 
         lifecycleScope.launchWhenStarted {
             viewModel.allFollow.collectLatest {
-                binding.pbFollowData.isVisible = it is FollowViewModel.FollowState.Loading
                 when(it){
                     is FollowViewModel.FollowState.Success->{
+                        followsAdapter.removeLoadingView()
                         followsAdapter.setData(it.followData)
                         isLoading = false
-                    }else->{}
+                    }
+                    is FollowViewModel.FollowState.Loading->{
+                        val data = FollowData(type = 5)
+                        followsAdapter.setLoading(data)
+                    }
+                    else->{}
                 }
 
             }
