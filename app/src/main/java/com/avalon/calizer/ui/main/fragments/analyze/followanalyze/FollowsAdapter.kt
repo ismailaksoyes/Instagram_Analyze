@@ -37,7 +37,7 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         @SuppressLint("SetTextI18n")
         fun bind(followList: FollowData?) {
             followList?.let { data ->
-                binding.ivViewPp.loadPPUrl(data.profilePicUrl)
+                binding.ivViewPp.loadPPUrl(null)
                 binding.tvPpUsername.text = "@${data.username}"
                 if (!data.fullName.isNullOrEmpty()) {
                     binding.tvPpFullname.text = data.fullName
