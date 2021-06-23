@@ -13,6 +13,7 @@ import com.avalon.calizer.data.local.FollowData
 import com.avalon.calizer.databinding.FollowItemLoadingBinding
 import com.avalon.calizer.databinding.FollowViewItemBinding
 import com.avalon.calizer.utils.clearRecycled
+import com.avalon.calizer.utils.getItemByID
 import com.avalon.calizer.utils.loadPPUrl
 import com.bumptech.glide.Glide
 
@@ -26,9 +27,9 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class LoadingViewHolder(var binding: FollowItemLoadingBinding) :
         RecyclerView.ViewHolder(binding.root) {
-            fun bind(followList: FollowData){
+        fun bind(followList: FollowData) {
 
-            }
+        }
 
     }
 
@@ -38,6 +39,7 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         fun bind(followList: FollowData?) {
             followList?.let { data ->
                 binding.ivViewPp.loadPPUrl(null)
+
                 binding.tvPpUsername.text = "@${data.username}"
                 if (!data.fullName.isNullOrEmpty()) {
                     binding.tvPpFullname.text = data.fullName
@@ -47,17 +49,30 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
 
         }
+    }
+
+    fun updatePpItem() {
 
 
     }
+
+    fun getItemPosition(item: Long?): Int {
+        return _followsList.getItemByID(item)
+    }
+
 
     override fun getItemViewType(position: Int): Int {
         _followsList[position].let {
-            return if (it.type?.toInt()==5){1}else{0}
+            return if (it.type?.toInt() == 5) {
+                1
+            } else {
+                0
+            }
         }
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        Log.d("ViewType",viewType.toString())
+        Log.d("ViewType", viewType.toString())
 
         return if (viewType == VIEW_TYPE_LOADING) {
             val binding =
@@ -72,10 +87,12 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        _followsList[position].let {data->
-            if (data.type?.toInt()==5){
+
+        Log.d("GetPosition", getItemPosition(_followsList[position].dsUserID).toString())
+        _followsList[position].let { data ->
+            if (data.type?.toInt() == 5) {
                 (holder as LoadingViewHolder).bind(_followsList[position])
-            }else{
+            } else {
                 (holder as MainViewHolder).bind(_followsList[position])
             }
 
@@ -84,7 +101,7 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-       return _followsList.size
+        return _followsList.size
     }
 
 
@@ -99,7 +116,8 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         _followsList.addAll(followList)
         notifyDataSetChanged()
     }
-    fun setLoading(followList: FollowData){
+
+    fun setLoading(followList: FollowData) {
         _followsList.add(followList)
         notifyDataSetChanged()
     }

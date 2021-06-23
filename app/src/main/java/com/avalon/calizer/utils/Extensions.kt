@@ -11,7 +11,7 @@ import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 
 
-fun  ImageView.loadPPUrl(url:String?){
+fun ImageView.loadPPUrl(url: String?) {
     val shimmer = Shimmer.AlphaHighlightBuilder()
         .setDuration(1800)
         .setBaseAlpha(0.7f)
@@ -28,13 +28,17 @@ fun  ImageView.loadPPUrl(url:String?){
         .into(this)
 }
 
-fun ImageView.clearRecycled(){
+fun ImageView.clearRecycled() {
     Glide.with(context)
         .clear(this)
 }
 
-fun getBitmap(context: Context,url: String?):Bitmap{
-   return Glide.with(context)
+fun ArrayList<FollowData>.getItemByID(item: Long?): Int {
+    return indexOf(this.first { it.dsUserID == item })
+}
+
+fun getBitmap(context: Context, url: String?): Bitmap {
+    return Glide.with(context)
         .asBitmap()
         .load(url)
         .submit()
@@ -43,10 +47,10 @@ fun getBitmap(context: Context,url: String?):Bitmap{
 
 
 @BindingAdapter("app:glideCircleUrl")
-fun withGlide(imageView: ImageView,url: String?){
-    if(!url.isNullOrEmpty()){
+fun withGlide(imageView: ImageView, url: String?) {
+    if (!url.isNullOrEmpty()) {
         imageView.loadPPUrl(url)
-    }else{
+    } else {
         imageView.loadPPUrl(url)
     }
 

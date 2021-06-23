@@ -46,7 +46,36 @@ class AllFollowersFragment : Fragment() {
         setupRecyclerview()
         layoutManager = LinearLayoutManager(view.context)
         binding.rcFollowData.layoutManager =  layoutManager
+        initData()
         loadData(0)
+        scrollListener()
+
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        binding = FragmentAllFollowersBinding.inflate(inflater,container,false)
+        return binding.root
+    }
+    private fun setupRecyclerview() {
+        binding.rcFollowData.adapter = followsAdapter
+        binding.rcFollowData.layoutManager = LinearLayoutManager(
+            this.context,
+            LinearLayoutManager.VERTICAL, false
+        )
+
+    }
+    fun updatePpItemReq(){
+
+    }
+    fun updatePpItemRes(){
+
+    }
+    fun scrollListener(){
+
         binding.rcFollowData.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -63,8 +92,8 @@ class AllFollowersFragment : Fragment() {
             }
 
         })
-
-
+    }
+    fun initData(){
         lifecycleScope.launchWhenStarted {
             viewModel.allFollow.collectLatest {
                 when(it){
@@ -77,35 +106,16 @@ class AllFollowersFragment : Fragment() {
                         val data = FollowData(type = 5)
                         followsAdapter.setLoading(data)
                     }
+                    is FollowViewModel.FollowState.UpdateItem->{
+
+
+                    }
+
                     else->{}
                 }
 
             }
         }
-
-        /**
-        lifecycleScope.launch {
-            followsAdapter.loadStateFlow.collectLatest {loadStates ->
-                binding.pbFollowData.isVisible = loadStates.refresh is LoadState.Loading
-            }
-        }
-        **/
-    }
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = FragmentAllFollowersBinding.inflate(inflater,container,false)
-        return binding.root
-    }
-    private fun setupRecyclerview() {
-        binding.rcFollowData.adapter = followsAdapter
-        binding.rcFollowData.layoutManager = LinearLayoutManager(
-            this.context,
-            LinearLayoutManager.VERTICAL, false
-        )
-
     }
 
 

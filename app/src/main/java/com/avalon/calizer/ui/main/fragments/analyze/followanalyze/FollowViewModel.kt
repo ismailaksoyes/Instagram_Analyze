@@ -30,13 +30,16 @@ class FollowViewModel @Inject constructor(private val dbRepository: RoomReposito
     sealed class FollowState{
         object Empty :FollowState()
         object Loading :FollowState()
+        data class UpdateItem(val followData:List<FollowData>) :FollowState()
         data class Success(val followData:List<FollowData>) :FollowState()
 
     }
 
     suspend fun getFollowData(dataSize:Int){
         delay(1000)
-        _allFollow.value = FollowState.Success(dbRepository.getFollowersData(dataSize))
+        val data = dbRepository.getFollowersData(dataSize)
+        _allFollow.value = FollowState.Success(data)
+        _allFollow.value = FollowState.UpdateItem(data)
     }
     suspend fun updateFlow(){
         _allFollow.value = FollowState.Loading
