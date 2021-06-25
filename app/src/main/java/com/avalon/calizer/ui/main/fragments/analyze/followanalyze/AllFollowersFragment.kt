@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.map
@@ -33,7 +34,6 @@ class AllFollowersFragment : Fragment() {
     private val followsAdapter by lazy { FollowsAdapter() }
     private lateinit var layoutManager: LinearLayoutManager
     private var isLoading: Boolean = false
-
     fun loadData(startItem:Int){
         lifecycleScope.launch {
             viewModel.updateFlow()
@@ -46,9 +46,13 @@ class AllFollowersFragment : Fragment() {
         setupRecyclerview()
         layoutManager = LinearLayoutManager(view.context)
         binding.rcFollowData.layoutManager =  layoutManager
+        updatePpItemRes()
         initData()
         loadData(0)
         scrollListener()
+        binding.ivBackBtn.setOnClickListener {
+            it.findNavController().navigate(R.id.action_allFollowersFragment_to_destination_analyze)
+        }
 
     }
 
@@ -68,21 +72,41 @@ class AllFollowersFragment : Fragment() {
         )
 
     }
-    fun updatePpItemReq(){
+    fun updatePpItemReq(followData:List <FollowData>){
+        lifecycleScope.launchWhenStarted {
+            followData.forEach { data->
+                data.dsUserID?.let {
+                    Log.d("DsUserId",it.toString())
+                    viewModel.getUserDetails(it)
+                }
+
+            }
+        }
 
     }
     fun updatePpItemRes(){
+        lifecycleScope.launchWhenStarted {
+            viewModel.updateFollow.collectLatest {
+                when(it){
+                    is FollowViewModel.UpdateState.Success->{
+                        it.userDetails.data?.user.let { userData->
+                            followsAdapter.updatePpItem(userData?.pk,userData?.profilePicUrl)
+                        }
+                    }
 
+                }
+            }
+
+        }
     }
     fun scrollListener(){
 
         binding.rcFollowData.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (recyclerView.layoutManager != null){
+                if (recyclerView.layoutManager != null && recyclerView.layoutManager!!.itemCount>1){
                     if (!isLoading && recyclerView.layoutManager?.itemCount ==(layoutManager.findLastVisibleItemPosition()+1)){
-                        Log.d("LoadData","isLoading...")
-                        // addLoadMoreData()
+                        Log.d("DataLoad",recyclerView.layoutManager!!.itemCount.toString())
                         loadData(recyclerView.layoutManager!!.itemCount)
                         isLoading = true
                     }
@@ -107,8 +131,7 @@ class AllFollowersFragment : Fragment() {
                         followsAdapter.setLoading(data)
                     }
                     is FollowViewModel.FollowState.UpdateItem->{
-
-
+                        updatePpItemReq(it.followData)
                     }
 
                     else->{}

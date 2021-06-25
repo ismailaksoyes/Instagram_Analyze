@@ -38,8 +38,11 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         @SuppressLint("SetTextI18n")
         fun bind(followList: FollowData?) {
             followList?.let { data ->
-                binding.ivViewPp.loadPPUrl(null)
-
+                data.profilePicUrl?.let {
+                    binding.ivViewPp.loadPPUrl(it)
+                } ?: kotlin.run {
+                    binding.ivViewPp.setImageDrawable(null)
+                }
                 binding.tvPpUsername.text = "@${data.username}"
                 if (!data.fullName.isNullOrEmpty()) {
                     binding.tvPpFullname.text = data.fullName
@@ -51,8 +54,9 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    fun updatePpItem() {
-
+    fun updatePpItem(item: Long?, profilePhoto: String?) {
+        _followsList[getItemPosition(item)].profilePicUrl = profilePhoto
+        notifyItemChanged(getItemPosition(item))
 
     }
 
@@ -63,11 +67,7 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
         _followsList[position].let {
-            return if (it.type?.toInt() == 5) {
-                1
-            } else {
-                0
-            }
+            return if (it.type?.toInt() == 5) 1 else 0
         }
     }
 

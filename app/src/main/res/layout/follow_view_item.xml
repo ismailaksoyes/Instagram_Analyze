@@ -66,6 +66,5 @@
         android:textColor="?colorOnSecondary"
         app:strokeColor="?colorOnSecondary"
        />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 

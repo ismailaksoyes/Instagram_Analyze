@@ -34,7 +34,7 @@ fun ImageView.clearRecycled() {
 }
 
 fun ArrayList<FollowData>.getItemByID(item: Long?): Int {
-    return indexOf(this.first { it.dsUserID == item })
+    return indexOf(this.first { it.dsUserID==item})
 }
 
 fun getBitmap(context: Context, url: String?): Bitmap {

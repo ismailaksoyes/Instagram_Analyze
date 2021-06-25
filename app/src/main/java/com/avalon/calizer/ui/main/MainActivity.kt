@@ -144,7 +144,7 @@ class MainActivity : AppCompatActivity() {
                                             isPrivate = item.isPrivate,
                                             isVerified = item.isVerified,
                                             latestReelMedia = item.latestReelMedia,
-                                            profilePicUrl = item.profilePicUrl,
+                                            profilePicUrl = null,
                                             profilePicId = item.profilePicId,
                                             username = item.username
 
@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity() {
                                             isPrivate = item.isPrivate,
                                             isVerified = item.isVerified,
                                             latestReelMedia = item.latestReelMedia,
-                                            profilePicUrl = item.profilePicUrl,
+                                            profilePicUrl = null,
                                             profilePicId = item.profilePicId,
                                             username = item.username
 
@@ -221,7 +221,6 @@ class MainActivity : AppCompatActivity() {
                     lifecycleScope.launchWhenStarted {
                         viewModel.getUserDetails(prefs.selectedAccount)
                     }
-
 
                     val analyzeTime: Date = Date(prefs.followUpdateDate)
                     if (Utils.getTimeDifference(analyzeTime)) {

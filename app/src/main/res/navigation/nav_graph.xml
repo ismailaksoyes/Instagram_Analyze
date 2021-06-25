@@ -13,7 +13,7 @@
 
         <action
             android:id="@+id/action_destination_profile_self"
-            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@id/destination_profile"
             app:popUpToInclusive="true" />
@@ -29,7 +29,8 @@
 
         <action
             android:id="@+id/action_destination_analyze_to_allFollowersFragment"
-            app:destination="@id/allFollowersFragment" />
+            app:destination="@id/allFollowersFragment"
+            app:popEnterAnim="@android:anim/slide_in_left" />
     </fragment>
     <fragment
         android:id="@+id/destination_settings"
@@ -82,5 +83,11 @@
         android:id="@+id/allFollowersFragment"
         android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.AllFollowersFragment"
         android:label="fragment_all_followers"
-        tools:layout="@layout/fragment_all_followers" />
+        tools:layout="@layout/fragment_all_followers" >
+        <action
+            android:id="@+id/action_allFollowersFragment_to_destination_analyze"
+            app:destination="@id/destination_analyze"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
 </navigation>
