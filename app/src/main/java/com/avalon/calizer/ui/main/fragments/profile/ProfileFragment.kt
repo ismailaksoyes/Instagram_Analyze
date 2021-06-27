@@ -146,7 +146,9 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.clPhotoAnalyze.setOnClickListener {
+            it.findNavController().navigate(R.id.action_destination_profile_to_photoUploadFragment)
+        }
         val imageUrl: String = "https://thispersondoesnotexist.com/image"
 
         viewModel.getUserDetails(prefs.selectedAccount)

@@ -20,6 +20,9 @@
         <action
             android:id="@+id/action_destination_profile_to_destination_accounts"
             app:destination="@id/destination_accounts" />
+        <action
+            android:id="@+id/action_destination_profile_to_photoUploadFragment"
+            app:destination="@id/photoUploadFragment" />
     </fragment>
     <fragment
         android:id="@+id/destination_analyze"
@@ -92,4 +95,17 @@
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
+    <fragment
+        android:id="@+id/photoUploadFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.profile.photocmp.PhotoUploadFragment"
+        android:label="PhotoUploadFragment" >
+        <action
+            android:id="@+id/action_photoUploadFragment_to_photoAnalyzeFragment"
+            app:destination="@id/photoAnalyzeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/photoAnalyzeFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.profile.photocmp.PhotoAnalyzeFragment"
+        android:label="fragment_photo_analyze"
+        tools:layout="@layout/fragment_photo_analyze" />
 </navigation>
