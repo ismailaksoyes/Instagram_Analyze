@@ -101,7 +101,10 @@
         android:label="PhotoUploadFragment" >
         <action
             android:id="@+id/action_photoUploadFragment_to_photoAnalyzeFragment"
-            app:destination="@id/photoAnalyzeFragment" />
+            app:destination="@id/photoAnalyzeFragment" >
+
+
+        </action>
     </fragment>
     <fragment
         android:id="@+id/photoAnalyzeFragment"

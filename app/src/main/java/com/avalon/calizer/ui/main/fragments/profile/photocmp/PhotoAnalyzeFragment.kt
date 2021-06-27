@@ -22,6 +22,8 @@ class PhotoAnalyzeFragment : Fragment() {
     @Inject
     lateinit var viewModel: PhotoAnalyzeViewModel
 
+    private lateinit var data:ArrayList<String>
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +36,13 @@ class PhotoAnalyzeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        arguments?.let {
+           data = it.getStringArrayList("data") as ArrayList<String>
 
+        }
+        data.forEach {
+            Log.d("Aaaa",it.toString())
+        }
         lifecycleScope.launchWhenStarted {
             viewModel.photoAnalyzeData.collect { data->
                 when(data){

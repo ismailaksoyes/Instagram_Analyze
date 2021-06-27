@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.avalon.calizer.R
@@ -57,9 +58,15 @@ class PhotoUploadFragment : Fragment() {
         Log.d("DataPhoto",data.toString())
         val list = ArrayList<PhotoAnalyzeData>()
         list.add(data)
+        val testList = ArrayList<String>()
+        testList.add("type1")
+        testList.add("type2")
+        testList.add("type3")
+
         viewModel.setPhotoData(list)
         binding.btnUploadImage.setOnClickListener {
-           findNavController().navigate(R.id.action_photoUploadFragment_to_photoAnalyzeFragment)
+            val bundle = bundleOf("data" to testList)
+           findNavController().navigate(R.id.action_photoUploadFragment_to_photoAnalyzeFragment,bundle)
         }
 
     }
