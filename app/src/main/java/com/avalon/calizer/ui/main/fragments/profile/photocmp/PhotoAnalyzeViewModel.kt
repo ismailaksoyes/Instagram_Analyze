@@ -1,14 +1,9 @@
 package com.avalon.calizer.ui.main.fragments.profile.photocmp
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.avalon.calizer.data.local.profile.PhotoAnalyzeData
-import dagger.hilt.android.AndroidEntryPoint
+import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
-import java.util.*
 import javax.inject.Inject
 
 class PhotoAnalyzeViewModel @Inject constructor() : ViewModel() {

@@ -1,6 +1,5 @@
 package com.avalon.calizer.ui.main.fragments.profile.photocmp
 
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -9,20 +8,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.drawable.toBitmap
 import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.avalon.calizer.R
-import com.avalon.calizer.data.local.profile.PhotoAnalyzeData
+import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 import com.avalon.calizer.databinding.FragmentPhotoUploadBinding
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -65,8 +58,8 @@ class PhotoUploadFragment : Fragment() {
 
         viewModel.setPhotoData(list)
         binding.btnUploadImage.setOnClickListener {
-            val bundle = bundleOf("data" to testList)
-           findNavController().navigate(R.id.action_photoUploadFragment_to_photoAnalyzeFragment,bundle)
+            val bundle = bundleOf("data" to list)
+           findNavController().navigate(R.id.action_photoUploadFragment_to_photoAnalyzeFragment,list)
         }
 
     }
