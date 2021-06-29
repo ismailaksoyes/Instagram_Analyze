@@ -59,7 +59,9 @@ class PhotoUploadFragment : Fragment() {
         viewModel.setPhotoData(list)
         binding.btnUploadImage.setOnClickListener {
             val bundle = bundleOf("data" to list)
-           findNavController().navigate(R.id.action_photoUploadFragment_to_photoAnalyzeFragment,list)
+         //   val direct = PhotoAnalyzeFragment.// FIXME: 28.06.2021
+           val action = PhotoUploadFragmentDirections.actionPhotoUploadFragmentToPhotoAnalyzeFragment(data)
+         //  findNavController().navigate(R.id.action_photoUploadFragment_to_photoAnalyzeFragment,list)
         }
 
     }

@@ -101,20 +101,22 @@
         android:label="PhotoUploadFragment" >
         <action
             android:id="@+id/action_photoUploadFragment_to_photoAnalyzeFragment"
-            app:destination="@id/photoAnalyzeFragment"
-            app:popUpTo="com.android.tools.property.panel.api.EnumValue$Companion$LOADING$1@74e0e5e2">
+            app:destination="@id/photoAnalyzeFragment">
 
 
         </action>
-        <argument
-            android:name="photoAnalyzeArg"
-            app:argType="com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData[]"
-            app:nullable="true"
-            android:defaultValue="@null" />
+
     </fragment>
     <fragment
         android:id="@+id/photoAnalyzeFragment"
         android:name="com.avalon.calizer.ui.main.fragments.profile.photocmp.PhotoAnalyzeFragment"
         android:label="fragment_photo_analyze"
-        tools:layout="@layout/fragment_photo_analyze" />
+        tools:layout="@layout/fragment_photo_analyze" >
+        <argument
+            android:name="photoAnalyzeArgs"
+            app:argType="com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+
+    </fragment>
 </navigation>

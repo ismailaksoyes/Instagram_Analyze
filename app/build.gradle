@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'com.google.gms.google-services'
     id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs'
 
 
 }
@@ -105,7 +106,7 @@ dependencies {
     implementation "androidx.activity:activity-ktx:1.2.3"
 
     //navigation comp
-    def nav_version = "2.4.0-alpha01"
+    def nav_version = "2.3.5"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
