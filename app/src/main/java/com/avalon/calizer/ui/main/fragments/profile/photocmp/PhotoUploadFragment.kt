@@ -41,27 +41,21 @@ class PhotoUploadFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val urlList = ArrayList<String>()
-        urlList.add("https://img.piri.net/mnresize/900/-/resim/upload/2017/11/12/11/28/12ee7246kapak.jpg")
+        urlList.add("https://cdn.bolgegundem.com/d/gallery/1030_4.jpg")
         setGlideImageUrl(urlList)
         RealTimeData()
     }
 
     fun getBitmap(bitmap: Bitmap){
-        val data = PhotoAnalyzeData(0,bitmap,false)
-        Log.d("DataPhoto",data.toString())
         val list = ArrayList<PhotoAnalyzeData>()
-        list.add(data)
-        val testList = ArrayList<String>()
-        testList.add("type1")
-        testList.add("type2")
-        testList.add("type3")
-
+        for (i in 0L..5L){
+            list.add(PhotoAnalyzeData(i,bitmap,false))
+        }
+       val newList =  list.toTypedArray()
         viewModel.setPhotoData(list)
         binding.btnUploadImage.setOnClickListener {
-            val bundle = bundleOf("data" to list)
-         //   val direct = PhotoAnalyzeFragment.// FIXME: 28.06.2021
-           val action = PhotoUploadFragmentDirections.actionPhotoUploadFragmentToPhotoAnalyzeFragment(data)
-         //  findNavController().navigate(R.id.action_photoUploadFragment_to_photoAnalyzeFragment,list)
+           val action = PhotoUploadFragmentDirections.actionPhotoUploadFragmentToPhotoAnalyzeFragment(newList)
+          findNavController().navigate(action)
         }
 
     }

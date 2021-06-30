@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/splashFragment">
+    app:startDestination="@id/photoUploadFragment">
 
     <fragment
         android:id="@+id/destination_profile"
@@ -113,10 +113,8 @@
         android:label="fragment_photo_analyze"
         tools:layout="@layout/fragment_photo_analyze" >
         <argument
-            android:name="photoAnalyzeArgs"
-            app:argType="com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData[]"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            android:name="photoAnalyze"
+            app:argType="com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData[]" />
 
     </fragment>
 </navigation>
