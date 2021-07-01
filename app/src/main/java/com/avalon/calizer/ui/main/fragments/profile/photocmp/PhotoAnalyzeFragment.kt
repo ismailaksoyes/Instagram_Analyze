@@ -30,6 +30,7 @@ class PhotoAnalyzeFragment : Fragment() {
     @Inject
     lateinit var viewModel: PhotoAnalyzeViewModel
 
+
     private lateinit var data: List<PhotoAnalyzeData>
 
     private val args: PhotoAnalyzeFragmentArgs by navArgs()
@@ -38,7 +39,7 @@ class PhotoAnalyzeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentPhotoAnalyzeBinding.inflate(inflater, container, false)
         data = args.photoAnalyze.toList()
@@ -59,20 +60,18 @@ class PhotoAnalyzeFragment : Fragment() {
             InputImage.fromBitmap(it, 0)
 
         }
+
         image?.let {
             poseDetector.process(it).addOnSuccessListener { result ->
 
                 Log.d("PoseDETECTED", result.allPoseLandmarks.toString())
             }
         }
-        binding.direk.setOnClickListener {
-            binding.gizlibtn.visibility = View.VISIBLE
-        }
+
         binding.randomDraw.setOnClickListener {
-            val location = IntArray(2)
-            binding.randomDraw.getLocationOnScreen(location)
-            Log.d("AxisY1",location[1].toString())
-            drawItem(location[1].toFloat())
+            binding.cvCanvas.setHeightCanvas(Random.nextInt(0,1000).toFloat())
+            binding.cvCanvas.setWidthCanvas(Random.nextInt(0,1000).toFloat())
+            binding.cvCanvas.invalidate()
         }
 
         lifecycleScope.launchWhenStarted {
@@ -94,33 +93,6 @@ class PhotoAnalyzeFragment : Fragment() {
 
     }
 
-    fun drawItem(item:Float) {
-        val cca = IntArray(2)
-        binding.allcl.getLocationOnScreen(cca)
-        Log.d("Axiscca",cca[1].toString())
-        val bitmap = Bitmap.createBitmap(1024,  2080, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-       // canvas.drawColor(Color.RED)
-        val paint = Paint()
-        paint.color = Color.RED
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = 50F
-        paint.isAntiAlias = true
-        val offset = 50
-        canvas.drawLine(
-            512f,
-            item,
-            712f,
-            item,
-            paint
-        )
-        val ccc = IntArray(2)
-        binding.paint.getLocationOnScreen(ccc)
-        Log.d("Axis3","${ccc[0]} - ${ccc[1]} ")
-        binding.paint.setImageBitmap(bitmap)
-
-
-    }
 
 
 

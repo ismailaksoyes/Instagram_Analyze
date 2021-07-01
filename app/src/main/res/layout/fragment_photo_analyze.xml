@@ -8,43 +8,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.main.fragments.profile.photocmp.PhotoAnalyzeFragment">
 
-    <TextView
-        android:id="@+id/direk"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="DIREK"
-        android:gravity="center"/>
-    <Button
-        android:id="@+id/gizlibtn"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/direk"
-        android:text="BUYUK BUTON"
-       android:elevation="8dp"
-        android:visibility="gone"/>
 
-
-    <ImageView
-        android:id="@+id/paint"
+    <com.avalon.calizer.ui.main.fragments.profile.photocmp.CanvasView
+        android:id="@+id/cv_canvas"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/gizlibtn"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toTopOf="@id/randomDraw"/>
     <TextView
         android:id="@+id/randomDraw"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-       app:layout_constraintTop_toBottomOf="@id/gizlibtn"
         app:layout_constraintBottom_toBottomOf="parent"
         android:text="ANALYZE PAGE"
-        android:fontFamily="@font/ibm_plex_sans_bold"/>
+        android:fontFamily="@font/ibm_plex_sans_bold"
+        android:gravity="center"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
