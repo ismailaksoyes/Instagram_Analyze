@@ -41,7 +41,7 @@ class PhotoUploadFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val urlList = ArrayList<String>()
-        urlList.add("https://cdn.bolgegundem.com/d/gallery/1030_4.jpg")
+        urlList.add("https://i.pinimg.com/originals/92/de/a9/92dea9fc1e1b8e315ca8bd13685d66e5.jpg")
         setGlideImageUrl(urlList)
         RealTimeData()
     }
