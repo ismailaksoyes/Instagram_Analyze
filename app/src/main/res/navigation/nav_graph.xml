@@ -100,21 +100,28 @@
         android:name="com.avalon.calizer.ui.main.fragments.profile.photocmp.PhotoUploadFragment"
         android:label="PhotoUploadFragment" >
         <action
-            android:id="@+id/action_photoUploadFragment_to_photoAnalyzeFragment"
-            app:destination="@id/photoAnalyzeFragment">
-
-
-        </action>
-
+            android:id="@+id/action_photoUploadFragment_to_photoAnalyzeLoadingFragment"
+            app:destination="@id/photoAnalyzeLoadingFragment" />
     </fragment>
     <fragment
-        android:id="@+id/photoAnalyzeFragment"
-        android:name="com.avalon.calizer.ui.main.fragments.profile.photocmp.PhotoAnalyzeFragment"
-        android:label="fragment_photo_analyze"
-        tools:layout="@layout/fragment_photo_analyze" >
+        android:id="@+id/photoPagerFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.profile.photocmp.PhotoPagerFragment"
+        android:label="fragment_photo_pager"
+        tools:layout="@layout/fragment_photo_pager" >
         <argument
-            android:name="photoAnalyze"
+            android:name="photoAnalyzeDataArgs"
             app:argType="com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData[]" />
-
+    </fragment>
+    <fragment
+        android:id="@+id/photoAnalyzeLoadingFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.profile.photocmp.PhotoAnalyzeLoadingFragment"
+        android:label="fragment_photo_analyze_loading"
+        tools:layout="@layout/fragment_photo_analyze_loading" >
+        <action
+            android:id="@+id/action_photoAnalyzeLoadingFragment_to_photoPagerFragment"
+            app:destination="@id/photoPagerFragment" />
+        <argument
+            android:name="photoNotAnalyzeData"
+            app:argType="com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData[]" />
     </fragment>
 </navigation>

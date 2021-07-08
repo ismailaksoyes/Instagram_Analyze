@@ -69,12 +69,14 @@ class ViewPagerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewPager = binding.viewPager2
-        viewPager.orientation - ViewPager2.ORIENTATION_HORIZONTAL
+        viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         viewPager.adapter = tutorialAdapter
         viewPager.registerOnPageChangeCallback(onTutorialPageChangeCallBack)
        setupPagerClick()
 
     }
+
+
 
     override fun onDestroy() {
         binding.viewPager2.unregisterOnPageChangeCallback(onTutorialPageChangeCallBack)
@@ -92,9 +94,6 @@ class ViewPagerFragment : Fragment() {
                 if (!binding.tvNextIntro.isVisible) {
                     binding.tvNextIntro.textAnimVisible()
                 }
-                // binding.tvStartNow.visibility = View.GONE
-
-
 
             }
             1 -> {

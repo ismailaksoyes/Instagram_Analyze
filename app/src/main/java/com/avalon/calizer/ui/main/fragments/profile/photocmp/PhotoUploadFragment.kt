@@ -41,7 +41,7 @@ class PhotoUploadFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val urlList = ArrayList<String>()
-        urlList.add("https://i.pinimg.com/originals/92/de/a9/92dea9fc1e1b8e315ca8bd13685d66e5.jpg")
+        urlList.add("https://pbs.twimg.com/media/EvLqFeYXYAI4SZC.jpg")
         setGlideImageUrl(urlList)
         RealTimeData()
     }
@@ -54,7 +54,7 @@ class PhotoUploadFragment : Fragment() {
        val newList =  list.toTypedArray()
         viewModel.setPhotoData(list)
         binding.btnUploadImage.setOnClickListener {
-           val action = PhotoUploadFragmentDirections.actionPhotoUploadFragmentToPhotoAnalyzeFragment(newList)
+           val action = PhotoUploadFragmentDirections.actionPhotoUploadFragmentToPhotoAnalyzeLoadingFragment(newList)
           findNavController().navigate(action)
         }
 

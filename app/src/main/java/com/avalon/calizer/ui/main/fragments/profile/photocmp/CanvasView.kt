@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import com.avalon.calizer.data.local.profile.photoanalyze.PoseData
 
@@ -53,8 +54,8 @@ class CanvasView @JvmOverloads constructor(
         val leftOffset = (ww / 2) - (bitmap.width / 2)
         val topOffset = (hh / 2) - (bitmap.height / 2)
         canvas?.drawBitmap(bitmap, leftOffset, topOffset, paint)
-        drawLine(canvas, paint, poseData, leftOffset, topOffset)
-        drawPoint(canvas, paint, poseData, leftOffset, topOffset)
+        drawLine(canvas, paint, poseData, leftOffset, topOffset, bitmap)
+        drawPoint(canvas, paint, poseData, leftOffset, topOffset, bitmap)
 
 
     }
@@ -64,14 +65,27 @@ class CanvasView @JvmOverloads constructor(
         paint: Paint,
         poseData: PoseData,
         leftOffset: Float,
-        topOffset: Float
+        topOffset: Float,
+        bitmap: Bitmap
     ) {
+
         paint.color = Color.RED
         paint.style = Paint.Style.FILL
         for (i in poseData.getData()) {
-            val left = i.first + leftOffset
-            val top = i.second + topOffset
-            canvas?.drawCircle(left, top, 7f, paint)
+            i.apply {
+                first?.let { first ->
+                    second?.let { second ->
+                        Log.d("ImagePosTest", "$first $second")
+                        val left = first + leftOffset
+                        val top = second + topOffset
+
+                        canvas?.drawCircle(left, top, 7f, paint)
+
+
+                    }
+                }
+            }
+
 
         }
     }
@@ -81,82 +95,140 @@ class CanvasView @JvmOverloads constructor(
         paint: Paint,
         poseData: PoseData,
         leftOffset: Float,
-        topOffset: Float
+        topOffset: Float,
+        bitmap: Bitmap
     ) {
         paint.color = Color.WHITE
         paint.strokeWidth = 5f
-        canvas?.drawLine(
-            poseData.leftKnee.first + leftOffset,
-            poseData.leftKnee.second + topOffset,
-            poseData.leftAnkle.first + leftOffset,
-            poseData.leftAnkle.second + topOffset, paint
-        )
-        canvas?.drawLine(
-            poseData.rightKnee.first + leftOffset,
-            poseData.rightKnee.second + topOffset,
-            poseData.rightAnkle.first + leftOffset,
-            poseData.rightAnkle.second + topOffset, paint
-        )
-        canvas?.drawLine(
-            poseData.leftHip.first + leftOffset,
-            poseData.leftHip.second + topOffset,
-            poseData.leftKnee.first + leftOffset,
-            poseData.leftKnee.second + topOffset, paint
-        )
-        canvas?.drawLine(
-            poseData.rightHip.first + leftOffset,
-            poseData.rightHip.second + topOffset,
-            poseData.rightKnee.first + leftOffset,
-            poseData.rightKnee.second + topOffset, paint
-        )
-        canvas?.drawLine(
-            poseData.leftShoulder.first + leftOffset,
-            poseData.leftShoulder.second + topOffset,
-            poseData.leftHip.first + leftOffset,
-            poseData.leftHip.second + topOffset, paint
-        )
-        canvas?.drawLine(
-            poseData.rightShoulder.first + leftOffset,
-            poseData.rightShoulder.second + topOffset,
-            poseData.rightHip.first + leftOffset,
-            poseData.rightHip.second + topOffset, paint
-        )
-        canvas?.drawLine(
-            poseData.leftShoulder.first + leftOffset,
-            poseData.leftShoulder.second + topOffset,
-            poseData.rightShoulder.first + leftOffset,
-            poseData.rightShoulder.second + topOffset, paint
-        )
-        canvas?.drawLine(
-            poseData.leftHip.first + leftOffset,
-            poseData.leftHip.second + topOffset,
-            poseData.rightHip.first + leftOffset,
-            poseData.rightHip.second + topOffset, paint
-        )
-        canvas?.drawLine(
-            poseData.leftShoulder.first + leftOffset,
-            poseData.leftShoulder.second + topOffset,
-            poseData.leftElbow.first + leftOffset,
-            poseData.leftElbow.second + topOffset, paint
-        )
-        canvas?.drawLine(
-            poseData.rightShoulder.first + leftOffset,
-            poseData.rightShoulder.second + topOffset,
-            poseData.rightElbow.first + leftOffset,
-            poseData.rightElbow.second + topOffset, paint
-        )
-        canvas?.drawLine(
-            poseData.leftElbow.first + leftOffset,
-            poseData.leftElbow.second + topOffset,
-            poseData.leftWrist.first + leftOffset,
-            poseData.leftWrist.second + topOffset, paint
-        )
-        canvas?.drawLine(
-            poseData.rightElbow.first + leftOffset,
-            poseData.rightElbow.second + topOffset,
-            poseData.rightWrist.first + leftOffset,
-            poseData.rightWrist.second + topOffset, paint
-        )
+
+        poseData.apply {
+            leftKnee?.let { leftKnee ->
+                leftAnkle?.let { leftAnkle ->
+                    canvas?.drawLine(
+                        leftKnee.first + leftOffset,
+                        leftKnee.second + topOffset,
+                        leftAnkle.first + leftOffset,
+                        leftAnkle.second + topOffset, paint
+                    )
+                }
+
+            }
+            rightKnee?.let { rightKnee ->
+                rightAnkle?.let { rightAnkle ->
+                    canvas?.drawLine(
+                        rightKnee.first + leftOffset,
+                        rightKnee.second + topOffset,
+                        rightAnkle.first + leftOffset,
+                        rightAnkle.second + topOffset, paint
+                    )
+                }
+            }
+            leftHip?.let { leftHip ->
+                leftKnee?.let { leftKnee ->
+                    canvas?.drawLine(
+                        leftHip.first + leftOffset,
+                        leftHip.second + topOffset,
+                        leftKnee.first + leftOffset,
+                        leftKnee.second + topOffset, paint
+                    )
+                }
+            }
+            rightHip?.let { rightHip ->
+                rightKnee?.let { rightKnee ->
+                    canvas?.drawLine(
+                        rightHip.first + leftOffset,
+                        rightHip.second + topOffset,
+                        rightKnee.first + leftOffset,
+                        rightKnee.second + topOffset, paint
+                    )
+                }
+            }
+            leftShoulder?.let { leftShoulder ->
+                leftHip?.let { leftHip ->
+                    canvas?.drawLine(
+                        leftShoulder.first + leftOffset,
+                        leftShoulder.second + topOffset,
+                        leftHip.first + leftOffset,
+                        leftHip.second + topOffset, paint
+                    )
+                }
+            }
+
+            rightShoulder?.let { rightShoulder ->
+                rightHip?.let { rightHip ->
+                    canvas?.drawLine(
+                        rightShoulder.first + leftOffset,
+                        rightShoulder.second + topOffset,
+                        rightHip.first + leftOffset,
+                        rightHip.second + topOffset, paint
+                    )
+                }
+            }
+            leftShoulder?.let { leftShoulder ->
+                rightShoulder?.let { rightShoulder ->
+                    canvas?.drawLine(
+                        leftShoulder.first + leftOffset,
+                        leftShoulder.second + topOffset,
+                        rightShoulder.first + leftOffset,
+                        rightShoulder.second + topOffset, paint
+                    )
+                }
+            }
+            leftHip?.let { leftHip ->
+                rightHip?.let { rightHip ->
+                    canvas?.drawLine(
+                        leftHip.first + leftOffset,
+                        leftHip.second + topOffset,
+                        rightHip.first + leftOffset,
+                        rightHip.second + topOffset, paint
+                    )
+                }
+            }
+            leftShoulder?.let { leftShoulder ->
+                leftElbow?.let { leftElbow ->
+                    canvas?.drawLine(
+                        leftShoulder.first + leftOffset,
+                        leftShoulder.second + topOffset,
+                        leftElbow.first + leftOffset,
+                        leftElbow.second + topOffset, paint
+                    )
+
+                }
+            }
+            rightShoulder?.let { rightShoulder ->
+                rightElbow?.let { rightElbow ->
+                    canvas?.drawLine(
+                        rightShoulder.first + leftOffset,
+                        rightShoulder.second + topOffset,
+                        rightElbow.first + leftOffset,
+                        rightElbow.second + topOffset, paint
+                    )
+                }
+            }
+            leftElbow?.let { leftElbow ->
+                leftWrist?.let { leftWrist ->
+                    canvas?.drawLine(
+                        leftElbow.first + leftOffset,
+                        leftElbow.second + topOffset,
+                        leftWrist.first + leftOffset,
+                        leftWrist.second + topOffset, paint
+                    )
+                }
+            }
+            rightElbow?.let { rightElbow ->
+                rightWrist?.let { rightWrist ->
+                    canvas?.drawLine(
+                        rightElbow.first + leftOffset,
+                        rightElbow.second + topOffset,
+                        rightWrist.first + leftOffset,
+                        rightWrist.second + topOffset, paint
+                    )
+                }
+            }
+
+        }
+
+
     }
 
 
