@@ -1,5 +1,9 @@
 package com.avalon.calizer.data.local.profile.photoanalyze
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class PoseData(
     val leftShoulder:Pair<Float,Float>?,
     val rightShoulder:Pair<Float,Float>?,
@@ -15,7 +19,7 @@ data class PoseData(
     val rightAnkle:Pair<Float,Float>?
 
 
-){
+):Parcelable{
     fun getData() = listOf(Pair(leftShoulder?.first,leftShoulder?.second),
         Pair(rightShoulder?.first,rightShoulder?.second),
         Pair(leftElbow?.first,leftElbow?.second),

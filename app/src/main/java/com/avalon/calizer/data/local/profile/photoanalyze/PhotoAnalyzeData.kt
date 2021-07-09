@@ -8,7 +8,8 @@ import kotlinx.parcelize.Parcelize
  data class PhotoAnalyzeData(
     val id:Long? = 0L,
     val image: Bitmap? = null,
-    val isResComp:Boolean? = false
+    val isResComp:Boolean? = false,
+    val poseData: PoseData? = null
 
 ):Parcelable
 

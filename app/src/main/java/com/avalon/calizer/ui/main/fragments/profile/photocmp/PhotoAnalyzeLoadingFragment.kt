@@ -12,6 +12,7 @@ import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 import com.avalon.calizer.data.local.profile.photoanalyze.PoseData
 import com.avalon.calizer.databinding.FragmentPhotoAnalyzeLoadingBinding
 import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseDetector
 import com.google.mlkit.vision.pose.PoseLandmark
@@ -23,53 +24,33 @@ class PhotoAnalyzeLoadingFragment : Fragment() {
     private lateinit var analyzeData: List<PhotoAnalyzeData>
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        binding = FragmentPhotoAnalyzeLoadingBinding.inflate(inflater,container,false)
+        binding = FragmentPhotoAnalyzeLoadingBinding.inflate(inflater, container, false)
         analyzeData = args.photoNotAnalyzeData.toList()
         return binding.root
     }
 
-    private fun createPoseData(bitmapImage:Bitmap,poseDetector: PoseDetector):PoseData{
-        poseDetector.process(InputImage.fromBitmap(bitmapImage,0)).addOnSuccessListener { result ->
-            if (!result.allPoseLandmarks.isNullOrEmpty()){
-                val poseData = PoseData(
-                    leftShoulder = getXorYCoordinates(result.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)),
-                    rightShoulder = getXorYCoordinates(result.getPoseLandmark(PoseLandmark.RIGHT_SHOULDER)),
-                    leftElbow = getXorYCoordinates(result.getPoseLandmark(PoseLandmark.LEFT_ELBOW)),
-                    rightElbow = getXorYCoordinates(result.getPoseLandmark(PoseLandmark.RIGHT_ELBOW)),
-                    leftHip = getXorYCoordinates(result.getPoseLandmark(PoseLandmark.LEFT_HIP)),
-                    rightHip = getXorYCoordinates(result.getPoseLandmark(PoseLandmark.RIGHT_HIP)),
-                    leftWrist = getXorYCoordinates(result.getPoseLandmark(PoseLandmark.LEFT_WRIST)),
-                    rightWrist = getXorYCoordinates(result.getPoseLandmark(PoseLandmark.RIGHT_WRIST)),
-                    leftKnee = getXorYCoordinates(result.getPoseLandmark(PoseLandmark.LEFT_KNEE)),
-                    rightKnee = getXorYCoordinates(result.getPoseLandmark(PoseLandmark.RIGHT_KNEE)),
-                    leftAnkle = getXorYCoordinates(result.getPoseLandmark(PoseLandmark.LEFT_ANKLE)),
-                    rightAnkle = getXorYCoordinates(result.getPoseLandmark(PoseLandmark.RIGHT_ANKLE))
 
-                )
-
-            }
-
-        }
-    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val options =
             PoseDetectorOptions.Builder().setDetectorMode(PoseDetectorOptions.SINGLE_IMAGE_MODE)
                 .build()
         val poseDetector = PoseDetection.getClient(options)
+        val photoAnalyzeData = ArrayList<PhotoAnalyzeData>()
+        analyzeData.forEach { itAnalyzeData ->
+            itAnalyzeData.image?.let { bitmapImage ->
+                photoAnalyzeData.add(
+                    PhotoAnalyzeData(
+                        image = bitmapImage,
+                        poseData = createPoseData(bitmapImage, poseDetector)
+                    )
+                )
 
-        analyzeData.forEach { itAnalyzeData->
-            itAnalyzeData.image?.let { bitmapImage->
-
-
-
-            }?: kotlin.run {
+            } ?: kotlin.run {
 
             }
 
@@ -80,5 +61,37 @@ class PhotoAnalyzeLoadingFragment : Fragment() {
     private fun getXorYCoordinates(poseLandmark: PoseLandmark?) =
         poseLandmark?.let { pose -> Pair(pose.position.x, pose.position.y) }
 
+    private fun createPoseData(bitmapImage: Bitmap, poseDetector: PoseDetector): PoseData? {
+        val result = poseDetectorProcess(bitmapImage, poseDetector)
+        return result?.let { itResult ->
+            PoseData(
+                leftShoulder = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)),
+                rightShoulder = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.RIGHT_SHOULDER)),
+                leftElbow = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.LEFT_ELBOW)),
+                rightElbow = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.RIGHT_ELBOW)),
+                leftHip = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.LEFT_HIP)),
+                rightHip = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.RIGHT_HIP)),
+                leftWrist = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.LEFT_WRIST)),
+                rightWrist = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.RIGHT_WRIST)),
+                leftKnee = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.LEFT_KNEE)),
+                rightKnee = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.RIGHT_KNEE)),
+                leftAnkle = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.LEFT_ANKLE)),
+                rightAnkle = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.RIGHT_ANKLE))
+
+            )
+
+        }
+    }
+
+    private fun poseDetectorProcess(bitmapImage: Bitmap, poseDetector: PoseDetector): Pose? {
+        var poseData: Pose? = null
+        poseDetector.process(InputImage.fromBitmap(bitmapImage, 0)).addOnSuccessListener { result ->
+            if (!result.allPoseLandmarks.isNullOrEmpty()) {
+                poseData = result
+            }
+
+        }
+        return poseData
+    }
 
 }
