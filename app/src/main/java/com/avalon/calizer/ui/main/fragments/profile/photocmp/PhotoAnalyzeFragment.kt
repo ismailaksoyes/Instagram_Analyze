@@ -64,37 +64,9 @@ class PhotoAnalyzeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val options =
-            PoseDetectorOptions.Builder().setDetectorMode(PoseDetectorOptions.SINGLE_IMAGE_MODE)
-                .build()
-        val poseDetector = PoseDetection.getClient(options)
-
-       // val image = data[0].image?.let {
-      //      InputImage.fromBitmap(it, 0)
-
-       // }
 
 
 
-
-
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.photoAnalyzeData.collect { data ->
-                when (data) {
-                    is PhotoAnalyzeViewModel.PhotoState.Success -> {
-                        Log.d("DataPhoto", data.toString())
-                    }
-                    is PhotoAnalyzeViewModel.PhotoState.Random -> {
-                        Log.d("DataPhoto", data.data.toString())
-                    }
-                    else -> {
-                        Log.d("DataPhoto", "else")
-                    }
-                }
-            }
-
-        }
 
     }
 
