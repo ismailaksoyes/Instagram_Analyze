@@ -4,14 +4,14 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 
-class PhotoAnalyzePagerAdapter(fragment:Fragment, val itemsCount: Int):FragmentStateAdapter(fragment) {
+class PhotoAnalyzePagerAdapter(fragment:Fragment, private val analyzeData:List<PhotoAnalyzeData>):FragmentStateAdapter(fragment) {
 
     override fun getItemCount(): Int {
-        return itemsCount
+        return analyzeData.size
     }
 
     override fun createFragment(position: Int): Fragment {
-        return PhotoAnalyzeFragment.getInstance(position)
+        return PhotoAnalyzeFragment.getInstance(analyzeData[position])
     }
 
 }

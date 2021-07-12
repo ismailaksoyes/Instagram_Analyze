@@ -30,10 +30,10 @@ import kotlin.random.Random
 @AndroidEntryPoint
 class PhotoAnalyzeFragment : Fragment() {
     companion object {
-        private const val ARG_POSITION = "ARG_POSITION"
+        private const val ARG_DATA = "ARG_DATA"
 
-        fun getInstance(position: Int) = PhotoAnalyzeFragment().apply {
-            arguments = bundleOf(ARG_POSITION to position)
+        fun getInstance(data: PhotoAnalyzeData) = PhotoAnalyzeFragment().apply {
+            arguments = bundleOf(ARG_DATA to data)
         }
 
     }
@@ -64,7 +64,13 @@ class PhotoAnalyzeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val analyzeData = requireArguments().getParcelable<PhotoAnalyzeData>(ARG_DATA)
+        Log.d("FRAGMENTTEST-> ",analyzeData?.poseData.toString())
+        binding.cvCanvas.setPoseData(
+            poseData = analyzeData?.poseData,
+            bitmap = analyzeData?.image
+        )
+        binding.cvCanvas.invalidate()
 
 
 
