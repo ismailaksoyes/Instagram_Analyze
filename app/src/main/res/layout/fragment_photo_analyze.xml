@@ -7,90 +7,177 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.main.fragments.profile.photocmp.PhotoAnalyzeFragment">
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv_photo_analyze_canvas"
-        android:layout_width="250dp"
-        android:layout_height="300dp"
-        app:layout_constraintStart_toStartOf="parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-       android:layout_marginTop="30dp"
-        app:cardCornerRadius="12dp"
-        android:elevation="8dp">
-        <com.avalon.calizer.ui.main.fragments.profile.photocmp.CanvasView
-            android:id="@+id/cv_canvas"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"/>
-    </androidx.cardview.widget.CardView>
-    <androidx.cardview.widget.CardView
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/cv_photo_analyze_canvas"
-        app:layout_constraintStart_toStartOf="@id/cv_photo_analyze_canvas"
-        android:elevation="8dp"
-        app:cardCornerRadius="12dp"
-        android:layout_marginTop="20dp">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?colorSecondary"
-            android:padding="12dp">
-        <ImageView
-            android:id="@+id/iv_pose_analyze"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/ic_pose_analyze"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_photo_analyze_canvas"
+            android:layout_width="250dp"
+            android:layout_height="300dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-            <TextView
-                android:id="@+id/tv_pose_rate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="82%"
-               app:layout_constraintTop_toBottomOf="@id/iv_pose_analyze"
-                app:layout_constraintStart_toStartOf="parent"
-                android:textSize="18sp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/ibm_plex_sans_medium"
-                android:textColor="@color/green"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                app:layout_constraintStart_toStartOf="@id/iv_pose_analyze"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_pose_rate"
-                android:layout_marginTop="10dp"
-                android:textColor="?colorOnSecondary"
-                android:fontFamily="@font/ibm_plex_sans_medium"
-                android:text="Poz Analizi"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="30dp"
+            app:cardCornerRadius="12dp"
+            android:elevation="8dp">
+            <com.avalon.calizer.ui.main.fragments.profile.photocmp.CanvasView
+                android:id="@+id/cv_canvas"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"/>
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_pose_rate_card"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/cv_photo_analyze_canvas"
+            app:layout_constraintStart_toStartOf="@id/cv_photo_analyze_canvas"
+            android:elevation="8dp"
+            app:cardCornerRadius="12dp"
+            android:layout_marginTop="20dp">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?colorSecondary"
+                android:padding="12dp">
+                <ImageView
+                    android:id="@+id/iv_pose_analyze"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_pose_analyze"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+                <TextView
+                    android:id="@+id/tv_pose_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="82%"
+                    app:layout_constraintTop_toBottomOf="@id/iv_pose_analyze"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:textSize="18sp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/ibm_plex_sans_medium"
+                    android:textColor="@color/green"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    app:layout_constraintStart_toStartOf="@id/iv_pose_analyze"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_pose_rate"
+                    android:layout_marginTop="10dp"
+                    android:textColor="?colorOnSecondary"
+                    android:fontFamily="@font/ibm_plex_sans_medium"
+                    android:text="Poz Analizi"/>
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-    <androidx.cardview.widget.CardView
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/cv_photo_analyze_canvas"
-        app:layout_constraintEnd_toEndOf="@id/cv_photo_analyze_canvas"
-        android:elevation="8dp"
-        app:cardCornerRadius="12dp"
-        android:layout_marginTop="20dp">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?colorSecondary"
-            android:padding="12dp">
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/ic_face_detection"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_face_rate_card"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/cv_photo_analyze_canvas"
+            app:layout_constraintEnd_toEndOf="@id/cv_photo_analyze_canvas"
+            android:elevation="8dp"
+            app:cardCornerRadius="12dp"
+            android:layout_marginTop="20dp">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?colorSecondary"
+                android:padding="12dp">
+                <ImageView
+                    android:id="@+id/iv_face_analyze"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_face_detection"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+                <TextView
+                    android:id="@+id/tv_face_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="89%"
+                    app:layout_constraintTop_toBottomOf="@id/iv_face_analyze"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:textSize="18sp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/ibm_plex_sans_medium"
+                    android:textColor="@color/green"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    app:layout_constraintStart_toStartOf="@id/iv_face_analyze"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_face_rate"
+                    android:layout_marginTop="10dp"
+                    android:textColor="?colorOnSecondary"
+                    android:fontFamily="@font/ibm_plex_sans_medium"
+                    android:text="Yuz Analizi"/>
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:elevation="8dp"
+            app:cardCornerRadius="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/cv_face_rate_card"
+            app:layout_constraintStart_toStartOf="@id/cv_pose_rate_card"
+            app:layout_constraintTop_toBottomOf="@id/cv_pose_rate_card">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?colorSecondary"
+                android:padding="12dp">
+
+                <ImageView
+                    android:id="@+id/iv_resolution"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_resolution"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_resolution"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/ibm_plex_sans_medium"
+                    android:text="1920x1080"
+                    android:textColor="?colorOnSecondary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/iv_check"
+                    app:layout_constraintStart_toEndOf="@id/iv_resolution"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/iv_check"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_check_true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
