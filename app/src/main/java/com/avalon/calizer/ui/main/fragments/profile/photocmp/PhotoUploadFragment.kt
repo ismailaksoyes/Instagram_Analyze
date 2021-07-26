@@ -14,11 +14,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 import com.avalon.calizer.databinding.FragmentPhotoUploadBinding
 import com.avalon.calizer.utils.showSnackBar
@@ -27,6 +29,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -38,29 +41,69 @@ class PhotoUploadFragment : Fragment() {
 
     val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK ) {
-
+            if (result.resultCode == Activity.RESULT_OK) {
+                val imageUriList = ArrayList<Uri>()
                 result.data?.let { itdata ->
-                    itdata.clipData?.let { itClipData->
+                    itdata.clipData?.let { itClipData ->
                         val itemCount = itClipData.itemCount
-                        for (i in 0 until itemCount){
-                            val imageUri:Uri = itClipData.getItemAt(i).uri
-                            Log.d("ImageUri","$imageUri")
+                        for (i in 0 until itemCount) {
+                            val imageUri: Uri = itClipData.getItemAt(i).uri
+                            imageUriList.add(imageUri)
 
                         }
-                    }?: kotlin.run {
+                    } ?: kotlin.run {
                         //single image selected
-                        itdata.data?.let { itUri->
-                            val imageUri:Uri = itUri
-                            Log.d("ImageUri","$imageUri")
+                        itdata.data?.let { itUri ->
+                            val imageUri: Uri = itUri
+                            imageUriList.add(imageUri)
+                            Log.d("ImageUri", "$imageUri")
                         }
 
+                    }.also {
+                        createListBitmap(imageUriList)
                     }
 
                 }
 
             }
         }
+
+    private fun createListBitmap(uriList: List<Uri>) {
+        if (uriList.isNotEmpty()) {
+            val bitmapList = ArrayList<Bitmap>()
+
+            uriList.forEach { itUri ->
+                itUri.path?.let { itPath ->
+
+
+                }.also {
+                    setDataAnalyze(bitmapList)
+                }
+            }
+
+        } else {
+            Toast.makeText(requireContext(), "RESIM YOK", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+    fun uriToBitmapGlide(imagePath: String):Bitmap{
+
+         Glide.with(this).asBitmap().load(File(imagePath))
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: Transition<in Bitmap>?
+                ) {
+
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+
+                }
+
+            })
+
+    }
 
 
     override fun onCreateView(
@@ -73,9 +116,7 @@ class PhotoUploadFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val urlList = ArrayList<String>()
-        urlList.add("https://witandfolly.co/wp-content/uploads/2020/01/Hoka-14-1-scaled.jpg")
-        setGlideImageUrl(urlList)
+        initData()
     }
 
 
@@ -137,41 +178,27 @@ class PhotoUploadFragment : Fragment() {
 
     }
 
-    fun getBitmap(bitmap: Bitmap) {
+    fun initData() {
+        binding.btnUploadImage.setOnClickListener {
+
+            onclickRequestPermission(it)
+
+        }
+    }
+
+    fun setDataAnalyze(bitmapList: List<Bitmap>) {
+        Log.d("TestLog","BITMAPLIST")
         val list = ArrayList<PhotoAnalyzeData>()
-        for (i in 0L..5L) {
-            list.add(PhotoAnalyzeData(i, bitmap, false))
+        for (i in 0..bitmapList.size) {
+            list.add(PhotoAnalyzeData(i.toLong(), bitmapList[i], false))
         }
         val newList = list.toTypedArray()
-        viewModel.setPhotoData(list)
-        binding.btnUploadImage.setOnClickListener {
-            // val action = PhotoUploadFragmentDirections.actionPhotoUploadFragmentToPhotoAnalyzeLoadingFragment(newList)
-            //findNavController().navigate(action)
-            onclickRequestPermission(it)
-            // getGalleryImage()
-        }
-
+        val action =
+            PhotoUploadFragmentDirections.actionPhotoUploadFragmentToPhotoAnalyzeLoadingFragment(
+                newList
+            )
+        findNavController().navigate(action)
     }
-
-    fun setGlideImageUrl(urlList: ArrayList<String>) {
-        urlList.forEach { imageUrl ->
-            Glide.with(this).asBitmap().load(imageUrl)
-                .into(object : CustomTarget<Bitmap>() {
-                    override fun onResourceReady(
-                        resource: Bitmap,
-                        transition: Transition<in Bitmap>?
-                    ) {
-                        getBitmap(bitmap = resource)
-                    }
-
-                    override fun onLoadCleared(placeholder: Drawable?) {
-
-                    }
-
-                })
-        }
-    }
-
 
 }
 
