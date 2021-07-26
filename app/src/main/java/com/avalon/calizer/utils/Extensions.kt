@@ -2,6 +2,7 @@ package com.avalon.calizer.utils
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.avalon.calizer.data.local.FollowData
@@ -9,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
+import com.google.android.material.snackbar.Snackbar
 
 
 fun ImageView.loadPPUrl(url: String?) {
@@ -54,4 +56,21 @@ fun withGlide(imageView: ImageView, url: String?) {
         imageView.loadPPUrl(url)
     }
 
+}
+
+fun View.showSnackBar(
+    view: View,
+    msg:String,
+    length:Int,
+    actionMessage:CharSequence?,
+    action:(View) -> Unit
+){
+    val snackbar = Snackbar.make(view,msg,length)
+    if (actionMessage!=null){
+        snackbar.setAction(actionMessage){
+            action(this)
+        }.show()
+    }else{
+        snackbar.show()
+    }
 }
