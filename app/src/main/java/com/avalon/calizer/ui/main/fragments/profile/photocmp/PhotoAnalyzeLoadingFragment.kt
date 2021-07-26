@@ -78,7 +78,6 @@ class PhotoAnalyzeLoadingFragment : Fragment() {
 
     suspend fun loadingNextAnim(list: ArrayList<PhotoAnalyzeData>) {
 
-        delay(2000)
         val action =
             PhotoAnalyzeLoadingFragmentDirections.actionPhotoAnalyzeLoadingFragmentToPhotoPagerFragment(
                 list.toTypedArray()

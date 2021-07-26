@@ -11,6 +11,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 import com.avalon.calizer.databinding.FragmentPhotoPagerBinding
+import kotlin.math.abs
 
 
 class PhotoPagerFragment : Fragment() {
@@ -23,7 +24,7 @@ class PhotoPagerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPhotoPagerBinding.inflate(inflater,container,false)
         analyzeData = args.photoAnalyzeDataArgs.toList()
         return binding.root
@@ -31,11 +32,7 @@ class PhotoPagerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("FRAGMENTTESTPAGER->",analyzeData[0].poseData?.getData().toString())
         createViewPagerAdapter()
-
-
-
     }
 
     private fun createViewPagerAdapter(){
@@ -43,6 +40,20 @@ class PhotoPagerFragment : Fragment() {
         viewPager = binding.vpViewPagerPhotoAnalyze
         viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         viewPager.adapter = photoAnalyzePagerAdapter
+        viewPager.offscreenPageLimit = 3
+        val pageMargin = resources.getDimensionPixelOffset(R.dimen.pageMargin).toFloat()
+        val pageOffset = resources.getDimensionPixelOffset(R.dimen.offset).toFloat()
+        viewPager.setPageTransformer { page, position ->
+            val myOffset = position * -(2 * pageOffset + pageMargin)
+            when {
+                position < -1 -> {
+                    page.translationX = -myOffset
+                }
+                else -> {
+                    page.translationX = myOffset
+                }
+            }
+        }
     }
 
     private var onTutorialPageChangeCallBack = object:ViewPager2.OnPageChangeCallback(){
