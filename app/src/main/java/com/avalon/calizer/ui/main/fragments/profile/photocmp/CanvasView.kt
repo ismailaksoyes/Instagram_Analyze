@@ -23,7 +23,6 @@ class CanvasView @JvmOverloads constructor(
         val paint = Paint()
         val ww = width.toFloat()
         val hh = height.toFloat()
-
         _poseData?.let { poseData ->
             _imageBit?.let { imageBitmap ->
                 val newBitmap = scaleBitmap(imageBitmap, hh)
@@ -35,9 +34,17 @@ class CanvasView @JvmOverloads constructor(
     }
 
     fun scaleBitmap(imageBitmap: Bitmap, height: Float): Pair<Bitmap, Float> {
-        val ratio: Float = imageBitmap.width / imageBitmap.height.toFloat()
-        val newWidth = Math.round(height * ratio)
-        val pointRatio = imageBitmap.width / newWidth.toFloat()
+        var newWidth:Int = 0
+        var pointRatio:Float = 0f
+
+        try {
+            val ratio: Float = imageBitmap.width / imageBitmap.height.toFloat()
+             newWidth = Math.round(height * ratio)
+             pointRatio = imageBitmap.width / newWidth.toFloat()
+
+        }catch (e:ArithmeticException){
+
+        }
         return Pair(imageBitmap.scale(newWidth, height.toInt()), pointRatio)
     }
 
@@ -59,12 +66,17 @@ class CanvasView @JvmOverloads constructor(
         bitmap: Bitmap,
         ratio: Float
     ) {
-        val leftOffset = (ww / 2) - (bitmap.width / 2)
-        val topOffset = (hh / 2) - (bitmap.height / 2)
-        val offset = PointF(leftOffset, topOffset)
-        canvas?.drawBitmap(bitmap, offset.x, offset.y, paint)
-        lineCreate(canvas, paint, poseData, offset, ratio)
-        drawPoint(canvas, paint, poseData, offset, ratio)
+        try {
+            val leftOffset = (ww / 2) - (bitmap.width / 2)
+            val topOffset = (hh / 2) - (bitmap.height / 2)
+            val offset = PointF(leftOffset, topOffset)
+            canvas?.drawBitmap(bitmap, offset.x, offset.y, paint)
+            lineCreate(canvas, paint, poseData, offset, ratio)
+            drawPoint(canvas, paint, poseData, offset, ratio)
+        }catch (e:ArithmeticException){
+
+        }
+
 
 
     }
@@ -80,11 +92,16 @@ class CanvasView @JvmOverloads constructor(
         paint.color = Color.RED
         paint.style = Paint.Style.FILL
         for (i in poseData.getData()) {
-            i?.apply {
-                val left = (x / ratio) + offset.x
-                val top = (y / ratio) + offset.y
-                canvas?.drawCircle(left, top, 7f, paint)
+            try {
+                i?.apply {
+                    val left = (x / ratio) + offset.x
+                    val top = (y / ratio) + offset.y
+                    canvas?.drawCircle(left, top, 7f, paint)
+                }
+            }catch (e:ArithmeticException){
+
             }
+
 
 
         }
@@ -118,7 +135,7 @@ class CanvasView @JvmOverloads constructor(
 
     }
 
-    fun drawPointLine(lineData: LineData) {
+    private fun drawPointLine(lineData: LineData) {
         val ratio = lineData.ratio
         val offset = lineData.offset
         val x1 = lineData.firstPoint?.x
@@ -127,13 +144,18 @@ class CanvasView @JvmOverloads constructor(
         val y2 = lineData.secondPoint?.y
 
         if (x1 != null && y1 != null && x2 != null && y2 != null) {
-            lineData.canvas?.drawLine(
-                x1 / ratio + offset.x,
-                y1 / ratio + offset.y,
-                x2 / ratio + offset.x,
-                y2 / ratio + offset.y,
-                lineData.paint
-            )
+            try {
+                lineData.canvas?.drawLine(
+                    x1 / ratio + offset.x,
+                    y1 / ratio + offset.y,
+                    x2 / ratio + offset.x,
+                    y2 / ratio + offset.y,
+                    lineData.paint
+                )
+            }catch (e:ArithmeticException){
+
+            }
+
         }
     }
 
