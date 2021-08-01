@@ -143,11 +143,31 @@ class PhotoAnalyzeFragment : Fragment() {
         }
 
     }
+    fun getAngleLeftArm(poseData: PoseData?){
+        poseData?.let { itPoseData->
+            val leftShoulder = itPoseData.leftShoulder
+            val leftElbow = itPoseData.leftElbow
+            val leftWrist  = itPoseData.leftWrist
+            if(leftElbow!=null&&leftShoulder!=null&&leftWrist!=null){
+                val betta = calculateAngle(leftShoulder,leftElbow,leftWrist).betta
+                betta
+            }
+        }
+
+    }
+    fun getBodyAngle(pointData: PointData){
+        
+    }
 
     data class TriangleData(
         val alpha: Float?,
         val betta: Float?,
         val gamma: Float?
+    )
+    data class PointData(
+        val point1 : Float?,
+        val point2 : Float?,
+        val point3 : Float?
     )
 
 
