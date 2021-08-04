@@ -3,6 +3,7 @@ package com.avalon.calizer.ui.main.fragments.profile.photocmp
 import android.annotation.SuppressLint
 import android.graphics.*
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,12 +19,15 @@ import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 import com.avalon.calizer.data.local.profile.photoanalyze.PoseData
 import com.avalon.calizer.databinding.FragmentPhotoAnalyzeBinding
 import com.avalon.calizer.ui.tutorial.TutorialFragment
+import com.avalon.calizer.utils.Utils
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.parcelize.Parcelize
+import org.jetbrains.annotations.NotNull
 import java.lang.Math.atan2
 import javax.inject.Inject
 import kotlin.math.PI
@@ -87,32 +91,42 @@ class PhotoAnalyzeFragment : Fragment() {
         }
         binding.ivCheck.setImageDrawable(checkImage)
 
-        getAngleSit(analyzeData?.poseData)
+        //getAngleSit(analyzeData?.poseData)
+        analyzeData?.poseData?.let { itPoseData->
+            val sitting= getSitting(itPoseData.leftShoulder,itPoseData.leftHip,itPoseData.leftKnee)
+            val leftHandUp = getLeftHandUp(itPoseData.leftShoulder,itPoseData.leftElbow,itPoseData.leftWrist)
+            val rightHandUp = getRightHandUp(itPoseData.rightShoulder,itPoseData.rightElbow,itPoseData.rightWrist)
+            val leftArmUp = getLeftArmUp(itPoseData.leftHip,itPoseData.leftShoulder,itPoseData.leftElbow)
+            val rightArmUp = getRightArmUp(itPoseData.rightHip,itPoseData.rightShoulder,itPoseData.rightElbow)
+            val leftKneeUp = getLeftKneeUp(itPoseData.leftHip,itPoseData.leftKnee,itPoseData.leftAnkle)
+            val rightKneeUp = getRightKneeUp(itPoseData.rightHip,itPoseData.rightKnee,itPoseData.rightAnkle)
+            val calculateData = CalculateData(sitting, leftHandUp, rightHandUp, leftArmUp, rightArmUp, leftKneeUp, rightKneeUp)
+            binding.tvPoseRate.text = calculatePoint(calculateData).toString()
+            binding.sitTextTest.text = "$sitting $leftHandUp $rightHandUp $leftArmUp $rightArmUp $leftKneeUp $rightKneeUp"
+        }
 
     }
 
-    private fun lengthSquare(p1: Point, p2: Point): Int {
+    private fun lengthSquare(p1: PointF, p2: PointF): Float {
         val xDiff = p1.x - p2.x
         val yDiff = p1.y - p2.y
         return xDiff * xDiff + yDiff * yDiff
     }
 
-    fun calculateAngle(
-        aPoint: PointF,
-        bPoint: PointF,
-        cPoint: PointF
+    private fun calculateAngle(
+        pointData: PointData
     ): TriangleData {
-        val a = Point(aPoint.x.toInt(), aPoint.y.toInt())
-        val b = Point(bPoint.x.toInt(), bPoint.y.toInt())
-        val c = Point(cPoint.x.toInt(), cPoint.y.toInt())
+        val a = PointF(pointData.point1.x, pointData.point1.y)
+        val b = PointF(pointData.point2.x, pointData.point2.y)
+        val c = PointF(pointData.point3.x, pointData.point3.y)
 
         val aLength = lengthSquare(b, c)
         val bLength = lengthSquare(a, c)
         val cLength = lengthSquare(a, b)
 
-        val aSides = sqrt(aLength.toFloat())
-        val bSides = sqrt(bLength.toFloat())
-        val cSides = sqrt(cLength.toFloat())
+        val aSides = sqrt(aLength)
+        val bSides = sqrt(bLength)
+        val cSides = sqrt(cLength)
 
         var alpha = acos((bLength + cLength - aLength) / (2 * bSides * cSides))
         var betta = acos((aLength + cLength - bLength) / (2 * aSides * cSides))
@@ -125,50 +139,117 @@ class PhotoAnalyzeFragment : Fragment() {
         return TriangleData(alpha, betta, gamma)
     }
 
-    fun getAngleSit(poseData: PoseData?) {
-        poseData?.let { itPoseData ->
-            val leftShoulder = itPoseData.leftShoulder
-            val leftHip =itPoseData.leftHip
-            val leftKnee = itPoseData.leftKnee
-            if(leftShoulder!=null&&leftHip!=null&&leftKnee!=null){
-             val betta=  calculateAngle(leftShoulder,leftHip,leftKnee).betta
-                betta?.let {
-                    val sitTest = if(it<120)"OTURUYOR" else "AYAKTA YADA BACAGI YOK"
-                    Log.d("ANGLE","$sitTest")
-                    binding.sitTextTest.text = sitTest
+    private fun getSitting(point1: PointF?, point2: PointF?, point3: PointF?):Boolean? {
+        return getBodyAngleCalculate(point1, point2, point3)?.let { it<=120 }
+    }
+    private fun getLeftHandUp(point1: PointF?, point2: PointF?, point3: PointF?):Boolean?{
+        return getBodyAngleCalculate(point1, point2, point3)?.let { it<=90 }
+    }
+    private fun getRightHandUp(point1: PointF?, point2: PointF?, point3: PointF?):Boolean?{
+        return getBodyAngleCalculate(point1, point2, point3)?.let { it<=90 }
+    }
+    private fun getLeftArmUp(point1: PointF?, point2: PointF?, point3: PointF?):Boolean?{
+        return getBodyAngleCalculate(point1, point2, point3)?.let { it<=45 }
+    }
+    private fun getRightArmUp(point1: PointF?, point2: PointF?, point3: PointF?):Boolean?{
+        return getBodyAngleCalculate(point1, point2, point3)?.let { it<=45 }
+    }
+    private fun getLeftKneeUp(point1: PointF?, point2: PointF?, point3: PointF?):Boolean?{
+        return getBodyAngleCalculate(point1, point2, point3)?.let { it<=160 }
+    }
+    private fun getRightKneeUp(point1: PointF?, point2: PointF?, point3: PointF?):Boolean?{
+        return getBodyAngleCalculate(point1, point2, point3)?.let { it<=160 }
+    }
 
+
+    private fun getBodyAngleCalculate(point1: PointF?, point2: PointF?, point3: PointF?): Float? {
+        var angle:Float? = null
+        Utils.ifNotNull(point1,point2,point3){p1,p2,p3 ->
+            angle = calculateAngle(PointData(p1, p2, p3)).betta
+        }
+        return angle
+    }
+    private fun calculatePoint(calculateData: CalculateData):Int{
+        var point = 0f
+
+        calculateData.apply {
+            sitting?.let { itSitting->
+                if (itSitting){
+                    leftHandUp?.let { itLeftHandUp->
+                        rightHandUp?.let { itRightHandUp->
+                            if((itLeftHandUp&&!itRightHandUp)||(!itLeftHandUp&&itRightHandUp)){
+                                point += 100/7
+                            }
+                        }
+                    }
+                    leftArmUp?.let { itLeftArmUp->
+                        rightArmUp?.let { itRightArmUp->
+                            if((itLeftArmUp&&!itRightArmUp)||(!itLeftArmUp&&itRightArmUp)){
+                                point += 100/7
+                            }
+                        }
+                    }
+                    leftKneeUp?.let { itLeftKneeUp->
+                        rightKneeUp?.let { itRightKneeUp->
+                            if((itLeftKneeUp&&!itRightKneeUp)||(!itLeftKneeUp&&itRightKneeUp)){
+                                point += 100/7
+                            }
+                        }
+                    }
+
+
+                }else{
+                    leftHandUp?.let { itLeftHandUp->
+                        rightHandUp?.let { itRightHandUp->
+                            if((itLeftHandUp&&!itRightHandUp)||(itLeftHandUp&&!itRightHandUp)){
+                                point += 100/7
+                            }
+                        }
+                    }
+                    leftArmUp?.let { itLeftArmUp->
+                        rightArmUp?.let { itRightArmUp->
+                            if((!itLeftArmUp&&!itRightArmUp)||(!itLeftArmUp&&!itRightArmUp)){
+                                point += 100/7
+                            }
+                        }
+                    }
+                    leftKneeUp?.let { itLeftKneeUp->
+                        rightKneeUp?.let { itRightKneeUp->
+                            if((itLeftKneeUp&&!itRightKneeUp)||(!itLeftKneeUp&&itRightKneeUp)){
+                                point += 100/7
+                            }
+                        }
+                    }
                 }
             }
-
         }
+        return point.toInt()
+    }
 
-    }
-    fun getAngleLeftArm(poseData: PoseData?){
-        poseData?.let { itPoseData->
-            val leftShoulder = itPoseData.leftShoulder
-            val leftElbow = itPoseData.leftElbow
-            val leftWrist  = itPoseData.leftWrist
-            if(leftElbow!=null&&leftShoulder!=null&&leftWrist!=null){
-                val betta = calculateAngle(leftShoulder,leftElbow,leftWrist).betta
-                betta
-            }
-        }
+    data class CalculateData(
+        val sitting : Boolean?,
+        val leftHandUp : Boolean?,
+        val rightHandUp : Boolean?,
+        val leftArmUp : Boolean?,
+        val rightArmUp : Boolean?,
+        val leftKneeUp : Boolean?,
+        val rightKneeUp : Boolean?,
+    )
 
-    }
-    fun getBodyAngle(pointData: PointData){
-        
-    }
 
     data class TriangleData(
         val alpha: Float?,
         val betta: Float?,
         val gamma: Float?
-    )
-    data class PointData(
-        val point1 : Float?,
-        val point2 : Float?,
-        val point3 : Float?
+
     )
 
+
+    data class PointData(
+        val point1: PointF,
+        val point2: PointF,
+        val point3: PointF
+    )
 
 }
+
