@@ -105,7 +105,7 @@
     </fragment>
     <fragment
         android:id="@+id/photoPagerFragment"
-        android:name="com.avalon.calizer.ui.main.fragments.profile.photocmp.PhotoPagerFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.PhotoPagerFragment"
         android:label="fragment_photo_pager"
         tools:layout="@layout/fragment_photo_pager" >
         <argument

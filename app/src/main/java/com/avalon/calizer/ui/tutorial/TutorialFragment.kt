@@ -57,8 +57,6 @@ class TutorialFragment : Fragment() {
             tvIntroDesc.text = getData[position].descText
             ivIntroView.setImageResource(getData[position].drawable)
         }
-       // Log.d("position","$position")
-
     }
 
 
