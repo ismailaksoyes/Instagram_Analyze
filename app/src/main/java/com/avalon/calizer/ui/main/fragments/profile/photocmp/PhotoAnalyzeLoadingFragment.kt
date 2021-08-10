@@ -1,6 +1,7 @@
 package com.avalon.calizer.ui.main.fragments.profile.photocmp
 
 import android.graphics.Bitmap
+import android.graphics.PointF
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -44,6 +45,7 @@ class PhotoAnalyzeLoadingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val options =
             PoseDetectorOptions.Builder().setDetectorMode(PoseDetectorOptions.SINGLE_IMAGE_MODE)
                 .build()
@@ -58,7 +60,7 @@ class PhotoAnalyzeLoadingFragment : Fragment() {
                             poseData = createPoseData(bitmapImage, poseDetector)
                         )
                     )
-                    Log.d("DATATEST->",createPoseData(bitmapImage, poseDetector)?.leftAnkle?.first.toString())
+
 
                 } ?: kotlin.run {
 
@@ -76,7 +78,7 @@ class PhotoAnalyzeLoadingFragment : Fragment() {
 
     }
 
-    suspend fun loadingNextAnim(list: ArrayList<PhotoAnalyzeData>) {
+     private fun loadingNextAnim(list: ArrayList<PhotoAnalyzeData>) {
 
         val action =
             PhotoAnalyzeLoadingFragmentDirections.actionPhotoAnalyzeLoadingFragmentToPhotoPagerFragment(
@@ -84,10 +86,11 @@ class PhotoAnalyzeLoadingFragment : Fragment() {
             )
         findNavController().navigate(action)
 
+
     }
 
     private fun getXorYCoordinates(poseLandmark: PoseLandmark?) =
-        poseLandmark?.let { pose -> Pair(pose.position.x, pose.position.y) }
+        poseLandmark?.let { pose -> PointF(pose.position.x, pose.position.y) }
 
     private suspend fun createPoseData(bitmapImage: Bitmap, poseDetector: PoseDetector): PoseData? {
 

@@ -1,21 +1,20 @@
-package com.avalon.calizer.ui.main.fragments.profile.photocmp
+package com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 import com.avalon.calizer.databinding.FragmentPhotoPagerBinding
-import kotlin.math.abs
 
 
 class PhotoPagerFragment : Fragment() {
-    private val args:PhotoPagerFragmentArgs by navArgs()
+    private val args: PhotoPagerFragmentArgs by navArgs()
     private lateinit var binding: FragmentPhotoPagerBinding
     private lateinit var viewPager:ViewPager2
     private lateinit var analyzeData: List<PhotoAnalyzeData>
@@ -33,6 +32,7 @@ class PhotoPagerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         createViewPagerAdapter()
+        backBtn()
     }
 
     private fun createViewPagerAdapter(){
@@ -59,6 +59,12 @@ class PhotoPagerFragment : Fragment() {
     private var onTutorialPageChangeCallBack = object:ViewPager2.OnPageChangeCallback(){
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
+        }
+    }
+
+    private fun backBtn(){
+        binding.ivBackBtn.setOnClickListener {
+            it.findNavController().navigate(R.id.action_photoPagerFragment_to_photoUploadFragment)
         }
     }
 

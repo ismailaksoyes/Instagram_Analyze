@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:fontFamily="@font/ibm_plex_sans_bold"
-            android:text="@{viewmodel.userModel.value.userName}"
+            android:text="@{viewmodel.userModel.userName}"
             android:textColor="?colorOnSecondary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_acc_list"
@@ -65,7 +65,7 @@
             android:id="@+id/iv_profile_page_im"
             android:layout_width="75dp"
             android:layout_height="75dp"
-            app:glideCircleUrl="@{viewmodel.userModel.value.profilePic}"/>
+            app:glideCircleUrl="@{viewmodel.userModel.profilePic}"/>
     </androidx.cardview.widget.CardView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -81,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/ibm_plex_sans_bold"
-            android:text="@{viewmodel.userModel.value.followers.toString()}"
+            android:text="@{viewmodel.userModel.followers.toString()}"
             android:textColor="?colorOnSecondary"
             app:layout_constraintBottom_toTopOf="@id/tv_followers_title"
             app:layout_constraintEnd_toStartOf="@id/tv_profile_following"
@@ -93,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/ibm_plex_sans_bold"
-            android:text="@{viewmodel.userModel.value.following.toString()}"
+            android:text="@{viewmodel.userModel.following.toString()}"
             android:textColor="?colorOnSecondary"
             app:layout_constraintBottom_toTopOf="@id/tv_following_title"
             app:layout_constraintEnd_toStartOf="@id/tv_profile_posts"
@@ -105,7 +105,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/ibm_plex_sans_bold"
-            android:text="@{viewmodel.userModel.value.posts.toString()}"
+            android:text="@{viewmodel.userModel.posts.toString()}"
             android:textColor="?colorOnSecondary"
             app:layout_constraintBottom_toTopOf="@id/tv_posts_title"
             app:layout_constraintEnd_toEndOf="parent"
@@ -307,7 +307,7 @@
         android:layout_height="100dp"
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
-        app:glideCircleUrl="@{viewmodel.userModel.value.profilePic}"
+        app:glideCircleUrl="@{viewmodel.userModel.profilePic}"
         app:layout_constraintTop_toBottomOf="@id/tv_iv_analyze"
         app:layout_constraintBottom_toBottomOf="@id/iv_details_next_ico"
         app:layout_constraintStart_toStartOf="parent" />

@@ -4,7 +4,10 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import com.avalon.calizer.R
 import com.avalon.calizer.data.local.FollowData
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -30,9 +33,19 @@ fun ImageView.loadPPUrl(url: String?) {
         .into(this)
 }
 
+
 fun ImageView.clearRecycled() {
     Glide.with(context)
         .clear(this)
+}
+
+fun TextView.analyzeTextColor(score:Int){
+    when(score){
+        in 0..30 -> this.setTextColor(ContextCompat.getColor(this.context,R.color.lightRed))
+        in 31..69 -> this.setTextColor(ContextCompat.getColor(this.context,R.color.lightYellow))
+        in 70..100 -> this.setTextColor(ContextCompat.getColor(this.context,R.color.green))
+    }
+
 }
 
 fun ArrayList<FollowData>.getItemByID(item: Long?): Int {

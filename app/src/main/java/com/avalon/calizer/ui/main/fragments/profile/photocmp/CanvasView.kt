@@ -2,14 +2,13 @@ package com.avalon.calizer.ui.main.fragments.profile.photocmp
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import androidx.core.graphics.scale
 import com.avalon.calizer.data.local.profile.photoanalyze.PoseData
+import kotlin.math.roundToInt
 
 
 class CanvasView @JvmOverloads constructor(
@@ -24,14 +23,29 @@ class CanvasView @JvmOverloads constructor(
         val paint = Paint()
         val ww = width.toFloat()
         val hh = height.toFloat()
-
         _poseData?.let { poseData ->
             _imageBit?.let { imageBitmap ->
-                drawData(poseData, canvas, paint, ww, hh, imageBitmap)
+                val newBitmap = scaleBitmap(imageBitmap, hh)
+                drawData(poseData, canvas, paint, ww, hh, newBitmap.first, newBitmap.second)
             }
         }
 
 
+    }
+
+    fun scaleBitmap(imageBitmap: Bitmap, height: Float): Pair<Bitmap, Float> {
+        var newWidth:Int = 0
+        var pointRatio:Float = 0f
+
+        try {
+            val ratio: Float = imageBitmap.width / imageBitmap.height.toFloat()
+             newWidth = Math.round(height * ratio)
+             pointRatio = imageBitmap.width / newWidth.toFloat()
+
+        }catch (e:ArithmeticException){
+
+        }
+        return Pair(imageBitmap.scale(newWidth, height.toInt()), pointRatio)
     }
 
     fun setPoseData(poseData: PoseData?, bitmap: Bitmap?) {
@@ -49,13 +63,20 @@ class CanvasView @JvmOverloads constructor(
         paint: Paint,
         ww: Float,
         hh: Float,
-        bitmap: Bitmap
+        bitmap: Bitmap,
+        ratio: Float
     ) {
-        val leftOffset = (ww / 2) - (bitmap.width / 2)
-        val topOffset = (hh / 2) - (bitmap.height / 2)
-        canvas?.drawBitmap(bitmap, leftOffset, topOffset, paint)
-        drawLine(canvas, paint, poseData, leftOffset, topOffset, bitmap)
-        drawPoint(canvas, paint, poseData, leftOffset, topOffset, bitmap)
+        try {
+            val leftOffset = (ww / 2) - (bitmap.width / 2)
+            val topOffset = (hh / 2) - (bitmap.height / 2)
+            val offset = PointF(leftOffset, topOffset)
+            canvas?.drawBitmap(bitmap, offset.x, offset.y, paint)
+            lineCreate(canvas, paint, poseData, offset, ratio)
+            drawPoint(canvas, paint, poseData, offset, ratio)
+        }catch (e:ArithmeticException){
+
+        }
+
 
 
     }
@@ -64,172 +85,88 @@ class CanvasView @JvmOverloads constructor(
         canvas: Canvas?,
         paint: Paint,
         poseData: PoseData,
-        leftOffset: Float,
-        topOffset: Float,
-        bitmap: Bitmap
+        offset: PointF,
+        ratio: Float
     ) {
 
         paint.color = Color.RED
         paint.style = Paint.Style.FILL
         for (i in poseData.getData()) {
-            i.apply {
-                first?.let { first ->
-                    second?.let { second ->
-                        Log.d("ImagePosTest", "$first $second")
-                        val left = first + leftOffset
-                        val top = second + topOffset
-
-                        canvas?.drawCircle(left, top, 7f, paint)
-
-
-                    }
+            try {
+                i?.apply {
+                    val left = (x / ratio) + offset.x
+                    val top = (y / ratio) + offset.y
+                    canvas?.drawCircle(left, top, 7f, paint)
                 }
+            }catch (e:ArithmeticException){
+
             }
+
 
 
         }
     }
 
-    private fun drawLine(
+    private fun lineCreate(
         canvas: Canvas?,
         paint: Paint,
         poseData: PoseData,
-        leftOffset: Float,
-        topOffset: Float,
-        bitmap: Bitmap
+        offset: PointF,
+        ratio: Float
     ) {
         paint.color = Color.WHITE
         paint.strokeWidth = 5f
-
         poseData.apply {
-            leftKnee?.let { leftKnee ->
-                leftAnkle?.let { leftAnkle ->
-                    canvas?.drawLine(
-                        leftKnee.first + leftOffset,
-                        leftKnee.second + topOffset,
-                        leftAnkle.first + leftOffset,
-                        leftAnkle.second + topOffset, paint
-                    )
-                }
-
-            }
-            rightKnee?.let { rightKnee ->
-                rightAnkle?.let { rightAnkle ->
-                    canvas?.drawLine(
-                        rightKnee.first + leftOffset,
-                        rightKnee.second + topOffset,
-                        rightAnkle.first + leftOffset,
-                        rightAnkle.second + topOffset, paint
-                    )
-                }
-            }
-            leftHip?.let { leftHip ->
-                leftKnee?.let { leftKnee ->
-                    canvas?.drawLine(
-                        leftHip.first + leftOffset,
-                        leftHip.second + topOffset,
-                        leftKnee.first + leftOffset,
-                        leftKnee.second + topOffset, paint
-                    )
-                }
-            }
-            rightHip?.let { rightHip ->
-                rightKnee?.let { rightKnee ->
-                    canvas?.drawLine(
-                        rightHip.first + leftOffset,
-                        rightHip.second + topOffset,
-                        rightKnee.first + leftOffset,
-                        rightKnee.second + topOffset, paint
-                    )
-                }
-            }
-            leftShoulder?.let { leftShoulder ->
-                leftHip?.let { leftHip ->
-                    canvas?.drawLine(
-                        leftShoulder.first + leftOffset,
-                        leftShoulder.second + topOffset,
-                        leftHip.first + leftOffset,
-                        leftHip.second + topOffset, paint
-                    )
-                }
-            }
-
-            rightShoulder?.let { rightShoulder ->
-                rightHip?.let { rightHip ->
-                    canvas?.drawLine(
-                        rightShoulder.first + leftOffset,
-                        rightShoulder.second + topOffset,
-                        rightHip.first + leftOffset,
-                        rightHip.second + topOffset, paint
-                    )
-                }
-            }
-            leftShoulder?.let { leftShoulder ->
-                rightShoulder?.let { rightShoulder ->
-                    canvas?.drawLine(
-                        leftShoulder.first + leftOffset,
-                        leftShoulder.second + topOffset,
-                        rightShoulder.first + leftOffset,
-                        rightShoulder.second + topOffset, paint
-                    )
-                }
-            }
-            leftHip?.let { leftHip ->
-                rightHip?.let { rightHip ->
-                    canvas?.drawLine(
-                        leftHip.first + leftOffset,
-                        leftHip.second + topOffset,
-                        rightHip.first + leftOffset,
-                        rightHip.second + topOffset, paint
-                    )
-                }
-            }
-            leftShoulder?.let { leftShoulder ->
-                leftElbow?.let { leftElbow ->
-                    canvas?.drawLine(
-                        leftShoulder.first + leftOffset,
-                        leftShoulder.second + topOffset,
-                        leftElbow.first + leftOffset,
-                        leftElbow.second + topOffset, paint
-                    )
-
-                }
-            }
-            rightShoulder?.let { rightShoulder ->
-                rightElbow?.let { rightElbow ->
-                    canvas?.drawLine(
-                        rightShoulder.first + leftOffset,
-                        rightShoulder.second + topOffset,
-                        rightElbow.first + leftOffset,
-                        rightElbow.second + topOffset, paint
-                    )
-                }
-            }
-            leftElbow?.let { leftElbow ->
-                leftWrist?.let { leftWrist ->
-                    canvas?.drawLine(
-                        leftElbow.first + leftOffset,
-                        leftElbow.second + topOffset,
-                        leftWrist.first + leftOffset,
-                        leftWrist.second + topOffset, paint
-                    )
-                }
-            }
-            rightElbow?.let { rightElbow ->
-                rightWrist?.let { rightWrist ->
-                    canvas?.drawLine(
-                        rightElbow.first + leftOffset,
-                        rightElbow.second + topOffset,
-                        rightWrist.first + leftOffset,
-                        rightWrist.second + topOffset, paint
-                    )
-                }
-            }
+            drawPointLine(LineData(leftKnee, leftAnkle, paint, canvas, ratio, offset))
+            drawPointLine(LineData(rightKnee, rightAnkle, paint, canvas, ratio, offset))
+            drawPointLine(LineData(leftHip, leftKnee, paint, canvas, ratio, offset))
+            drawPointLine(LineData(rightHip, rightKnee, paint, canvas, ratio, offset))
+            drawPointLine(LineData(leftShoulder, leftHip, paint, canvas, ratio, offset))
+            drawPointLine(LineData(rightShoulder, rightHip, paint, canvas, ratio, offset))
+            drawPointLine(LineData(leftShoulder, rightShoulder, paint, canvas, ratio, offset))
+            drawPointLine(LineData(leftHip, rightHip, paint, canvas, ratio, offset))
+            drawPointLine(LineData(leftShoulder, leftElbow, paint, canvas, ratio, offset))
+            drawPointLine(LineData(rightShoulder, rightElbow, paint, canvas, ratio, offset))
+            drawPointLine(LineData(leftElbow, leftWrist, paint, canvas, ratio, offset))
+            drawPointLine(LineData(rightElbow, rightWrist, paint, canvas, ratio, offset))
 
         }
 
 
     }
+
+    private fun drawPointLine(lineData: LineData) {
+        val ratio = lineData.ratio
+        val offset = lineData.offset
+        val x1 = lineData.firstPoint?.x
+        val y1 = lineData.firstPoint?.y
+        val x2 = lineData.secondPoint?.x
+        val y2 = lineData.secondPoint?.y
+
+        if (x1 != null && y1 != null && x2 != null && y2 != null) {
+            try {
+                lineData.canvas?.drawLine(
+                    x1 / ratio + offset.x,
+                    y1 / ratio + offset.y,
+                    x2 / ratio + offset.x,
+                    y2 / ratio + offset.y,
+                    lineData.paint
+                )
+            }catch (e:ArithmeticException){
+
+            }
+
+        }
+    }
+
+    data class LineData(
+        val firstPoint: PointF?,
+        val secondPoint: PointF?,
+        val paint: Paint,
+        val canvas: Canvas?,
+        val ratio: Float,
+        val offset: PointF
+    )
 
 
 }

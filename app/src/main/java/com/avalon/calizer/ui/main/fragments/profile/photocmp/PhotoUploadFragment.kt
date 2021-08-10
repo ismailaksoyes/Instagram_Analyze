@@ -4,13 +4,15 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
+import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.provider.Settings
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,18 +21,15 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 import com.avalon.calizer.databinding.FragmentPhotoUploadBinding
 import com.avalon.calizer.utils.showSnackBar
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.File
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class PhotoUploadFragment : Fragment() {
@@ -56,29 +55,28 @@ class PhotoUploadFragment : Fragment() {
                         itdata.data?.let { itUri ->
                             val imageUri: Uri = itUri
                             imageUriList.add(imageUri)
-                            Log.d("ImageUri", "$imageUri")
                         }
 
-                    }.also {
-                        createListBitmap(imageUriList)
                     }
+                    createListBitmap(imageUriList)
+
 
                 }
 
             }
         }
 
+
     private fun createListBitmap(uriList: List<Uri>) {
         if (uriList.isNotEmpty()) {
-            val bitmapList = ArrayList<Bitmap>()
+            val bitmapList = ArrayList<Bitmap?>()
 
             uriList.forEach { itUri ->
-                itUri.path?.let { itPath ->
+                bitmapList.add(uriToBitmap(itUri))
 
 
-                }.also {
-                    setDataAnalyze(bitmapList)
-                }
+            }.also {
+                setDataAnalyze(bitmapList)
             }
 
         } else {
@@ -86,23 +84,20 @@ class PhotoUploadFragment : Fragment() {
         }
 
     }
-    fun uriToBitmapGlide(imagePath: String):Bitmap{
 
-         Glide.with(this).asBitmap().load(File(imagePath))
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onResourceReady(
-                    resource: Bitmap,
-                    transition: Transition<in Bitmap>?
-                ) {
-
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-
-                }
-
-            })
-
+    private fun uriToBitmap(imagePath: Uri): Bitmap? {
+        val bitmap = if (Build.VERSION.SDK_INT < 29) {
+            @Suppress("DEPRECATION")
+            MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imagePath)
+        } else {
+            ImageDecoder.decodeBitmap(
+                ImageDecoder.createSource(
+                    requireContext().contentResolver,
+                    imagePath
+                )
+            )
+        }
+        return bitmap.copy(Bitmap.Config.ARGB_8888, bitmap.isMutable)
     }
 
 
@@ -178,7 +173,7 @@ class PhotoUploadFragment : Fragment() {
 
     }
 
-    fun initData() {
+    private fun initData() {
         binding.btnUploadImage.setOnClickListener {
 
             onclickRequestPermission(it)
@@ -186,11 +181,11 @@ class PhotoUploadFragment : Fragment() {
         }
     }
 
-    fun setDataAnalyze(bitmapList: List<Bitmap>) {
-        Log.d("TestLog","BITMAPLIST")
+    private fun setDataAnalyze(bitmapList: List<Bitmap?>) {
         val list = ArrayList<PhotoAnalyzeData>()
-        for (i in 0..bitmapList.size) {
-            list.add(PhotoAnalyzeData(i.toLong(), bitmapList[i], false))
+        bitmapList.forEachIndexed { index, itBitmap ->
+            list.add(PhotoAnalyzeData(index, itBitmap, false))
+
         }
         val newList = list.toTypedArray()
         val action =
