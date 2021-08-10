@@ -14,14 +14,7 @@ import androidx.navigation.findNavController
 import com.avalon.calizer.R
 import com.avalon.calizer.databinding.ProfileFragmentBinding
 import com.avalon.calizer.utils.MySharedPreferences
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
-import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.charts.RadarChart
-import com.github.mikephil.charting.data.*
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
-import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
+
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
@@ -41,8 +34,7 @@ class ProfileFragment : Fragment() {
     @Inject
     lateinit var viewModel: ProfileViewModel
     private lateinit var binding: ProfileFragmentBinding
-    private lateinit var radarChart: RadarChart
-    private lateinit var chartList: List<PieData>
+
 
     @Inject
     lateinit var prefs: MySharedPreferences

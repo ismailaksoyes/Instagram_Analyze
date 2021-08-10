@@ -25,5 +25,11 @@ object Utils {
             block(a, b, c)
         } else null
 
+    fun <R,A,B> ifTwoNotNull(a:A?,b:B?,block:(A,B)->R):R?=
+        if (a!=null&&b!=null){
+            block(a,b)
+        }else null
+
+
 
 }

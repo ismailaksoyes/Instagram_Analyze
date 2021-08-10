@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 import com.avalon.calizer.databinding.FragmentPhotoAnalyzeBinding
@@ -19,6 +20,7 @@ import com.avalon.calizer.ui.main.fragments.profile.photocmp.PhotoAnalyzeViewMod
 import com.avalon.calizer.utils.Utils
 import com.avalon.calizer.utils.analyzeTextColor
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 import kotlin.math.PI
@@ -43,6 +45,7 @@ class PhotoAnalyzeFragment : Fragment() {
 
     @Inject
     lateinit var analyzeManager: BodyAnalyzeManager
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,6 +74,10 @@ class PhotoAnalyzeFragment : Fragment() {
             bitmap = analyzeData?.image
         )
         binding.cvCanvas.invalidate()
+
+        val faceAnalyzeManager = FaceAnalyzeManager()
+
+        faceAnalyzeManager.setFaceAnalyzeBitmap(analyzeData?.image)
 
         val xPos = analyzeData?.image?.width
         val yPos = analyzeData?.image?.height

@@ -3,16 +3,24 @@ package com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager
 import android.graphics.Bitmap
 import android.graphics.PointF
 import android.util.Log
+import com.avalon.calizer.data.local.profile.photoanalyze.FaceAnalyzeData
 import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.face.Face
-import com.google.mlkit.vision.face.FaceDetection
-import com.google.mlkit.vision.face.FaceDetectorOptions
-import com.google.mlkit.vision.face.FaceLandmark
+import com.google.mlkit.vision.face.*
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class FaceAnalyzeManager {
+
+class FaceAnalyzeManager()  {
+
+
+    fun setFaceAnalyzeBitmap(bitmap: Bitmap?) {
+        bitmap?.let { itBitmap ->
+            runImageFaceDetector(itBitmap)
+        }
+    }
 
     private fun runImageFaceDetector(bitmap: Bitmap) {
         val image = InputImage.fromBitmap(bitmap, 0)
@@ -20,63 +28,68 @@ class FaceAnalyzeManager {
             .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
             .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
             .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
+            .setContourMode(FaceDetectorOptions.CONTOUR_MODE_ALL)
             .build()
         val detector = FaceDetection.getClient(options)
-         detector.process(image).addOnSuccessListener { faces ->
-           faceParts(faces)
-
+        detector.process(image).addOnSuccessListener { faces ->
+            if (faces.size > 0) {
+                faceParts(faces[0])
+            }
         }
             .addOnFailureListener { e ->
-                Log.d("Response", "${e.message}")
+                Log.e("", "${e.message}")
 
             }
 
     }
 
-    private fun faceParts(faceList:List<Face>) {
-        val peopleSize = faceList.size
-        Log.d("Response", "" + peopleSize)
-        for (face in faceList) {
-            Log.d("Response", "$face")
-            val leftEar = face.getLandmark(FaceLandmark.LEFT_EAR)
-            val rightEar = face.getLandmark(FaceLandmark.RIGHT_EAR)
-            val noseBase = face.getLandmark(FaceLandmark.NOSE_BASE)
-            val mountBottom = face.getLandmark(FaceLandmark.MOUTH_BOTTOM)
-            val mountLeft = face.getLandmark(FaceLandmark.MOUTH_LEFT)
-            val mountRight = face.getLandmark(FaceLandmark.MOUTH_RIGHT)
-            val leftEye = face.getLandmark(FaceLandmark.LEFT_EYE)
-            val rightEye = face.getLandmark(FaceLandmark.RIGHT_EYE)
-            val leftCheek = face.getLandmark(FaceLandmark.LEFT_CHEEK)
-            val rightCheek = face.getLandmark(FaceLandmark.RIGHT_CHEEK)
+    private fun faceParts(face: Face) {
 
-            val leftEarPosition = leftEar.position
-            val rightEarPosition = rightEar.position
-            val leftEyePosition = leftEye.position
-            val rightEyePosition = rightEye.position
-            val earWeight = findDistance(
-                 leftEarPosition,
-               rightEarPosition
-            )
-            val eyesWeight = findDistance(
-                leftEyePosition,
-                rightEyePosition
-            )
-            val eyesBtEar = (earWeight - eyesWeight) / 2
-            val ratioH: Float = (eyesBtEar * 5) / earWeight
-            val ratio = abs(ratioH)
+        val faceAnalyzeData = FaceAnalyzeData()
+            faceAnalyzeData.apply {
+                leftEar = face.getLandmark(FaceLandmark.LEFT_EAR)?.position
+                rightEar = face.getLandmark(FaceLandmark.RIGHT_EAR)?.position
+                noseBase = face.getLandmark(FaceLandmark.NOSE_BASE)?.position
+                mountBottom = face.getLandmark(FaceLandmark.MOUTH_BOTTOM)?.position
+                mountLeft = face.getLandmark(FaceLandmark.MOUTH_LEFT)?.position
+                mountRight = face.getLandmark(FaceLandmark.MOUTH_RIGHT)?.position
+                leftEye = face.getLandmark(FaceLandmark.LEFT_EYE)?.position
+                rightEye = face.getLandmark(FaceLandmark.RIGHT_EYE)?.position
+                leftCheek = face.getLandmark(FaceLandmark.LEFT_CHEEK)?.position
+                rightCheek = face.getLandmark(FaceLandmark.RIGHT_CHEEK)?.position
+                leftEyeContour = face.getContour(FaceContour.LEFT_EYE)?.points
+                leftEyeBrowTopContour = face.getContour(FaceContour.LEFT_EYEBROW_TOP)?.points
+                leftEyeBrowBottomContour = face.getContour(FaceContour.LEFT_EYEBROW_BOTTOM)?.points
+                rightEyeContour = face.getContour(FaceContour.RIGHT_EYE)?.points
+                rightEyeBrowTopContour = face.getContour(FaceContour.RIGHT_EYEBROW_TOP)?.points
+                rightEyeBrowBottomContour =
+                    face.getContour(FaceContour.RIGHT_EYEBROW_BOTTOM)?.points
+                noseBridgeContour = face.getContour(FaceContour.NOSE_BRIDGE)?.points
+                noseBottomContour = face.getContour(FaceContour.NOSE_BOTTOM)?.points
+                upperLipTop = face.getContour(FaceContour.UPPER_LIP_TOP)?.points
+                upperLipBottom = face.getContour(FaceContour.UPPER_LIP_BOTTOM)?.points
+                lowerLipTop = face.getContour(FaceContour.LOWER_LIP_TOP)?.points
+                lowerLipBottom = face.getContour(FaceContour.LOWER_LIP_BOTTOM)?.points
+                smilingProbability = face.smilingProbability
+            }.also { faceAnalyzeScore(faceAnalyzeData) }
 
-            Log.d("Response", "sol kulak ${leftEarPosition}")
-            Log.d("Response", "kulaklar arasi mesafe ${earWeight}")
-            Log.d("Response", "sag kulak ${rightEarPosition}")
-            Log.d("Response", "oran ${ratio}")
-            Log.d("Response", "${face.smilingProbability}")
+
+
+    }
+    private fun faceAnalyzeScore(faceAnalyzeData: FaceAnalyzeData?){
+        faceAnalyzeData?.let { itFaceData->
+            val test1 = itFaceData.getHeightLeftEye()
+            val test2 = itFaceData.getHeightLeftEyeBrow()
+            val test3 = itFaceData.getHeightRightEye()
+            val test4 = itFaceData.getHeightRightEyeBrow()
+            val test5 = itFaceData.getIsSmiling()
+            Log.d("faceAnalyzeData","$test1 $test2 $test3 $test4 $test5")
         }
     }
 
-    private fun findDistance(a:PointF, b:PointF): Float = sqrt(
-        (b.x - a.x).pow(2) + (b.y - a.y).pow(
-            2
-        )
-    )
+    private fun getRatio(){
+
+    }
+
 
 }
