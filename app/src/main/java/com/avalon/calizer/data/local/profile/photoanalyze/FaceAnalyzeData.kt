@@ -34,7 +34,8 @@ data class FaceAnalyzeData(
     var upperLipBottom:List<PointF>?= null,
     var lowerLipTop:List<PointF>?= null,
     var lowerLipBottom:List<PointF>?= null,
-    var smilingProbability:Float? =null
+    var smilingProbability:Float? =null,
+    var faceContour: List<PointF>? = null
 ):Parcelable{
     private fun getDistance2Point(pointF: PointF?,pointF2: PointF?):Float?{
         return Utils.ifTwoNotNull(pointF,pointF2){a,b->
@@ -42,6 +43,21 @@ data class FaceAnalyzeData(
         }?:run { null }
 
     }
+
+    private fun getRatioCheck(n1:Float?,n2:Float?,n3:Float?):Boolean{
+        var controlRatio = false
+        Utils.ifNotNull(n1,n2,n3){x,y,z->
+            val average = (x+y+y)/3
+            val rot = average*0.1f
+            val rotNeg = average-rot
+            val rotPoz = average+rot
+            if (x in rotNeg..rotPoz&&y in rotNeg..rotPoz&&z in rotNeg..rotPoz){
+                controlRatio = true
+            }
+        }?: kotlin.run { controlRatio=false }
+        return controlRatio
+    }
+
 
     fun getHeightRightEye():Float?{
         return getDistance2Point(rightEyeContour?.get(4),rightEyeContour?.get(12))
@@ -65,6 +81,19 @@ data class FaceAnalyzeData(
     fun getIsSmiling():Boolean?{
         return smilingProbability?.let { itSmile-> itSmile>0.7f }
     }
+
+    fun getHairNoseHeight():Float?{
+        return getDistance2Point(faceContour?.get(0),noseBridgeContour?.get(0))
+    }
+
+    fun getNoseToJaw():Float?{
+        return getDistance2Point(noseBridgeContour?.get(1),faceContour?.get(18))
+    }
+
+    fun getFaceVerticalRatio():Boolean{
+        return getRatioCheck(getNoseBridgeHeight(),getHairNoseHeight(),getNoseToJaw())
+    }
+
 
 
 

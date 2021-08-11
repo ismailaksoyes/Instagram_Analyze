@@ -71,6 +71,7 @@ class FaceAnalyzeManager()  {
                 lowerLipTop = face.getContour(FaceContour.LOWER_LIP_TOP)?.points
                 lowerLipBottom = face.getContour(FaceContour.LOWER_LIP_BOTTOM)?.points
                 smilingProbability = face.smilingProbability
+                faceContour = face.getContour(FaceContour.FACE)?.points
             }.also { faceAnalyzeScore(faceAnalyzeData) }
 
 
@@ -83,11 +84,13 @@ class FaceAnalyzeManager()  {
             val test3 = itFaceData.getHeightRightEye()
             val test4 = itFaceData.getHeightRightEyeBrow()
             val test5 = itFaceData.getIsSmiling()
-            Log.d("faceAnalyzeData","$test1 $test2 $test3 $test4 $test5")
+            val test6 = itFaceData.faceContour
+            val test7 = itFaceData.getFaceVerticalRatio()
+            Log.d("faceAnalyzeData","$test1 $test2 $test3 $test4 $test5 ${test6?.size} $test7")
         }
     }
 
-    private fun getRatio(){
+    private fun getRatio(a:Float,b:Float){
 
     }
 
