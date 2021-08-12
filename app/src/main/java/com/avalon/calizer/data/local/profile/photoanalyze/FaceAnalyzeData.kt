@@ -3,6 +3,7 @@ package com.avalon.calizer.data.local.profile.photoanalyze
 import android.graphics.PointF
 import android.os.Parcelable
 import com.avalon.calizer.utils.Utils
+import com.bumptech.glide.util.Util
 import com.google.mlkit.vision.face.FaceContour
 import com.google.mlkit.vision.face.FaceLandmark
 import kotlinx.parcelize.Parcelize
@@ -35,7 +36,7 @@ data class FaceAnalyzeData(
     var lowerLipTop:List<PointF>?= null,
     var lowerLipBottom:List<PointF>?= null,
     var smilingProbability:Float? =null,
-    var faceContour: List<PointF>? = null
+    var faceContour: List<PointF>? = null,
 ):Parcelable{
     private fun getDistance2Point(pointF: PointF?,pointF2: PointF?):Float?{
         return Utils.ifTwoNotNull(pointF,pointF2){a,b->
@@ -44,14 +45,37 @@ data class FaceAnalyzeData(
 
     }
 
-    private fun getRatioCheck(n1:Float?,n2:Float?,n3:Float?):Boolean{
+    private fun getTwoRatioCheck(n1: Float?,n2: Float?):Boolean{
+        var controlRatio = false
+        Utils.ifTwoNotNull(n1,n2){x,y->
+            val ratio = x/y
+            if (ratio in 0.25f..0.41f){
+                controlRatio = true
+            }
+        }?: kotlin.run { controlRatio=false }
+        return controlRatio
+    }
+    private fun getTriRatioCheck(n1:Float?,n2:Float?,n3:Float?):Boolean{
         var controlRatio = false
         Utils.ifNotNull(n1,n2,n3){x,y,z->
             val average = (x+y+y)/3
-            val rot = average*0.1f
+            val rot = average*0.2f
             val rotNeg = average-rot
             val rotPoz = average+rot
             if (x in rotNeg..rotPoz&&y in rotNeg..rotPoz&&z in rotNeg..rotPoz){
+                controlRatio = true
+            }
+        }?: kotlin.run { controlRatio=false }
+        return controlRatio
+    }
+    private fun getFiveRatioCheck(n1:Float?,n2:Float?,n3:Float?,n4:Float?,n5:Float?):Boolean{
+        var controlRatio = false
+        Utils.ifFiveNotNull(n1,n2,n3,n4,n5){x,y,z,e,f->
+            val average = (x+y+y+e+f)/3
+            val rot = average*0.2f
+            val rotNeg = average-rot
+            val rotPoz = average+rot
+            if (x in rotNeg..rotPoz&&y in rotNeg..rotPoz&&z in rotNeg..rotPoz&&e in rotNeg..rotPoz&&f in rotNeg..rotPoz){
                 controlRatio = true
             }
         }?: kotlin.run { controlRatio=false }
@@ -74,6 +98,15 @@ data class FaceAnalyzeData(
     fun getWeightLeftEyeBrow():Float?{
         return getDistance2Point(leftEyeBrowBottomContour?.get(0),leftEyeBrowBottomContour?.get(4))
     }
+    fun getWeightRightEye():Float?{
+        return getDistance2Point(rightEyeContour?.get(0),rightEyeContour?.get(8))
+    }
+    fun getWeightLeftEye():Float?{
+        return getDistance2Point(leftEyeContour?.get(0),leftEyeContour?.get(8))
+    }
+    fun getWeightBetweenEyes():Float?{
+        return getDistance2Point(rightEyeContour?.get(8),leftEyeContour?.get(0))
+    }
 
     fun getNoseBridgeHeight():Float?{
         return getDistance2Point(noseBridgeContour?.get(0),noseBridgeContour?.get(1))
@@ -87,11 +120,33 @@ data class FaceAnalyzeData(
     }
 
     fun getNoseToJaw():Float?{
-        return getDistance2Point(noseBridgeContour?.get(1),faceContour?.get(18))
+        return getDistance2Point(noseBottomContour?.get(1),faceContour?.get(18))
+    }
+
+    fun getRightEarToRightEye():Float?{
+        return getDistance2Point(faceContour?.get(29),rightEyeContour?.get(0))
+    }
+
+    fun getLeftEarToLeftEye():Float?{
+        return getDistance2Point(faceContour?.get(7),leftEyeContour?.get(8))
+    }
+    fun getBridgeToLipHeight():Float?{
+        return getDistance2Point(noseBridgeContour?.get(1),upperLipBottom?.get(4))
+    }
+    fun getLipToChipHeight():Float?{
+        return getDistance2Point(upperLipBottom?.get(4),faceContour?.get(18))
     }
 
     fun getFaceVerticalRatio():Boolean{
-        return getRatioCheck(getNoseBridgeHeight(),getHairNoseHeight(),getNoseToJaw())
+        return getTriRatioCheck(getNoseBridgeHeight(),getHairNoseHeight(),getNoseToJaw())
+    }
+
+    fun getFaceHorizontalRatio():Boolean{
+        return getFiveRatioCheck(getRightEarToRightEye(),getWeightRightEye(),getWeightBetweenEyes(),getWeightLeftEye(),getLeftEarToLeftEye())
+    }
+
+    fun getBridgeToChipRatio():Boolean{
+        return getTwoRatioCheck(getBridgeToLipHeight(),getLipToChipHeight())
     }
 
 

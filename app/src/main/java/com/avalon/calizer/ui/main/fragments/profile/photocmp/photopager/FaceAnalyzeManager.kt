@@ -86,6 +86,8 @@ class FaceAnalyzeManager()  {
             val test5 = itFaceData.getIsSmiling()
             val test6 = itFaceData.faceContour
             val test7 = itFaceData.getFaceVerticalRatio()
+            val test8 = itFaceData.getFaceHorizontalRatio()
+
             Log.d("faceAnalyzeData","$test1 $test2 $test3 $test4 $test5 ${test6?.size} $test7")
         }
     }
