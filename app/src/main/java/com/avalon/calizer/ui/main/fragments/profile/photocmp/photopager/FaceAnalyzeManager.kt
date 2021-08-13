@@ -13,7 +13,7 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 
-class FaceAnalyzeManager()  {
+class FaceAnalyzeManager @Inject constructor()  {
 
 
     fun setFaceAnalyzeBitmap(bitmap: Bitmap?) {
@@ -22,7 +22,7 @@ class FaceAnalyzeManager()  {
         }
     }
 
-    private fun runImageFaceDetector(bitmap: Bitmap) {
+     fun runImageFaceDetector(bitmap: Bitmap) {
         val image = InputImage.fromBitmap(bitmap, 0)
         val options = FaceDetectorOptions.Builder()
             .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
@@ -71,29 +71,30 @@ class FaceAnalyzeManager()  {
                 lowerLipTop = face.getContour(FaceContour.LOWER_LIP_TOP)?.points
                 lowerLipBottom = face.getContour(FaceContour.LOWER_LIP_BOTTOM)?.points
                 smilingProbability = face.smilingProbability
+                rightEyeOpenProbability = face.rightEyeOpenProbability
+                leftEyeOpenProbability = face.leftEyeOpenProbability
                 faceContour = face.getContour(FaceContour.FACE)?.points
             }.also { faceAnalyzeScore(faceAnalyzeData) }
 
 
 
     }
-    private fun faceAnalyzeScore(faceAnalyzeData: FaceAnalyzeData?){
+    private fun faceAnalyzeScore(faceAnalyzeData: FaceAnalyzeData?):Int{
+        var scoreCalc = 0f
         faceAnalyzeData?.let { itFaceData->
-            val test1 = itFaceData.getHeightLeftEye()
-            val test2 = itFaceData.getHeightLeftEyeBrow()
-            val test3 = itFaceData.getHeightRightEye()
-            val test4 = itFaceData.getHeightRightEyeBrow()
-            val test5 = itFaceData.getIsSmiling()
-            val test6 = itFaceData.faceContour
-            val test7 = itFaceData.getFaceVerticalRatio()
-            val test8 = itFaceData.getFaceHorizontalRatio()
+             if(itFaceData.getFaceVerticalRatio()) scoreCalc + 100/5
+            if (itFaceData.getFaceHorizontalRatio()) scoreCalc + 100/5
+            if(itFaceData.getBridgeToChipRatio()) scoreCalc + 100/5
+            if(itFaceData.getEyeProbabilityRatio()) scoreCalc + 100/5
+            if (itFaceData.getIsSmiling()) scoreCalc + 100/5
 
-            Log.d("faceAnalyzeData","$test1 $test2 $test3 $test4 $test5 ${test6?.size} $test7")
+
         }
+        return scoreCalc.toInt()
     }
 
-    private fun getRatio(a:Float,b:Float){
-
+    private fun addScore(score:Float):Float{
+        return score + 100/5
     }
 
 

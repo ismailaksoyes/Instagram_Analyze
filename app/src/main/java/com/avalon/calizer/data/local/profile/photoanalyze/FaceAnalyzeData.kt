@@ -8,6 +8,7 @@ import com.google.mlkit.vision.face.FaceContour
 import com.google.mlkit.vision.face.FaceLandmark
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
+import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -36,6 +37,8 @@ data class FaceAnalyzeData(
     var lowerLipTop:List<PointF>?= null,
     var lowerLipBottom:List<PointF>?= null,
     var smilingProbability:Float? =null,
+    var rightEyeOpenProbability:Float?= null,
+    var leftEyeOpenProbability:Float?=null,
     var faceContour: List<PointF>? = null,
 ):Parcelable{
     private fun getDistance2Point(pointF: PointF?,pointF2: PointF?):Float?{
@@ -49,7 +52,7 @@ data class FaceAnalyzeData(
         var controlRatio = false
         Utils.ifTwoNotNull(n1,n2){x,y->
             val ratio = x/y
-            if (ratio in 0.25f..0.41f){
+            if (ratio in 0.44f..0.65f){
                 controlRatio = true
             }
         }?: kotlin.run { controlRatio=false }
@@ -58,7 +61,7 @@ data class FaceAnalyzeData(
     private fun getTriRatioCheck(n1:Float?,n2:Float?,n3:Float?):Boolean{
         var controlRatio = false
         Utils.ifNotNull(n1,n2,n3){x,y,z->
-            val average = (x+y+y)/3
+            val average = (x+y+z)/3
             val rot = average*0.2f
             val rotNeg = average-rot
             val rotPoz = average+rot
@@ -71,7 +74,7 @@ data class FaceAnalyzeData(
     private fun getFiveRatioCheck(n1:Float?,n2:Float?,n3:Float?,n4:Float?,n5:Float?):Boolean{
         var controlRatio = false
         Utils.ifFiveNotNull(n1,n2,n3,n4,n5){x,y,z,e,f->
-            val average = (x+y+y+e+f)/3
+            val average = (x+y+z+e+f)/5
             val rot = average*0.2f
             val rotNeg = average-rot
             val rotPoz = average+rot
@@ -81,6 +84,7 @@ data class FaceAnalyzeData(
         }?: kotlin.run { controlRatio=false }
         return controlRatio
     }
+
 
 
     fun getHeightRightEye():Float?{
@@ -105,14 +109,21 @@ data class FaceAnalyzeData(
         return getDistance2Point(leftEyeContour?.get(0),leftEyeContour?.get(8))
     }
     fun getWeightBetweenEyes():Float?{
-        return getDistance2Point(rightEyeContour?.get(8),leftEyeContour?.get(0))
+        return getDistance2Point(leftEyeContour?.get(8),rightEyeContour?.get(0))
     }
 
     fun getNoseBridgeHeight():Float?{
         return getDistance2Point(noseBridgeContour?.get(0),noseBridgeContour?.get(1))
     }
-    fun getIsSmiling():Boolean?{
-        return smilingProbability?.let { itSmile-> itSmile>0.7f }
+    fun getIsSmiling():Boolean{
+        return smilingProbability?.let { itSmile-> itSmile>0.7f }?:false
+    }
+
+    fun getOpenLeftEye():Boolean?{
+        return leftEyeOpenProbability?.let { itOpen-> itOpen>0.7f }
+    }
+    fun getOpenRightEye():Boolean?{
+        return rightEyeOpenProbability?.let { itOpen-> itOpen>0.7f }
     }
 
     fun getHairNoseHeight():Float?{
@@ -123,12 +134,12 @@ data class FaceAnalyzeData(
         return getDistance2Point(noseBottomContour?.get(1),faceContour?.get(18))
     }
 
-    fun getRightEarToRightEye():Float?{
-        return getDistance2Point(faceContour?.get(29),rightEyeContour?.get(0))
+    fun getRightEarToRightEyeWeight():Float?{
+        return getDistance2Point(rightEyeContour?.get(8),rightEar)
     }
 
-    fun getLeftEarToLeftEye():Float?{
-        return getDistance2Point(faceContour?.get(7),leftEyeContour?.get(8))
+    fun getLeftEarToLeftEyeWeight():Float?{
+        return getDistance2Point(leftEar,leftEyeContour?.get(0))
     }
     fun getBridgeToLipHeight():Float?{
         return getDistance2Point(noseBridgeContour?.get(1),upperLipBottom?.get(4))
@@ -142,11 +153,22 @@ data class FaceAnalyzeData(
     }
 
     fun getFaceHorizontalRatio():Boolean{
-        return getFiveRatioCheck(getRightEarToRightEye(),getWeightRightEye(),getWeightBetweenEyes(),getWeightLeftEye(),getLeftEarToLeftEye())
+        return getFiveRatioCheck(getRightEarToRightEyeWeight(),getWeightRightEye(),getWeightBetweenEyes(),getWeightLeftEye(),getLeftEarToLeftEyeWeight())
     }
 
     fun getBridgeToChipRatio():Boolean{
         return getTwoRatioCheck(getBridgeToLipHeight(),getLipToChipHeight())
+    }
+
+    fun getEyeProbabilityRatio():Boolean{
+        var controlRatio = false
+       Utils.ifTwoNotNull(getOpenLeftEye(),getOpenRightEye()){itLeft,itRight->
+           Utils.ifTwoNotNull(leftEyeOpenProbability,rightEyeOpenProbability){itLeftPro,itRightPro->
+               val ratio = abs(itLeftPro-itRightPro)
+               controlRatio = ratio <= ((itLeftPro+itRightPro)/2)*0.03
+           }?: kotlin.run { controlRatio= false }
+       }?: kotlin.run { controlRatio=false }
+        return controlRatio
     }
 
 

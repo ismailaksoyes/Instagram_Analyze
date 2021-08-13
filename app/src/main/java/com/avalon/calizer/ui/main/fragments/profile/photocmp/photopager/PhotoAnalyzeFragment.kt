@@ -44,7 +44,10 @@ class PhotoAnalyzeFragment : Fragment() {
     lateinit var viewModel: PhotoAnalyzeViewModel
 
     @Inject
-    lateinit var analyzeManager: BodyAnalyzeManager
+    lateinit var bodyAnalyzeManager: BodyAnalyzeManager
+
+    @Inject
+    lateinit var faceAnalyzeManager: FaceAnalyzeManager
 
 
     override fun onCreateView(
@@ -66,7 +69,6 @@ class PhotoAnalyzeFragment : Fragment() {
         return image?.let { data -> data.width >= 1080 && data.height >= 1080 } ?: false
     }
 
-    @SuppressLint("SetTextI18n")
     private fun initData() {
         val analyzeData = requireArguments().getParcelable<PhotoAnalyzeData>(ARG_DATA)
         binding.cvCanvas.setPoseData(
@@ -74,14 +76,9 @@ class PhotoAnalyzeFragment : Fragment() {
             bitmap = analyzeData?.image
         )
         binding.cvCanvas.invalidate()
-
-        val faceAnalyzeManager = FaceAnalyzeManager()
-
+        setResolution(analyzeData)
         faceAnalyzeManager.setFaceAnalyzeBitmap(analyzeData?.image)
 
-        val xPos = analyzeData?.image?.width
-        val yPos = analyzeData?.image?.height
-        binding.tvResolution.text = "${xPos}x${yPos}"
         val checkImage = if (getWidthAndHeightQuality(analyzeData?.image)) {
             ContextCompat.getDrawable(requireContext(), R.drawable.ic_check_true)
         } else {
@@ -90,9 +87,20 @@ class PhotoAnalyzeFragment : Fragment() {
         binding.ivCheck.setImageDrawable(checkImage)
 
         analyzeData?.let { itAnalyzeData ->
-            val score = analyzeManager.getScore(itAnalyzeData.poseData)
+            val score = bodyAnalyzeManager.getScore(itAnalyzeData.poseData)
             binding.tvPoseRate.analyzeTextColor(score)
             binding.tvPoseRate.text = "${score}%"
+
+        }
+    }
+
+    fun setResolution(analyzeData: PhotoAnalyzeData?){
+        analyzeData?.let { itAnalyzeData->
+            itAnalyzeData.image?.let { itImage->
+                val xPos = itImage.width
+                val yPos = itImage.height
+                "${xPos}x${yPos}".also { binding.tvResolution.text = it }
+            }
 
         }
     }
