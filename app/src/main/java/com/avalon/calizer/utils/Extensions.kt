@@ -2,6 +2,7 @@ package com.avalon.calizer.utils
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -31,6 +32,24 @@ fun ImageView.loadPPUrl(url: String?) {
         .diskCacheStrategy(DiskCacheStrategy.NONE)
         .placeholder(shimmerDrawable)
         .into(this)
+}
+
+fun TextView.shimmerText(start:Boolean){
+    if (start){
+        val shimmer = Shimmer.AlphaHighlightBuilder()
+            .setDuration(1800)
+            .setBaseAlpha(0.7f)
+            .setHighlightAlpha(0.6f)
+            .setDirection(Shimmer.Direction.LEFT_TO_RIGHT)
+            .setAutoStart(true)
+            .build()
+        val shimmerDrawable = ShimmerDrawable().apply { setShimmer(shimmer) }
+        this.text = "1111"
+        this.setTextColor(Color.TRANSPARENT)
+        this.background =shimmerDrawable
+    }else{
+        this.background = null
+    }
 }
 
 

@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
@@ -19,8 +20,10 @@ import com.avalon.calizer.ui.main.fragments.profile.photocmp.BodyAnalyzeManager
 import com.avalon.calizer.ui.main.fragments.profile.photocmp.PhotoAnalyzeViewModel
 import com.avalon.calizer.utils.Utils
 import com.avalon.calizer.utils.analyzeTextColor
+import com.avalon.calizer.utils.shimmerText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 import kotlin.math.PI
@@ -77,6 +80,7 @@ class PhotoAnalyzeFragment : Fragment() {
         )
         binding.cvCanvas.invalidate()
         setResolution(analyzeData)
+        setFaceScore()
         faceAnalyzeManager.setFaceAnalyzeBitmap(analyzeData?.image)
 
         val checkImage = if (getWidthAndHeightQuality(analyzeData?.image)) {
@@ -91,6 +95,27 @@ class PhotoAnalyzeFragment : Fragment() {
             binding.tvPoseRate.analyzeTextColor(score)
             binding.tvPoseRate.text = "${score}%"
 
+        }
+
+
+    }
+
+    fun setFaceScore(){
+        lifecycleScope.launchWhenCreated {
+            faceAnalyzeManager.onComplete.collectLatest { state->
+                when(state){
+                    is FaceAnalyzeManager.FaceAnalyzeState.Loading->{
+                        binding.tvFaceRate.shimmerText(true)
+                    }
+                    is FaceAnalyzeManager.FaceAnalyzeState.Success->{
+                        binding.tvFaceRate.shimmerText(false)
+                        binding.tvFaceRate.analyzeTextColor(state.score)
+                        binding.tvFaceRate.text = "${state.score}%"
+                    }else->{}
+
+                }
+
+            }
         }
     }
 

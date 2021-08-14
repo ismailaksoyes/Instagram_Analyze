@@ -3,11 +3,14 @@ package com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager
 import android.graphics.Bitmap
 import android.graphics.PointF
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.avalon.calizer.data.local.profile.photoanalyze.FaceAnalyzeData
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.*
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlin.math.abs
@@ -16,8 +19,13 @@ import kotlin.math.sqrt
 
 
 class FaceAnalyzeManager @Inject constructor(var detector: FaceDetector)  {
+    private val _onComplete = MutableStateFlow<FaceAnalyzeState>(FaceAnalyzeState.Loading)
+    val onComplete :StateFlow<FaceAnalyzeState> = _onComplete
 
-
+    sealed class FaceAnalyzeState{
+        object Loading : FaceAnalyzeState()
+        data class Success(val score:Int) : FaceAnalyzeState()
+    }
     fun setFaceAnalyzeBitmap(bitmap: Bitmap?) {
         bitmap?.let { itBitmap ->
             runImageFaceDetector(itBitmap)
@@ -74,23 +82,19 @@ class FaceAnalyzeManager @Inject constructor(var detector: FaceDetector)  {
 
 
     }
-    private fun faceAnalyzeScore(faceAnalyzeData: FaceAnalyzeData?):Int{
-        var scoreCalc = 0f
-        faceAnalyzeData?.let { itFaceData->
-             if(itFaceData.getFaceVerticalRatio()) scoreCalc + 100/5
-            if (itFaceData.getFaceHorizontalRatio()) scoreCalc + 100/5
-            if(itFaceData.getBridgeToChipRatio()) scoreCalc + 100/5
-            if(itFaceData.getEyeProbabilityRatio()) scoreCalc + 100/5
-            if (itFaceData.getIsSmiling()) scoreCalc + 100/5
+    private fun faceAnalyzeScore(faceAnalyzeData: FaceAnalyzeData?){
 
+        faceAnalyzeData?.let { itFaceData->
+            var scoreCalc = 0f
+             if(itFaceData.getFaceVerticalRatio()) scoreCalc += 100/5
+            if (itFaceData.getFaceHorizontalRatio()) scoreCalc += 100/5
+            if(itFaceData.getBridgeToChipRatio()) scoreCalc += 100/5
+            if(itFaceData.getEyeProbabilityRatio()) scoreCalc += 100/5
+            if (itFaceData.getIsSmiling()) scoreCalc += 100/5
+            _onComplete.value = FaceAnalyzeState.Success(scoreCalc.toInt())
 
         }
-        return scoreCalc.toInt()
-    }
 
-    private fun addScore(score:Float):Float{
-        return score + 100/5
     }
-
 
 }
