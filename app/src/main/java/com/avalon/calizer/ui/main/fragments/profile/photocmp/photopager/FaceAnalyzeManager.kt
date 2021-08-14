@@ -7,13 +7,15 @@ import com.avalon.calizer.data.local.profile.photoanalyze.FaceAnalyzeData
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.*
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
 
-class FaceAnalyzeManager @Inject constructor()  {
+class FaceAnalyzeManager @Inject constructor(var detector: FaceDetector)  {
 
 
     fun setFaceAnalyzeBitmap(bitmap: Bitmap?) {
@@ -22,15 +24,8 @@ class FaceAnalyzeManager @Inject constructor()  {
         }
     }
 
-     fun runImageFaceDetector(bitmap: Bitmap) {
+      fun runImageFaceDetector(bitmap: Bitmap) {
         val image = InputImage.fromBitmap(bitmap, 0)
-        val options = FaceDetectorOptions.Builder()
-            .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
-            .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
-            .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
-            .setContourMode(FaceDetectorOptions.CONTOUR_MODE_ALL)
-            .build()
-        val detector = FaceDetection.getClient(options)
         detector.process(image).addOnSuccessListener { faces ->
             if (faces.size > 0) {
                 faceParts(faces[0])
