@@ -3,7 +3,6 @@ package com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
-import com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.PhotoAnalyzeFragment
 
 class PhotoAnalyzePagerAdapter(fragment:Fragment, private val analyzeData:List<PhotoAnalyzeData>):FragmentStateAdapter(fragment) {
 

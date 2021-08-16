@@ -1,9 +1,12 @@
 package com.avalon.calizer.ui.main.fragments.profile.photocmp
 
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.graphics.PointF
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,21 +14,17 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.avalon.calizer.R
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 import com.avalon.calizer.data.local.profile.photoanalyze.PoseData
 import com.avalon.calizer.databinding.FragmentPhotoAnalyzeLoadingBinding
-import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseDetector
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import okhttp3.internal.wait
 
 class PhotoAnalyzeLoadingFragment : Fragment() {
     private val args: PhotoAnalyzeLoadingFragmentArgs by navArgs()
@@ -36,7 +35,7 @@ class PhotoAnalyzeLoadingFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPhotoAnalyzeLoadingBinding.inflate(inflater, container, false)
         analyzeData = args.photoNotAnalyzeData.toList()
         return binding.root
@@ -53,11 +52,11 @@ class PhotoAnalyzeLoadingFragment : Fragment() {
         val photoAnalyzeData = ArrayList<PhotoAnalyzeData>()
         lifecycleScope.launch {
             analyzeData.forEach { itAnalyzeData ->
-                itAnalyzeData.image?.let { bitmapImage ->
+                itAnalyzeData.uri?.let { itUri ->
                     photoAnalyzeData.add(
                         PhotoAnalyzeData(
-                            image = bitmapImage,
-                            poseData = createPoseData(bitmapImage, poseDetector)
+                            uri = itUri,
+                            poseData = createPoseData(uriToBitmap(itUri), poseDetector)
                         )
                     )
 
@@ -92,9 +91,8 @@ class PhotoAnalyzeLoadingFragment : Fragment() {
     private fun getXorYCoordinates(poseLandmark: PoseLandmark?) =
         poseLandmark?.let { pose -> PointF(pose.position.x, pose.position.y) }
 
-    private suspend fun createPoseData(bitmapImage: Bitmap, poseDetector: PoseDetector): PoseData? {
-
-        val result = poseDetectorProcess(bitmapImage, poseDetector)
+    private suspend fun createPoseData(bitmapImage: Bitmap?, poseDetector: PoseDetector): PoseData? {
+        val result = bitmapImage?.let { itImage-> poseDetectorProcess(itImage,poseDetector) }
         return result?.let { itResult ->
             PoseData(
                 leftShoulder = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)),
@@ -113,6 +111,20 @@ class PhotoAnalyzeLoadingFragment : Fragment() {
             )
 
         }
+    }
+    private fun uriToBitmap(imagePath: Uri): Bitmap? {
+        val bitmap = if (Build.VERSION.SDK_INT < 29) {
+            @Suppress("DEPRECATION")
+            MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imagePath)
+        } else {
+            ImageDecoder.decodeBitmap(
+                ImageDecoder.createSource(
+                    requireContext().contentResolver,
+                    imagePath
+                )
+            )
+        }
+        return bitmap.copy(Bitmap.Config.ARGB_8888, bitmap.isMutable)
     }
 
     suspend fun poseDetectorProcess(bitmapImage: Bitmap, poseDetector: PoseDetector): Pose? {
