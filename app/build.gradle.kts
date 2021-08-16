@@ -62,6 +62,7 @@ dependencies {
     implementation (androidxsupportDependencies.constraintlayout)
     implementation(androidxsupportDependencies.multidex)
     implementation (androidxsupportDependencies.legacy_support)
+    implementation ("com.gu.android:toolargetool:0.3.0")
     //Kotlin components
     implementation (kotlinDependencies.kotlin)
     implementation (kotlinDependencies.coroutines_core)

@@ -4,19 +4,12 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -38,67 +31,54 @@ class PhotoUploadFragment : Fragment() {
     @Inject
     lateinit var viewModel: PhotoAnalyzeViewModel
 
-    val startForResult =
+    private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val imageUriList = ArrayList<Uri>()
-                result.data?.let { itdata ->
-                    itdata.clipData?.let { itClipData ->
-                        val itemCount = itClipData.itemCount
-                        for (i in 0 until itemCount) {
-                            val imageUri: Uri = itClipData.getItemAt(i).uri
-                            imageUriList.add(imageUri)
+                result.data?.let { itResultData->
+                    getActivityResult(itResultData)
+                }
+            }
+        }
 
-                        }
-                    } ?: kotlin.run {
-                        //single image selected
-                        itdata.data?.let { itUri ->
-                            val imageUri: Uri = itUri
-                            imageUriList.add(imageUri)
-                        }
-
-                    }
-                    createListBitmap(imageUriList)
-
-
+    private fun getActivityResult(resultData:Intent){
+        val imageUriList = ArrayList<Uri>()
+            resultData.clipData?.let { itClipData ->
+                val itemCount = itClipData.itemCount
+                for (i in 0 until itemCount) {
+                    val imageUri: Uri = itClipData.getItemAt(i).uri
+                    imageUriList.add(imageUri)
+                }
+            } ?: kotlin.run {
+                //single image selected
+                resultData.data?.let { itUri ->
+                    val imageUri: Uri = itUri
+                    imageUriList.add(imageUri)
                 }
 
             }
-        }
-
-
-    private fun createListBitmap(uriList: List<Uri>) {
-        if (uriList.isNotEmpty()) {
-            val bitmapList = ArrayList<Bitmap?>()
-
-            uriList.forEach { itUri ->
-                bitmapList.add(uriToBitmap(itUri))
-
-
-            }.also {
-                setDataAnalyze(bitmapList)
-            }
-
-        } else {
-            Toast.makeText(requireContext(), "RESIM YOK", Toast.LENGTH_SHORT).show()
-        }
+             setUriList(imageUriList)
 
     }
 
-    private fun uriToBitmap(imagePath: Uri): Bitmap? {
-        val bitmap = if (Build.VERSION.SDK_INT < 29) {
-            @Suppress("DEPRECATION")
-            MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imagePath)
-        } else {
-            ImageDecoder.decodeBitmap(
-                ImageDecoder.createSource(
-                    requireContext().contentResolver,
-                    imagePath
+    private fun setUriList(imageUriList: ArrayList<Uri>) {
+        val photoUriListData =ArrayList<PhotoAnalyzeData>()
+        imageUriList.forEach { itUri->
+            photoUriListData.add(PhotoAnalyzeData(itUri))
+        }
+        if(photoUriListData.size>0){
+            val action =
+               PhotoUploadFragmentDirections.actionPhotoUploadFragmentToPhotoAnalyzeLoadingFragment(
+                   photoUriListData.toTypedArray()
                 )
-            )
+            findNavController().navigate(action)
         }
-        return bitmap.copy(Bitmap.Config.ARGB_8888, bitmap.isMutable)
+
     }
+
+
+
+
+
 
 
     override fun onCreateView(
@@ -181,19 +161,6 @@ class PhotoUploadFragment : Fragment() {
         }
     }
 
-    private fun setDataAnalyze(bitmapList: List<Bitmap?>) {
-        val list = ArrayList<PhotoAnalyzeData>()
-        bitmapList.forEachIndexed { index, itBitmap ->
-            list.add(PhotoAnalyzeData(index, itBitmap, false))
-
-        }
-        val newList = list.toTypedArray()
-        val action =
-            PhotoUploadFragmentDirections.actionPhotoUploadFragmentToPhotoAnalyzeLoadingFragment(
-                newList
-            )
-        findNavController().navigate(action)
-    }
 
 }
 

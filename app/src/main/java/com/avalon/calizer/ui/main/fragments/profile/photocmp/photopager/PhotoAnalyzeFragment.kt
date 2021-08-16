@@ -1,34 +1,23 @@
 package com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager
 
-import android.annotation.SuppressLint
 import android.graphics.*
 import android.os.Bundle
-import android.os.Parcelable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 import com.avalon.calizer.databinding.FragmentPhotoAnalyzeBinding
-import com.avalon.calizer.ui.main.fragments.profile.photocmp.BodyAnalyzeManager
 import com.avalon.calizer.ui.main.fragments.profile.photocmp.PhotoAnalyzeViewModel
-import com.avalon.calizer.utils.Utils
 import com.avalon.calizer.utils.analyzeTextColor
 import com.avalon.calizer.utils.shimmerText
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
-import kotlin.math.PI
-import kotlin.math.acos
-import kotlin.math.sqrt
 
 @AndroidEntryPoint
 class PhotoAnalyzeFragment : Fragment() {
@@ -47,7 +36,7 @@ class PhotoAnalyzeFragment : Fragment() {
     lateinit var viewModel: PhotoAnalyzeViewModel
 
     @Inject
-    lateinit var bodyAnalyzeManager: BodyAnalyzeManager
+    lateinit var poseAnalyzeManager: PoseAnalyzeManager
 
     @Inject
     lateinit var faceAnalyzeManager: FaceAnalyzeManager
@@ -74,54 +63,72 @@ class PhotoAnalyzeFragment : Fragment() {
 
     private fun initData() {
         val analyzeData = requireArguments().getParcelable<PhotoAnalyzeData>(ARG_DATA)
-        binding.cvCanvas.setPoseData(
-            poseData = analyzeData?.poseData,
-            bitmap = analyzeData?.image
-        )
-        binding.cvCanvas.invalidate()
+        faceAnalyzeManager.setFaceAnalyzeBitmap(analyzeData?.image)
+        poseAnalyzeManager.setBodyAnalyze(analyzeData?.poseData)
         setResolution(analyzeData)
         setFaceScore()
-        faceAnalyzeManager.setFaceAnalyzeBitmap(analyzeData?.image)
+        setPoseScore()
+        setCanvasData(analyzeData)
+        setResolutionImage(analyzeData)
 
+
+    }
+
+    fun setResolutionImage(analyzeData: PhotoAnalyzeData?) {
         val checkImage = if (getWidthAndHeightQuality(analyzeData?.image)) {
             ContextCompat.getDrawable(requireContext(), R.drawable.ic_check_true)
         } else {
             ContextCompat.getDrawable(requireContext(), R.drawable.ic_check_false)
         }
         binding.ivCheck.setImageDrawable(checkImage)
-
-        analyzeData?.let { itAnalyzeData ->
-            val score = bodyAnalyzeManager.getScore(itAnalyzeData.poseData)
-            binding.tvPoseRate.analyzeTextColor(score)
-            binding.tvPoseRate.text = "${score}%"
-
-        }
-
-
     }
 
-    fun setFaceScore(){
+    fun setCanvasData(analyzeData: PhotoAnalyzeData?) {
+        binding.cvCanvas.setPoseData(
+            poseData = analyzeData?.poseData,
+            bitmap = analyzeData?.image
+        )
+        binding.cvCanvas.invalidate()
+    }
+
+    private fun setPoseScore() {
         lifecycleScope.launchWhenCreated {
-            faceAnalyzeManager.onComplete.collectLatest { state->
-                when(state){
-                    is FaceAnalyzeManager.FaceAnalyzeState.Loading->{
+            poseAnalyzeManager.bodyAnalyze.collectLatest { itBodyState->
+                when(itBodyState){
+                    is PoseAnalyzeManager.BodyAnalyzeState.Loading->{
+                        binding.tvPoseRate.shimmerText(true)
+                    }
+                    is PoseAnalyzeManager.BodyAnalyzeState.Success->{
+                        binding.tvPoseRate.shimmerText(false)
+                        binding.tvPoseRate.analyzeTextColor(itBodyState.score)
+                        binding.tvPoseRate.text = "${itBodyState.score}%"
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setFaceScore() {
+        lifecycleScope.launchWhenCreated {
+            faceAnalyzeManager.faceAnalyze.collectLatest { itFaceState ->
+                when (itFaceState) {
+                    is FaceAnalyzeManager.FaceAnalyzeState.Loading -> {
                         binding.tvFaceRate.shimmerText(true)
                     }
-                    is FaceAnalyzeManager.FaceAnalyzeState.Success->{
+                    is FaceAnalyzeManager.FaceAnalyzeState.Success -> {
                         binding.tvFaceRate.shimmerText(false)
-                        binding.tvFaceRate.analyzeTextColor(state.score)
-                        binding.tvFaceRate.text = "${state.score}%"
-                    }else->{}
-
+                        binding.tvFaceRate.analyzeTextColor(itFaceState.score)
+                        binding.tvFaceRate.text = "${itFaceState.score}%"
+                    }
                 }
 
             }
         }
     }
 
-    fun setResolution(analyzeData: PhotoAnalyzeData?){
-        analyzeData?.let { itAnalyzeData->
-            itAnalyzeData.image?.let { itImage->
+    fun setResolution(analyzeData: PhotoAnalyzeData?) {
+        analyzeData?.let { itAnalyzeData ->
+            itAnalyzeData.image?.let { itImage ->
                 val xPos = itImage.width
                 val yPos = itImage.height
                 "${xPos}x${yPos}".also { binding.tvResolution.text = it }

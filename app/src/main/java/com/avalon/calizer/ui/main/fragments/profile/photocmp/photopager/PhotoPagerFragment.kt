@@ -25,7 +25,7 @@ class PhotoPagerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentPhotoPagerBinding.inflate(inflater,container,false)
-        analyzeData = args.photoAnalyzeDataArgs.toList()
+        analyzeData = args.photoUriListArgs.toList()
         return binding.root
     }
 

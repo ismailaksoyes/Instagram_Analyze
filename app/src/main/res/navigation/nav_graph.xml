@@ -108,13 +108,14 @@
         android:name="com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.PhotoPagerFragment"
         android:label="fragment_photo_pager"
         tools:layout="@layout/fragment_photo_pager" >
-        <argument
-            android:name="photoAnalyzeDataArgs"
-            app:argType="com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData[]" />
+
         <action
             android:id="@+id/action_photoPagerFragment_to_photoUploadFragment"
             app:destination="@id/photoUploadFragment"
             />
+        <argument
+            android:name="photoUriListArgs"
+            app:argType="com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData[]" />
     </fragment>
     <fragment
         android:id="@+id/photoAnalyzeLoadingFragment"

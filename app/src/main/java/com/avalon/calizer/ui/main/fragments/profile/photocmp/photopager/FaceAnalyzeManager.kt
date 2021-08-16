@@ -1,26 +1,18 @@
 package com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager
 
 import android.graphics.Bitmap
-import android.graphics.PointF
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.avalon.calizer.data.local.profile.photoanalyze.FaceAnalyzeData
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.*
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import kotlin.math.abs
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 
 class FaceAnalyzeManager @Inject constructor(var detector: FaceDetector)  {
-    private val _onComplete = MutableStateFlow<FaceAnalyzeState>(FaceAnalyzeState.Loading)
-    val onComplete :StateFlow<FaceAnalyzeState> = _onComplete
+    private val _faceAnalyze = MutableStateFlow<FaceAnalyzeState>(FaceAnalyzeState.Loading)
+    val faceAnalyze :StateFlow<FaceAnalyzeState> = _faceAnalyze
 
     sealed class FaceAnalyzeState{
         object Loading : FaceAnalyzeState()
@@ -37,6 +29,8 @@ class FaceAnalyzeManager @Inject constructor(var detector: FaceDetector)  {
         detector.process(image).addOnSuccessListener { faces ->
             if (faces.size > 0) {
                 faceParts(faces[0])
+            }else{
+                _faceAnalyze.value = FaceAnalyzeState.Success(0)
             }
         }
             .addOnFailureListener { e ->
@@ -91,7 +85,7 @@ class FaceAnalyzeManager @Inject constructor(var detector: FaceDetector)  {
             if(itFaceData.getBridgeToChipRatio()) scoreCalc += 100/5
             if(itFaceData.getEyeProbabilityRatio()) scoreCalc += 100/5
             if (itFaceData.getIsSmiling()) scoreCalc += 100/5
-            _onComplete.value = FaceAnalyzeState.Success(scoreCalc.toInt())
+            _faceAnalyze.value = FaceAnalyzeState.Success(scoreCalc.toInt())
 
         }
 

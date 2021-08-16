@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatDelegate
 import com.avalon.calizer.utils.MySharedPreferences
+import com.gu.toolargetool.TooLargeTool
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.HiltAndroidApp
@@ -20,6 +21,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        TooLargeTool.startLogging(this)
        // prefs = MySharedPreferences(applicationContext)
 
 
