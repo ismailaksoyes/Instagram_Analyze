@@ -3,7 +3,7 @@ object Versions {
     const val lifecycle_version = "2.3.1"
     const val coroutines_version = "1.4.3"
     const val kotlin_version = "1.5.30-M1"
-    const val hilt_version = "2.37"
+    const val hilt_version = "2.38.1"
     const val room_version = "2.3.0"
 
     const val appcompat_version = "1.3.1"

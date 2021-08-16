@@ -3,34 +3,37 @@ package com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager
 import android.graphics.Bitmap
 import android.graphics.PointF
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.avalon.calizer.data.local.profile.photoanalyze.FaceAnalyzeData
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.*
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
 
-class FaceAnalyzeManager()  {
+class FaceAnalyzeManager @Inject constructor(var detector: FaceDetector)  {
+    private val _onComplete = MutableStateFlow<FaceAnalyzeState>(FaceAnalyzeState.Loading)
+    val onComplete :StateFlow<FaceAnalyzeState> = _onComplete
 
-
+    sealed class FaceAnalyzeState{
+        object Loading : FaceAnalyzeState()
+        data class Success(val score:Int) : FaceAnalyzeState()
+    }
     fun setFaceAnalyzeBitmap(bitmap: Bitmap?) {
         bitmap?.let { itBitmap ->
             runImageFaceDetector(itBitmap)
         }
     }
 
-    private fun runImageFaceDetector(bitmap: Bitmap) {
+      fun runImageFaceDetector(bitmap: Bitmap) {
         val image = InputImage.fromBitmap(bitmap, 0)
-        val options = FaceDetectorOptions.Builder()
-            .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
-            .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
-            .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
-            .setContourMode(FaceDetectorOptions.CONTOUR_MODE_ALL)
-            .build()
-        val detector = FaceDetection.getClient(options)
         detector.process(image).addOnSuccessListener { faces ->
             if (faces.size > 0) {
                 faceParts(faces[0])
@@ -71,25 +74,27 @@ class FaceAnalyzeManager()  {
                 lowerLipTop = face.getContour(FaceContour.LOWER_LIP_TOP)?.points
                 lowerLipBottom = face.getContour(FaceContour.LOWER_LIP_BOTTOM)?.points
                 smilingProbability = face.smilingProbability
+                rightEyeOpenProbability = face.rightEyeOpenProbability
+                leftEyeOpenProbability = face.leftEyeOpenProbability
+                faceContour = face.getContour(FaceContour.FACE)?.points
             }.also { faceAnalyzeScore(faceAnalyzeData) }
 
 
 
     }
     private fun faceAnalyzeScore(faceAnalyzeData: FaceAnalyzeData?){
+
         faceAnalyzeData?.let { itFaceData->
-            val test1 = itFaceData.getHeightLeftEye()
-            val test2 = itFaceData.getHeightLeftEyeBrow()
-            val test3 = itFaceData.getHeightRightEye()
-            val test4 = itFaceData.getHeightRightEyeBrow()
-            val test5 = itFaceData.getIsSmiling()
-            Log.d("faceAnalyzeData","$test1 $test2 $test3 $test4 $test5")
+            var scoreCalc = 0f
+             if(itFaceData.getFaceVerticalRatio()) scoreCalc += 100/5
+            if (itFaceData.getFaceHorizontalRatio()) scoreCalc += 100/5
+            if(itFaceData.getBridgeToChipRatio()) scoreCalc += 100/5
+            if(itFaceData.getEyeProbabilityRatio()) scoreCalc += 100/5
+            if (itFaceData.getIsSmiling()) scoreCalc += 100/5
+            _onComplete.value = FaceAnalyzeState.Success(scoreCalc.toInt())
+
         }
-    }
-
-    private fun getRatio(){
 
     }
-
 
 }

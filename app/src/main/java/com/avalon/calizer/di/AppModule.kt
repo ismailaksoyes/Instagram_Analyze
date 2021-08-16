@@ -12,6 +12,9 @@ import com.avalon.calizer.utils.Constants
 import com.avalon.calizer.utils.Constants.USER_DATABASE
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.mlkit.vision.face.FaceDetection
+import com.google.mlkit.vision.face.FaceDetector
+import com.google.mlkit.vision.face.FaceDetectorOptions
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -75,6 +78,19 @@ object AppModule {
             .writeTimeout(15, TimeUnit.SECONDS)
             .build()
     }
+
+    @Singleton
+    @Provides
+    fun provideFaceDetectorOptions():FaceDetectorOptions = FaceDetectorOptions.Builder()
+        .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
+        .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
+        .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
+        .setContourMode(FaceDetectorOptions.CONTOUR_MODE_ALL)
+        .build()
+
+    @Singleton
+    @Provides
+    fun provideFaceDetector(options: FaceDetectorOptions):FaceDetector = FaceDetection.getClient(options)
 
 
     @Singleton

@@ -64,13 +64,11 @@
                     android:id="@+id/tv_pose_rate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="82%"
                     app:layout_constraintTop_toBottomOf="@id/iv_pose_analyze"
                     app:layout_constraintStart_toStartOf="parent"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/ibm_plex_sans_medium"
-                    android:textColor="@color/green"/>
+                    android:fontFamily="@font/ibm_plex_sans_medium" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -111,13 +109,11 @@
                     android:id="@+id/tv_face_rate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="89%"
                     app:layout_constraintTop_toBottomOf="@id/iv_face_analyze"
                     app:layout_constraintStart_toStartOf="parent"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/ibm_plex_sans_medium"
-                    android:textColor="@color/green"/>
+                    android:fontFamily="@font/ibm_plex_sans_medium" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -166,7 +162,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/ibm_plex_sans_medium"
-                    android:text="1920x1080"
                     android:textColor="?colorOnSecondary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/iv_check"
