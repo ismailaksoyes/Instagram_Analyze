@@ -1,7 +1,11 @@
 package com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager
 
+import android.annotation.SuppressLint
 import android.graphics.*
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +17,9 @@ import com.avalon.calizer.R
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 import com.avalon.calizer.databinding.FragmentPhotoAnalyzeBinding
 import com.avalon.calizer.ui.main.fragments.profile.photocmp.PhotoAnalyzeViewModel
+import com.avalon.calizer.utils.Utils
 import com.avalon.calizer.utils.analyzeTextColor
-import com.avalon.calizer.utils.shimmerText
+import com.avalon.calizer.utils.isShimmerEnabled
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
@@ -63,18 +68,42 @@ class PhotoAnalyzeFragment : Fragment() {
 
     private fun initData() {
         val analyzeData = requireArguments().getParcelable<PhotoAnalyzeData>(ARG_DATA)
-        faceAnalyzeManager.setFaceAnalyzeBitmap(analyzeData?.image)
-        poseAnalyzeManager.setBodyAnalyze(analyzeData?.poseData)
-        setResolution(analyzeData)
+        analyzeData?.uri?.let { itUri->
+
+        }
+        analyzeData?.let { itAnalyzeData->
+            itAnalyzeData.uri?.let { itUri->
+                faceAnalyzeManager.setFaceAnalyzeBitmap(uriToBitmap(itUri))
+            }
+            itAnalyzeData.poseData?.let { itPoseData->
+                poseAnalyzeManager.setBodyAnalyze(itPoseData)
+            }
+
+            setResolution(itAnalyzeData)
+            setCanvasData(itAnalyzeData)
+            setResolutionImage(itAnalyzeData)
+
+        }
         setFaceScore()
         setPoseScore()
-        setCanvasData(analyzeData)
-        setResolutionImage(analyzeData)
-
 
     }
+    private fun uriToBitmap(imagePath: Uri): Bitmap? {
+        val bitmap = if (Build.VERSION.SDK_INT < 29) {
+            @Suppress("DEPRECATION")
+            MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imagePath)
+        } else {
+            ImageDecoder.decodeBitmap(
+                ImageDecoder.createSource(
+                    requireContext().contentResolver,
+                    imagePath
+                )
+            )
+        }
+        return bitmap.copy(Bitmap.Config.ARGB_8888, bitmap.isMutable)
+    }
 
-    fun setResolutionImage(analyzeData: PhotoAnalyzeData?) {
+    private fun setResolutionImage(analyzeData: PhotoAnalyzeData?) {
         val checkImage = if (getWidthAndHeightQuality(analyzeData?.image)) {
             ContextCompat.getDrawable(requireContext(), R.drawable.ic_check_true)
         } else {
@@ -83,23 +112,27 @@ class PhotoAnalyzeFragment : Fragment() {
         binding.ivCheck.setImageDrawable(checkImage)
     }
 
-    fun setCanvasData(analyzeData: PhotoAnalyzeData?) {
-        binding.cvCanvas.setPoseData(
-            poseData = analyzeData?.poseData,
-            bitmap = analyzeData?.image
-        )
-        binding.cvCanvas.invalidate()
+    private fun setCanvasData(analyzeData: PhotoAnalyzeData) {
+        Utils.ifTwoNotNull(analyzeData.uri,analyzeData.poseData){itUri,itPose->
+            binding.cvCanvas.setPoseData(
+                poseData = itPose,
+                bitmap = uriToBitmap(itUri)
+            )
+            binding.cvCanvas.invalidate()
+        }
+
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setPoseScore() {
         lifecycleScope.launchWhenCreated {
             poseAnalyzeManager.bodyAnalyze.collectLatest { itBodyState->
                 when(itBodyState){
                     is PoseAnalyzeManager.BodyAnalyzeState.Loading->{
-                        binding.tvPoseRate.shimmerText(true)
+                        binding.tvPoseRate.isShimmerEnabled(true)
                     }
                     is PoseAnalyzeManager.BodyAnalyzeState.Success->{
-                        binding.tvPoseRate.shimmerText(false)
+                        binding.tvPoseRate.isShimmerEnabled(false)
                         binding.tvPoseRate.analyzeTextColor(itBodyState.score)
                         binding.tvPoseRate.text = "${itBodyState.score}%"
                     }
@@ -113,10 +146,10 @@ class PhotoAnalyzeFragment : Fragment() {
             faceAnalyzeManager.faceAnalyze.collectLatest { itFaceState ->
                 when (itFaceState) {
                     is FaceAnalyzeManager.FaceAnalyzeState.Loading -> {
-                        binding.tvFaceRate.shimmerText(true)
+                        binding.tvFaceRate.isShimmerEnabled(true)
                     }
                     is FaceAnalyzeManager.FaceAnalyzeState.Success -> {
-                        binding.tvFaceRate.shimmerText(false)
+                        binding.tvFaceRate.isShimmerEnabled(false)
                         binding.tvFaceRate.analyzeTextColor(itFaceState.score)
                         binding.tvFaceRate.text = "${itFaceState.score}%"
                     }
@@ -126,14 +159,14 @@ class PhotoAnalyzeFragment : Fragment() {
         }
     }
 
-    fun setResolution(analyzeData: PhotoAnalyzeData?) {
-        analyzeData?.let { itAnalyzeData ->
-            itAnalyzeData.image?.let { itImage ->
+    private fun setResolution(analyzeData: PhotoAnalyzeData) {
+        analyzeData.uri?.let { itUri->
+            val imageBitmap = uriToBitmap(itUri)
+            imageBitmap?.let { itImage->
                 val xPos = itImage.width
                 val yPos = itImage.height
                 "${xPos}x${yPos}".also { binding.tvResolution.text = it }
             }
-
         }
     }
 

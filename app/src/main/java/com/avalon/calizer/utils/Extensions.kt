@@ -34,7 +34,7 @@ fun ImageView.loadPPUrl(url: String?) {
         .into(this)
 }
 
-fun TextView.shimmerText(start:Boolean){
+fun TextView.isShimmerEnabled(start:Boolean){
     if (start){
         val shimmer = Shimmer.AlphaHighlightBuilder()
             .setDuration(1800)

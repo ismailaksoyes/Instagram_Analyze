@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PhotoAnalyzeData(
-    val uriList :Uri? = null,
+    val uri :Uri? = null,
     val image: Bitmap? = null,
     val isResComp:Boolean? = false,
     val poseData: PoseData? = null

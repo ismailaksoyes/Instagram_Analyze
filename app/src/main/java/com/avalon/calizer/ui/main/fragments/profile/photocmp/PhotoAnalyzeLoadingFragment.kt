@@ -35,7 +35,7 @@ class PhotoAnalyzeLoadingFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPhotoAnalyzeLoadingBinding.inflate(inflater, container, false)
         analyzeData = args.photoNotAnalyzeData.toList()
         return binding.root
@@ -52,10 +52,10 @@ class PhotoAnalyzeLoadingFragment : Fragment() {
         val photoAnalyzeData = ArrayList<PhotoAnalyzeData>()
         lifecycleScope.launch {
             analyzeData.forEach { itAnalyzeData ->
-                itAnalyzeData.uriList?.let { itUri ->
+                itAnalyzeData.uri?.let { itUri ->
                     photoAnalyzeData.add(
                         PhotoAnalyzeData(
-                            image = uriToBitmap(itUri),
+                            uri = itUri,
                             poseData = createPoseData(uriToBitmap(itUri), poseDetector)
                         )
                     )
