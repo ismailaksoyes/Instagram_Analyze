@@ -34,9 +34,6 @@ import javax.inject.Singleton
 @Module
 object AppModule {
 
-    @Provides
-    fun provideBaseUrl() = Constants.BASE_URL
-
 
     @Provides
     @Singleton
@@ -52,32 +49,6 @@ object AppModule {
     @Provides
     fun provideRoomDao(db: MyDatabase) = db.roomDao
 
-    @Singleton
-    @Provides
-    fun provideApiService(retrofit: Retrofit) = retrofit.create(ApiService::class.java)
-
-    @Singleton
-    @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient, BASE_URL: String): Retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-
-    @Singleton
-    @Provides
-    fun provideOkHttpClient(apiInterceptor: Interceptor): OkHttpClient {
-        val logging = HttpLoggingInterceptor()
-        logging.level = HttpLoggingInterceptor.Level.BODY
-        return OkHttpClient.Builder()
-            .addInterceptor(logging)
-            .addInterceptor(apiInterceptor)
-            .connectTimeout(1, TimeUnit.MINUTES)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
-            .build()
-    }
 
     @Singleton
     @Provides
@@ -92,14 +63,6 @@ object AppModule {
     @Provides
     fun provideFaceDetector(options: FaceDetectorOptions):FaceDetector = FaceDetection.getClient(options)
 
-
-    @Singleton
-    @Provides
-    fun provideApiHelper(apiHelper: ApiHelperImpl): ApiHelper = apiHelper
-
-    @Singleton
-    @Provides
-    fun provideApiInterceptor(apiInterceptor: ApiInterceptor):Interceptor = apiInterceptor
 
 
    @Singleton
