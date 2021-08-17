@@ -1,7 +1,6 @@
 package com.avalon.calizer.data.repository
 
 import com.avalon.calizer.data.api.ApiHelper
-import com.avalon.calizer.data.api.ApiClient
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollow
 import retrofit2.Response
 import javax.inject.Inject
