@@ -103,7 +103,7 @@ class MainViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
 
-            repository.getUserFollowers(userId, maxId, rnkToken, cookies).let {
+            repository.getUserFollowers(userId, maxId, rnkToken,cookies).let {
                 if (it.isSuccessful) {
 
                     if (!it.body()?.nextMaxId.isNullOrEmpty()) {
@@ -132,7 +132,7 @@ class MainViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
 
-            repository.getUserFollowing(userId, maxId, rnkToken, cookies).let {
+            repository.getUserFollowing(userId, maxId, rnkToken,cookies).let {
 
                 if (it.isSuccessful) {
 

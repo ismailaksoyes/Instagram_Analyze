@@ -47,7 +47,7 @@ class FollowViewModel @Inject constructor(private val followRepository: FollowRe
 
     suspend fun getUserDetails(userId: Long) = viewModelScope.launch {
         val cookies = getCookies()
-        repository.getUserDetails(cookies, userId).let {
+        repository.getUserDetails(userId,cookies).let {
             if (it.isSuccessful){
                 _updateFollow.value = UpdateState.Success(Resource.success(it.body()))
             }

@@ -15,6 +15,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetector
 import com.google.mlkit.vision.face.FaceDetectorOptions
+import com.google.mlkit.vision.pose.PoseDetection
+import com.google.mlkit.vision.pose.PoseDetector
+import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -62,6 +65,16 @@ object AppModule {
     @Singleton
     @Provides
     fun provideFaceDetector(options: FaceDetectorOptions):FaceDetector = FaceDetection.getClient(options)
+
+    @Singleton
+    @Provides
+    fun providePoseDetectorOptions():PoseDetectorOptions = PoseDetectorOptions.Builder()
+        .setDetectorMode(PoseDetectorOptions.SINGLE_IMAGE_MODE)
+        .build()
+
+    @Singleton
+    @Provides
+    fun providePoseDetector(options: PoseDetectorOptions):PoseDetector = PoseDetection.getClient(options)
 
 
 

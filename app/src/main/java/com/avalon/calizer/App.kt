@@ -13,8 +13,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.supervisorScope
 import java.util.logging.Handler
 
-//val PREFERENCES: MySharedPreferences by lazy { App.prefs!! }
-
 @HiltAndroidApp
 class App : Application() {
 
@@ -22,10 +20,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         TooLargeTool.startLogging(this)
-       // prefs = MySharedPreferences(applicationContext)
-
-
-        //setTheme(R.style.Theme_Calizer)
 
     }
 
