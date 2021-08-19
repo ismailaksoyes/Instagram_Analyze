@@ -163,10 +163,15 @@ data class FaceAnalyzeData(
     fun getEyeProbabilityRatio():Boolean{
         var controlRatio = false
        Utils.ifTwoNotNull(getOpenLeftEye(),getOpenRightEye()){itLeft,itRight->
-           Utils.ifTwoNotNull(leftEyeOpenProbability,rightEyeOpenProbability){itLeftPro,itRightPro->
-               val ratio = abs(itLeftPro-itRightPro)
-               controlRatio = ratio <= ((itLeftPro+itRightPro)/2)*0.03
-           }?: kotlin.run { controlRatio= false }
+           if (itLeft&&itRight){
+               Utils.ifTwoNotNull(leftEyeOpenProbability,rightEyeOpenProbability){itLeftPro,itRightPro->
+                   val ratio = abs(itLeftPro-itRightPro)
+                   controlRatio = ratio <= ((itLeftPro+itRightPro)/2)*0.03
+               }?: kotlin.run { controlRatio= false }
+           }else{
+               controlRatio=false
+           }
+
        }?: kotlin.run { controlRatio=false }
         return controlRatio
     }

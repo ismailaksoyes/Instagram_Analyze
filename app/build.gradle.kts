@@ -74,6 +74,7 @@ dependencies {
     implementation(retrofitDependencies.logging_interceptor)
     // Room components
     implementation (roomDependencies.room_ktx)
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
     kapt (roomDependencies.room_compiler)
     testImplementation (roomDependencies.room_testing)
     //Lifecycle

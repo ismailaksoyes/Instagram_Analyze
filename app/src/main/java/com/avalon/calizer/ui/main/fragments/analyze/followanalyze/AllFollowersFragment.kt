@@ -17,6 +17,7 @@ import com.avalon.calizer.R
 import com.avalon.calizer.data.local.FollowData
 import com.avalon.calizer.databinding.FragmentAllFollowersBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -31,19 +32,15 @@ class AllFollowersFragment : Fragment() {
     private val followsAdapter by lazy { FollowsAdapter() }
     private lateinit var layoutManager: LinearLayoutManager
     private var isLoading: Boolean = false
-    fun loadData(startItem:Int){
-        lifecycleScope.launch {
-            viewModel.updateFlow()
-            viewModel.getFollowData(startItem)
-        }
-    }
+
+
     @SuppressLint("ShowToast")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerview()
         layoutManager = LinearLayoutManager(view.context)
-        binding.rcFollowData.layoutManager =  layoutManager
-        updatePpItemRes()
+        binding.rcFollowData.layoutManager = layoutManager
+        observeFollowData()
         initData()
         loadData(0)
         scrollListener()
@@ -56,11 +53,11 @@ class AllFollowersFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = FragmentAllFollowersBinding.inflate(inflater,container,false)
+    ): View {
+        binding = FragmentAllFollowersBinding.inflate(inflater, container, false)
         return binding.root
     }
+
     private fun setupRecyclerview() {
         binding.rcFollowData.adapter = followsAdapter
         binding.rcFollowData.layoutManager = LinearLayoutManager(
@@ -69,11 +66,11 @@ class AllFollowersFragment : Fragment() {
         )
 
     }
-    fun updatePpItemReq(followData:List <FollowData>){
+
+    fun updatePpItemReq(followData: List<FollowData>) {
         lifecycleScope.launchWhenStarted {
-            followData.forEach { data->
+            followData.forEach { data ->
                 data.dsUserID?.let {
-                    Log.d("DsUserId",it.toString())
                     viewModel.getUserDetails(it)
                 }
 
@@ -81,13 +78,14 @@ class AllFollowersFragment : Fragment() {
         }
 
     }
-    fun updatePpItemRes(){
+
+    private fun observePpItemRes() {
         lifecycleScope.launchWhenStarted {
             viewModel.updateFollow.collectLatest {
-                when(it){
-                    is FollowViewModel.UpdateState.Success->{
-                        it.userDetails.data?.user.let { userData->
-                            followsAdapter.updatePpItem(userData?.pk,userData?.profilePicUrl)
+                when (it) {
+                    is FollowViewModel.UpdateState.Success -> {
+                        it.userDetails.data?.user.let { userData ->
+                            followsAdapter.updatePpItem(userData?.pk, userData?.profilePicUrl)
                         }
                     }
 
@@ -96,46 +94,56 @@ class AllFollowersFragment : Fragment() {
 
         }
     }
-    fun scrollListener(){
-
-        binding.rcFollowData.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+    fun loadData(startItem: Int) {
+        lifecycleScope.launch {
+            viewModel.updateFlow()
+            viewModel.getFollowData(startItem)
+        }
+    }
+    private fun scrollListener() {
+        binding.rcFollowData.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (recyclerView.layoutManager != null && recyclerView.layoutManager!!.itemCount>1){
-                    if (!isLoading && recyclerView.layoutManager?.itemCount ==(layoutManager.findLastVisibleItemPosition()+1)){
-                        Log.d("DataLoad",recyclerView.layoutManager!!.itemCount.toString())
-                        loadData(recyclerView.layoutManager!!.itemCount)
+                recyclerView.layoutManager?.let { itLayoutManager ->
+                    if (!isLoading && itLayoutManager.itemCount == (layoutManager.findLastVisibleItemPosition() + 1) && itLayoutManager.itemCount > 1) {
+                        loadData(itLayoutManager.itemCount)
                         isLoading = true
                     }
+
                 }
-
-
             }
 
         })
     }
-    fun initData(){
+
+    private fun observeFollowData(){
         lifecycleScope.launchWhenStarted {
+            delay(1000L)
             viewModel.allFollow.collectLatest {
-                when(it){
-                    is FollowViewModel.FollowState.Success->{
+                when (it) {
+                    is FollowViewModel.FollowState.Success -> {
                         followsAdapter.removeLoadingView()
                         followsAdapter.setData(it.followData)
                         isLoading = false
                     }
-                    is FollowViewModel.FollowState.Loading->{
+                    is FollowViewModel.FollowState.Loading -> {
                         val data = FollowData(type = 5)
                         followsAdapter.setLoading(data)
                     }
-                    is FollowViewModel.FollowState.UpdateItem->{
+                    is FollowViewModel.FollowState.UpdateItem -> {
                         updatePpItemReq(it.followData)
                     }
 
-                    else->{}
+                    else -> {
+                    }
                 }
 
             }
         }
+    }
+
+    fun initData() {
+
     }
 
 

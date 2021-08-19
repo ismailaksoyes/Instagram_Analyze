@@ -68,17 +68,12 @@ class PhotoAnalyzeFragment : Fragment() {
 
     private fun initData() {
         val analyzeData = requireArguments().getParcelable<PhotoAnalyzeData>(ARG_DATA)
-        analyzeData?.uri?.let { itUri->
 
-        }
         analyzeData?.let { itAnalyzeData->
             itAnalyzeData.uri?.let { itUri->
                 faceAnalyzeManager.setFaceAnalyzeBitmap(uriToBitmap(itUri))
+                poseAnalyzeManager.setBodyAnalyzeBitmap(uriToBitmap(itUri))
             }
-            itAnalyzeData.poseData?.let { itPoseData->
-                poseAnalyzeManager.setBodyAnalyze(itPoseData)
-            }
-
             setResolution(itAnalyzeData)
             setCanvasData(itAnalyzeData)
             setResolutionImage(itAnalyzeData)
