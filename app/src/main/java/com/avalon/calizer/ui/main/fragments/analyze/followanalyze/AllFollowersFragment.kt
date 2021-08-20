@@ -96,7 +96,7 @@ class AllFollowersFragment : Fragment() {
     }
     fun loadData(startItem: Int) {
         lifecycleScope.launch {
-            viewModel.updateFlow()
+            viewModel.updateAllFollowFlow()
             viewModel.getFollowData(startItem)
         }
     }
@@ -118,7 +118,6 @@ class AllFollowersFragment : Fragment() {
 
     private fun observeFollowData(){
         lifecycleScope.launchWhenStarted {
-            delay(1000L)
             viewModel.allFollow.collectLatest {
                 when (it) {
                     is FollowViewModel.FollowState.Success -> {

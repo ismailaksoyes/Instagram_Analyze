@@ -77,7 +77,8 @@ class AnalyzeFragment : Fragment() {
             ),
             AnalyzeViewData(
               uri = R.drawable.ic_follow_neg_ico,
-              title = "Takip Etmeyenler"
+              title = "Takip Etmeyenler",
+                type = R.id.action_destination_analyze_to_noFollowFragment
             ),
             AnalyzeViewData(
                 uri = R.drawable.ic_follow_neg_ico,

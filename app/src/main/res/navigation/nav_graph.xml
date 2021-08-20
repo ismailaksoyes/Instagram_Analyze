@@ -36,6 +36,9 @@
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popUpTo="@id/destination_analyze"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_destination_analyze_to_noFollowFragment"
+            app:destination="@id/noFollowFragment" />
     </fragment>
     <fragment
         android:id="@+id/destination_settings"
@@ -133,5 +136,13 @@
         <argument
             android:name="photoNotAnalyzeData"
             app:argType="com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData[]" />
+    </fragment>
+    <fragment
+        android:id="@+id/noFollowFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.nofollow.NoFollowFragment"
+        android:label="NoFollowFragment" >
+        <action
+            android:id="@+id/action_noFollowFragment_to_destination_analyze"
+            app:destination="@id/destination_analyze" />
     </fragment>
 </navigation>

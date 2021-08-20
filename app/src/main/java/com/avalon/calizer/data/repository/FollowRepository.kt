@@ -20,4 +20,8 @@ class FollowRepository @Inject constructor(private val roomDao: RoomDao,private 
         return roomDao.getFollowersData(position)
     }
 
+    suspend fun getNoFollowersData(userId:Long,position: Int):List<FollowData>{
+        return roomDao.getUnFollowers(userId,position)
+    }
+
 }

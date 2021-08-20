@@ -51,17 +51,17 @@ class PhotoAnalyzeLoadingFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             //Work like a charm
             delay(2000L)
-            loadingNextAnim(photoAnalyzeData)
+            loadingNextAnim()
         }
 
 
     }
 
-    private fun loadingNextAnim(list: ArrayList<PhotoAnalyzeData>) {
+    private fun loadingNextAnim() {
 
         val action =
             PhotoAnalyzeLoadingFragmentDirections.actionPhotoAnalyzeLoadingFragmentToPhotoPagerFragment(
-                list.toTypedArray()
+               analyzeData.toTypedArray()
             )
         findNavController().navigate(action)
 

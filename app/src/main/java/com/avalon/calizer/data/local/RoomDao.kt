@@ -42,6 +42,9 @@ interface RoomDao {
     @Query("DELETE FROM follow_table WHERE (type=1 OR type=3) AND analyzeUserId=:userId")
     suspend fun deleteLastData(userId: Long)
 
+    @Query("SELECT DISTINCT * FROM follow_table WHERE type=3 AND analyzeUserId=:userId ORDER BY pk ASC LIMIT 12 OFFSET :position")
+    suspend fun getUnFollowers(userId: Long,position: Int):List<FollowData>
+
 
 /**
     @Query("SELECT * FROM followers_table EXCEPT SELECT * FROM last_followers_table")
