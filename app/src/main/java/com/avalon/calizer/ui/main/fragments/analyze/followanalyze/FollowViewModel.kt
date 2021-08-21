@@ -21,6 +21,9 @@ class FollowViewModel @Inject constructor(private val followRepository: FollowRe
     private val _updateFollow = MutableStateFlow<UpdateState>(UpdateState.Empty)
     val updateFollow:StateFlow<UpdateState> = _updateFollow
 
+    private val _unFollowersData = MutableStateFlow<UnFollowersState>(UnFollowersState.Empty)
+    val unFollowersData:StateFlow<UnFollowersState> = _unFollowersData
+
 
     sealed class UpdateState{
         object Empty:UpdateState()
@@ -35,24 +38,40 @@ class FollowViewModel @Inject constructor(private val followRepository: FollowRe
 
     }
 
+
+    sealed class UnFollowersState{
+        object Empty:UnFollowersState()
+        object Loading:UnFollowersState()
+        data class UpdateItem(val followData:List<FollowData>) :UnFollowersState()
+        data class Success(val followData:List<FollowData>):UnFollowersState()
+    }
+
+    suspend fun getUnFollowers(userId:Long,position:Int){
+        val unFollowers = followRepository.getNoFollowersData(userId,position)
+        _unFollowersData.value = UnFollowersState.Success(unFollowers)
+        _unFollowersData.value = UnFollowersState.UpdateItem(unFollowers)
+    }
+
     suspend fun getFollowData(dataSize:Int){
         val data = followRepository.getFollowersData(dataSize)
         _allFollow.value = FollowState.Success(data)
         _allFollow.value = FollowState.UpdateItem(data)
     }
-     fun updateFlow(){
+     fun updateAllFollowFlow(){
         _allFollow.value = FollowState.Loading
+    }
+    fun updateNoFollowFlow(){
+        _unFollowersData.value = UnFollowersState.Loading
     }
     private suspend fun getCookies() =followRepository.getUserCookie().allCookie
 
     suspend fun getUserDetails(userId: Long) = viewModelScope.launch {
         val cookies = getCookies()
-        repository.getUserDetails(cookies, userId).let {
+        repository.getUserDetails(userId,cookies).let {
             if (it.isSuccessful){
                 _updateFollow.value = UpdateState.Success(Resource.success(it.body()))
             }
         }
-
     }
 
 

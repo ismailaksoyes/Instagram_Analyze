@@ -40,16 +40,37 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 } ?: kotlin.run {
                     binding.ivViewPp.setImageDrawable(null)
                 }
-                binding.tvPpUsername.text = "@${data.username}"
-                if (!data.fullName.isNullOrEmpty()) {
-                    binding.tvPpFullname.text = data.fullName
-                } else {
-                    binding.tvPpFullname.visibility = View.GONE
+
+
+                getSubString(data.username)?.let { itUserName->
+                    binding.tvPpUsername.text = "@${itUserName}"
                 }
+
+                getSubString(data.fullName)?.let { itFullName->
+                    binding.tvPpFullname.text = itFullName
+                }?: kotlin.run {  binding.tvPpFullname.visibility = View.GONE }
+
             }
 
         }
+        private fun getSubString(name:String?):String?{
+            return name?.let { itName->
+                when(itName.length){
+                    in 1..9->{
+                        itName
+                    }
+                    in 10..50 ->{
+                        "${itName.substring(0,9)}..."
+                    }else->{
+                    null
+                }
+
+                }
+            }
+        }
     }
+
+
 
     fun updatePpItem(item: Long?, profilePhoto: String?) {
         _followsList[getItemPosition(item)].profilePicUrl = profilePhoto

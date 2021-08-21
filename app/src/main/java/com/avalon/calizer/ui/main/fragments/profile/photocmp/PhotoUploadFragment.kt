@@ -15,7 +15,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.avalon.calizer.R
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 import com.avalon.calizer.databinding.FragmentPhotoUploadBinding
 import com.avalon.calizer.utils.showSnackBar
@@ -158,6 +160,10 @@ class PhotoUploadFragment : Fragment() {
 
             onclickRequestPermission(it)
 
+        }
+
+        binding.ivBackBtn.setOnClickListener {
+            it.findNavController().navigate(R.id.action_photoUploadFragment_to_destination_profile)
         }
     }
 

@@ -48,7 +48,6 @@ class LoginActivity : AppCompatActivity() {
 
         mCookiesVewModel.reelsTray.observe(this, Observer { response ->
             if(response.isSuccessful){
-               Log.d("Response",response.body()?.status.toString()!!)
                 launchActivity<MainActivity> {  }
             }
         })
@@ -70,8 +69,6 @@ class LoginActivity : AppCompatActivity() {
                 if (!url.equals(loginUrl) && lastControl) {
                     lastControl = false
                     val loginCookies = CookieManager.getInstance().getCookie(url)
-                    Log.d("Response",loginCookies.toString())
-                   // PREFERENCES.allCookie = loginCookies
                     allCookie = loginCookies
                     for (data in loginCookies.split(";")) {
                         val trim2 = data.trim()

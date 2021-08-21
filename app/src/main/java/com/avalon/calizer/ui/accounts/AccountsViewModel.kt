@@ -49,7 +49,7 @@ class AccountsViewModel @Inject constructor(
         get() = _userDetails
 
 
-    fun getReelsTray(cookies: String) = viewModelScope.launch {
+    fun getReelsTray(cookies:String) = viewModelScope.launch {
         _reelsTray.postValue(Resource.loading(null))
         repository.getReelsTray(cookies).let {
             if (it.isSuccessful) {
@@ -68,7 +68,7 @@ class AccountsViewModel @Inject constructor(
     }
 
     fun getUserDetails(cookies: String, userId: Long) = viewModelScope.launch(Dispatchers.IO) {
-        repository.getUserDetails(cookies, userId).let {
+        repository.getUserDetails(userId,cookies).let {
             if (it.isSuccessful) {
                 _allAccounts.value = LastAccountsState.UserDetails(Resource.success(it.body()))
              //   _allAccounts.value = LastAccountsState.UpdateDataa

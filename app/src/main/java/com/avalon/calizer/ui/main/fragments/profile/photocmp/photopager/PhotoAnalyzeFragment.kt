@@ -68,17 +68,12 @@ class PhotoAnalyzeFragment : Fragment() {
 
     private fun initData() {
         val analyzeData = requireArguments().getParcelable<PhotoAnalyzeData>(ARG_DATA)
-        analyzeData?.uri?.let { itUri->
 
-        }
         analyzeData?.let { itAnalyzeData->
             itAnalyzeData.uri?.let { itUri->
                 faceAnalyzeManager.setFaceAnalyzeBitmap(uriToBitmap(itUri))
+                poseAnalyzeManager.setBodyAnalyzeBitmap(uriToBitmap(itUri))
             }
-            itAnalyzeData.poseData?.let { itPoseData->
-                poseAnalyzeManager.setBodyAnalyze(itPoseData)
-            }
-
             setResolution(itAnalyzeData)
             setCanvasData(itAnalyzeData)
             setResolutionImage(itAnalyzeData)
@@ -114,10 +109,7 @@ class PhotoAnalyzeFragment : Fragment() {
 
     private fun setCanvasData(analyzeData: PhotoAnalyzeData) {
         Utils.ifTwoNotNull(analyzeData.uri,analyzeData.poseData){itUri,itPose->
-            binding.cvCanvas.setPoseData(
-                poseData = itPose,
-                bitmap = uriToBitmap(itUri)
-            )
+
             binding.cvCanvas.invalidate()
         }
 
@@ -135,6 +127,16 @@ class PhotoAnalyzeFragment : Fragment() {
                         binding.tvPoseRate.isShimmerEnabled(false)
                         binding.tvPoseRate.analyzeTextColor(itBodyState.score)
                         binding.tvPoseRate.text = "${itBodyState.score}%"
+                    }
+                    is PoseAnalyzeManager.BodyAnalyzeState.PoseDataSuccess->{
+                        Utils.ifTwoNotNull(itBodyState.poseManagerData.poseData,itBodyState.poseManagerData.image){itPose,itImage->
+                            binding.cvCanvas.setPoseData(
+                                poseData = itPose,
+                                bitmap = itImage
+                            )
+
+                        }
+
                     }
                 }
             }
@@ -169,6 +171,7 @@ class PhotoAnalyzeFragment : Fragment() {
             }
         }
     }
+
 
 }
 

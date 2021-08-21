@@ -24,7 +24,7 @@ class FaceAnalyzeManager @Inject constructor(var detector: FaceDetector)  {
         }
     }
 
-      fun runImageFaceDetector(bitmap: Bitmap) {
+     fun runImageFaceDetector(bitmap: Bitmap) {
         val image = InputImage.fromBitmap(bitmap, 0)
         detector.process(image).addOnSuccessListener { faces ->
             if (faces.size > 0) {

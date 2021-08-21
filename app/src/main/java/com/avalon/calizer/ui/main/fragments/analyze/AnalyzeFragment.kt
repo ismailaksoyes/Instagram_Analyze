@@ -42,6 +42,7 @@ class AnalyzeFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(AnalyzeViewModel::class.java)
 
     }
+
     private fun setupRecyclerview() {
         binding.rcViewTitle.adapter = viewsAdapter
         binding.rcViewTitle.layoutManager = LinearLayoutManager(this.context,
@@ -73,6 +74,11 @@ class AnalyzeFragment : Fragment() {
             AnalyzeViewData(
                 uri = R.drawable.ic_follow_poz_ico,
                 title = resources.getString(R.string.analyze_title_new_followers)
+            ),
+            AnalyzeViewData(
+              uri = R.drawable.ic_follow_neg_ico,
+              title = "Takip Etmeyenler",
+                type = R.id.action_destination_analyze_to_noFollowFragment
             ),
             AnalyzeViewData(
                 uri = R.drawable.ic_follow_neg_ico,

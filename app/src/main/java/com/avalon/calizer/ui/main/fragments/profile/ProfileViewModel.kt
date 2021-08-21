@@ -22,12 +22,12 @@ class ProfileViewModel @Inject constructor(private val dbRepository: RoomReposit
     val userModel : StateFlow<AccountsInfoData> = _userModel
 
 
-
     sealed class UserDataFlow{
         object Empty : UserDataFlow()
         data class GetUserDetails(var accountsInfoData: AccountsInfoData) :UserDataFlow()
 
     }
+
 
     fun getUserDetails(userId: Long){
         viewModelScope.launch {

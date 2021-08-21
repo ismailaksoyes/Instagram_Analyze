@@ -23,6 +23,7 @@ import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseDetector
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -45,96 +46,27 @@ class PhotoAnalyzeLoadingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val options =
-            PoseDetectorOptions.Builder().setDetectorMode(PoseDetectorOptions.SINGLE_IMAGE_MODE)
-                .build()
-        val poseDetector = PoseDetection.getClient(options)
         val photoAnalyzeData = ArrayList<PhotoAnalyzeData>()
-        lifecycleScope.launch {
-            analyzeData.forEach { itAnalyzeData ->
-                itAnalyzeData.uri?.let { itUri ->
-                    photoAnalyzeData.add(
-                        PhotoAnalyzeData(
-                            uri = itUri,
-                            poseData = createPoseData(uriToBitmap(itUri), poseDetector)
-                        )
-                    )
 
-
-                } ?: kotlin.run {
-
-                }
-
-            }.also {
-                lifecycleScope.launchWhenStarted {
-                     loadingNextAnim(photoAnalyzeData)
-                }
-
-
-            }
+        lifecycleScope.launchWhenStarted {
+            //Work like a charm
+            delay(2000L)
+            loadingNextAnim()
         }
 
 
     }
 
-     private fun loadingNextAnim(list: ArrayList<PhotoAnalyzeData>) {
+    private fun loadingNextAnim() {
 
         val action =
             PhotoAnalyzeLoadingFragmentDirections.actionPhotoAnalyzeLoadingFragmentToPhotoPagerFragment(
-                list.toTypedArray()
+               analyzeData.toTypedArray()
             )
         findNavController().navigate(action)
 
 
     }
 
-    private fun getXorYCoordinates(poseLandmark: PoseLandmark?) =
-        poseLandmark?.let { pose -> PointF(pose.position.x, pose.position.y) }
-
-    private suspend fun createPoseData(bitmapImage: Bitmap?, poseDetector: PoseDetector): PoseData? {
-        val result = bitmapImage?.let { itImage-> poseDetectorProcess(itImage,poseDetector) }
-        return result?.let { itResult ->
-            PoseData(
-                leftShoulder = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)),
-                rightShoulder = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.RIGHT_SHOULDER)),
-                leftElbow = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.LEFT_ELBOW)),
-                rightElbow = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.RIGHT_ELBOW)),
-                leftHip = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.LEFT_HIP)),
-                rightHip = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.RIGHT_HIP)),
-                leftWrist = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.LEFT_WRIST)),
-                rightWrist = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.RIGHT_WRIST)),
-                leftKnee = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.LEFT_KNEE)),
-                rightKnee = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.RIGHT_KNEE)),
-                leftAnkle = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.LEFT_ANKLE)),
-                rightAnkle = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.RIGHT_ANKLE))
-
-            )
-
-        }
-    }
-    private fun uriToBitmap(imagePath: Uri): Bitmap? {
-        val bitmap = if (Build.VERSION.SDK_INT < 29) {
-            @Suppress("DEPRECATION")
-            MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imagePath)
-        } else {
-            ImageDecoder.decodeBitmap(
-                ImageDecoder.createSource(
-                    requireContext().contentResolver,
-                    imagePath
-                )
-            )
-        }
-        return bitmap.copy(Bitmap.Config.ARGB_8888, bitmap.isMutable)
-    }
-
-    suspend fun poseDetectorProcess(bitmapImage: Bitmap, poseDetector: PoseDetector): Pose? {
-        var poseData:Pose? = null
-         val wait = poseDetector.process(InputImage.fromBitmap(bitmapImage, 0)).addOnSuccessListener { result->
-            poseData = result
-         }
-        wait.await()
-        return poseData
-
-    }
 
 }
