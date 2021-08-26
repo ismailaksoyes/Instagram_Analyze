@@ -28,16 +28,14 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_accounts_username" />
-        <com.google.android.material.textview.MaterialTextView
+        <TextView
             android:id="@+id/tv_accounts_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_profile_image"
-            android:text="-"
-            android:textColor="?colorOnSecondary"
-            android:fontFamily="@font/ibm_plex_sans_medium"
+            style="@style/text_medium_style"
             android:layout_marginStart="20dp"/>
 
 

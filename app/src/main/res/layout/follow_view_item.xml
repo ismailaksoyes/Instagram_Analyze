@@ -38,9 +38,7 @@
             app:layout_constraintTop_toTopOf="@id/cv_view_pp"
             app:layout_constraintBottom_toTopOf="@id/tv_pp_fullname"
             app:layout_constraintStart_toEndOf="@id/cv_view_pp"
-            android:text="title"
-            android:fontFamily="@font/ibm_plex_sans_medium"
-            android:textColor="?colorOnSecondary"
+            style="@style/text_medium_style"
             android:layout_marginStart="20dp"/>
     <TextView
         android:id="@+id/tv_pp_fullname"
@@ -49,22 +47,18 @@
         app:layout_constraintTop_toBottomOf="@id/tv_pp_username"
         app:layout_constraintStart_toEndOf="@id/cv_view_pp"
         app:layout_constraintBottom_toBottomOf="@id/cv_view_pp"
-        android:text="title title"
-        android:fontFamily="@font/ibm_plex_sans_light"
-        android:textColor="?colorOnSecondary"
+        style="@style/text_medium_light_style"
         android:layout_marginStart="20dp"/>
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_follow_view"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        style="@style/button_outline_medium_style"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:text="UnFollow"
-        android:fontFamily="@font/ibm_plex_sans_medium"
-        android:textColor="?colorOnSecondary"
-        app:strokeColor="?colorOnSecondary"
+
        />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

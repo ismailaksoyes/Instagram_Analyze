@@ -17,6 +17,9 @@ import com.avalon.calizer.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.IOException
+import java.net.InetSocketAddress
+import java.net.Socket
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
@@ -43,7 +46,13 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         context = this
+        try {
+            val socket:Socket = Socket()
+            socket.connect(InetSocketAddress("8.8.8.8",53),1500)
+            socket.close()
+        }catch (e:IOException){
 
+        }
 
 
         mCookiesVewModel.reelsTray.observe(this, Observer { response ->

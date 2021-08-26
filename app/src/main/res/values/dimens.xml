@@ -3,5 +3,26 @@
     <dimen name="pageMargin">30dp</dimen>
     <dimen name="offset">30dp</dimen>
     <dimen name="pageMarginAndOffset">50dp</dimen>
+    <dimen name="text_size_h1">27sp</dimen>
+    <dimen name="text_size_h2">21sp</dimen>
+    <dimen name="text_size_h3">19sp</dimen>
+    <dimen name="text_size_h4">17sp</dimen>
+    <dimen name="text_size_h5">15sp</dimen>
+    <dimen name="text_size_h6">13sp</dimen>
+    <dimen name="text_size_headline">21sp</dimen>
+    <dimen name="text_size_huge">48sp</dimen>
+    <dimen name="text_size_huge_max">80sp</dimen>
+    <dimen name="text_size_input_heading">11sp</dimen>
+    <dimen name="text_size_input_text">15sp</dimen>
+    <dimen name="text_size_large">27sp</dimen>
+    <dimen name="text_size_medium">14sp</dimen>
+    <dimen name="text_size_normal">16sp</dimen>
+    <dimen name="text_size_paragraph">15sp</dimen>
+    <dimen name="text_size_paragraph_small">13sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_toggle">13sp</dimen>
+    <dimen name="button_padding_left">13sp</dimen>
+    <dimen name="button_padding_right">13sp</dimen>
+    <dimen name="button_stroke_size">1sp</dimen>
 </resources>
 

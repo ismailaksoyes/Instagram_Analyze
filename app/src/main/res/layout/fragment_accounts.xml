@@ -8,37 +8,35 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_accounts_text"
+        style="@style/text_h1_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="Hesaplarım"
-        android:textColor="?colorOnPrimary"
-        android:fontFamily="@font/ibm_plex_sans_bold"
-        android:textSize="24sp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="40dp"/>
+        android:text="Hesaplarim"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rc_accounts_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constrainedHeight="true"
-        app:layout_constraintTop_toBottomOf="@id/tv_accounts_text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
-        android:overScrollMode="never"/>
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_accounts_text" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_accounts_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:clickable="true"
@@ -51,8 +49,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp"
-            android:background="?colorSecondary">
+            android:background="?colorSecondary"
+            android:padding="10dp">
 
 
             <ImageView
@@ -68,12 +66,11 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_accounts_add_text"
+                style="@style/text_medium_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:fontFamily="@font/ibm_plex_sans_medium"
                 android:text="Hesap Ekle"
-                android:textColor="?colorOnSecondary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_plus_ico"
                 app:layout_constraintTop_toTopOf="parent" />

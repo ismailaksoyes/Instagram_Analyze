@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="text_h1_style">
+        <item name="fontFamily">@font/ibm_plex_sans_bold</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textSize">@dimen/text_size_h1</item>
+    </style>
+
+    <style name="text_h1_uncolored_style">
+        <item name="fontFamily">@font/ibm_plex_sans_bold</item>
+        <item name="android:textSize">@dimen/text_size_h1</item>
+    </style>
+
+    <style name="text_medium_style">
+        <item name="fontFamily">@font/ibm_plex_sans_medium</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
+    <style name="text_medium_uncolored_style">
+        <item name="fontFamily">@font/ibm_plex_sans_medium</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
+    <style name="text_medium_light_style">
+        <item name="fontFamily">@font/ibm_plex_sans_light</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
+    <style name="text_normal_style">
+        <item name="fontFamily">@font/ibm_plex_sans_bold</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textSize">@dimen/text_size_normal</item>
+    </style>
+
+    <style name="button_outline_medium_style">
+        <item name="android:paddingLeft">@dimen/button_padding_left</item>
+        <item name="android:paddingRight">@dimen/button_padding_right</item>
+        <item name="strokeColor">@color/mtrl_btn_stroke_color_selector</item>
+        <item name="strokeWidth">@dimen/button_stroke_size</item>
+        <item name="fontFamily">@font/ibm_plex_sans_medium</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
+
+</resources>
