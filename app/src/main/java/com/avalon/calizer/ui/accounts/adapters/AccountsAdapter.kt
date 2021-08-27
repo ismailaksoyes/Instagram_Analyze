@@ -30,10 +30,9 @@ class AccountsAdapter(var selectedUserInterface: SelectedUserInterface) :
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(accountsList: AccountsData) {
-            Log.d("UserId","${accountsList.dsUserID}")
             if(accountsList.profilePic.isEmpty() && accountsList.userName.isEmpty()){
-                binding.ivProfileImage.loadPPUrl("https://slangit.com/img/slang/pp_4215.jpg")
-                binding.tvAccountsUsername.text = "bir hata olustu!"
+                binding.ivProfileImage.loadPPUrl("")
+                binding.tvAccountsUsername.text = "!!!"
             }else{
                 binding.ivProfileImage.loadPPUrl(accountsList.profilePic)
                 binding.tvAccountsUsername.text = accountsList.userName
@@ -47,7 +46,6 @@ class AccountsAdapter(var selectedUserInterface: SelectedUserInterface) :
                 )
                 selectedUserInterface.getData(sendData)
 
-                 // it.findNavController().navigate(R.id.action_destination_analyze_to_allFollowersFragment)
             }
         }
     }
@@ -69,6 +67,5 @@ class AccountsAdapter(var selectedUserInterface: SelectedUserInterface) :
     fun setData(accountsList: List<AccountsData>) {
         _accountsList = accountsList
         notifyDataSetChanged()
-
     }
 }

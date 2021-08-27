@@ -16,6 +16,7 @@ import androidx.navigation.findNavController
 import com.avalon.calizer.R
 import com.avalon.calizer.databinding.ProfileFragmentBinding
 import com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.FaceAnalyzeManager
+import com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.PoseAnalyzeManager
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.analyzeTextColor
 import com.avalon.calizer.utils.isShimmerEnabled
@@ -47,6 +48,9 @@ class ProfileFragment : Fragment() {
 
     @Inject
     lateinit var faceAnalyzeManager: FaceAnalyzeManager
+
+    @Inject
+    lateinit var poseAnalyzeManager: PoseAnalyzeManager
 
 
     @Inject
@@ -117,6 +121,7 @@ class ProfileFragment : Fragment() {
                         transition: Transition<in Bitmap>?
                     ) {
                         getFaceScore(resource)
+                        getPoseScore(resource)
                     }
                 })
         }
@@ -140,6 +145,24 @@ class ProfileFragment : Fragment() {
             }
         }
 
+    }
+
+    fun getPoseScore(bitmap: Bitmap){
+        poseAnalyzeManager.setBodyAnalyzeBitmap(bitmap)
+        lifecycleScope.launchWhenCreated {
+            poseAnalyzeManager.bodyAnalyze.collectLatest { itPoseState->
+                when(itPoseState){
+                    is PoseAnalyzeManager.BodyAnalyzeState.Loading ->{
+                        binding.tvPozeOdds.isShimmerEnabled(true)
+                    }
+                    is PoseAnalyzeManager.BodyAnalyzeState.Success->{
+                        binding.tvPozeOdds.isShimmerEnabled(false)
+                        binding.tvPozeOdds.analyzeTextColor(itPoseState.score)
+                        binding.tvPozeOdds.text = "${itPoseState.score}%"
+                    }
+                }
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

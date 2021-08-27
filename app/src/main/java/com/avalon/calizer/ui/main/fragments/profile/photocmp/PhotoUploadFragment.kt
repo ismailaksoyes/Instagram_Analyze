@@ -139,7 +139,6 @@ class PhotoUploadFragment : Fragment() {
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) -> {
                 binding.clTopComp.showSnackBar(
-                    view,
                     "PERMISSION REQUIRED",
                     Snackbar.LENGTH_INDEFINITE,
                     "OK"

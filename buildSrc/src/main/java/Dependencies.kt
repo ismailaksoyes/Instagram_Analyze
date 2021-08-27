@@ -36,7 +36,7 @@ object Versions {
 
     const val coroutines_play_services_version = "1.2.1"
 
-    const val android_gradle_plugin_version = "7.0.0"
+    const val android_gradle_plugin_version = "7.0.1"
     const val gms_play_services_version = "4.3.8"
 
 }

@@ -11,12 +11,22 @@ import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.avalon.calizer.R
 import com.avalon.calizer.data.local.AccountsData
+import com.avalon.calizer.data.local.weblogin.CookiesData
 import com.avalon.calizer.databinding.FragmentWebLoginBinding
+import com.avalon.calizer.utils.CheckInternetConnection
+import com.avalon.calizer.utils.Constants
+import com.avalon.calizer.utils.showSnackBar
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,24 +37,9 @@ class WebLoginFragment : Fragment() {
    @Inject
     lateinit var viewModel: AccountsViewModel
 
+    lateinit var webView: WebView
 
-    var csfr = ""
-    var dsUserID = 0L
-    var igDId = ""
-    var rur = ""
-    var sessID = ""
-    var shbid = ""
-    var shbts = ""
-    var mid = ""
-    var allCookie = ""
     var lastControl: Boolean = true
-    var getCookies: Boolean = false
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,110 +53,136 @@ class WebLoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        CookieManager.getInstance().removeAllCookies(null)
+        CookieManager.getInstance().setAcceptCookie(true)
+        setupWebView()
+        getCookieSplit()
+        addCookieDatabase()
+        cookieValid()
+        getCookie()
+        loginSuccess()
 
-//        viewModel.allAccounts.observe(viewLifecycleOwner, Observer { data->
-//            Log.d("Response", "data geldi bro")
-//        })
+    }
 
-        viewModel.reelsTray.observe(viewLifecycleOwner, Observer {
-            Log.d("Response", "${it.data}")
-        })
-        viewModel.userDetails.observe(viewLifecycleOwner, Observer {
-            Log.d("Response", "${it.data?.user?.profilePicUrl}")
-        })
+    private fun loginSuccess(){
+        lifecycleScope.launchWhenCreated {
+            viewModel.cookieData.collectLatest { itSuccess->
+                if (itSuccess is AccountsViewModel.AccountCookieState.Success){
+                    findNavController().navigate(R.id.action_webLoginFragment_to_destination_accounts)
+                }
+            }
+        }
 
+    }
 
-        val loginUrl: String = "https://www.instagram.com/accounts/login/"
-        val webView: WebView = binding.webView
+    private fun cookieValid(){
+        lifecycleScope.launchWhenCreated {
+            viewModel.cookieData.collectLatest { itValid->
+                if (itValid is AccountsViewModel.AccountCookieState.CookieValid){
+                    viewModel.setCookies(itValid.cookies)
+
+                }
+            }
+        }
+    }
+
+    private fun setupWebView(){
+        webView = binding.webView
         webView.settings.javaScriptEnabled = true
         webView.settings.javaScriptCanOpenWindowsAutomatically = true
         webView.settings.setSupportZoom(true)
         webView.settings.domStorageEnabled = true
         webView.settings.loadWithOverviewMode = true
         webView.settings.useWideViewPort = true
-        // val cookieManager:CookieManager
-        CookieManager.getInstance().setAcceptCookie(true)
-        webView.loadUrl(loginUrl)
-        webView.webViewClient = object : WebViewClient() {
-            override fun onPageFinished(view: WebView?, url: String?) {
-                super.onPageFinished(view, url)
-                if (!url.equals(loginUrl) && lastControl) {
-                    lastControl = false
-                    val loginCookies = CookieManager.getInstance().getCookie(url)
-                    Log.d("Response",loginCookies.toString())
-                    // PREFERENCES.allCookie = loginCookies
-                    allCookie = loginCookies
-                    for (data in loginCookies.split(";")) {
+    }
+    private fun getCookieSplit(){
+        lifecycleScope.launchWhenCreated {
+            viewModel.cookieData.collect { itCookieData->
+                if (itCookieData is AccountsViewModel.AccountCookieState.Cookies){
+                    val cookiesData = CookiesData()
+                    for (data in itCookieData.cookies.split(";")){
                         val trim2 = data.trim()
                         val datalast = trim2.split("=").toTypedArray()
-
                         when {
                             trim2.startsWith("sessionid") -> {
-                                sessID = datalast[1]
+                                cookiesData.sessID = datalast[1]
                             }
                             trim2.startsWith("ds_user_id") -> {
-                                dsUserID = datalast[1].toLong()
+                                cookiesData.dsUserID = datalast[1].toLong()
                             }
                             trim2.startsWith("ig_did") -> {
-                                igDId = datalast[1]
+                                cookiesData.igDId = datalast[1]
                             }
                             trim2.startsWith("mid") -> {
-                                mid = datalast[1]
+                                cookiesData.mid = datalast[1]
                             }
                             trim2.startsWith("csrftoken") -> {
-                                csfr = datalast[1]
+                                cookiesData.csfr = datalast[1]
                             }
                             trim2.startsWith("shbid") -> {
-                                shbid = datalast[1]
+                                cookiesData.shbid = datalast[1]
                             }
                             trim2.startsWith("shbts") -> {
-                                shbts = datalast[1]
+                                cookiesData.shbts = datalast[1]
                             }
                             trim2.startsWith("rur") -> {
-                                rur = datalast[1]
+                                cookiesData.rur = datalast[1]
                             }
                         }
                     }
+                    viewModel.setSplitCookies(cookiesData)
 
-                    val accountData = AccountsData(
-                        csfr = csfr,
-                        dsUserID = dsUserID,
-                        mid = mid,
-                        rur = rur,
-                        sessID = sessID,
-                        shbid =  shbid,
-                        shbts = shbts,
-                        allCookie = allCookie
-                    )
-                    // Log.d("Response","allCookie->"+ PREFERENCES.allCookie)
-                    GlobalScope.launch {
-                        val success1 =  insertCookiesToDatabase(accountData)
-                        val success2 = LoginTest()
+                }
 
-                        if(success1&&success2){
-                            Log.d("Response","BASARILI")
-                        }
+            }
+        }
+    }
+    private fun addCookieDatabase(){
+        lifecycleScope.launchWhenCreated {
+            viewModel.cookieData.collect { itSplitData->
+                if (itSplitData is AccountsViewModel.AccountCookieState.SplitCookie){
+                    itSplitData.cookiesData.apply {
+                        val accountData = AccountsData(
+                            csfr = csfr,
+                            dsUserID = dsUserID,
+                            mid = mid,
+                            rur = rur,
+                            sessID = sessID,
+                            shbid =  shbid,
+                            shbts = shbts,
+                            allCookie = allCookie
+                        )
 
+                        viewModel.addAccount(accountData)
                     }
-
 
                 }
             }
         }
     }
-    private fun insertCookiesToDatabase(accountsData: AccountsData):Boolean {
-        CoroutineScope(Dispatchers.IO).launch {
-            viewModel.addAccount(accountsData)
-            getCookies = true
-        }
 
-        return true
-    }
-    private suspend fun LoginTest():Boolean{
-       // mCookiesVewModel.getReelsTray(allCookie)
-       // viewModel.getReelsTray(allCookie)
-       // viewModel.getUserDetails(allCookie,dsUserID)
-        return true
+    private fun getCookie(){
+
+       // val checkInternetConnection =  CheckInternetConnection()
+        //if (checkInternetConnection.isAvailableInternet()){
+          //  webView.loadUrl("https://www.instagram.com/accounts/login/")
+        //}else{
+          //  binding.clTopLogin.showSnackBar("checkInternetConnection", Snackbar.LENGTH_INDEFINITE,"TRY AGAIN"){
+            //    getCookie()
+            //}
+        //}
+        webView.loadUrl("https://www.instagram.com/accounts/login/")
+        webView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                if (!url.equals("https://www.instagram.com/accounts/login/") && lastControl) {
+                    lastControl = false
+                    val loginCookies = CookieManager.getInstance().getCookie(url)
+                    viewModel.getReelsTray(loginCookies)
+
+                }
+            }
+        }
     }
 
 
