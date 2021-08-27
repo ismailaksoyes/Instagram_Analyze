@@ -66,47 +66,42 @@ class AccountsFragment  : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("ResDeep",savedInstanceState.toString())
         setupRecyclerview()
         viewModel.getAccountList()
         lifecycleScope.launchWhenStarted {
             viewModel.allAccounts.collect {
                 when (it) {
                     is AccountsViewModel.LastAccountsState.Loading -> {
-                        Log.d("StateTest", "Loading")
                     }
                     is AccountsViewModel.LastAccountsState.Success -> {
-                        Log.d("StateTest", "Success")
                         setAdapterData(it.allAccounts)
 
                     }
                     is AccountsViewModel.LastAccountsState.Error -> {
-                        Log.d("StateTest", "Error")
                     }
                     is AccountsViewModel.LastAccountsState.UpdateData -> {
-                        Log.d("StateTest", "Data Update")
                         viewModel.getLastAccountList()
                     }
                     is AccountsViewModel.LastAccountsState.UserDetails -> {
-                        Log.d("StateTest", "User Details  ${it.userDetails.data?.user?.pk}")
-                        val accountInfo = AccountsInfoData(
-                            profilePic = it.userDetails.data?.user?.profilePicUrl,
-                            userName =  it.userDetails.data?.user?.username.toString(),
-                            userId =  it.userDetails.data?.user?.pk,
-                            followers = it.userDetails.data?.user?.followerCount?.toLong(),
-                            following = it.userDetails.data?.user?.followingCount?.toLong(),
-                            posts = it.userDetails.data?.user?.mediaCount?.toLong()
-                        )
-                        viewModel.setAccountInfo(accountInfo)
-                        updateAccount(
-                            profile_Pic = it.userDetails.data?.user?.profilePicUrl,
-                            user_name = it.userDetails.data?.user?.username.toString(),
-                            ds_userId = it.userDetails.data?.user?.pk?.toString()
-                        )
+                        it.userDetails.user.let { itUserData->
+                            val accountInfo = AccountsInfoData(
+                                profilePic = itUserData.profilePicUrl,
+                                userName =  itUserData.username.toString(),
+                                userId =  itUserData.pk,
+                                followers = itUserData.followerCount.toLong(),
+                                following = itUserData.followingCount.toLong(),
+                                posts = itUserData.mediaCount.toLong()
+                            )
+                            viewModel.setAccountInfo(accountInfo)
+                            updateAccount(
+                                profile_Pic = itUserData.profilePicUrl,
+                                user_name = itUserData.username.toString(),
+                                ds_userId = itUserData.pk.toString()
+                            )
+                        }
+
                     }
                     is AccountsViewModel.LastAccountsState.OldData -> {
-                        Log.d("StateTest", "Old Data List -> ${it.allAccounts}")
-
                         for (data in it.allAccounts) {
                             viewModel.getUserDetails(
                                 cookies = data.allCookie,
@@ -116,7 +111,6 @@ class AccountsFragment  : Fragment() {
 
                     }
                     else -> {
-                        Log.d("StateTest", "Empty")
                     }
                 }
             }
@@ -134,7 +128,6 @@ class AccountsFragment  : Fragment() {
     }
 
     suspend fun setAdapterData(accountsData: List<AccountsData>) {
-        Log.d("StateTest", ".........")
         lifecycleScope.launchWhenStarted {
             accountsAdapter.setData(accountsData)
         }

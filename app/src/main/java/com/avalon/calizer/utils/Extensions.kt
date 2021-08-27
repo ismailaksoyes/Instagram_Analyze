@@ -91,13 +91,12 @@ fun withGlide(imageView: ImageView, url: String?) {
 }
 
 fun View.showSnackBar(
-    view: View,
     msg:String,
     length:Int,
     actionMessage:CharSequence?,
     action:(View) -> Unit
 ){
-    val snackbar = Snackbar.make(view,msg,length)
+    val snackbar = Snackbar.make(this,msg,length)
     if (actionMessage!=null){
         snackbar.setAction(actionMessage){
             action(this)

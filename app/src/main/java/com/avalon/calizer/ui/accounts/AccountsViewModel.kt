@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.avalon.calizer.data.local.AccountsData
 import com.avalon.calizer.data.local.profile.AccountsInfoData
+import com.avalon.calizer.data.local.weblogin.CookiesData
 import com.avalon.calizer.data.remote.insresponse.ApiResponseReelsTray
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserDetails
 import com.avalon.calizer.data.repository.Repository
@@ -23,20 +24,35 @@ class AccountsViewModel @Inject constructor(
     private val roomRepository: RoomRepository,
     private val repository: Repository
 ) : ViewModel() {
-    //val allAccounts: MutableLiveData<List<AccountsData>> = MutableLiveData()
+
 
     private val _allAccounts = MutableStateFlow<LastAccountsState>(LastAccountsState.Empty)
     val allAccounts: StateFlow<LastAccountsState> = _allAccounts
+
+    private val _cookieData = MutableStateFlow<AccountCookieState>(AccountCookieState.Empty)
+    val cookieData:StateFlow<AccountCookieState> = _cookieData
 
     sealed class LastAccountsState {
         object Empty : LastAccountsState()
         data class Success(var allAccounts: List<AccountsData>) : LastAccountsState()
         object Loading : LastAccountsState()
         data class OldData(var allAccounts: List<AccountsData>) : LastAccountsState()
-        data class UserDetails(var userDetails: Resource<ApiResponseUserDetails>) : LastAccountsState()
+        data class UserDetails(var userDetails: ApiResponseUserDetails) : LastAccountsState()
         object UpdateData : LastAccountsState()
         data class Error(val error: String) : LastAccountsState()
 
+    }
+    sealed class UserDetailsState{
+        object Empty :UserDetailsState()
+        object Loading : UserDetailsState()
+    }
+
+    sealed class AccountCookieState{
+        object Empty:AccountCookieState()
+        data class Cookies(val cookies: String):AccountCookieState()
+        data class SplitCookie(val cookiesData: CookiesData):AccountCookieState()
+        data class CookieValid(val cookies:String):AccountCookieState()
+        object Success:AccountCookieState()
 
     }
 
@@ -50,16 +66,14 @@ class AccountsViewModel @Inject constructor(
 
 
     fun getReelsTray(cookies:String) = viewModelScope.launch {
-        _reelsTray.postValue(Resource.loading(null))
         repository.getReelsTray(cookies).let {
             if (it.isSuccessful) {
-                _reelsTray.postValue(Resource.success(it.body()))
-            } else {
-                _reelsTray.postValue(Resource.error(it.errorBody().toString(), null))
+                _cookieData.value = AccountCookieState.CookieValid(cookies)
             }
         }
 
     }
+
 
     fun setAccountInfo(accountsInfoData: AccountsInfoData){
         viewModelScope.launch {
@@ -70,13 +84,11 @@ class AccountsViewModel @Inject constructor(
     fun getUserDetails(cookies: String, userId: Long) = viewModelScope.launch(Dispatchers.IO) {
         repository.getUserDetails(userId,cookies).let {
             if (it.isSuccessful) {
-                _allAccounts.value = LastAccountsState.UserDetails(Resource.success(it.body()))
-             //   _allAccounts.value = LastAccountsState.UpdateDataa
-               // val date = it.headers()
-                Log.d("GetHeader","${it.headers()}")
+                it.body()?.let { itBody->
+                    _allAccounts.value = LastAccountsState.UserDetails(itBody)
+                }
             } else {
-                _allAccounts.value =
-                    LastAccountsState.UserDetails(Resource.error(it.errorBody().toString(), null))
+                _allAccounts.value = LastAccountsState.Error(it.errorBody().toString())
             }
         }
     }
@@ -88,8 +100,7 @@ class AccountsViewModel @Inject constructor(
             if (data.isEmpty()) {
                 _allAccounts.value = LastAccountsState.Empty
             } else {
-
-                _allAccounts.value = LastAccountsState.OldData(roomRepository.getAccounts())
+                _allAccounts.value = LastAccountsState.OldData(data)
             }
 
         }
@@ -101,9 +112,24 @@ class AccountsViewModel @Inject constructor(
         }
     }
 
+    fun setCookies(cookies: String){
+        viewModelScope.launch {
+            _cookieData.value = AccountCookieState.Cookies(cookies)
+        }
+    }
+    fun setSplitCookies(cookiesData: CookiesData){
+        viewModelScope.launch {
+            _cookieData.value = AccountCookieState.SplitCookie(cookiesData)
+        }
+    }
+
 
     suspend fun addAccount(accountsData: AccountsData) {
-        roomRepository.addAccount(accountsData)
+        viewModelScope.launch {
+            roomRepository.addAccount(accountsData)
+            _cookieData.value = AccountCookieState.Success
+        }
+
     }
 
     suspend fun updateAccount(
@@ -112,7 +138,6 @@ class AccountsViewModel @Inject constructor(
         dsUserId: String?
     ) {
         roomRepository.updateAccount(profilePicture , user_name, dsUserId)
-        delay(1000L)
         _allAccounts.value = LastAccountsState.UpdateData
     }
 }
