@@ -23,8 +23,7 @@
             android:text="Intro Gec"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:fontFamily="@font/ibm_plex_sans_medium"
-            android:textColor="?colorOnSecondary"
+            style="@style/text_medium_style"
             android:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -71,8 +70,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:text="Kullanmaya Basla"
             android:visibility="gone"
-            android:fontFamily="@font/ibm_plex_sans_medium"
-            android:textColor="?colorOnSecondary"/>
+           style="@style/text_medium_style"/>
         <ImageView
             android:id="@+id/iv_startNow_image"
             android:layout_width="20dp"

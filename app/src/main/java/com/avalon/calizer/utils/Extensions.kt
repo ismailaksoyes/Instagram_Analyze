@@ -60,8 +60,8 @@ fun ImageView.clearRecycled() {
 
 fun TextView.analyzeTextColor(score:Int){
     when(score){
-        in 0..30 -> this.setTextColor(ContextCompat.getColor(this.context,R.color.lightRed))
-        in 31..69 -> this.setTextColor(ContextCompat.getColor(this.context,R.color.lightYellow))
+        in 0..30 -> this.setTextColor(ContextCompat.getColor(this.context,R.color.red_light))
+        in 31..69 -> this.setTextColor(ContextCompat.getColor(this.context,R.color.yellow_light))
         in 70..100 -> this.setTextColor(ContextCompat.getColor(this.context,R.color.green))
     }
 

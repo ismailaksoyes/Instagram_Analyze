@@ -24,6 +24,15 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:src="@drawable/ic_back_ico"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fotoğraf Analizi"
+            style="@style/text_medium_style"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -50,10 +59,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline_50"
-        android:fontFamily="@font/ibm_plex_sans_bold"
+        style="@style/text_normal_style"
         android:text="Fotograf Yukle"
         android:layout_marginTop="30dp"
-        android:textSize="24sp"/>
+        />
     <TextView
         android:id="@+id/tv_upload_desc"
         android:layout_width="wrap_content"
@@ -61,11 +70,10 @@
         app:layout_constraintTop_toBottomOf="@id/tv_upload_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:fontFamily="@font/ibm_plex_sans_medium"
         android:text="Puanlari goruntulemek icin\n fotograflari yuklemen yeterli."
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:textSize="14sp"/>
+        style="@style/text_medium_light_style"/>
 
     <Button
         android:id="@+id/btn_upload_image"
@@ -73,6 +81,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:text="Yukle"
+        style="@style/button_outline_medium_style"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_upload_desc" />

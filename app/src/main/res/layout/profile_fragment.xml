@@ -57,7 +57,7 @@
         app:cardCornerRadius="70dp"
         android:layout_centerHorizontal="true"
         android:shape="ring"
-        android:background="@color/colorTrans"
+        android:background="@color/trans"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cl_go_accounts">
 
@@ -114,11 +114,10 @@
 
         <TextView
             android:id="@+id/tv_followers_title"
+            style="@style/text_medium_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/ibm_plex_sans_medium"
             android:text="Followers"
-            android:textColor="?colorOnSecondary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/tv_profile_followers"
             app:layout_constraintStart_toStartOf="@id/tv_profile_followers"
@@ -126,11 +125,10 @@
 
         <TextView
             android:id="@+id/tv_following_title"
+            style="@style/text_medium_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/ibm_plex_sans_medium"
             android:text="Following"
-            android:textColor="?colorOnSecondary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/tv_profile_following"
             app:layout_constraintStart_toStartOf="@id/tv_profile_following"
@@ -140,9 +138,8 @@
             android:id="@+id/tv_posts_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/ibm_plex_sans_medium"
+           style="@style/text_medium_style"
             android:text="Posts"
-            android:textColor="?colorOnSecondary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/tv_profile_posts"
             app:layout_constraintStart_toStartOf="@id/tv_profile_posts"
@@ -151,16 +148,15 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
     <TextView
         android:id="@+id/tv_chart_analyze"
+        style="@style/text_normal_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:text="Profil Analizi"
-        android:fontFamily="@font/ibm_plex_sans_bold"
         app:layout_constraintTop_toBottomOf="@id/cv_profile_image"
         app:layout_constraintBottom_toTopOf="@id/cv_new_followers"
-        app:layout_constraintStart_toStartOf="parent"
-        android:textColor="?colorOnSecondary"/>
+        app:layout_constraintStart_toStartOf="parent" />
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cv_new_followers"
         android:layout_width="170dp"
@@ -193,10 +189,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="9dp"
                 android:layout_marginBottom="9dp"
-                android:fontFamily="@font/ibm_plex_sans_bold"
+                style="@style/text_h1_style"
                 android:text="541"
-                android:textColor="?colorOnSecondary"
-                android:textSize="30sp"
                 app:layout_constraintBottom_toTopOf="@id/tv_followers_text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_followers_plus" />
@@ -205,7 +199,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:fontFamily="@font/ibm_plex_sans_medium"
+               style="@style/text_medium_uncolored_style"
                 android:text="%12"
                 android:textColor="@color/green"
                 app:layout_constraintBottom_toBottomOf="@id/tv_followers_plus"
@@ -216,9 +210,8 @@
                 android:id="@+id/tv_followers_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/ibm_plex_sans_medium"
+               style="@style/text_medium_style"
                 android:text="Yeni Takipciler"
-                android:textColor="?colorOnSecondary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_followers_plus" />
@@ -256,9 +249,7 @@
                 app:layout_constraintTop_toBottomOf="@id/iv_unfollowers_plus"
                 app:layout_constraintBottom_toTopOf="@id/tv_unfollowers_text"
                 android:text="541"
-                android:fontFamily="@font/ibm_plex_sans_bold"
-                android:textColor="?colorOnSecondary"
-                android:textSize="30sp"
+                style="@style/text_h1_style"
                 android:layout_marginTop="9dp"
                 android:layout_marginBottom="9dp"
                 />
@@ -269,9 +260,9 @@
                 app:layout_constraintBottom_toBottomOf="@id/tv_unfollowers_plus"
                 app:layout_constraintStart_toEndOf="@id/tv_unfollowers_plus"
                 android:layout_marginStart="10dp"
-                android:textColor="@color/lightRed"
+                android:textColor="@color/red_light"
                 android:text="%19"
-                android:fontFamily="@font/ibm_plex_sans_medium"/>
+               style="@style/text_medium_uncolored_style"/>
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_unfollowers_text"
                 android:layout_width="wrap_content"
@@ -280,8 +271,7 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_unfollowers_plus"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:text="Kaybedilen Takipciler"
-                android:fontFamily="@font/ibm_plex_sans_medium"
-                android:textColor="?colorOnSecondary"
+                style="@style/text_medium_style"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -291,36 +281,45 @@
 
     <TextView
         android:id="@+id/tv_iv_analyze"
+        style="@style/text_normal_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:text="Profil Resmi Analizi"
-        android:fontFamily="@font/ibm_plex_sans_bold"
        app:layout_constraintTop_toBottomOf="@id/cv_new_followers"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/iv_pp_analyze"
-        android:textColor="?colorOnSecondary"/>
-    <ImageView
-        android:id="@+id/iv_pp_analyze"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toTopOf="@id/cv_profile_analyze_image" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_profile_analyze_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        app:glideCircleUrl="@{viewmodel.userModel.profilePic}"
+        android:layout_marginTop="30dp"
+        app:cardCornerRadius="70dp"
+        android:layout_centerHorizontal="true"
+        android:shape="ring"
+        android:background="@color/trans"
         app:layout_constraintTop_toBottomOf="@id/tv_iv_analyze"
-        app:layout_constraintBottom_toBottomOf="@id/iv_details_next_ico"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@id/tv_poze_odds"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_pp_analyze"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:glideCircleUrl="@{viewmodel.userModel.profilePic}"/>
+    </androidx.cardview.widget.CardView>
     <TextView
         android:id="@+id/tv_calc_odd_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/iv_pp_analyze"
-      app:layout_constraintStart_toEndOf="@id/iv_pp_analyze"
+        app:layout_constraintTop_toTopOf="@id/cv_profile_analyze_image"
+      app:layout_constraintStart_toEndOf="@id/cv_profile_analyze_image"
         app:layout_constraintEnd_toStartOf="@id/tv_calc_odd_poze"
         android:text="Yuz Orani"
-        android:fontFamily="@font/ibm_plex_sans_bold"
-        android:textColor="?colorOnSecondary"/>
+        style="@style/text_medium_style"/>
     <View
         android:id="@+id/view_face_title"
         android:layout_width="75dp"
@@ -329,19 +328,16 @@
         app:layout_constraintStart_toStartOf="@id/tv_calc_odd_title"
         app:layout_constraintEnd_toEndOf="@id/tv_calc_odd_title"
         android:layout_marginTop="3dp"
-        android:background="@color/darkBlue"/>
+        android:background="@color/blue_night"/>
     <TextView
         android:id="@+id/tv_face_odds"
+        style="@style/text_h1_uncolored_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/view_face_title"
         app:layout_constraintStart_toStartOf="@id/view_face_title"
         app:layout_constraintEnd_toEndOf="@id/view_face_title"
-        android:layout_marginTop="5dp"
-        android:text="%63"
-        android:fontFamily="@font/ibm_plex_sans_medium"
-        android:textColor="@color/green"
-        android:textSize="25sp"/>
+        android:layout_marginTop="5dp" />
 
     <TextView
         android:id="@+id/tv_calc_odd_poze"
@@ -351,8 +347,7 @@
         app:layout_constraintTop_toTopOf="@id/tv_calc_odd_title"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="Poz Orani"
-        android:fontFamily="@font/ibm_plex_sans_bold"
-        android:textColor="?colorOnSecondary"
+        style="@style/text_medium_style"
         android:layout_marginEnd="20dp"/>
     <View
         android:id="@+id/view_poze_title"
@@ -362,7 +357,7 @@
         app:layout_constraintStart_toStartOf="@+id/tv_calc_odd_poze"
         app:layout_constraintEnd_toEndOf="@+id/tv_calc_odd_poze"
         android:layout_marginTop="3dp"
-        android:background="@color/darkBlue"/>
+        android:background="@color/blue_night"/>
     <TextView
         android:id="@+id/tv_poze_odds"
         android:layout_width="wrap_content"
@@ -371,35 +366,13 @@
         app:layout_constraintStart_toStartOf="@+id/view_poze_title"
         app:layout_constraintEnd_toEndOf="@+id/view_poze_title"
         android:layout_marginTop="5dp"
-        android:text="%13"
-        android:fontFamily="@font/ibm_plex_sans_medium"
-        android:textColor="@color/lightRed"
-        android:textSize="25sp"/>
+        style="@style/text_h1_uncolored_style"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/iv_details_next_ico"
-        app:layout_constraintTop_toTopOf="@id/iv_details_next_ico"
-       app:layout_constraintEnd_toStartOf="@id/iv_details_next_ico"
-        android:layout_marginEnd="5dp"
-        android:text="Detaylar"
-        android:fontFamily="@font/ibm_plex_sans_light"
-        android:textColor="?colorAccent"/>
-    <ImageView
-        android:id="@+id/iv_details_next_ico"
-        android:layout_width="10dp"
-        android:layout_height="15dp"
-        android:src="@drawable/ic_next_icon"
-        app:layout_constraintBottom_toBottomOf="@id/iv_pp_analyze"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="2dp"/>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_photo_analyze"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        app:layout_constraintTop_toBottomOf="@id/iv_pp_analyze"
+        app:layout_constraintTop_toBottomOf="@id/cv_profile_analyze_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -423,8 +396,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:text="Fotograf Karsilastir"
-            android:fontFamily="@font/ibm_plex_sans_bold"
-            android:textColor="?colorOnSecondary"/>
+            style="@style/text_medium_style"/>
         <ImageView
             android:layout_width="20dp"
             android:layout_height="30dp"

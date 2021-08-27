@@ -21,8 +21,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:textColor="?colorOnSecondary"
-            android:fontFamily="@font/ibm_plex_sans_medium"
+           style="@style/text_medium_style"
             app:layout_constraintBottom_toTopOf="@id/cv_photo_analyze_canvas"/>
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_photo_analyze_canvas"
@@ -66,9 +65,9 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/iv_pose_analyze"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:textSize="18sp"
+                    style="@style/text_normal_style"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/ibm_plex_sans_medium" />
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -77,8 +76,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_pose_rate"
                     android:layout_marginTop="10dp"
-                    android:textColor="?colorOnSecondary"
-                    android:fontFamily="@font/ibm_plex_sans_medium"
+                    style="@style/text_medium_style"
                     android:text="Poz Analizi"/>
 
 
@@ -107,13 +105,13 @@
                     app:layout_constraintTop_toTopOf="parent"/>
                 <TextView
                     android:id="@+id/tv_face_rate"
+                    style="@style/text_normal_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/iv_face_analyze"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/ibm_plex_sans_medium" />
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -122,8 +120,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_face_rate"
                     android:layout_marginTop="10dp"
-                    android:textColor="?colorOnSecondary"
-                    android:fontFamily="@font/ibm_plex_sans_medium"
+                    style="@style/text_normal_style"
                     android:text="Yuz Analizi"/>
 
 
@@ -161,8 +158,7 @@
                     android:id="@+id/tv_resolution"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/ibm_plex_sans_medium"
-                    android:textColor="?colorOnSecondary"
+                    style="@style/text_medium_style"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/iv_check"
                     app:layout_constraintStart_toEndOf="@id/iv_resolution"

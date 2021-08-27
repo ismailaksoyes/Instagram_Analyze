@@ -43,7 +43,7 @@ class SplashFragment : Fragment() {
         if(savedInstanceState ==null){
             lifecycleScope.launchWhenStarted {
 
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+              //  AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
             }
         }

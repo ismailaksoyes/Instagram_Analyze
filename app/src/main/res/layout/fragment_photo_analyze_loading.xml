@@ -52,7 +52,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:fontFamily="@font/ibm_plex_sans_bold"/>
+       style="@style/text_medium_style"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
