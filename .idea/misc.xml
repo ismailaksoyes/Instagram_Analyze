@@ -9,6 +9,7 @@
         <entry key="app/src/main/res/drawable/ic_next_icon.xml" value="0.2324074074074074" />
         <entry key="app/src/main/res/drawable/ic_point_circle.xml" value="0.15208333333333332" />
         <entry key="app/src/main/res/layout/accounts_item.xml" value="0.15982776089159068" />
+        <entry key="app/src/main/res/layout/accounts_shimmer_view.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.12685185185185185" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.14074074074074075" />
         <entry key="app/src/main/res/layout/analyze_fragment.xml" value="0.15982776089159068" />

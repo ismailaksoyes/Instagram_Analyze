@@ -39,7 +39,6 @@ class SplashFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("hashTest","${prefs.showIntro}")
         if(savedInstanceState ==null){
             lifecycleScope.launchWhenStarted {
 
@@ -50,7 +49,7 @@ class SplashFragment : Fragment() {
         navOto()
     }
 
-    fun navOto(){
+    private fun navOto(){
         lifecycleScope.launch {
             delay(1000)
             if (prefs.showIntro) findNavController().navigate(R.id.action_splashFragment_to_destination_tutorial) else findNavController().navigate(R.id.action_splashFragment_to_destination_accounts)
