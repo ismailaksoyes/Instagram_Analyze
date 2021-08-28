@@ -33,8 +33,9 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class WebLoginFragment : Fragment() {
-   private lateinit var binding: FragmentWebLoginBinding
-   @Inject
+    private lateinit var binding: FragmentWebLoginBinding
+
+    @Inject
     lateinit var viewModel: AccountsViewModel
 
     lateinit var webView: WebView
@@ -45,7 +46,7 @@ class WebLoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentWebLoginBinding.inflate(inflater,container,false)
+        binding = FragmentWebLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -64,10 +65,10 @@ class WebLoginFragment : Fragment() {
 
     }
 
-    private fun loginSuccess(){
+    private fun loginSuccess() {
         lifecycleScope.launchWhenCreated {
-            viewModel.cookieData.collectLatest { itSuccess->
-                if (itSuccess is AccountsViewModel.AccountCookieState.Success){
+            viewModel.cookieData.collectLatest { itSuccess ->
+                if (itSuccess is AccountsViewModel.AccountCookieState.Success) {
                     findNavController().navigate(R.id.action_webLoginFragment_to_destination_accounts)
                 }
             }
@@ -75,10 +76,10 @@ class WebLoginFragment : Fragment() {
 
     }
 
-    private fun cookieValid(){
+    private fun cookieValid() {
         lifecycleScope.launchWhenCreated {
-            viewModel.cookieData.collectLatest { itValid->
-                if (itValid is AccountsViewModel.AccountCookieState.CookieValid){
+            viewModel.cookieData.collectLatest { itValid ->
+                if (itValid is AccountsViewModel.AccountCookieState.CookieValid) {
                     viewModel.setCookies(itValid.cookies)
 
                 }
@@ -86,7 +87,7 @@ class WebLoginFragment : Fragment() {
         }
     }
 
-    private fun setupWebView(){
+    private fun setupWebView() {
         webView = binding.webView
         webView.settings.javaScriptEnabled = true
         webView.settings.javaScriptCanOpenWindowsAutomatically = true
@@ -95,12 +96,13 @@ class WebLoginFragment : Fragment() {
         webView.settings.loadWithOverviewMode = true
         webView.settings.useWideViewPort = true
     }
-    private fun getCookieSplit(){
+
+    private fun getCookieSplit() {
         lifecycleScope.launchWhenCreated {
-            viewModel.cookieData.collect { itCookieData->
-                if (itCookieData is AccountsViewModel.AccountCookieState.Cookies){
+            viewModel.cookieData.collect { itCookieData ->
+                if (itCookieData is AccountsViewModel.AccountCookieState.Cookies) {
                     val cookiesData = CookiesData()
-                    for (data in itCookieData.cookies.split(";")){
+                    for (data in itCookieData.cookies.split(";")) {
                         val trim2 = data.trim()
                         val datalast = trim2.split("=").toTypedArray()
                         when {
@@ -137,10 +139,11 @@ class WebLoginFragment : Fragment() {
             }
         }
     }
-    private fun addCookieDatabase(){
+
+    private fun addCookieDatabase() {
         lifecycleScope.launchWhenCreated {
-            viewModel.cookieData.collect { itSplitData->
-                if (itSplitData is AccountsViewModel.AccountCookieState.SplitCookie){
+            viewModel.cookieData.collect { itSplitData ->
+                if (itSplitData is AccountsViewModel.AccountCookieState.SplitCookie) {
                     itSplitData.cookiesData.apply {
                         val accountData = AccountsData(
                             csfr = csfr,
@@ -148,7 +151,7 @@ class WebLoginFragment : Fragment() {
                             mid = mid,
                             rur = rur,
                             sessID = sessID,
-                            shbid =  shbid,
+                            shbid = shbid,
                             shbts = shbts,
                             allCookie = allCookie
                         )
@@ -161,25 +164,30 @@ class WebLoginFragment : Fragment() {
         }
     }
 
-    private fun getCookie(){
+    private fun getCookie() {
 
-       // val checkInternetConnection =  CheckInternetConnection()
-        //if (checkInternetConnection.isAvailableInternet()){
-          //  webView.loadUrl("https://www.instagram.com/accounts/login/")
-        //}else{
-          //  binding.clTopLogin.showSnackBar("checkInternetConnection", Snackbar.LENGTH_INDEFINITE,"TRY AGAIN"){
-            //    getCookie()
-            //}
-        //}
-        webView.loadUrl("https://www.instagram.com/accounts/login/")
+        val checkInternetConnection = CheckInternetConnection()
+
+        if (checkInternetConnection.isAvailableInternet(requireContext())) {
+            webView.loadUrl("https://www.instagram.com/accounts/login/")
+        } else {
+            binding.clTopLogin.showSnackBar(
+                "checkInternetConnection",
+                Snackbar.LENGTH_INDEFINITE,
+                "TRY AGAIN"
+            ) {
+                getCookie()
+            }
+        }
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 if (!url.equals("https://www.instagram.com/accounts/login/") && lastControl) {
                     lastControl = false
                     val loginCookies = CookieManager.getInstance().getCookie(url)
-                    viewModel.getReelsTray(loginCookies)
-
+                    lifecycleScope.launchWhenCreated {
+                        viewModel.getReelsTray(loginCookies)
+                    }
                 }
             }
         }

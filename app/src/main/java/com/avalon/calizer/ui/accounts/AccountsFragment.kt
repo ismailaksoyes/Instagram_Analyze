@@ -46,7 +46,6 @@ class AccountsFragment  : Fragment() {
     }
 
 
-
     fun nextMain(accountsData: AccountsData) {
         prefs.userName = accountsData.userName
         prefs.selectedAccount = accountsData.dsUserID
@@ -58,7 +57,7 @@ class AccountsFragment  : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAccountsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -67,13 +66,36 @@ class AccountsFragment  : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerview()
-        viewModel.getAccountList()
+        observeAccountData()
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.getAccountList()
+        }
+
+        binding.cvAccountsAdd.setOnClickListener {
+
+            it.findNavController().navigate(R.id.action_destination_accounts_to_webLoginFragment)
+
+        }
+
+    }
+
+    private fun setAdapterData(accountsData: List<AccountsData>) {
+        lifecycleScope.launchWhenStarted {
+            accountsAdapter.setData(accountsData)
+        }
+
+    }
+
+    private fun observeAccountData(){
         lifecycleScope.launchWhenStarted {
             viewModel.allAccounts.collect {
                 when (it) {
                     is AccountsViewModel.LastAccountsState.Loading -> {
                     }
                     is AccountsViewModel.LastAccountsState.Success -> {
+                        binding.shmView.stopShimmer()
+                        binding.shmView.visibility = View.GONE
                         setAdapterData(it.allAccounts)
 
                     }
@@ -102,6 +124,8 @@ class AccountsFragment  : Fragment() {
 
                     }
                     is AccountsViewModel.LastAccountsState.OldData -> {
+                        binding.shmView.visibility = View.VISIBLE
+                        binding.shmView.startShimmer()
                         for (data in it.allAccounts) {
                             viewModel.getUserDetails(
                                 cookies = data.allCookie,
@@ -115,28 +139,11 @@ class AccountsFragment  : Fragment() {
                 }
             }
         }
-
-
-
-
-        binding.cvAccountsAdd.setOnClickListener {
-
-            it.findNavController().navigate(R.id.action_destination_accounts_to_webLoginFragment)
-
-        }
-
-    }
-
-    suspend fun setAdapterData(accountsData: List<AccountsData>) {
-        lifecycleScope.launchWhenStarted {
-            accountsAdapter.setData(accountsData)
-        }
-
     }
 
 
-    fun updateAccount(profile_Pic: String?, user_name: String?, ds_userId: String?) {
-        CoroutineScope(Dispatchers.IO).launch {
+    private fun updateAccount(profile_Pic: String?, user_name: String?, ds_userId: String?) {
+        lifecycleScope.launchWhenCreated {
             viewModel.updateAccount(profile_Pic, user_name, ds_userId)
         }
     }

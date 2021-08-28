@@ -65,7 +65,7 @@ class AccountsViewModel @Inject constructor(
         get() = _userDetails
 
 
-    fun getReelsTray(cookies:String) = viewModelScope.launch {
+   suspend fun getReelsTray(cookies:String) = viewModelScope.launch {
         repository.getReelsTray(cookies).let {
             if (it.isSuccessful) {
                 _cookieData.value = AccountCookieState.CookieValid(cookies)
@@ -75,13 +75,13 @@ class AccountsViewModel @Inject constructor(
     }
 
 
-    fun setAccountInfo(accountsInfoData: AccountsInfoData){
+   suspend fun setAccountInfo(accountsInfoData: AccountsInfoData){
         viewModelScope.launch {
             roomRepository.addAccountInfo(accountsInfoData)
         }
     }
 
-    fun getUserDetails(cookies: String, userId: Long) = viewModelScope.launch(Dispatchers.IO) {
+   suspend fun getUserDetails(cookies: String, userId: Long) = viewModelScope.launch(Dispatchers.IO) {
         repository.getUserDetails(userId,cookies).let {
             if (it.isSuccessful) {
                 it.body()?.let { itBody->
@@ -93,7 +93,7 @@ class AccountsViewModel @Inject constructor(
         }
     }
 
-    fun getAccountList() {
+   suspend fun getAccountList() {
         viewModelScope.launch(Dispatchers.IO) {
             _allAccounts.value = LastAccountsState.Loading
             val data = roomRepository.getAccounts()
@@ -106,26 +106,26 @@ class AccountsViewModel @Inject constructor(
         }
     }
 
-    fun getLastAccountList() {
+    suspend fun getLastAccountList() {
         viewModelScope.launch(Dispatchers.IO) {
             _allAccounts.value = LastAccountsState.Success(roomRepository.getAccounts())
         }
     }
 
-    fun setCookies(cookies: String){
-        viewModelScope.launch {
+   suspend fun setCookies(cookies: String){
+        viewModelScope.launch(Dispatchers.IO) {
             _cookieData.value = AccountCookieState.Cookies(cookies)
         }
     }
-    fun setSplitCookies(cookiesData: CookiesData){
-        viewModelScope.launch {
+    suspend fun setSplitCookies(cookiesData: CookiesData){
+        viewModelScope.launch(Dispatchers.IO) {
             _cookieData.value = AccountCookieState.SplitCookie(cookiesData)
         }
     }
 
 
     suspend fun addAccount(accountsData: AccountsData) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             roomRepository.addAccount(accountsData)
             _cookieData.value = AccountCookieState.Success
         }
@@ -137,7 +137,10 @@ class AccountsViewModel @Inject constructor(
         user_name: String?,
         dsUserId: String?
     ) {
-        roomRepository.updateAccount(profilePicture , user_name, dsUserId)
-        _allAccounts.value = LastAccountsState.UpdateData
+        viewModelScope.launch(Dispatchers.IO) {
+            roomRepository.updateAccount(profilePicture , user_name, dsUserId)
+            _allAccounts.value = LastAccountsState.UpdateData
+        }
+
     }
 }
