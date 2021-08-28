@@ -46,6 +46,13 @@ class FollowViewModel @Inject constructor(private val followRepository: FollowRe
         data class Success(val followData:List<FollowData>):UnFollowersState()
     }
 
+    sealed class NewFollowersState{
+        object Empty:NewFollowersState()
+        object  Loading:NewFollowersState()
+        data class UpdateItem(val followData: List<FollowData>):NewFollowersState()
+        data class Success(val followData: List<FollowData>):NewFollowersState()
+    }
+
     suspend fun getUnFollowers(userId:Long,position:Int){
         val unFollowers = followRepository.getNoFollowersData(userId,position)
         _unFollowersData.value = UnFollowersState.Success(unFollowers)

@@ -39,6 +39,9 @@
         <action
             android:id="@+id/action_destination_analyze_to_noFollowFragment"
             app:destination="@id/noFollowFragment" />
+        <action
+            android:id="@+id/action_destination_analyze_to_newFollowersFragment"
+            app:destination="@id/newFollowersFragment" />
     </fragment>
     <fragment
         android:id="@+id/destination_settings"
@@ -143,6 +146,14 @@
         android:label="NoFollowFragment" >
         <action
             android:id="@+id/action_noFollowFragment_to_destination_analyze"
+            app:destination="@id/destination_analyze" />
+    </fragment>
+    <fragment
+        android:id="@+id/newFollowersFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.newfollowers.NewFollowersFragment"
+        android:label="NewFollowersFragment" >
+        <action
+            android:id="@+id/action_newFollowersFragment_to_destination_analyze"
             app:destination="@id/destination_analyze" />
     </fragment>
 </navigation>
