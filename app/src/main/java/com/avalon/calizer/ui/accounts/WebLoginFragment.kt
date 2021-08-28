@@ -105,6 +105,7 @@ class WebLoginFragment : Fragment() {
                     for (data in itCookieData.cookies.split(";")) {
                         val trim2 = data.trim()
                         val datalast = trim2.split("=").toTypedArray()
+                        cookiesData.allCookie = itCookieData.cookies
                         when {
                             trim2.startsWith("sessionid") -> {
                                 cookiesData.sessID = datalast[1]

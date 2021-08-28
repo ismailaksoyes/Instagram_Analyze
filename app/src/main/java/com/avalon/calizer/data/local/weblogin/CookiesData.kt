@@ -9,7 +9,7 @@ data class CookiesData(
     var shbid:String  = "",
     var shbts:String  = "",
     var mid:String  = "",
-    val allCookie:String  = "",
+    var allCookie:String  = "",
     val lastControl: Boolean = true,
     val getCookies: Boolean = false
 
