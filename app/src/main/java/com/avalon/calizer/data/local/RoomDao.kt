@@ -29,7 +29,7 @@ interface RoomDao {
     @get:Query("SELECT * FROM accounts_table")
     val getAllAccountDetails : List<AccountsData>
 
-    @Query("SELECT * FROM follow_table WHERE type=1 ORDER BY pk ASC LIMIT 12 OFFSET :position")
+    @Query("SELECT * FROM follow_table WHERE type=1 ORDER BY dsUserID ASC LIMIT 12 OFFSET :position")
     suspend fun getFollowersData(position:Int):List<FollowData>
 
     @Query("DELETE FROM remotekeys")
@@ -42,10 +42,10 @@ interface RoomDao {
     @Query("DELETE FROM follow_table WHERE (type=1 OR type=3) AND analyzeUserId=:userId")
     suspend fun deleteLastData(userId: Long)
 
-    @Query("SELECT DISTINCT * FROM follow_table WHERE type=3 AND analyzeUserId=:userId ORDER BY pk ASC LIMIT 12 OFFSET :position")
+    @Query("SELECT DISTINCT * FROM follow_table WHERE type=3 AND analyzeUserId=:userId ORDER BY dsUserID ASC LIMIT 12 OFFSET :position")
     suspend fun getUnFollowers(userId: Long,position: Int):List<FollowData>
 
-    @Query("SELECT DISTINCT * FROM follow_table WHERE type=0 AND type=1 AND analyzeUserId='19748713375' ORDER BY pk ")
+    @Query("SELECT DISTINCT * FROM follow_table WHERE type=0 AND type=1 AND analyzeUserId='19748713375' ORDER BY dsUserID ")
     suspend fun getNewFollowers():List<FollowData>
 
 
