@@ -19,6 +19,7 @@ import com.avalon.calizer.databinding.ActivityMainBinding
 import com.avalon.calizer.utils.FollowSaveType
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Utils
+import com.avalon.calizer.utils.toFollowData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
@@ -300,28 +301,14 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private suspend fun addFollowList(followData: ApiResponseUserFollow?, type: Long?) {
-
-        Utils.ifTwoNotNull(followData, type) { itFollowData, itType ->
-            val analyzeUserId = prefs.selectedAccount
-            for (data in itFollowData.users) {
-                val followUpdateList = FollowData()
-                followUpdateList.dsUserID = data.pk
-                followUpdateList.type = type
-                followUpdateList.uniqueType = (data.pk) + itType
-                followUpdateList.analyzeUserId = analyzeUserId
-                followUpdateList.fullName = data.fullName
-                followUpdateList.profilePicUrl = data.profilePicUrl
-                followUpdateList.hasAnonymousProfilePicture = data.hasAnonymousProfilePicture
-                followUpdateList.isPrivate = data.isPrivate
-                followUpdateList.isVerified = data.isVerified
-                followUpdateList.username = data.username
-                followDataList.add(followUpdateList)
+    private fun addFollowList(followData: ApiResponseUserFollow?, type: Long?) {
+        lifecycleScope.launchWhenCreated {
+            Utils.ifTwoNotNull(followData, type) { itFollowData, itType ->
+                val analyzeUserId = prefs.selectedAccount
+                val followList = itFollowData.toFollowData(type=itType,userId = analyzeUserId)
+                followDataList.addAll(followList)
             }
-
         }
-
-
     }
 
 

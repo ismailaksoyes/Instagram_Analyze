@@ -8,8 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import androidx.lifecycle.Transformations.map
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.FollowData
+import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollow
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.facebook.shimmer.Shimmer
@@ -104,4 +106,21 @@ fun View.showSnackBar(
     }else{
         snackbar.show()
     }
+}
+
+fun ApiResponseUserFollow.toFollowData(type:Long,userId:Long) = users.map { itUserData->
+    FollowData(
+        type= type ,
+        uniqueType = itUserData.pk.toString().plus(type).toLong() ,
+        analyzeUserId = userId,
+        dsUserID = itUserData.pk,
+        fullName = itUserData.fullName,
+        hasAnonymousProfilePicture = itUserData.hasAnonymousProfilePicture,
+        isPrivate = itUserData.isPrivate,
+        isVerified = itUserData.isVerified,
+        latestReelMedia = itUserData.latestReelMedia,
+        profilePicUrl = itUserData.profilePicUrl,
+        profilePicId = itUserData.profilePicId,
+        username = itUserData.username
+    )
 }

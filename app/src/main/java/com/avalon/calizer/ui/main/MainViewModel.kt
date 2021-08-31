@@ -40,15 +40,12 @@ class MainViewModel @Inject constructor(
         object Empty : FollowDataFlow()
         data class GetUserCookies(var accountsData: AccountsData) : FollowDataFlow()
         data class GetFollowDataSync(var follow: ApiResponseUserFollow) : FollowDataFlow()
-        data class GetFollowDataSuccess(var follow: ApiResponseUserFollow) :
-            FollowDataFlow()
+        data class GetFollowDataSuccess(var follow: ApiResponseUserFollow) : FollowDataFlow()
 
         data class SaveFollow(var userInfo: AccountsInfoData) : FollowDataFlow()
-        data class GetFollowingDataSync(var following: ApiResponseUserFollow) :
-            FollowDataFlow()
+        data class GetFollowingDataSync(var following: ApiResponseUserFollow) : FollowDataFlow()
 
-        data class GetFollowingDataSuccess(var following: ApiResponseUserFollow) :
-            FollowDataFlow()
+        data class GetFollowingDataSuccess(var following: ApiResponseUserFollow) : FollowDataFlow()
 
         data class Error(val error: String) : FollowDataFlow()
     }
