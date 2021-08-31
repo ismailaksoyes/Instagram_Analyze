@@ -24,7 +24,7 @@ class AnalyzeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = AnalyzeFragmentBinding.inflate(inflater,container,false)
+        binding = AnalyzeFragmentBinding.inflate(inflater, container, false)
         return binding.root
 
     }
@@ -45,11 +45,14 @@ class AnalyzeFragment : Fragment() {
 
     private fun setupRecyclerview() {
         binding.rcViewTitle.adapter = viewsAdapter
-        binding.rcViewTitle.layoutManager = LinearLayoutManager(this.context,
-            LinearLayoutManager.VERTICAL,false)
+        binding.rcViewTitle.layoutManager = LinearLayoutManager(
+            this.context,
+            LinearLayoutManager.VERTICAL, false
+        )
 
     }
-    fun viewList(resources: Resources):ArrayList<AnalyzeViewData>{
+
+    fun viewList(resources: Resources): ArrayList<AnalyzeViewData> {
         return arrayListOf(
             AnalyzeViewData(
                 uri = R.drawable.ic_story_ico,
@@ -76,8 +79,8 @@ class AnalyzeFragment : Fragment() {
                 title = resources.getString(R.string.analyze_title_new_followers)
             ),
             AnalyzeViewData(
-              uri = R.drawable.ic_follow_neg_ico,
-              title = "Takip Etmeyenler",
+                uri = R.drawable.ic_follow_neg_ico,
+                title = "Takip Etmeyenler",
                 type = R.id.action_destination_analyze_to_noFollowFragment
             ),
             AnalyzeViewData(

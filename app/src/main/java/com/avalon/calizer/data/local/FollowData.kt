@@ -1,13 +1,15 @@
 package com.avalon.calizer.data.local
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "follow_table")
+@Entity(tableName = "follow_table",indices = [Index(value = arrayOf("uniqueType") ,unique = true)])
 data class FollowData(
     @PrimaryKey(autoGenerate = true)
-    var pk: Long? = null ,
+    var uid:Long?=null,
     var type:Long? = null ,
+    var uniqueType:Long? = null,
     var analyzeUserId:Long? = null ,
     var dsUserID: Long? = null ,
     var fullName: String?= null ,

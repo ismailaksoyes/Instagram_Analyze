@@ -52,7 +52,7 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
 
     suspend fun addFollowData(followData: List<FollowData>,userId: Long) {
         CoroutineScope(Dispatchers.IO).launch {
-            roomDao.deleteLastData(userId)
+            //roomDao.deleteLastData(userId)
             roomDao.addFollowData(followData)
         }
 
