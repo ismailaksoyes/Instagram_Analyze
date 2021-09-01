@@ -75,11 +75,6 @@ class AccountsViewModel @Inject constructor(
     }
 
 
-   suspend fun setAccountInfo(accountsInfoData: AccountsInfoData){
-        viewModelScope.launch {
-            roomRepository.addAccountInfo(accountsInfoData)
-        }
-    }
 
    suspend fun getUserDetails(cookies: String, userId: Long) = viewModelScope.launch(Dispatchers.IO) {
         repository.getUserDetails(userId,cookies).let {

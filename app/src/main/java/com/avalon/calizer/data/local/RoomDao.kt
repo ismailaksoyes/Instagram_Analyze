@@ -7,21 +7,20 @@ import com.avalon.calizer.data.local.profile.AccountsInfoData
 @Dao
 interface RoomDao {
 
-    //accounts data
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAccount(accountsData: AccountsData)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addAccountInfo(accountsInfoData: AccountsInfoData)
-
-    @Query("SELECT * FROM accounts_info WHERE userId= :userId")
-    suspend fun getUserInfo(userId:Long):AccountsInfoData
 
     @Query("UPDATE accounts_info SET followersType = :followersType, followingType =:followingType WHERE userId  = :userId")
     suspend fun updateUserType(userId:Long,followersType:Long,followingType:Long)
 
     @Query("SELECT * FROM accounts_table WHERE dsUserID= :userId")
     suspend fun getUserCookies(userId:Long):AccountsData
+
+    @Query("SELECT * FROM accounts_table WHERE dsUserID = :userId")
+    suspend fun getSaveFollowingType(userId: Long):AccountsData
+
+    @Query("SELECT * FROM accounts_table WHERE dsUserID = :userId")
+    suspend fun getSaveFollowersType(userId: Long):AccountsData
 
     @Query("UPDATE accounts_table SET profilePic = :profile_Pic, userName = :user_name WHERE dsUserID = :ds_userId")
     suspend fun updateAccountData(profile_Pic : String?, user_name:String?, ds_userId:String?)

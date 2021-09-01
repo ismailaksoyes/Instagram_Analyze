@@ -124,3 +124,19 @@ fun ApiResponseUserFollow.toFollowData(type:Long,userId:Long) = users.map { itUs
         username = itUserData.username
     )
 }
+
+
+fun FollowData.toCopyValue(type: Long) = FollowData(
+    type= type ,
+    uniqueType = analyzeUserId.toString().plus(type).toLong() ,
+    analyzeUserId = analyzeUserId,
+    dsUserID = dsUserID,
+    fullName = fullName,
+    hasAnonymousProfilePicture = hasAnonymousProfilePicture,
+    isPrivate =  isPrivate,
+    isVerified = isVerified,
+    latestReelMedia =latestReelMedia,
+    profilePicUrl = profilePicUrl,
+    profilePicId = profilePicId,
+    username = username
+)

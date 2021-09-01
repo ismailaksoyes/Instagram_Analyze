@@ -17,6 +17,8 @@ data class AccountsData(
     var shbid: String = "",
     var shbts: String = "",
     var mid: String = "",
-    var allCookie:String = ""
+    var allCookie:String = "",
+    var firstFollowersType:Long? = 0L,
+    var firstFollowingType:Long? = 0L
 
 )

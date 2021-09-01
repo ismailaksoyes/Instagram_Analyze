@@ -30,6 +30,9 @@ class MainViewModel @Inject constructor(
     private val _followersData = MutableStateFlow<FollowDataFlow>(FollowDataFlow.Empty)
     val followData: StateFlow<FollowDataFlow> = _followersData
 
+    private val _saveFollowData = MutableStateFlow<FollowSaveState>(FollowSaveState.Empty)
+    val saveFollowData:StateFlow<FollowSaveState> = _saveFollowData
+
     sealed class UserDataFlow {
         object Empty : UserDataFlow()
         data class GetUserDetails(var accountsInfoData: AccountsInfoData) : UserDataFlow()
@@ -39,21 +42,17 @@ class MainViewModel @Inject constructor(
     sealed class FollowDataFlow {
         object Empty : FollowDataFlow()
         data class GetUserCookies(var accountsData: AccountsData) : FollowDataFlow()
-        data class GetFollowDataSync(var follow: ApiResponseUserFollow) : FollowDataFlow()
-        data class GetFollowDataSuccess(var follow: ApiResponseUserFollow) : FollowDataFlow()
-
-        data class SaveFollow(var userInfo: AccountsInfoData) : FollowDataFlow()
+        data class GetFollowersDataSync(var follow: ApiResponseUserFollow) : FollowDataFlow()
+        data class GetFollowersDataSuccess(var follow: ApiResponseUserFollow) : FollowDataFlow()
         data class GetFollowingDataSync(var following: ApiResponseUserFollow) : FollowDataFlow()
-
         data class GetFollowingDataSuccess(var following: ApiResponseUserFollow) : FollowDataFlow()
-
+        data class SaveFollow(var userInfo: AccountsInfoData) : FollowDataFlow()
         data class Error(val error: String) : FollowDataFlow()
     }
-
-   suspend fun getUserDetails(userId: Long) {
-        viewModelScope.launch {
-            _userData.value = UserDataFlow.GetUserDetails(dbRepository.getUserInfo(userId))
-        }
+    sealed class FollowSaveState{
+        object Empty : FollowSaveState()
+        data class SaveFollowers(val accountsData: AccountsData):FollowSaveState()
+        data class SaveFollowing(val accountsData: AccountsData):FollowSaveState()
     }
 
 
@@ -77,10 +76,10 @@ class MainViewModel @Inject constructor(
 
                     itUserFollowers.body()?.let { itFollowersBody->
                         if (itFollowersBody.nextMaxId.isNotEmpty()) {
-                            _followersData.value = FollowDataFlow.GetFollowDataSync(itFollowersBody)
+                            _followersData.value = FollowDataFlow.GetFollowersDataSync(itFollowersBody)
                         } else {
                             _followersData.value =
-                                FollowDataFlow.GetFollowDataSuccess(itFollowersBody)
+                                FollowDataFlow.GetFollowersDataSuccess(itFollowersBody)
 
                         }
                     }
@@ -123,11 +122,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    suspend fun stateSaveLaunch(userId: Long) {
+
+    suspend fun setSaveFollowData(followData: List<FollowData>,userId: Long){
         viewModelScope.launch(Dispatchers.IO) {
-            dbRepository.getUserInfo(userId).let {
-                _followersData.value = FollowDataFlow.SaveFollow(it)
-            }
+            dbRepository.addFollowData(followData,userId)
         }
     }
     suspend fun updateUserType(userId:Long,followersType:Long,followingType:Long){

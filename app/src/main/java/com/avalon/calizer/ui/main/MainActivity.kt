@@ -43,6 +43,9 @@ class MainActivity : AppCompatActivity() {
 
     private val followDataList = ArrayList<FollowData>()
 
+    private val followersDataList = ArrayList<FollowData>()
+    private val followingDataList = ArrayList<FollowData>()
+
 
     private fun setupBottomNavigationMenu(navController: NavController) {
         binding.bottomNavigation.let {
@@ -85,21 +88,15 @@ class MainActivity : AppCompatActivity() {
                 binding.bottomNavigation.visibility = View.VISIBLE
                 if (getFirstData) {
                     getFirstData = false
-                    lifecycleScope.launchWhenStarted {
-                        viewModel.getUserDetails(prefs.selectedAccount)
-                    }
-
-                    val analyzeTime: Date = Date(prefs.followUpdateDate)
+                    val analyzeTime = Date(prefs.followUpdateDate)
                     if (Utils.getTimeDifference(analyzeTime)) {
                         lifecycleScope.launchWhenStarted {
-
                             viewModel.getUserFollowers(
                                 userId = prefs.selectedAccount,
                                 maxId = null,
                                 rnkToken = null,
                                 cookies = prefs.allCookie
                             )
-
 
                         }
 
@@ -116,12 +113,25 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-
+    private fun observeSaveFollowData(){
+        lifecycleScope.launchWhenCreated {
+            viewModel.saveFollowData.collect { itSave->
+                when(itSave){
+                    is MainViewModel.FollowSaveState.SaveFollowers->{
+                        saveFollowersData(itSave.accountsData.firstFollowersType)
+                    }
+                    is MainViewModel.FollowSaveState.SaveFollowing->{
+                        saveFollowingData(itSave.accountsData.firstFollowingType)
+                    }
+                }
+            }
+        }
+    }
     private fun observeFollowData() {
         lifecycleScope.launchWhenStarted {
             viewModel.followData.collect { itFollowData ->
                 when (itFollowData) {
-                    is MainViewModel.FollowDataFlow.GetFollowDataSync -> {
+                    is MainViewModel.FollowDataFlow.GetFollowersDataSync -> {
                         delay((500 + (0..250).random()).toLong())
                         itFollowData.follow.let { users ->
                             viewModel.getUserFollowers(
@@ -135,7 +145,7 @@ class MainActivity : AppCompatActivity() {
                         }
 
                     }
-                    is MainViewModel.FollowDataFlow.GetFollowDataSuccess -> {
+                    is MainViewModel.FollowDataFlow.GetFollowersDataSuccess -> {
                         delay((5005 + (0..250).random()).toLong())
                         itFollowData.follow.let { users ->
                             addFollowList(users, FollowSaveType.FOLLOWERS_LAST.type)
@@ -181,6 +191,7 @@ class MainActivity : AppCompatActivity() {
 
                         itFollowData.userInfo.followersType.let { type ->
                             if (type == FollowSaveType.FOLLOWERS_FIRST.type) {
+
                                 val cacheList = ArrayList<FollowData>()
                                 followDataList.filter { data -> data.type == FollowSaveType.FOLLOWERS_LAST.type }
                                     .forEach { item ->
@@ -269,6 +280,25 @@ class MainActivity : AppCompatActivity() {
 
                     }
                 }
+            }
+        }
+
+    }
+    private fun saveFollowersData(followersType: Long?){
+
+        followersType?.let { itType->
+            if (itType == 0L) {
+
+            }
+
+        }
+
+    }
+    private fun saveFollowingData(followingType: Long?){
+
+        followingType?.let { itType->
+            if (itType == 0L) {
+
             }
         }
 

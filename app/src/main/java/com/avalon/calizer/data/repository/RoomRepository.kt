@@ -12,12 +12,11 @@ import javax.inject.Inject
 class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
 
 
-    suspend fun addAccountInfo(accountsInfoData: AccountsInfoData){
-        roomDao.addAccountInfo(accountsInfoData)
+    suspend fun getSaveFollowingType(userId: Long):AccountsData{
+        return roomDao.getSaveFollowingType(userId)
     }
-
-    suspend fun getUserInfo(userId:Long):AccountsInfoData{
-       return roomDao.getUserInfo(userId)
+    suspend fun getSaveFollowersType(userId: Long):AccountsData{
+        return roomDao.getSaveFollowersType(userId)
     }
 
     suspend fun updateUserType(userId:Long,followersType:Long,followingType:Long){
