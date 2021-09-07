@@ -2,6 +2,10 @@ package com.avalon.calizer.data.local
 
 
 import androidx.room.*
+import com.avalon.calizer.data.local.follow.FollowersData
+import com.avalon.calizer.data.local.follow.FollowingData
+import com.avalon.calizer.data.local.follow.OldFollowersData
+import com.avalon.calizer.data.local.follow.OldFollowingData
 import com.avalon.calizer.data.local.profile.AccountsInfoData
 
 @Dao
@@ -28,24 +32,45 @@ interface RoomDao {
     @get:Query("SELECT * FROM accounts_table")
     val getAllAccountDetails : List<AccountsData>
 
-    @Query("SELECT * FROM follow_table WHERE type=1 ORDER BY dsUserID ASC LIMIT 12 OFFSET :position")
-    suspend fun getFollowersData(position:Int):List<FollowData>
+    @Query("SELECT * FROM accounts_info WHERE userId= :userId")
+    suspend fun getUserInfo(userId:Long): AccountsInfoData
 
-    @Query("DELETE FROM remotekeys")
-    suspend fun clearRemoteKeys()
+    @Query("SELECT * FROM followers_table WHERE analyzeUserId=:userId ORDER BY dsUserID ASC LIMIT 12 OFFSET :position")
+    suspend fun getFollowersData(position:Int,userId: Long):List<FollowersData>
 
+    @Query("SELECT * FROM following_table WHERE analyzeUserId=:userId ORDER BY dsUserID ASC LIMIT 12 OFFSET :position")
+    suspend fun getFollowingData(position:Int,userId: Long):List<FollowingData>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addFollowData(followData:List<FollowData>)
+    suspend fun addFollowersData(followData:List<FollowersData>)
 
-    @Query("DELETE FROM follow_table WHERE (type=1 OR type=3) AND analyzeUserId=:userId")
-    suspend fun deleteLastData(userId: Long)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addFollowingData(followData:List<FollowingData>)
 
-    @Query("SELECT DISTINCT * FROM follow_table WHERE type=3 AND analyzeUserId=:userId ORDER BY dsUserID ASC LIMIT 12 OFFSET :position")
-    suspend fun getUnFollowers(userId: Long,position: Int):List<FollowData>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addOldFollowersData(followData:List<OldFollowersData>)
 
-    @Query("SELECT DISTINCT * FROM follow_table WHERE type=0 AND type=1 AND analyzeUserId='19748713375' ORDER BY dsUserID ")
-    suspend fun getNewFollowers():List<FollowData>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addOldFollowingData(followData:List<OldFollowingData>)
+
+    @Query("DELETE FROM followers_table WHERE analyzeUserId=:userId")
+    suspend fun deleteFollowersData(userId: Long)
+
+    @Query("DELETE FROM following_table WHERE analyzeUserId=:userId")
+    suspend fun deleteFollowingData(userId: Long)
+
+    @Query("UPDATE accounts_table SET isFirstFollowersAnalyze=0 WHERE dsUserID=:userId")
+    suspend fun updateFollowersSaveType(userId: Long)
+
+    @Query("UPDATE accounts_table SET isFirstFollowingAnalyze=0 WHERE dsUserID=:userId")
+    suspend fun updateFollowingSaveType(userId: Long)
+
+
+    @Query("SELECT DISTINCT * FROM followers_table WHERE  analyzeUserId=:userId ORDER BY dsUserID ASC LIMIT 12 OFFSET :position")
+    suspend fun getUnFollowers(userId: Long,position: Int):List<FollowersData>
+
+    @Query("SELECT DISTINCT * FROM followers_table WHERE  analyzeUserId='19748713375' ORDER BY dsUserID ")
+    suspend fun getNewFollowers():List<FollowersData>
 
 
 /**

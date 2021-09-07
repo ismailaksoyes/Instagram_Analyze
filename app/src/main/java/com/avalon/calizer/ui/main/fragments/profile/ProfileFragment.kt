@@ -30,8 +30,10 @@ import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 import com.google.mlkit.vision.face.FaceLandmark
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.pow
@@ -66,7 +68,10 @@ class ProfileFragment : Fragment() {
 
 
     fun initData() {
-        viewModel.getUserDetails(prefs.selectedAccount)
+        lifecycleScope.launch(Dispatchers.IO) {
+           // viewModel.getUserDetails()
+        }
+
         binding.clPhotoAnalyze.setOnClickListener {
             it.findNavController().navigate(R.id.action_destination_profile_to_photoUploadFragment)
         }

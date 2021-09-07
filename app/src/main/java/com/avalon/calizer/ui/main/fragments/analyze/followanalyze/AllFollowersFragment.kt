@@ -2,23 +2,18 @@ package com.avalon.calizer.ui.main.fragments.analyze.followanalyze
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.R
-import com.avalon.calizer.data.local.FollowData
+import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.databinding.FragmentAllFollowersBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -67,7 +62,7 @@ class AllFollowersFragment : Fragment() {
 
     }
 
-    fun updatePpItemReq(followData: List<FollowData>) {
+    fun updatePpItemReq(followData: List<FollowersData>) {
         lifecycleScope.launchWhenStarted {
             followData.forEach { data ->
                 data.dsUserID?.let {
@@ -126,7 +121,7 @@ class AllFollowersFragment : Fragment() {
                         isLoading = false
                     }
                     is FollowViewModel.FollowState.Loading -> {
-                        val data = FollowData(type = 5)
+                        val data = FollowersData(uid = -1)
                         followsAdapter.setLoading(data)
                     }
                     is FollowViewModel.FollowState.UpdateItem -> {

@@ -8,9 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import androidx.lifecycle.Transformations.map
 import com.avalon.calizer.R
-import com.avalon.calizer.data.local.FollowData
+import com.avalon.calizer.data.local.follow.*
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollow
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -69,7 +68,7 @@ fun TextView.analyzeTextColor(score:Int){
 
 }
 
-fun ArrayList<FollowData>.getItemByID(item: Long?): Int {
+fun ArrayList<FollowersData>.getItemByID(item: Long?): Int {
     return indexOf(this.first { it.dsUserID==item})
 }
 
@@ -108,10 +107,39 @@ fun View.showSnackBar(
     }
 }
 
-fun ApiResponseUserFollow.toFollowData(type:Long,userId:Long) = users.map { itUserData->
+fun ApiResponseUserFollow.toFollowData(userId:Long) = users.map { itUserData->
     FollowData(
-        type= type ,
-        uniqueType = itUserData.pk.toString().plus(type).toLong() ,
+        uniqueType = itUserData.pk.toString().plus(userId).toLong() ,
+        analyzeUserId = userId,
+        dsUserID = itUserData.pk,
+        fullName = itUserData.fullName,
+        hasAnonymousProfilePicture = itUserData.hasAnonymousProfilePicture,
+        isPrivate = itUserData.isPrivate,
+        isVerified = itUserData.isVerified,
+        latestReelMedia = itUserData.latestReelMedia,
+        profilePicUrl = itUserData.profilePicUrl,
+        profilePicId = itUserData.profilePicId,
+        username = itUserData.username
+    )
+}
+fun ApiResponseUserFollow.toFollowersData(userId:Long) = users.map { itUserData->
+    FollowersData(
+        uniqueType = itUserData.pk.toString().plus(userId).toLong() ,
+        analyzeUserId = userId,
+        dsUserID = itUserData.pk,
+        fullName = itUserData.fullName,
+        hasAnonymousProfilePicture = itUserData.hasAnonymousProfilePicture,
+        isPrivate = itUserData.isPrivate,
+        isVerified = itUserData.isVerified,
+        latestReelMedia = itUserData.latestReelMedia,
+        profilePicUrl = itUserData.profilePicUrl,
+        profilePicId = itUserData.profilePicId,
+        username = itUserData.username
+    )
+}
+fun ApiResponseUserFollow.toFollowingData(userId:Long) = users.map { itUserData->
+    FollowingData(
+        uniqueType = itUserData.pk.toString().plus(userId).toLong() ,
         analyzeUserId = userId,
         dsUserID = itUserData.pk,
         fullName = itUserData.fullName,
@@ -125,9 +153,44 @@ fun ApiResponseUserFollow.toFollowData(type:Long,userId:Long) = users.map { itUs
     )
 }
 
+fun List<FollowersData>.toOldFollowersData() = map {
+    OldFollowersData(
+        uniqueType = it.uniqueType ,
+        analyzeUserId = it.analyzeUserId,
+        dsUserID = it.dsUserID,
+        fullName = it.fullName,
+        hasAnonymousProfilePicture = it.hasAnonymousProfilePicture,
+        isPrivate = it.isPrivate,
+        isVerified = it.isVerified,
+        latestReelMedia = it.latestReelMedia,
+        profilePicUrl = it.profilePicUrl,
+        profilePicId = it.profilePicId,
+        username = it.username
+    )
 
-fun FollowData.toCopyValue(type: Long) = FollowData(
-    type= type ,
+}
+
+
+fun List<FollowingData>.toOldFollowingData() = map {
+    OldFollowingData(
+        uniqueType = it.uniqueType ,
+        analyzeUserId = it.analyzeUserId,
+        dsUserID = it.dsUserID,
+        fullName = it.fullName,
+        hasAnonymousProfilePicture = it.hasAnonymousProfilePicture,
+        isPrivate = it.isPrivate,
+        isVerified = it.isVerified,
+        latestReelMedia = it.latestReelMedia,
+        profilePicUrl = it.profilePicUrl,
+        profilePicId = it.profilePicId,
+        username = it.username
+    )
+}
+
+
+
+
+fun FollowersData.toCopyValue(type: Long) = FollowersData(
     uniqueType = analyzeUserId.toString().plus(type).toLong() ,
     analyzeUserId = analyzeUserId,
     dsUserID = dsUserID,

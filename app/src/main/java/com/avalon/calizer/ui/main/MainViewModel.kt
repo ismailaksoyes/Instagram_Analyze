@@ -1,21 +1,20 @@
 package com.avalon.calizer.ui.main
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.avalon.calizer.data.local.*
+import com.avalon.calizer.data.local.follow.FollowersData
+import com.avalon.calizer.data.local.follow.FollowingData
+import com.avalon.calizer.data.local.follow.OldFollowersData
+import com.avalon.calizer.data.local.follow.OldFollowingData
 import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollow
 import com.avalon.calizer.data.repository.RoomRepository
 import com.avalon.calizer.data.repository.Repository
-import com.avalon.calizer.utils.Resource
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
@@ -41,26 +40,19 @@ class MainViewModel @Inject constructor(
 
     sealed class FollowDataFlow {
         object Empty : FollowDataFlow()
-        data class GetUserCookies(var accountsData: AccountsData) : FollowDataFlow()
+        object StartAnalyze : FollowDataFlow()
         data class GetFollowersDataSync(var follow: ApiResponseUserFollow) : FollowDataFlow()
         data class GetFollowersDataSuccess(var follow: ApiResponseUserFollow) : FollowDataFlow()
         data class GetFollowingDataSync(var following: ApiResponseUserFollow) : FollowDataFlow()
         data class GetFollowingDataSuccess(var following: ApiResponseUserFollow) : FollowDataFlow()
-        data class SaveFollow(var userInfo: AccountsInfoData) : FollowDataFlow()
         data class Error(val error: String) : FollowDataFlow()
     }
     sealed class FollowSaveState{
         object Empty : FollowSaveState()
-        data class SaveFollowers(val accountsData: AccountsData):FollowSaveState()
-        data class SaveFollowing(val accountsData: AccountsData):FollowSaveState()
+        data class SaveFollowers(val isSave: Boolean):FollowSaveState()
+        data class SaveFollowing(val isSave: Boolean):FollowSaveState()
     }
 
-
-    fun addFollow(followData: List<FollowData>,userId: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
-            dbRepository.addFollowData(followData,userId)
-        }
-    }
 
     suspend fun getUserFollowers(
         userId: Long,
@@ -90,6 +82,17 @@ class MainViewModel @Inject constructor(
             }
 
         }
+    }
+     fun startAnalyze(){
+        _followersData.value = FollowDataFlow.StartAnalyze
+    }
+
+    suspend fun getSaveFollowingType(){
+        _saveFollowData.value = FollowSaveState.SaveFollowing(dbRepository.getSaveFollowingType())
+    }
+
+    suspend fun getSaveFollowersType(){
+        _saveFollowData.value = FollowSaveState.SaveFollowers(dbRepository.getSaveFollowersType())
     }
 
     suspend fun getUserFollowing(
@@ -123,9 +126,37 @@ class MainViewModel @Inject constructor(
     }
 
 
-    suspend fun setSaveFollowData(followData: List<FollowData>,userId: Long){
+
+    suspend fun addFollowersData(followersData:List<FollowersData> ){
         viewModelScope.launch(Dispatchers.IO) {
-            dbRepository.addFollowData(followData,userId)
+            dbRepository.deleteFollowersData()
+            dbRepository.addFollowersData(followersData)
+        }
+    }
+    suspend fun addFollowingData(followingData:List<FollowingData> ){
+        viewModelScope.launch(Dispatchers.IO) {
+            dbRepository.deleteFollowingData()
+            dbRepository.addFollowingData(followingData)
+        }
+    }
+    suspend fun updateFollowersSaveType(){
+        viewModelScope.launch(Dispatchers.IO) {
+            dbRepository.updateFollowersSaveType()
+        }
+    }
+    suspend fun updateFollowingSaveType(){
+        viewModelScope.launch(Dispatchers.IO) {
+            dbRepository.updateFollowingSaveType()
+        }
+    }
+    suspend fun addOldFollowersData(oldFollowersData:List<OldFollowersData>){
+        viewModelScope.launch(Dispatchers.IO) {
+            dbRepository.addOldFollowersData(oldFollowersData)
+        }
+    }
+    suspend fun addOldFollowingData(oldFollowingData:List<OldFollowingData>){
+        viewModelScope.launch(Dispatchers.IO) {
+            dbRepository.addOldFollowingData(oldFollowingData)
         }
     }
     suspend fun updateUserType(userId:Long,followersType:Long,followingType:Long){

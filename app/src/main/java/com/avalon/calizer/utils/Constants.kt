@@ -9,7 +9,7 @@ object Constants {
         const val USER_NAME = "username"
         const val FIRST_LOGIN = "firstLogin"
         const val SELECTED_ACCOUNT = "selectedAccount"
-        const val FOLLOW_UPDATE_DATE = "followUpdateDate"
+        const val FOLLOWERS_UPDATE_DATE = "followersUpdateDate"
         const val FOLLOWING_UPDATE_DATE = "followingUpdateDate"
         const val SHOW_INTRO = "showIntro"
         const val FOLLOWERS_TYPE = "followers_type"

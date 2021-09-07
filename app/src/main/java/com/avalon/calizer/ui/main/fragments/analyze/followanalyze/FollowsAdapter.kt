@@ -6,13 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.avalon.calizer.data.local.FollowData
+import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.databinding.FollowItemLoadingBinding
 import com.avalon.calizer.databinding.FollowViewItemBinding
-import com.avalon.calizer.utils.clearRecycled
 import com.avalon.calizer.utils.getItemByID
 import com.avalon.calizer.utils.loadPPUrl
-import com.bumptech.glide.Glide
 
 class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -20,11 +18,11 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         const val VIEW_TYPE_LOADING = 1
     }
 
-    private var _followsList = arrayListOf<FollowData>()
+    private var _followsList = arrayListOf<FollowersData>()
 
     class LoadingViewHolder(var binding: FollowItemLoadingBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(followList: FollowData) {
+        fun bind(followList: FollowersData) {
 
         }
 
@@ -33,7 +31,7 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class MainViewHolder(var binding: FollowViewItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
-        fun bind(followList: FollowData?) {
+        fun bind(followList: FollowersData?) {
             followList?.let { data ->
                 data.profilePicUrl?.let {
                     binding.ivViewPp.loadPPUrl(it)
@@ -85,7 +83,7 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
         _followsList[position].let {
-            return if (it.type?.toInt() == 5) 1 else 0
+            return if (it.uid?.toInt() == -1) 1 else 0
         }
     }
 
@@ -108,7 +106,7 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         Log.d("GetPosition", getItemPosition(_followsList[position].dsUserID).toString())
         _followsList[position].let { data ->
-            if (data.type?.toInt() == 5) {
+            if (data.uid?.toInt() == -1) {
                 (holder as LoadingViewHolder).bind(_followsList[position])
             } else {
                 (holder as MainViewHolder).bind(_followsList[position])
@@ -130,12 +128,12 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    fun setData(followList: List<FollowData>) {
+    fun setData(followList: List<FollowersData>) {
         _followsList.addAll(followList)
         notifyDataSetChanged()
     }
 
-    fun setLoading(followList: FollowData) {
+    fun setLoading(followList: FollowersData) {
         _followsList.add(followList)
         notifyDataSetChanged()
     }

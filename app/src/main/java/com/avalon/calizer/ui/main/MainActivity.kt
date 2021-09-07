@@ -2,7 +2,6 @@ package com.avalon.calizer.ui.main
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -13,22 +12,18 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
 import com.avalon.calizer.R
-import com.avalon.calizer.data.local.FollowData
+import com.avalon.calizer.data.local.follow.FollowersData
+import com.avalon.calizer.data.local.follow.FollowRequestParams
+import com.avalon.calizer.data.local.follow.FollowingData
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollow
 import com.avalon.calizer.databinding.ActivityMainBinding
-import com.avalon.calizer.utils.FollowSaveType
-import com.avalon.calizer.utils.MySharedPreferences
-import com.avalon.calizer.utils.Utils
-import com.avalon.calizer.utils.toFollowData
+import com.avalon.calizer.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import okio.ByteString.Companion.decodeBase64
-import okio.Utf8
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
-import kotlin.random.Random
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -41,10 +36,10 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var prefs: MySharedPreferences
 
-    private val followDataList = ArrayList<FollowData>()
+    private val followDataList = ArrayList<FollowersData>()
 
-    private val followersDataList = ArrayList<FollowData>()
-    private val followingDataList = ArrayList<FollowData>()
+    private val followersDataList = ArrayList<FollowersData>()
+    private val followingDataList = ArrayList<FollowingData>()
 
 
     private fun setupBottomNavigationMenu(navController: NavController) {
@@ -69,9 +64,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.bottomNavigation.itemIconTintList = null
-        initData()
         initNavController()
         observeFollowData()
+        observeSaveFollowData()
 
 
     }
@@ -88,20 +83,7 @@ class MainActivity : AppCompatActivity() {
                 binding.bottomNavigation.visibility = View.VISIBLE
                 if (getFirstData) {
                     getFirstData = false
-                    val analyzeTime = Date(prefs.followUpdateDate)
-                    if (Utils.getTimeDifference(analyzeTime)) {
-                        lifecycleScope.launchWhenStarted {
-                            viewModel.getUserFollowers(
-                                userId = prefs.selectedAccount,
-                                maxId = null,
-                                rnkToken = null,
-                                cookies = prefs.allCookie
-                            )
-
-                        }
-
-                    }
-
+                    viewModel.startAnalyze()
                 }
 
             } else {
@@ -113,149 +95,103 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-    private fun observeSaveFollowData(){
+
+    private fun analyzeStartCheck(){
+        val followersAnalyzeTime = Date(prefs.followersUpdateDate)
+        val followingAnalyzeTime = Date(prefs.followingUpdateDate)
+        if (Utils.getTimeDifference(followersAnalyzeTime)){
+            lifecycleScope.launch(Dispatchers.IO) {
+                getUserFollowers(FollowRequestParams())
+            }
+        }
+        if (Utils.getTimeDifference(followingAnalyzeTime)){
+            lifecycleScope.launch(Dispatchers.IO) {
+                getUserFollowing(FollowRequestParams())
+            }
+        }
+
+    }
+
+    private fun observeSaveFollowData() {
         lifecycleScope.launchWhenCreated {
-            viewModel.saveFollowData.collect { itSave->
-                when(itSave){
-                    is MainViewModel.FollowSaveState.SaveFollowers->{
-                        saveFollowersData(itSave.accountsData.firstFollowersType)
+            viewModel.saveFollowData.collect { itSave ->
+                when (itSave) {
+                    is MainViewModel.FollowSaveState.SaveFollowers -> {
+                        saveFollowersData(itSave.isSave)
                     }
-                    is MainViewModel.FollowSaveState.SaveFollowing->{
-                        saveFollowingData(itSave.accountsData.firstFollowingType)
+                    is MainViewModel.FollowSaveState.SaveFollowing -> {
+                        saveFollowingData(itSave.isSave)
                     }
                 }
             }
         }
     }
+
+    private suspend fun getUserFollowers(followRequestParams: FollowRequestParams) {
+        delay((500 + (0..250).random()).toLong())
+        viewModel.getUserFollowers(
+            userId = prefs.selectedAccount,
+            maxId = followRequestParams.maxId,
+            rnkToken = followRequestParams.rnkToken,
+            cookies = prefs.allCookie
+        )
+    }
+
+    private suspend fun getUserFollowing(followRequestParams: FollowRequestParams) {
+        delay((500 + (0..250).random()).toLong())
+        viewModel.getUserFollowing(
+            userId = prefs.selectedAccount,
+            maxId = followRequestParams.maxId,
+            rnkToken = followRequestParams.rnkToken,
+            cookies = prefs.allCookie
+        )
+    }
+
     private fun observeFollowData() {
         lifecycleScope.launchWhenStarted {
             viewModel.followData.collect { itFollowData ->
                 when (itFollowData) {
                     is MainViewModel.FollowDataFlow.GetFollowersDataSync -> {
-                        delay((500 + (0..250).random()).toLong())
                         itFollowData.follow.let { users ->
-                            viewModel.getUserFollowers(
-                                userId = prefs.selectedAccount,
-                                maxId = users.nextMaxId,
-                                rnkToken = Utils.generateUUID(),
-                                cookies = prefs.allCookie
+                            getUserFollowers(
+                                FollowRequestParams(
+                                    users.nextMaxId,
+                                    Utils.generateUUID()
+                                )
                             )
-                            addFollowList(users, FollowSaveType.FOLLOWERS_LAST.type)
-
+                            addFollowersList(users)
                         }
 
                     }
                     is MainViewModel.FollowDataFlow.GetFollowersDataSuccess -> {
-                        delay((5005 + (0..250).random()).toLong())
-                        itFollowData.follow.let { users ->
-                            addFollowList(users, FollowSaveType.FOLLOWERS_LAST.type)
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            addFollowersList(itFollowData.follow)
+                            viewModel.getSaveFollowersType()
                         }
-                        viewModel.getUserFollowing(
-                            userId = prefs.selectedAccount,
-                            maxId = null,
-                            rnkToken = null,
-                            cookies = prefs.allCookie
-                        )
+
                     }
                     is MainViewModel.FollowDataFlow.GetFollowingDataSync -> {
-                        delay((500 + (0..250).random()).toLong())
                         itFollowData.following.let { users ->
-                            viewModel.getUserFollowing(
-                                userId = prefs.selectedAccount,
-                                maxId = users.nextMaxId,
-                                rnkToken = Utils.generateUUID(),
-                                cookies = prefs.allCookie
+                            getUserFollowing(
+                                FollowRequestParams(
+                                    users.nextMaxId,
+                                    Utils.generateUUID()
+                                )
                             )
-                            addFollowList(users, FollowSaveType.FOLLOWING_LAST.type)
+                            addFollowingList(users)
 
                         }
 
                     }
                     is MainViewModel.FollowDataFlow.GetFollowingDataSuccess -> {
-                        delay((500 + (0..250).random()).toLong())
-                        addFollowList(itFollowData.following, FollowSaveType.FOLLOWING_LAST.type)
-                        viewModel.stateSaveLaunch(prefs.selectedAccount)
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            addFollowingList(itFollowData.following)
+                            viewModel.getSaveFollowingType()
+                        }
 
                     }
-                    is MainViewModel.FollowDataFlow.GetUserCookies -> {
-                        itFollowData.accountsData.let { userInfo ->
-                            viewModel.getUserFollowers(
-                                userId = userInfo.dsUserID,
-                                maxId = null,
-                                cookies = userInfo.allCookie,
-                                rnkToken = null
-                            )
-                        }
-                    }
-                    is MainViewModel.FollowDataFlow.SaveFollow -> {
-
-                        itFollowData.userInfo.followersType.let { type ->
-                            if (type == FollowSaveType.FOLLOWERS_FIRST.type) {
-
-                                val cacheList = ArrayList<FollowData>()
-                                followDataList.filter { data -> data.type == FollowSaveType.FOLLOWERS_LAST.type }
-                                    .forEach { item ->
-                                        cacheList.add(
-                                            FollowData(
-                                                type = FollowSaveType.FOLLOWERS_FIRST.type,
-                                                uniqueType = (item.analyzeUserId
-                                                    ?: 0) + FollowSaveType.FOLLOWERS_FIRST.type,
-                                                analyzeUserId = item.analyzeUserId,
-                                                dsUserID = item.dsUserID,
-                                                fullName = item.fullName,
-                                                hasAnonymousProfilePicture = item.hasAnonymousProfilePicture,
-                                                isPrivate = item.isPrivate,
-                                                isVerified = item.isVerified,
-                                                latestReelMedia = item.latestReelMedia,
-                                                profilePicUrl = null,
-                                                profilePicId = item.profilePicId,
-                                                username = item.username
-
-                                            )
-                                        )
-
-                                    }
-                                followDataList.addAll(cacheList)
-
-                            }
-                        }
-
-                        itFollowData.userInfo.followingType.let { type ->
-                            if (type == FollowSaveType.FOLLOWING_FIRST.type) {
-                                val cacheList = ArrayList<FollowData>()
-                                followDataList.filter { data -> data.type == FollowSaveType.FOLLOWING_LAST.type }
-                                    .forEach { item ->
-                                        cacheList.add(
-                                            FollowData(
-                                                type = 2L,
-                                                uniqueType = (item.analyzeUserId
-                                                    ?: 0) + FollowSaveType.FOLLOWING_FIRST.type,
-                                                analyzeUserId = item.analyzeUserId,
-                                                dsUserID = item.dsUserID,
-                                                fullName = item.fullName,
-                                                hasAnonymousProfilePicture = item.hasAnonymousProfilePicture,
-                                                isPrivate = item.isPrivate,
-                                                isVerified = item.isVerified,
-                                                latestReelMedia = item.latestReelMedia,
-                                                profilePicUrl = null,
-                                                profilePicId = item.profilePicId,
-                                                username = item.username
-
-                                            )
-                                        )
-
-                                    }
-                                followDataList.addAll(cacheList)
-
-                            }
-                        }
-                        Utils.ifTwoNotNull(
-                            itFollowData.userInfo.followersType,
-                            itFollowData.userInfo.followingType
-                        ) { itFollowersType, itFollowingType ->
-                            saveFollowRoom(itFollowersType, itFollowingType)
-                        }
-
+                    is MainViewModel.FollowDataFlow.StartAnalyze -> {
+                        analyzeStartCheck()
                     }
                     is MainViewModel.FollowDataFlow.Error -> {
 
@@ -268,76 +204,53 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-   private fun initData() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.userData.collect {
-                when (it) {
-                    is MainViewModel.UserDataFlow.GetUserDetails -> {
-
-
-                    }
-                    is MainViewModel.UserDataFlow.Empty -> {
-
-                    }
-                }
-            }
-        }
-
-    }
-    private fun saveFollowersData(followersType: Long?){
-
-        followersType?.let { itType->
-            if (itType == 0L) {
-
-            }
-
-        }
-
-    }
-    private fun saveFollowingData(followingType: Long?){
-
-        followingType?.let { itType->
-            if (itType == 0L) {
-
+    private fun saveFollowersData(isFirst: Boolean) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            if (isFirst){
+                viewModel.addFollowersData(followersDataList)
+                val oldFollowers = followersDataList.toOldFollowersData()
+                viewModel.addOldFollowersData(oldFollowers)
+                viewModel.updateFollowersSaveType()
+                prefs.followersUpdateDate =System.currentTimeMillis()
+            }else{
+                viewModel.addFollowersData(followersDataList)
             }
         }
 
     }
 
-    private fun saveFollowRoom(followersType: Long, followingType: Long) {
-        if (followersType == FollowSaveType.FOLLOWERS_FIRST.type && followingType == FollowSaveType.FOLLOWING_FIRST.type) {
-            lifecycleScope.launchWhenStarted {
-                viewModel.updateUserType(
-                    userId = prefs.selectedAccount,
-                    followersType = FollowSaveType.FOLLOWERS_LAST.type,
-                    followingType = FollowSaveType.FOLLOWING_LAST.type
-                )
-
+    private fun saveFollowingData(isFirst: Boolean) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            if (isFirst){
+                viewModel.addFollowingData(followingDataList)
+                val oldFollowing = followingDataList.toOldFollowingData()
+                viewModel.addOldFollowingData(oldFollowing)
+                viewModel.updateFollowingSaveType()
+                prefs.followingUpdateDate =System.currentTimeMillis()
+            }else{
+                viewModel.addFollowingData(followingDataList)
             }
-        }
-
-        lifecycleScope.launchWhenStarted {
-            delay(1000)
-            for (sizeTR in 0..3) {
-                followDataList.filter { data ->
-                    data.type == sizeTR.toLong()
-                }
-            }
-            viewModel.addFollow(followDataList, prefs.selectedAccount)
-            prefs.followUpdateDate = System.currentTimeMillis()
         }
 
 
     }
 
 
-    private fun addFollowList(followData: ApiResponseUserFollow?, type: Long?) {
-        lifecycleScope.launchWhenCreated {
-            Utils.ifTwoNotNull(followData, type) { itFollowData, itType ->
-                val analyzeUserId = prefs.selectedAccount
-                val followList = itFollowData.toFollowData(type=itType,userId = analyzeUserId)
-                followDataList.addAll(followList)
-            }
+    private fun addFollowersList(followData: ApiResponseUserFollow?) {
+        lifecycleScope.launch(Dispatchers.IO) { }
+        followData?.let { itFollowers ->
+            val analyzeUserId = prefs.selectedAccount
+            val followersList = itFollowers.toFollowersData(analyzeUserId)
+            followersDataList.addAll(followersList)
+        }
+    }
+
+    private fun addFollowingList(followData: ApiResponseUserFollow?) {
+        lifecycleScope.launch(Dispatchers.IO) { }
+        followData?.let { itFollowing ->
+            val analyzeUserId = prefs.selectedAccount
+            val followingList = itFollowing.toFollowingData(analyzeUserId)
+            followingDataList.addAll(followingList)
         }
     }
 

@@ -10,7 +10,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.R
-import com.avalon.calizer.data.local.FollowData
+import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.databinding.FragmentNewFollowersBinding
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowViewModel
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
@@ -69,7 +69,7 @@ class NewFollowersFragment : Fragment() {
             viewModel.getUnFollowers(prefs.selectedAccount,startItem)
         }
     }
-    private fun updatePpItemReq(followData: List<FollowData>) {
+    private fun updatePpItemReq(followData: List<FollowersData>) {
         lifecycleScope.launchWhenStarted {
             followData.forEach { data ->
                 data.dsUserID?.let {
@@ -105,7 +105,7 @@ class NewFollowersFragment : Fragment() {
                         isLoading = false
                     }
                     is FollowViewModel.UnFollowersState.Loading -> {
-                        val data = FollowData(type = 5)
+                        val data = FollowersData(uid = -1)
                         followsAdapter.setLoading(data)
                     }
                     is FollowViewModel.UnFollowersState.UpdateItem -> {

@@ -16,8 +16,6 @@ class ProfileViewModel @Inject constructor(private val dbRepository: RoomReposit
     private val _userData = MutableStateFlow<UserDataFlow>(UserDataFlow.Empty)
     val userData : StateFlow<UserDataFlow> = _userData
 
-    val userDetailsData = MutableLiveData<AccountsInfoData>()
-
     private val _userModel  = MutableStateFlow(AccountsInfoData())
     val userModel : StateFlow<AccountsInfoData> = _userModel
 
@@ -29,10 +27,9 @@ class ProfileViewModel @Inject constructor(private val dbRepository: RoomReposit
     }
 
 
-    fun getUserDetails(userId: Long){
+   suspend fun getUserDetails(){
         viewModelScope.launch {
-            _userModel.emit(dbRepository.getUserInfo(userId))
-
+            _userData.value = UserDataFlow.GetUserDetails(dbRepository.getUserInfo())
         }
     }
 
