@@ -67,7 +67,7 @@ class MainViewModel @Inject constructor(
                 if (itUserFollowers.isSuccessful) {
 
                     itUserFollowers.body()?.let { itFollowersBody->
-                        if (itFollowersBody.nextMaxId.isNotEmpty()) {
+                        if (!itFollowersBody.nextMaxId.isNullOrEmpty()) {
                             _followersData.value = FollowDataFlow.GetFollowersDataSync(itFollowersBody)
                         } else {
                             _followersData.value =
@@ -106,7 +106,7 @@ class MainViewModel @Inject constructor(
             repository.getUserFollowing(userId, maxId, rnkToken,cookies).let { itUserFollowing->
                 if (itUserFollowing.isSuccessful) {
                     itUserFollowing.body()?.let { itFollowingBody->
-                        if (itFollowingBody.nextMaxId.isNotEmpty()) {
+                        if (!itFollowingBody.nextMaxId.isNullOrEmpty()) {
                             _followersData.value =
                                 FollowDataFlow.GetFollowingDataSync(itFollowingBody)
                         } else {
@@ -159,12 +159,7 @@ class MainViewModel @Inject constructor(
             dbRepository.addOldFollowingData(oldFollowingData)
         }
     }
-    suspend fun updateUserType(userId:Long,followersType:Long,followingType:Long){
-        viewModelScope.launch(Dispatchers.IO) {
-            dbRepository.updateUserType(userId,followersType, followingType)
-        }
 
-    }
 
 
 }

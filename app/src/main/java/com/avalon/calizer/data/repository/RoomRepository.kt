@@ -24,9 +24,6 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao,private va
         return roomDao.getSaveFollowersType(userId)
     }
 
-    suspend fun updateUserType(userId:Long,followersType:Long,followingType:Long){
-        roomDao.updateUserType(userId,followersType,followingType)
-    }
 
     suspend fun getAccountCookies(userId: Long):AccountsData{
         return roomDao.getUserCookies(userId)

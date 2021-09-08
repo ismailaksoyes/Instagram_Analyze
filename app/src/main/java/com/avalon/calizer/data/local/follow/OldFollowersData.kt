@@ -9,7 +9,6 @@ import androidx.room.PrimaryKey
 data class OldFollowersData(
     @PrimaryKey(autoGenerate = true)
     var uid:Long?=null,
-    var type:Long? = null ,
     var uniqueType:Long? = null,
     var analyzeUserId:Long? = null ,
     var dsUserID: Long? = null ,

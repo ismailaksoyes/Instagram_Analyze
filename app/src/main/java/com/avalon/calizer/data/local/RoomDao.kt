@@ -14,8 +14,6 @@ interface RoomDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAccount(accountsData: AccountsData)
 
-    @Query("UPDATE accounts_info SET followersType = :followersType, followingType =:followingType WHERE userId  = :userId")
-    suspend fun updateUserType(userId:Long,followersType:Long,followingType:Long)
 
     @Query("SELECT * FROM accounts_table WHERE dsUserID= :userId")
     suspend fun getUserCookies(userId:Long):AccountsData

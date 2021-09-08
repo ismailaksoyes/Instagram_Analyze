@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
 import com.avalon.calizer.R
 import com.avalon.calizer.databinding.ProfileFragmentBinding
@@ -61,24 +62,34 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = ProfileFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
 
-    fun initData() {
+
+    private fun initData() {
         lifecycleScope.launch(Dispatchers.IO) {
-           // viewModel.getUserDetails()
+            viewModel.setUserDetailsLoading()
+             viewModel.getUserDetails()
         }
 
-        binding.clPhotoAnalyze.setOnClickListener {
-            it.findNavController().navigate(R.id.action_destination_profile_to_photoUploadFragment)
-        }
-        binding.clGoAccounts.setOnClickListener {
-            it.findNavController().navigate(R.id.action_destination_profile_to_destination_accounts)
-        }
+    }
 
+    private fun observeNavigateFlow(){
+        lifecycleScope.launch {
+            viewModel.navigateFlow.collect {
+                when(it){
+                    is ProfileViewModel.NavigateFlow.AccountsPage->{
+                        view?.findNavController()?.navigate(R.id.action_destination_profile_to_destination_accounts)
+                    }
+                    is ProfileViewModel.NavigateFlow.PhotoAnalyze->{
+                        view?.findNavController()?.navigate(R.id.action_destination_profile_to_photoUploadFragment)
+                    }
+                }
+            }
+        }
     }
 
     private fun observeUserFlow() {
@@ -88,8 +99,19 @@ class ProfileFragment : Fragment() {
                     is ProfileViewModel.UserDataFlow.Empty -> {
 
                     }
+                    is ProfileViewModel.UserDataFlow.Loading->{
+                        binding.tvProfileFollowers.isShimmerEnabled(true)
+                        binding.tvProfileFollowing.isShimmerEnabled(true)
+                        binding.tvProfilePosts.isShimmerEnabled(true)
+                        binding.tvProfileUsername.isShimmerEnabled(true)
+                    }
                     is ProfileViewModel.UserDataFlow.GetUserDetails -> {
-
+                        binding.tvProfileFollowers.isShimmerEnabled(false)
+                        binding.tvProfileFollowing.isShimmerEnabled(false)
+                        binding.tvProfilePosts.isShimmerEnabled(false)
+                        binding.tvProfileUsername.isShimmerEnabled(false)
+                        createProfilePhoto(it.accountsInfoData.profilePic)
+                       viewModel.setViewUserData(it.accountsInfoData)
                     }
 
 
@@ -100,16 +122,13 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun observeUserProfileData() {
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.userModel.collect { userData ->
-                generateUrlToBitmap(userData.profilePic)
-                binding.viewmodel = viewModel
-            }
+    private fun createProfilePhoto(profileUrl:String?){
+        profileUrl?.let { itProfileUrl->
+            generateUrlToBitmap(itProfileUrl)
         }
 
     }
+
 
     private fun generateUrlToBitmap(photoUrl: String?) {
         photoUrl?.let { itUrl ->
@@ -152,15 +171,15 @@ class ProfileFragment : Fragment() {
 
     }
 
-    fun getPoseScore(bitmap: Bitmap){
+    fun getPoseScore(bitmap: Bitmap) {
         poseAnalyzeManager.setBodyAnalyzeBitmap(bitmap)
         lifecycleScope.launchWhenCreated {
-            poseAnalyzeManager.bodyAnalyze.collectLatest { itPoseState->
-                when(itPoseState){
-                    is PoseAnalyzeManager.BodyAnalyzeState.Loading ->{
+            poseAnalyzeManager.bodyAnalyze.collectLatest { itPoseState ->
+                when (itPoseState) {
+                    is PoseAnalyzeManager.BodyAnalyzeState.Loading -> {
                         binding.tvPozeOdds.isShimmerEnabled(true)
                     }
-                    is PoseAnalyzeManager.BodyAnalyzeState.Success->{
+                    is PoseAnalyzeManager.BodyAnalyzeState.Success -> {
                         binding.tvPozeOdds.isShimmerEnabled(false)
                         binding.tvPozeOdds.analyzeTextColor(itPoseState.score)
                         binding.tvPozeOdds.text = "${itPoseState.score}%"
@@ -172,9 +191,10 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.viewmodel = viewModel
         initData()
-        observeUserProfileData()
         observeUserFlow()
+        observeNavigateFlow()
 
 
     }

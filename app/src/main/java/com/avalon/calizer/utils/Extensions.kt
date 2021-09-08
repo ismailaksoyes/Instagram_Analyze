@@ -10,6 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.follow.*
+import com.avalon.calizer.data.local.profile.AccountsInfoData
+import com.avalon.calizer.data.remote.insresponse.ApiResponseUserDetails
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollow
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -124,7 +126,7 @@ fun ApiResponseUserFollow.toFollowData(userId:Long) = users.map { itUserData->
 }
 fun ApiResponseUserFollow.toFollowersData(userId:Long) = users.map { itUserData->
     FollowersData(
-        uniqueType = itUserData.pk.toString().plus(userId).toLong() ,
+        uniqueType = itUserData.pk.toString().plus(userId.toString().take(6)).toLong() ,
         analyzeUserId = userId,
         dsUserID = itUserData.pk,
         fullName = itUserData.fullName,
@@ -139,7 +141,7 @@ fun ApiResponseUserFollow.toFollowersData(userId:Long) = users.map { itUserData-
 }
 fun ApiResponseUserFollow.toFollowingData(userId:Long) = users.map { itUserData->
     FollowingData(
-        uniqueType = itUserData.pk.toString().plus(userId).toLong() ,
+        uniqueType = itUserData.pk.toString().plus(userId.toString().take(6)).toLong() ,
         analyzeUserId = userId,
         dsUserID = itUserData.pk,
         fullName = itUserData.fullName,
@@ -187,19 +189,4 @@ fun List<FollowingData>.toOldFollowingData() = map {
     )
 }
 
-
-
-
-fun FollowersData.toCopyValue(type: Long) = FollowersData(
-    uniqueType = analyzeUserId.toString().plus(type).toLong() ,
-    analyzeUserId = analyzeUserId,
-    dsUserID = dsUserID,
-    fullName = fullName,
-    hasAnonymousProfilePicture = hasAnonymousProfilePicture,
-    isPrivate =  isPrivate,
-    isVerified = isVerified,
-    latestReelMedia =latestReelMedia,
-    profilePicUrl = profilePicUrl,
-    profilePicId = profilePicId,
-    username = username
-)
+fun ApiResponseUserDetails.toAccountsInfoData() = AccountsInfoData(userName = user.username,profilePic = user.profilePicUrl,followers = user.followerCount.toLong(),following = user.followingCount.toLong(),posts = user.mediaCount.toLong(),userId = user.pk)
