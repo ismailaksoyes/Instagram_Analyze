@@ -64,10 +64,13 @@ interface RoomDao {
     suspend fun updateFollowingSaveType(userId: Long)
 
 
-    @Query("SELECT DISTINCT * FROM followers_table WHERE  analyzeUserId=:userId ORDER BY dsUserID ASC LIMIT 12 OFFSET :position")
+    @Query("SELECT * FROM old_followers_table WHERE analyzeUserId=:userId AND uniqueType=(SELECT uniqueType FROM old_followers_table WHERE analyzeUserId=:userId EXCEPT SELECT uniqueType FROM followers_table WHERE analyzeUserId=:userId)  ORDER BY dsUserID ASC LIMIT 12 OFFSET :position")
     suspend fun getUnFollowers(userId: Long,position: Int):List<FollowersData>
 
-    @Query("SELECT DISTINCT * FROM followers_table WHERE  analyzeUserId='19748713375' ORDER BY dsUserID ")
+    @Query("SELECT * FROM old_followers_table WHERE  analyzeUserId=:userId EXCEPT SELECT  * FROM followers_table WHERE  analyzeUserId='19748713375'  ORDER BY dsUserID ASC LIMIT 12 OFFSET :position")
+    suspend fun getNotFollowers(userId: Long,position: Int):List<FollowersData>
+
+    @Query("SELECT  * FROM followers_table WHERE  analyzeUserId='19748713375'  EXCEPT SELECT * FROM old_followers_table WHERE analyzeUserId='19748713375' ORDER BY dsUserID ")
     suspend fun getNewFollowers():List<FollowersData>
 
 

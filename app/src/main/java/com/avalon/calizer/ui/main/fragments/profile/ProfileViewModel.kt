@@ -16,56 +16,57 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class ProfileViewModel @Inject constructor(private val prefs: MySharedPreferences,private val repository: Repository) : ViewModel() {
+class ProfileViewModel @Inject constructor(
+    private val prefs: MySharedPreferences,
+    private val repository: Repository
+) : ViewModel() {
 
     private val _userData = MutableStateFlow<UserDataFlow>(UserDataFlow.Empty)
-    val userData : StateFlow<UserDataFlow> = _userData
+    val userData: StateFlow<UserDataFlow> = _userData
 
-    private val _userModel  = MutableStateFlow(AccountsInfoData())
-    val userModel : StateFlow<AccountsInfoData> = _userModel
+    val userModel: MutableLiveData<AccountsInfoData> = MutableLiveData<AccountsInfoData>()
 
-     private val _navigateFlow = MutableStateFlow<NavigateFlow>(NavigateFlow.Empty)
-    val navigateFlow :StateFlow<NavigateFlow> = _navigateFlow
-
+    private val _navigateFlow = MutableStateFlow<NavigateFlow>(NavigateFlow.Empty)
+    val navigateFlow: StateFlow<NavigateFlow> = _navigateFlow
 
 
-    sealed class UserDataFlow{
+    sealed class UserDataFlow {
         object Empty : UserDataFlow()
-        object Loading: UserDataFlow()
-        data class GetUserDetails(var accountsInfoData: AccountsInfoData) :UserDataFlow()
+        object Loading : UserDataFlow()
+        data class GetUserDetails(var accountsInfoData: AccountsInfoData) : UserDataFlow()
 
     }
 
-    sealed class NavigateFlow{
-        object Empty :NavigateFlow()
-        object PhotoAnalyze:NavigateFlow()
-        object AccountsPage:NavigateFlow()
+    sealed class NavigateFlow {
+        object Empty : NavigateFlow()
+        object PhotoAnalyze : NavigateFlow()
+        object AccountsPage : NavigateFlow()
     }
 
-    fun navigateProfileToPhotoAnalyze(){
-       _navigateFlow.value = NavigateFlow.PhotoAnalyze
+    fun navigateProfileToPhotoAnalyze() {
+        _navigateFlow.value = NavigateFlow.PhotoAnalyze
     }
-    fun navigateProfileToAccountsPage(){
+
+    fun navigateProfileToAccountsPage() {
         _navigateFlow.value = NavigateFlow.AccountsPage
     }
 
-    suspend fun setViewUserData(accountsInfoData: AccountsInfoData){
+    fun setViewUserData(accountsInfoData: AccountsInfoData) {
+        userModel.value = accountsInfoData
+    }
+
+    fun setUserDetailsLoading() {
         viewModelScope.launch {
-            _userModel.emit(accountsInfoData)
+            _userData.value = UserDataFlow.Loading
         }
-
-    }
-
-    fun setUserDetailsLoading(){
-        _userData.value = UserDataFlow.Loading
     }
 
 
-   suspend fun getUserDetails(){
+    suspend fun getUserDetails() {
         viewModelScope.launch {
-            repository.getUserDetails(prefs.selectedAccount,prefs.allCookie).let { itUserDetails->
-                if (itUserDetails.isSuccessful){
-                    itUserDetails.body()?.let { itBody->
+            repository.getUserDetails(prefs.selectedAccount, prefs.allCookie).let { itUserDetails ->
+                if (itUserDetails.isSuccessful) {
+                    itUserDetails.body()?.let { itBody ->
                         val accountsInfoData = itBody.toAccountsInfoData()
                         _userData.value = UserDataFlow.GetUserDetails(accountsInfoData)
                     }

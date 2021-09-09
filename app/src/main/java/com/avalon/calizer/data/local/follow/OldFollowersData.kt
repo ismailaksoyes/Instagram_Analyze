@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "old_followers_table",indices = [Index(value = arrayOf("uniqueType") ,unique = true)])
 data class OldFollowersData(
-    @PrimaryKey(autoGenerate = true)
-    var uid:Long?=null,
+    var uid:Long? = null,
+    @PrimaryKey
     var uniqueType:Long? = null,
     var analyzeUserId:Long? = null ,
     var dsUserID: Long? = null ,

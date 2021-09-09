@@ -37,8 +37,8 @@ fun ImageView.loadPPUrl(url: String?) {
         .into(this)
 }
 
-fun TextView.isShimmerEnabled(start:Boolean){
-    if (start){
+fun TextView.isShimmerEnabled(start: Boolean) {
+    if (start) {
         val shimmer = Shimmer.AlphaHighlightBuilder()
             .setDuration(1800)
             .setBaseAlpha(0.7f)
@@ -47,10 +47,27 @@ fun TextView.isShimmerEnabled(start:Boolean){
             .setAutoStart(true)
             .build()
         val shimmerDrawable = ShimmerDrawable().apply { setShimmer(shimmer) }
-        this.text = "1111"
+        this.text = "00000"
         this.setTextColor(Color.TRANSPARENT)
-        this.background =shimmerDrawable
-    }else{
+        this.background = shimmerDrawable
+    } else {
+        this.background = null
+    }
+}
+
+fun TextView.isTransShimmerEnabled(start: Boolean) {
+    if (start) {
+        val shimmer = Shimmer.AlphaHighlightBuilder()
+            .setDuration(1800)
+            .setBaseAlpha(0.7f)
+            .setHighlightAlpha(0.6f)
+            .setDirection(Shimmer.Direction.LEFT_TO_RIGHT)
+            .setAutoStart(true)
+            .build()
+        val shimmerDrawable = ShimmerDrawable().apply { setShimmer(shimmer) }
+        this.text = "\\u0020"
+        this.background = shimmerDrawable
+    } else {
         this.background = null
     }
 }
@@ -61,17 +78,17 @@ fun ImageView.clearRecycled() {
         .clear(this)
 }
 
-fun TextView.analyzeTextColor(score:Int){
-    when(score){
-        in 0..30 -> this.setTextColor(ContextCompat.getColor(this.context,R.color.red_light))
-        in 31..69 -> this.setTextColor(ContextCompat.getColor(this.context,R.color.yellow_light))
-        in 70..100 -> this.setTextColor(ContextCompat.getColor(this.context,R.color.green))
+fun TextView.analyzeTextColor(score: Int) {
+    when (score) {
+        in 0..30 -> this.setTextColor(ContextCompat.getColor(this.context, R.color.red_light))
+        in 31..69 -> this.setTextColor(ContextCompat.getColor(this.context, R.color.yellow_light))
+        in 70..100 -> this.setTextColor(ContextCompat.getColor(this.context, R.color.green))
     }
 
 }
 
 fun ArrayList<FollowersData>.getItemByID(item: Long?): Int {
-    return indexOf(this.first { it.dsUserID==item})
+    return indexOf(this.first { it.dsUserID == item })
 }
 
 fun getBitmap(context: Context, url: String?): Bitmap {
@@ -94,24 +111,24 @@ fun withGlide(imageView: ImageView, url: String?) {
 }
 
 fun View.showSnackBar(
-    msg:String,
-    length:Int,
-    actionMessage:CharSequence?,
-    action:(View) -> Unit
-){
-    val snackbar = Snackbar.make(this,msg,length)
-    if (actionMessage!=null){
-        snackbar.setAction(actionMessage){
+    msg: String,
+    length: Int,
+    actionMessage: CharSequence?,
+    action: (View) -> Unit
+) {
+    val snackbar = Snackbar.make(this, msg, length)
+    if (actionMessage != null) {
+        snackbar.setAction(actionMessage) {
             action(this)
         }.show()
-    }else{
+    } else {
         snackbar.show()
     }
 }
 
-fun ApiResponseUserFollow.toFollowData(userId:Long) = users.map { itUserData->
+fun ApiResponseUserFollow.toFollowData(userId: Long) = users.map { itUserData ->
     FollowData(
-        uniqueType = itUserData.pk.toString().plus(userId).toLong() ,
+        uniqueType = itUserData.pk.toString().plus(userId).toLong(),
         analyzeUserId = userId,
         dsUserID = itUserData.pk,
         fullName = itUserData.fullName,
@@ -124,9 +141,10 @@ fun ApiResponseUserFollow.toFollowData(userId:Long) = users.map { itUserData->
         username = itUserData.username
     )
 }
-fun ApiResponseUserFollow.toFollowersData(userId:Long) = users.map { itUserData->
+
+fun ApiResponseUserFollow.toFollowersData(userId: Long) = users.map { itUserData ->
     FollowersData(
-        uniqueType = itUserData.pk.toString().plus(userId.toString().take(6)).toLong() ,
+        uniqueType = itUserData.pk.toString().plus(userId.toString().take(6)).toLong(),
         analyzeUserId = userId,
         dsUserID = itUserData.pk,
         fullName = itUserData.fullName,
@@ -139,9 +157,10 @@ fun ApiResponseUserFollow.toFollowersData(userId:Long) = users.map { itUserData-
         username = itUserData.username
     )
 }
-fun ApiResponseUserFollow.toFollowingData(userId:Long) = users.map { itUserData->
+
+fun ApiResponseUserFollow.toFollowingData(userId: Long) = users.map { itUserData ->
     FollowingData(
-        uniqueType = itUserData.pk.toString().plus(userId.toString().take(6)).toLong() ,
+        uniqueType = itUserData.pk.toString().plus(userId.toString().take(6)).toLong(),
         analyzeUserId = userId,
         dsUserID = itUserData.pk,
         fullName = itUserData.fullName,
@@ -157,7 +176,7 @@ fun ApiResponseUserFollow.toFollowingData(userId:Long) = users.map { itUserData-
 
 fun List<FollowersData>.toOldFollowersData() = map {
     OldFollowersData(
-        uniqueType = it.uniqueType ,
+        uniqueType = it.uniqueType,
         analyzeUserId = it.analyzeUserId,
         dsUserID = it.dsUserID,
         fullName = it.fullName,
@@ -171,11 +190,10 @@ fun List<FollowersData>.toOldFollowersData() = map {
     )
 
 }
-
 
 fun List<FollowingData>.toOldFollowingData() = map {
     OldFollowingData(
-        uniqueType = it.uniqueType ,
+        uniqueType = it.uniqueType,
         analyzeUserId = it.analyzeUserId,
         dsUserID = it.dsUserID,
         fullName = it.fullName,
@@ -189,4 +207,11 @@ fun List<FollowingData>.toOldFollowingData() = map {
     )
 }
 
-fun ApiResponseUserDetails.toAccountsInfoData() = AccountsInfoData(userName = user.username,profilePic = user.profilePicUrl,followers = user.followerCount.toLong(),following = user.followingCount.toLong(),posts = user.mediaCount.toLong(),userId = user.pk)
+fun ApiResponseUserDetails.toAccountsInfoData() = AccountsInfoData(
+    userName = user.username,
+    profilePic = user.profilePicUrl,
+    followers = user.followerCount.toLong(),
+    following = user.followingCount.toLong(),
+    posts = user.mediaCount.toLong(),
+    userId = user.pk
+)

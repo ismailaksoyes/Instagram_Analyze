@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.toColorInt
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation.findNavController
@@ -21,6 +22,7 @@ import com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.PoseAnal
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.analyzeTextColor
 import com.avalon.calizer.utils.isShimmerEnabled
+import com.avalon.calizer.utils.isTransShimmerEnabled
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.SimpleTarget
@@ -93,25 +95,27 @@ class ProfileFragment : Fragment() {
     }
 
     private fun observeUserFlow() {
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             viewModel.userData.collect {
                 when (it) {
                     is ProfileViewModel.UserDataFlow.Empty -> {
 
                     }
                     is ProfileViewModel.UserDataFlow.Loading->{
-                        binding.tvProfileFollowers.isShimmerEnabled(true)
-                        binding.tvProfileFollowing.isShimmerEnabled(true)
-                        binding.tvProfilePosts.isShimmerEnabled(true)
-                        binding.tvProfileUsername.isShimmerEnabled(true)
+                         binding.tvProfileFollowers.isTransShimmerEnabled(true)
+                        binding.tvProfileFollowing.isTransShimmerEnabled(true)
+                        binding.tvProfilePosts.isTransShimmerEnabled(true)
+                        binding.tvProfileUsername.isTransShimmerEnabled(true)
                     }
                     is ProfileViewModel.UserDataFlow.GetUserDetails -> {
-                        binding.tvProfileFollowers.isShimmerEnabled(false)
-                        binding.tvProfileFollowing.isShimmerEnabled(false)
-                        binding.tvProfilePosts.isShimmerEnabled(false)
-                        binding.tvProfileUsername.isShimmerEnabled(false)
+                        viewModel.setViewUserData(it.accountsInfoData)
                         createProfilePhoto(it.accountsInfoData.profilePic)
-                       viewModel.setViewUserData(it.accountsInfoData)
+                        binding.tvProfileFollowers.isTransShimmerEnabled(false)
+                        binding.tvProfileFollowers.setTextColor(ContextCompat.getColor(requireContext(),R.color.blue_night))
+                        binding.tvProfileFollowing.isTransShimmerEnabled(false)
+                        binding.tvProfilePosts.isTransShimmerEnabled(false)
+                        binding.tvProfileUsername.isTransShimmerEnabled(false)
+                        binding.viewmodel = viewModel
                     }
 
 
@@ -191,10 +195,10 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.viewmodel = viewModel
         initData()
         observeUserFlow()
         observeNavigateFlow()
+
 
 
     }

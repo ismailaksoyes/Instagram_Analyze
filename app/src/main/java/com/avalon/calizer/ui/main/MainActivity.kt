@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var prefs: MySharedPreferences
 
-    private val followDataList = ArrayList<FollowersData>()
 
     private val followersDataList = ArrayList<FollowersData>()
     private val followingDataList = ArrayList<FollowingData>()
