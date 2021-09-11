@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "old_following_table",indices = [Index(value = arrayOf("uniqueType") ,unique = true)])
 data class OldFollowingData(
+    @PrimaryKey(autoGenerate = true)
     var uid:Long? = null,
-    @PrimaryKey
     var uniqueType:Long? = null,
     var analyzeUserId:Long? = null ,
     var dsUserID: Long? = null ,

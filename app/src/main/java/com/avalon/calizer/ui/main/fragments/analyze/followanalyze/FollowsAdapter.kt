@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.avalon.calizer.data.local.follow.FollowData
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.databinding.FollowItemLoadingBinding
 import com.avalon.calizer.databinding.FollowViewItemBinding
@@ -18,11 +19,11 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         const val VIEW_TYPE_LOADING = 1
     }
 
-    private var _followsList = arrayListOf<FollowersData>()
+    private var _followsList = arrayListOf<FollowData>()
 
     class LoadingViewHolder(var binding: FollowItemLoadingBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(followList: FollowersData) {
+        fun bind(followList: FollowData) {
 
         }
 
@@ -31,7 +32,7 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class MainViewHolder(var binding: FollowViewItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
-        fun bind(followList: FollowersData?) {
+        fun bind(followList: FollowData?) {
             followList?.let { data ->
                 data.profilePicUrl?.let {
                     binding.ivViewPp.loadPPUrl(it)
@@ -76,7 +77,8 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     }
 
-    fun getItemPosition(item: Long?): Int {
+    private fun getItemPosition(item: Long?): Int? {
+        item?.let { itItem-> }?:null
         return _followsList.getItemByID(item)
     }
 
@@ -128,12 +130,12 @@ class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    fun setData(followList: List<FollowersData>) {
+    fun setData(followList: List<FollowData>) {
         _followsList.addAll(followList)
         notifyDataSetChanged()
     }
 
-    fun setLoading(followList: FollowersData) {
+    fun setLoading(followList: FollowData) {
         _followsList.add(followList)
         notifyDataSetChanged()
     }

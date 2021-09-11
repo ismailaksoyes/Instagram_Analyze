@@ -1,6 +1,7 @@
 package com.avalon.calizer.data.local.follow
 
 data class FollowData(
+    var uid:Long? = null,
     var uniqueType:Long? = null,
     var analyzeUserId:Long? = null ,
     var dsUserID: Long? = null ,

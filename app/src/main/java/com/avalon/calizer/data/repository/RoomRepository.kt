@@ -2,10 +2,7 @@ package com.avalon.calizer.data.repository
 
 
 import com.avalon.calizer.data.local.*
-import com.avalon.calizer.data.local.follow.FollowersData
-import com.avalon.calizer.data.local.follow.FollowingData
-import com.avalon.calizer.data.local.follow.OldFollowersData
-import com.avalon.calizer.data.local.follow.OldFollowingData
+import com.avalon.calizer.data.local.follow.*
 import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.utils.MySharedPreferences
 import kotlinx.coroutines.CoroutineScope

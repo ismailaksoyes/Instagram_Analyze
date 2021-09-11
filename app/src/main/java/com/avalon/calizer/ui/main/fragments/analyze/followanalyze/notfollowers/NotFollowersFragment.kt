@@ -1,4 +1,4 @@
-package com.avalon.calizer.ui.main.fragments.analyze.followanalyze.nofollow
+package com.avalon.calizer.ui.main.fragments.analyze.followanalyze.notfollowers
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,21 +10,24 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.R
+import com.avalon.calizer.data.local.follow.FollowData
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.databinding.FragmentNoFollowBinding
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowViewModel
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
+import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.newfollowers.NewFollowersViewModel
 import com.avalon.calizer.utils.MySharedPreferences
+import com.avalon.calizer.utils.followersToFollowList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class NoFollowFragment : Fragment() {
+class NotFollowersFragment : Fragment() {
 
     @Inject
-    lateinit var viewModel:FollowViewModel
+    lateinit var viewModel:NotFollowersViewModel
 
     @Inject
     lateinit var prefs:MySharedPreferences
@@ -64,8 +67,8 @@ class NoFollowFragment : Fragment() {
     }
     fun loadData(startItem: Int) {
         lifecycleScope.launch {
-            viewModel.updateNoFollowFlow()
-            viewModel.getUnFollowers(prefs.selectedAccount,startItem)
+            viewModel.updateNotFollowFlow()
+            viewModel.getFollowData(startItem)
         }
     }
     fun updatePpItemReq(followData: List<FollowersData>) {
@@ -79,6 +82,23 @@ class NoFollowFragment : Fragment() {
         }
 
     }
+
+    private fun observePpItemRes() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.updateNotFollowers.collectLatest {
+                when (it) {
+                    is NotFollowersViewModel.UpdateState.Success -> {
+                        it.userDetails.data?.user.let { userData ->
+                            followsAdapter.updatePpItem(userData?.pk, userData?.profilePicUrl)
+                        }
+                    }
+
+                }
+            }
+
+        }
+    }
+
     private fun scrollListener() {
         binding.rcNoFollowData.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -96,18 +116,19 @@ class NoFollowFragment : Fragment() {
     }
     private fun observeFollowData(){
         lifecycleScope.launchWhenStarted {
-            viewModel.unFollowersData.collectLatest {
+            viewModel.notFollowers.collectLatest {
                 when (it) {
-                    is FollowViewModel.UnFollowersState.Success -> {
+                    is NotFollowersViewModel.NotFollowersState.Success -> {
                         followsAdapter.removeLoadingView()
-                        followsAdapter.setData(it.followData)
+                        val followData = it.followData.followersToFollowList()
+                        followsAdapter.setData(followData)
                         isLoading = false
                     }
-                    is FollowViewModel.UnFollowersState.Loading -> {
-                        val data = FollowersData(uid = -1)
+                    is NotFollowersViewModel.NotFollowersState.Loading -> {
+                        val data = FollowData(uid = -1)
                         followsAdapter.setLoading(data)
                     }
-                    is FollowViewModel.UnFollowersState.UpdateItem -> {
+                    is NotFollowersViewModel.NotFollowersState.UpdateItem -> {
                         updatePpItemReq(it.followData)
                     }
 

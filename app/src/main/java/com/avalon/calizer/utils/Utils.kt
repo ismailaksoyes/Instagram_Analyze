@@ -18,7 +18,7 @@ object Utils {
         return if (time.time <= -1) {
             true
         } else {
-            (((timeNow.time - time.time) / 1000) % 3600 / 60).toInt() >= 2
+            (((timeNow.time - time.time) / 1000) % 3600 / 60).toInt() >= 30
         }
     }
 

@@ -47,30 +47,16 @@ fun TextView.isShimmerEnabled(start: Boolean) {
             .setAutoStart(true)
             .build()
         val shimmerDrawable = ShimmerDrawable().apply { setShimmer(shimmer) }
-        this.text = "00000"
-        this.setTextColor(Color.TRANSPARENT)
+        this.hint = "111111"
+        this.setHintTextColor(Color.TRANSPARENT)
         this.background = shimmerDrawable
     } else {
+        this.hint = ""
         this.background = null
     }
 }
 
-fun TextView.isTransShimmerEnabled(start: Boolean) {
-    if (start) {
-        val shimmer = Shimmer.AlphaHighlightBuilder()
-            .setDuration(1800)
-            .setBaseAlpha(0.7f)
-            .setHighlightAlpha(0.6f)
-            .setDirection(Shimmer.Direction.LEFT_TO_RIGHT)
-            .setAutoStart(true)
-            .build()
-        val shimmerDrawable = ShimmerDrawable().apply { setShimmer(shimmer) }
-        this.text = "\\u0020"
-        this.background = shimmerDrawable
-    } else {
-        this.background = null
-    }
-}
+
 
 
 fun ImageView.clearRecycled() {
@@ -87,7 +73,7 @@ fun TextView.analyzeTextColor(score: Int) {
 
 }
 
-fun ArrayList<FollowersData>.getItemByID(item: Long?): Int {
+fun ArrayList<FollowData>.getItemByID(item: Long?): Int {
     return indexOf(this.first { it.dsUserID == item })
 }
 
@@ -126,21 +112,6 @@ fun View.showSnackBar(
     }
 }
 
-fun ApiResponseUserFollow.toFollowData(userId: Long) = users.map { itUserData ->
-    FollowData(
-        uniqueType = itUserData.pk.toString().plus(userId).toLong(),
-        analyzeUserId = userId,
-        dsUserID = itUserData.pk,
-        fullName = itUserData.fullName,
-        hasAnonymousProfilePicture = itUserData.hasAnonymousProfilePicture,
-        isPrivate = itUserData.isPrivate,
-        isVerified = itUserData.isVerified,
-        latestReelMedia = itUserData.latestReelMedia,
-        profilePicUrl = itUserData.profilePicUrl,
-        profilePicId = itUserData.profilePicId,
-        username = itUserData.username
-    )
-}
 
 fun ApiResponseUserFollow.toFollowersData(userId: Long) = users.map { itUserData ->
     FollowersData(

@@ -22,7 +22,6 @@ import com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.PoseAnal
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.analyzeTextColor
 import com.avalon.calizer.utils.isShimmerEnabled
-import com.avalon.calizer.utils.isTransShimmerEnabled
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.SimpleTarget
@@ -102,19 +101,18 @@ class ProfileFragment : Fragment() {
 
                     }
                     is ProfileViewModel.UserDataFlow.Loading->{
-                         binding.tvProfileFollowers.isTransShimmerEnabled(true)
-                        binding.tvProfileFollowing.isTransShimmerEnabled(true)
-                        binding.tvProfilePosts.isTransShimmerEnabled(true)
-                        binding.tvProfileUsername.isTransShimmerEnabled(true)
+                         binding.tvProfileFollowers.isShimmerEnabled(true)
+                        binding.tvProfileFollowing.isShimmerEnabled(true)
+                        binding.tvProfilePosts.isShimmerEnabled(true)
+                        binding.tvProfileUsername.isShimmerEnabled(true)
                     }
                     is ProfileViewModel.UserDataFlow.GetUserDetails -> {
                         viewModel.setViewUserData(it.accountsInfoData)
                         createProfilePhoto(it.accountsInfoData.profilePic)
-                        binding.tvProfileFollowers.isTransShimmerEnabled(false)
-                        binding.tvProfileFollowers.setTextColor(ContextCompat.getColor(requireContext(),R.color.blue_night))
-                        binding.tvProfileFollowing.isTransShimmerEnabled(false)
-                        binding.tvProfilePosts.isTransShimmerEnabled(false)
-                        binding.tvProfileUsername.isTransShimmerEnabled(false)
+                        binding.tvProfileFollowers.isShimmerEnabled(false)
+                        binding.tvProfileFollowing.isShimmerEnabled(false)
+                        binding.tvProfilePosts.isShimmerEnabled(false)
+                        binding.tvProfileUsername.isShimmerEnabled(false)
                         binding.viewmodel = viewModel
                     }
 
