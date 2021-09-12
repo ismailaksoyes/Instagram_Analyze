@@ -1,6 +1,7 @@
 package com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allfollowing
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +20,8 @@ import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allfollowers.A
 import com.avalon.calizer.utils.followersToFollowList
 import com.avalon.calizer.utils.followingToFollowList
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -68,7 +71,7 @@ class AllFollowingFragment : Fragment() {
     }
 
     private fun updatePpItemReq(followData: List<FollowingData>) {
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             followData.forEach { data ->
                 data.dsUserID?.let {
                     viewModel.getUserDetails(it)
@@ -80,8 +83,8 @@ class AllFollowingFragment : Fragment() {
     }
 
     private fun observePpItemRes() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.updateAllFollowing.collectLatest {
+        lifecycleScope.launch {
+            viewModel.updateAllFollowing.collect {
                 when (it) {
                     is AllFollowingViewModel.UpdateState.Success -> {
                         it.userDetails.data?.user.let { userData ->
@@ -95,8 +98,7 @@ class AllFollowingFragment : Fragment() {
         }
     }
     fun loadData(startItem: Int) {
-        lifecycleScope.launch {
-            viewModel.updateAllFollowFlow()
+        lifecycleScope.launch(Dispatchers.IO) {
             viewModel.getFollowData(startItem)
         }
     }
@@ -117,18 +119,13 @@ class AllFollowingFragment : Fragment() {
     }
 
     private fun observeFollowData(){
-        lifecycleScope.launchWhenStarted {
-            viewModel.allFollowing.collectLatest {
+        lifecycleScope.launch {
+            viewModel.allFollowing.collect {
                 when (it) {
                     is AllFollowingViewModel.AllFollowingState.Success -> {
-                        followsAdapter.removeLoadingView()
-                        val followData = it.followData.followingToFollowList()
-                        followsAdapter.setData(followData)
-                        isLoading = false
-                    }
-                    is AllFollowingViewModel.AllFollowingState.Loading -> {
-                        val data = FollowData(uid = -1)
-                        followsAdapter.setLoading(data)
+                            followsAdapter.setData(it.followData.followingToFollowList())
+                            isLoading = false
+
                     }
                     is AllFollowingViewModel.AllFollowingState.UpdateItem -> {
                         updatePpItemReq(it.followData)

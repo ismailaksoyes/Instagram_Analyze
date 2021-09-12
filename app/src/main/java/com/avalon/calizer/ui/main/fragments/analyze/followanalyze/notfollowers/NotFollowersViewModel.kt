@@ -31,20 +31,20 @@ class NotFollowersViewModel @Inject constructor (private val followRepository: F
     }
     sealed class NotFollowersState{
         object Empty :NotFollowersState()
-        object Loading :NotFollowersState()
         data class UpdateItem(val followData:List<FollowersData>) :NotFollowersState()
         data class Success(val followData:List<FollowersData>) :NotFollowersState()
 
     }
 
     suspend fun getFollowData(dataSize:Int){
-        val data = followRepository.getNotFollowers(dataSize)
-        _notFollowers.value = NotFollowersState.Success(data)
-        _notFollowers.value = NotFollowersState.UpdateItem(data)
+        viewModelScope.launch {
+            val data = followRepository.getNotFollowers(dataSize)
+            _notFollowers.value = NotFollowersState.Success(data)
+            _notFollowers.value = NotFollowersState.UpdateItem(data)
+        }
+
     }
-    fun updateNotFollowFlow(){
-        _notFollowers.value = NotFollowersState.Loading
-    }
+
 
     private suspend fun getCookies() =followRepository.getUserCookie()
 

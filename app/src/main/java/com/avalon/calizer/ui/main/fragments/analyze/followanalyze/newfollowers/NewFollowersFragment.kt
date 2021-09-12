@@ -19,6 +19,8 @@ import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allfollowers.A
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.followersToFollowList
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -68,13 +70,12 @@ class NewFollowersFragment : Fragment() {
 
     }
     fun loadData(startItem: Int) {
-        lifecycleScope.launch {
-            viewModel.updateNewFollowFlow()
+        lifecycleScope.launch(Dispatchers.IO) {
             viewModel.getFollowData(startItem)
         }
     }
     private fun updatePpItemReq(followData: List<FollowersData>) {
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             followData.forEach { data ->
                 data.dsUserID?.let {
                     viewModel.getUserDetails(it)
@@ -85,7 +86,7 @@ class NewFollowersFragment : Fragment() {
 
     }
     private fun observePpItemRes() {
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             viewModel.updateNewFollowers.collectLatest {
                 when (it) {
                     is NewFollowersViewModel.UpdateState.Success -> {
@@ -115,18 +116,13 @@ class NewFollowersFragment : Fragment() {
         })
     }
     private fun observeFollowData(){
-        lifecycleScope.launchWhenStarted {
-            viewModel.newFollowers.collectLatest {
+        lifecycleScope.launch {
+            viewModel.newFollowers.collect {
                 when (it) {
                     is NewFollowersViewModel.NewFollowersState.Success -> {
-                        followsAdapter.removeLoadingView()
                         val followData = it.followData.followersToFollowList()
                         followsAdapter.setData(followData)
                         isLoading = false
-                    }
-                    is NewFollowersViewModel.NewFollowersState.Loading -> {
-                        val data = FollowData(uid = -1)
-                        followsAdapter.setLoading(data)
                     }
                     is NewFollowersViewModel.NewFollowersState.UpdateItem -> {
                         updatePpItemReq(it.followData)

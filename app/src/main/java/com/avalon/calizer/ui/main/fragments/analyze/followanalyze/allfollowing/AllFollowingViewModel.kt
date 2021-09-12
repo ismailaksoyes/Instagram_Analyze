@@ -1,5 +1,6 @@
 package com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allfollowing
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.avalon.calizer.data.local.follow.FollowData
@@ -33,24 +34,19 @@ class AllFollowingViewModel @Inject constructor(private val followRepository: Fo
     }
     sealed class AllFollowingState{
         object Empty :AllFollowingState()
-        object Loading :AllFollowingState()
         data class UpdateItem(val followData:List<FollowingData>) :AllFollowingState()
         data class Success(val followData:List<FollowingData>) :AllFollowingState()
 
     }
 
     suspend fun getFollowData(dataSize:Int){
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch{
             val data = followRepository.getFollowing(dataSize)
             _allFollowing.value = AllFollowingState.Success(data)
             _allFollowing.value = AllFollowingState.UpdateItem(data)
         }
 
     }
-    fun updateAllFollowFlow(){
-        _allFollowing.value = AllFollowingState.Loading
-    }
-
     private  fun getCookies() =followRepository.getUserCookie()
 
     suspend fun getUserDetails(userId: Long) = viewModelScope.launch(Dispatchers.IO) {

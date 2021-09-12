@@ -2,6 +2,7 @@ package com.avalon.calizer.data.repository
 
 import com.avalon.calizer.data.api.ApiHelper
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollow
+import com.avalon.calizer.utils.MySharedPreferences
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -17,6 +18,5 @@ class Repository @Inject constructor(private val apiHelper: ApiHelper) {
 
     suspend fun getUserFollowing(userId: Long, maxId: String?, rnkToken: String?,cookies:String?) =
         apiHelper.getUserFollowing(userId, maxId, rnkToken,cookies)
-
 
 }

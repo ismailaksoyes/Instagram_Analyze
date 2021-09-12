@@ -2,6 +2,7 @@ package com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allfollowers
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,8 @@ import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowViewMode
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
 import com.avalon.calizer.utils.followersToFollowList
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -67,7 +70,7 @@ class AllFollowersFragment : Fragment() {
     }
 
     private fun updatePpItemReq(followData: List<FollowersData>) {
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             followData.forEach { data ->
                 data.dsUserID?.let {
                     viewModel.getUserDetails(it)
@@ -79,12 +82,12 @@ class AllFollowersFragment : Fragment() {
     }
 
     private fun observePpItemRes() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.updateAllFollowers.collectLatest {
+        lifecycleScope.launch {
+            viewModel.updateAllFollowers.collect {
                 when (it) {
                     is AllFollowersViewModel.UpdateState.Success -> {
-                        it.userDetails.data?.user.let { userData ->
-                            followsAdapter.updatePpItem(userData?.pk, userData?.profilePicUrl)
+                        it.userDetails.user.let { userData ->
+                            followsAdapter.updatePpItem(userData.pk, userData.profilePicUrl)
                         }
                     }
 
@@ -94,8 +97,7 @@ class AllFollowersFragment : Fragment() {
         }
     }
     fun loadData(startItem: Int) {
-        lifecycleScope.launch {
-            viewModel.updateAllFollowFlow()
+        lifecycleScope.launch(Dispatchers.IO) {
             viewModel.getFollowData(startItem)
         }
     }
@@ -116,18 +118,12 @@ class AllFollowersFragment : Fragment() {
     }
 
     private fun observeFollowData(){
-        lifecycleScope.launchWhenStarted {
-            viewModel.allFollowers.collectLatest {
+        lifecycleScope.launch {
+            viewModel.allFollowers.collect {
                 when (it) {
                     is AllFollowersViewModel.AllFollowersState.Success -> {
-                        followsAdapter.removeLoadingView()
-                        val followData = it.followData.followersToFollowList()
-                        followsAdapter.setData(followData)
-                        isLoading = false
-                    }
-                    is AllFollowersViewModel.AllFollowersState.Loading -> {
-                        val data = FollowData(uid = -1)
-                        followsAdapter.setLoading(data)
+                            followsAdapter.setData(it.followData.followersToFollowList())
+                            isLoading = false
                     }
                     is AllFollowersViewModel.AllFollowersState.UpdateItem -> {
                         updatePpItemReq(it.followData)

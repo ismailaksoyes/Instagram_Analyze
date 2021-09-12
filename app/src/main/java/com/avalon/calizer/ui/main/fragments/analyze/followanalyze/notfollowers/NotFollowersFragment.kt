@@ -19,6 +19,7 @@ import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.newfollowers.N
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.followersToFollowList
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -43,6 +44,7 @@ class NotFollowersFragment : Fragment() {
         layoutManager = LinearLayoutManager(view.context)
         binding.rcNoFollowData.layoutManager = layoutManager
         observeFollowData()
+        observePpItemRes()
         loadData(0)
         scrollListener()
         binding.ivBackBtn.setOnClickListener {
@@ -66,13 +68,12 @@ class NotFollowersFragment : Fragment() {
 
     }
     fun loadData(startItem: Int) {
-        lifecycleScope.launch {
-            viewModel.updateNotFollowFlow()
+        lifecycleScope.launch(Dispatchers.IO) {
             viewModel.getFollowData(startItem)
         }
     }
     fun updatePpItemReq(followData: List<FollowersData>) {
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             followData.forEach { data ->
                 data.dsUserID?.let {
                     viewModel.getUserDetails(it)
@@ -119,14 +120,9 @@ class NotFollowersFragment : Fragment() {
             viewModel.notFollowers.collectLatest {
                 when (it) {
                     is NotFollowersViewModel.NotFollowersState.Success -> {
-                        followsAdapter.removeLoadingView()
                         val followData = it.followData.followersToFollowList()
                         followsAdapter.setData(followData)
                         isLoading = false
-                    }
-                    is NotFollowersViewModel.NotFollowersState.Loading -> {
-                        val data = FollowData(uid = -1)
-                        followsAdapter.setLoading(data)
                     }
                     is NotFollowersViewModel.NotFollowersState.UpdateItem -> {
                         updatePpItemReq(it.followData)

@@ -30,19 +30,18 @@ class NewFollowersViewModel @Inject constructor (private val followRepository: F
     }
     sealed class NewFollowersState{
         object Empty :NewFollowersState()
-        object Loading :NewFollowersState()
         data class UpdateItem(val followData:List<FollowersData>) :NewFollowersState()
         data class Success(val followData:List<FollowersData>) :NewFollowersState()
 
     }
 
     suspend fun getFollowData(dataSize:Int){
-        val data = followRepository.getNewFollowers(dataSize)
-        _newFollowers.value = NewFollowersState.Success(data)
-        _newFollowers.value = NewFollowersState.UpdateItem(data)
-    }
-    fun updateNewFollowFlow(){
-        _newFollowers.value = NewFollowersState.Loading
+        viewModelScope.launch {
+            val data = followRepository.getNewFollowers(dataSize)
+            _newFollowers.value = NewFollowersState.Success(data)
+            _newFollowers.value = NewFollowersState.UpdateItem(data)
+        }
+
     }
 
     private suspend fun getCookies() =followRepository.getUserCookie()

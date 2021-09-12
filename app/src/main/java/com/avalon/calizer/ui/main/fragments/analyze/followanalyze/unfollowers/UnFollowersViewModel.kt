@@ -32,19 +32,17 @@ class UnFollowersViewModel  @Inject constructor (private val followRepository: F
     }
     sealed class UnFollowersState{
         object Empty :UnFollowersState()
-        object Loading :UnFollowersState()
         data class UpdateItem(val followData:List<FollowersData>) :UnFollowersState()
         data class Success(val followData:List<FollowersData>) :UnFollowersState()
 
     }
 
     suspend fun getFollowData(dataSize:Int){
-        val data = followRepository.getUnFollowers(dataSize)
-        _unFollowers.value = UnFollowersState.Success(data)
-        _unFollowers.value = UnFollowersState.UpdateItem(data)
-    }
-    fun updateUnFollowFlow(){
-        _unFollowers.value = UnFollowersState.Loading
+        viewModelScope.launch {
+            val data = followRepository.getUnFollowers(dataSize)
+            _unFollowers.value = UnFollowersState.Success(data)
+            _unFollowers.value = UnFollowersState.UpdateItem(data)
+        }
     }
 
     private suspend fun getCookies() =followRepository.getUserCookie()
