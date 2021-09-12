@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?colorPrimary"
-    tools:context=".ui.main.fragments.analyze.followanalyze.AllFollowersFragment">
+    tools:context=".ui.main.fragments.analyze.followanalyze.allfollowers.AllFollowersFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_top_no_follow"
@@ -29,7 +29,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Takip Etmeyenler"
+            android:text="@string/analyze_title_not_followers"
             style="@style/text_medium_style"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

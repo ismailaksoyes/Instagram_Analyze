@@ -1,4 +1,4 @@
-package com.avalon.calizer.ui.main.fragments.analyze.followanalyze.newfollowers
+package com.avalon.calizer.ui.main.fragments.analyze.followanalyze.unfollowers
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,11 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.follow.FollowData
 import com.avalon.calizer.data.local.follow.FollowersData
-import com.avalon.calizer.databinding.FragmentNewFollowersBinding
-import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowViewModel
+import com.avalon.calizer.databinding.FragmentUnFollowersBinding
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allfollowers.AllFollowersViewModel
-import com.avalon.calizer.utils.MySharedPreferences
+import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.notfollowers.NotFollowersViewModel
 import com.avalon.calizer.utils.followersToFollowList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -26,24 +25,21 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class NewFollowersFragment : Fragment() {
-    @Inject
-    lateinit var viewModel: NewFollowersViewModel
-    @Inject
-    lateinit var prefs: MySharedPreferences
+class UnFollowersFragment : Fragment() {
 
+    @Inject
+    lateinit var viewModel: UnFollowersViewModel
+    lateinit var binding: FragmentUnFollowersBinding
     private val followsAdapter by lazy { FollowsAdapter() }
     private lateinit var layoutManager: LinearLayoutManager
     private var isLoading: Boolean = false
-
-    private lateinit var binding: FragmentNewFollowersBinding
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentNewFollowersBinding.inflate(inflater,container,false)
+        binding = FragmentUnFollowersBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -51,19 +47,20 @@ class NewFollowersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerview()
         layoutManager = LinearLayoutManager(view.context)
-        binding.rcNewFollowersData.layoutManager = layoutManager
+        binding.rcNoFollowData.layoutManager = layoutManager
         observeFollowData()
         observePpItemRes()
         loadData(0)
         scrollListener()
         binding.ivBackBtn.setOnClickListener {
-            it.findNavController().navigate(R.id.action_newFollowersFragment_to_destination_analyze)
+            it.findNavController().navigate(R.id.action_unFollowersFragment_to_destination_analyze)
         }
+
     }
 
     private fun setupRecyclerview() {
-        binding.rcNewFollowersData.adapter = followsAdapter
-        binding.rcNewFollowersData.layoutManager = LinearLayoutManager(
+        binding.rcNoFollowData.adapter = followsAdapter
+        binding.rcNoFollowData.layoutManager = LinearLayoutManager(
             this.context,
             LinearLayoutManager.VERTICAL, false
         )
@@ -74,7 +71,7 @@ class NewFollowersFragment : Fragment() {
             viewModel.getFollowData(startItem)
         }
     }
-    private fun updatePpItemReq(followData: List<FollowersData>) {
+    fun updatePpItemReq(followData: List<FollowersData>) {
         lifecycleScope.launch {
             followData.forEach { data ->
                 data.dsUserID?.let {
@@ -87,9 +84,9 @@ class NewFollowersFragment : Fragment() {
     }
     private fun observePpItemRes() {
         lifecycleScope.launch {
-            viewModel.updateNewFollowers.collectLatest {
+            viewModel.updateUnFollowers.collect {
                 when (it) {
-                    is NewFollowersViewModel.UpdateState.Success -> {
+                    is UnFollowersViewModel.UpdateState.Success -> {
                         it.userDetails.data?.user.let { userData ->
                             followsAdapter.updatePpItem(userData?.pk, userData?.profilePicUrl)
                         }
@@ -101,7 +98,7 @@ class NewFollowersFragment : Fragment() {
         }
     }
     private fun scrollListener() {
-        binding.rcNewFollowersData.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding.rcNoFollowData.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 recyclerView.layoutManager?.let { itLayoutManager ->
@@ -117,14 +114,14 @@ class NewFollowersFragment : Fragment() {
     }
     private fun observeFollowData(){
         lifecycleScope.launch {
-            viewModel.newFollowers.collect {
+            viewModel.unFollowers.collect {
                 when (it) {
-                    is NewFollowersViewModel.NewFollowersState.Success -> {
+                    is UnFollowersViewModel.UnFollowersState.Success -> {
                         val followData = it.followData.followersToFollowList()
                         followsAdapter.setData(followData)
                         isLoading = false
                     }
-                    is NewFollowersViewModel.NewFollowersState.UpdateItem -> {
+                    is UnFollowersViewModel.UnFollowersState.UpdateItem -> {
                         updatePpItemReq(it.followData)
                     }
 
@@ -135,6 +132,5 @@ class NewFollowersFragment : Fragment() {
             }
         }
     }
-
 
 }

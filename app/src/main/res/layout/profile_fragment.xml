@@ -16,6 +16,7 @@
     >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_go_accounts"
+        android:onClick="@{() ->viewmodel.navigateProfileToAccountsPage()}"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -378,6 +379,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
+        android:onClick="@{() ->viewmodel.navigateProfileToPhotoAnalyze()}"
         android:background="@drawable/radius_rect"
         android:elevation="8dp">
         <ImageView

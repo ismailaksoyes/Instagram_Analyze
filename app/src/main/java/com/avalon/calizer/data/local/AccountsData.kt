@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "accounts_table")
 data class AccountsData(
     @PrimaryKey(autoGenerate = true)
-    var pk: Long = 1L,
+    var uid:Long?=null,
     var userName:String= "",
     var profilePic:String = "",
     var csfr: String = "",
@@ -17,6 +17,8 @@ data class AccountsData(
     var shbid: String = "",
     var shbts: String = "",
     var mid: String = "",
-    var allCookie:String = ""
+    var allCookie:String = "",
+    var isFirstFollowersAnalyze:Boolean = true,
+    var isFirstFollowingAnalyze:Boolean = true,
 
 )

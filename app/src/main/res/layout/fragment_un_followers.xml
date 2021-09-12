@@ -8,7 +8,7 @@
     tools:context=".ui.main.fragments.analyze.followanalyze.allfollowers.AllFollowersFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_top_new_followers"
+        android:id="@+id/cl_top_no_follow"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="?colorPrimary"
@@ -29,7 +29,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Yeni Takipçiler"
+            android:text="@string/analyze_title_new_unfollowers"
             style="@style/text_medium_style"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -38,11 +38,11 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rc_new_followers_data"
+        android:id="@+id/rc_no_follow_data"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_top_new_followers"
+        app:layout_constraintTop_toBottomOf="@id/cl_top_no_follow"
         app:layout_constraintEnd_toEndOf="parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_marginStart="10dp"

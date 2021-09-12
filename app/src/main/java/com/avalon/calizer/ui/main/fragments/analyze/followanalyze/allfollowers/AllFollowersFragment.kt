@@ -1,6 +1,8 @@
-package com.avalon.calizer.ui.main.fragments.analyze.followanalyze.nofollow
+package com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allfollowers
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,66 +12,65 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.R
-import com.avalon.calizer.data.local.FollowData
-import com.avalon.calizer.databinding.FragmentNoFollowBinding
+import com.avalon.calizer.data.local.follow.FollowData
+import com.avalon.calizer.data.local.follow.FollowersData
+import com.avalon.calizer.databinding.FragmentAllFollowersBinding
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowViewModel
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
-import com.avalon.calizer.utils.MySharedPreferences
+import com.avalon.calizer.utils.followersToFollowList
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class NoFollowFragment : Fragment() {
+class AllFollowersFragment : Fragment() {
+    private lateinit var binding: FragmentAllFollowersBinding
 
     @Inject
-    lateinit var viewModel:FollowViewModel
-
-    @Inject
-    lateinit var prefs:MySharedPreferences
-
-    private lateinit var binding: FragmentNoFollowBinding
+    lateinit var viewModel: AllFollowersViewModel
     private val followsAdapter by lazy { FollowsAdapter() }
     private lateinit var layoutManager: LinearLayoutManager
     private var isLoading: Boolean = false
 
+
+    @SuppressLint("ShowToast")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerview()
         layoutManager = LinearLayoutManager(view.context)
-        binding.rcNoFollowData.layoutManager = layoutManager
+        binding.rcFollowData.layoutManager = layoutManager
         observeFollowData()
+        observePpItemRes()
         loadData(0)
         scrollListener()
         binding.ivBackBtn.setOnClickListener {
-            it.findNavController().navigate(R.id.action_noFollowFragment_to_destination_analyze)
+            it.findNavController().navigate(R.id.action_allFollowersFragment_to_destination_analyze)
         }
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentNoFollowBinding.inflate(inflater,container,false)
-       return binding.root
+        binding = FragmentAllFollowersBinding.inflate(inflater, container, false)
+        return binding.root
     }
+
     private fun setupRecyclerview() {
-        binding.rcNoFollowData.adapter = followsAdapter
-        binding.rcNoFollowData.layoutManager = LinearLayoutManager(
+        binding.rcFollowData.adapter = followsAdapter
+        binding.rcFollowData.layoutManager = LinearLayoutManager(
             this.context,
             LinearLayoutManager.VERTICAL, false
         )
 
     }
-    fun loadData(startItem: Int) {
+
+    private fun updatePpItemReq(followData: List<FollowersData>) {
         lifecycleScope.launch {
-            viewModel.updateNoFollowFlow()
-            viewModel.getUnFollowers(prefs.selectedAccount,startItem)
-        }
-    }
-    fun updatePpItemReq(followData: List<FollowData>) {
-        lifecycleScope.launchWhenStarted {
             followData.forEach { data ->
                 data.dsUserID?.let {
                     viewModel.getUserDetails(it)
@@ -79,8 +80,29 @@ class NoFollowFragment : Fragment() {
         }
 
     }
+
+    private fun observePpItemRes() {
+        lifecycleScope.launch {
+            viewModel.updateAllFollowers.collect {
+                when (it) {
+                    is AllFollowersViewModel.UpdateState.Success -> {
+                        it.userDetails.user.let { userData ->
+                            followsAdapter.updatePpItem(userData.pk, userData.profilePicUrl)
+                        }
+                    }
+
+                }
+            }
+
+        }
+    }
+    fun loadData(startItem: Int) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.getFollowData(startItem)
+        }
+    }
     private fun scrollListener() {
-        binding.rcNoFollowData.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding.rcFollowData.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 recyclerView.layoutManager?.let { itLayoutManager ->
@@ -94,20 +116,16 @@ class NoFollowFragment : Fragment() {
 
         })
     }
+
     private fun observeFollowData(){
-        lifecycleScope.launchWhenStarted {
-            viewModel.unFollowersData.collectLatest {
+        lifecycleScope.launch {
+            viewModel.allFollowers.collect {
                 when (it) {
-                    is FollowViewModel.UnFollowersState.Success -> {
-                        followsAdapter.removeLoadingView()
-                        followsAdapter.setData(it.followData)
-                        isLoading = false
+                    is AllFollowersViewModel.AllFollowersState.Success -> {
+                            followsAdapter.setData(it.followData.followersToFollowList())
+                            isLoading = false
                     }
-                    is FollowViewModel.UnFollowersState.Loading -> {
-                        val data = FollowData(type = 5)
-                        followsAdapter.setLoading(data)
-                    }
-                    is FollowViewModel.UnFollowersState.UpdateItem -> {
+                    is AllFollowersViewModel.AllFollowersState.UpdateItem -> {
                         updatePpItemReq(it.followData)
                     }
 
@@ -118,5 +136,7 @@ class NoFollowFragment : Fragment() {
             }
         }
     }
+
+
 
 }

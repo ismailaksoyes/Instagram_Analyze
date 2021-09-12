@@ -114,7 +114,7 @@ class AccountsFragment  : Fragment() {
                                 following = itUserData.followingCount.toLong(),
                                 posts = itUserData.mediaCount.toLong()
                             )
-                            viewModel.setAccountInfo(accountInfo)
+
                             updateAccount(
                                 profile_Pic = itUserData.profilePicUrl,
                                 user_name = itUserData.username.toString(),

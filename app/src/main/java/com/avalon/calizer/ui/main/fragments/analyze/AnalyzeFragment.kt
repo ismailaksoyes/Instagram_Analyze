@@ -72,20 +72,22 @@ class AnalyzeFragment : Fragment() {
             AnalyzeViewData(
                 uri = R.drawable.ic_follow_poz_ico,
                 title = resources.getString(R.string.analyze_title_all_following),
-                type = AnalyzeAdapterType.ALL_FOLLOWING.type
+                type = R.id.action_destination_analyze_to_allFollowingFragment
             ),
             AnalyzeViewData(
                 uri = R.drawable.ic_follow_poz_ico,
-                title = resources.getString(R.string.analyze_title_new_followers)
+                title = resources.getString(R.string.analyze_title_new_followers),
+                type = R.id.action_destination_analyze_to_newFollowersFragment
+            ),
+            AnalyzeViewData(
+                uri = R.drawable.ic_follow_neg_ico,
+                title = "Takipten Çıkanlar",
+                type = R.id.action_destination_analyze_to_unFollowersFragment
             ),
             AnalyzeViewData(
                 uri = R.drawable.ic_follow_neg_ico,
                 title = "Takip Etmeyenler",
                 type = R.id.action_destination_analyze_to_noFollowFragment
-            ),
-            AnalyzeViewData(
-                uri = R.drawable.ic_follow_neg_ico,
-                title = resources.getString(R.string.analyze_title_new_unfollowers)
             ),
             AnalyzeViewData(
                 uri = R.drawable.ic_follow_poz_ico,

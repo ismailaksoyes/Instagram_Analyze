@@ -42,6 +42,12 @@
         <action
             android:id="@+id/action_destination_analyze_to_newFollowersFragment"
             app:destination="@id/newFollowersFragment" />
+        <action
+            android:id="@+id/action_destination_analyze_to_allFollowingFragment"
+            app:destination="@id/allFollowingFragment" />
+        <action
+            android:id="@+id/action_destination_analyze_to_unFollowersFragment"
+            app:destination="@id/unFollowersFragment" />
     </fragment>
     <fragment
         android:id="@+id/destination_settings"
@@ -92,7 +98,7 @@
     </fragment>
     <fragment
         android:id="@+id/allFollowersFragment"
-        android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.AllFollowersFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allfollowers.AllFollowersFragment"
         android:label="fragment_all_followers"
         tools:layout="@layout/fragment_all_followers" >
         <action
@@ -142,7 +148,7 @@
     </fragment>
     <fragment
         android:id="@+id/noFollowFragment"
-        android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.nofollow.NoFollowFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.notfollowers.NotFollowersFragment"
         android:label="NoFollowFragment" >
         <action
             android:id="@+id/action_noFollowFragment_to_destination_analyze"
@@ -154,6 +160,22 @@
         android:label="NewFollowersFragment" >
         <action
             android:id="@+id/action_newFollowersFragment_to_destination_analyze"
+            app:destination="@id/destination_analyze" />
+    </fragment>
+    <fragment
+        android:id="@+id/allFollowingFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allfollowing.AllFollowingFragment"
+        android:label="AllFollowingFragment" >
+        <action
+            android:id="@+id/action_allFollowingFragment_to_destination_analyze"
+            app:destination="@id/destination_analyze" />
+    </fragment>
+    <fragment
+        android:id="@+id/unFollowersFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.unfollowers.UnFollowersFragment"
+        android:label="UnFollowersFragment" >
+        <action
+            android:id="@+id/action_unFollowersFragment_to_destination_analyze"
             app:destination="@id/destination_analyze" />
     </fragment>
 </navigation>

@@ -9,7 +9,10 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.avalon.calizer.R
-import com.avalon.calizer.data.local.FollowData
+import com.avalon.calizer.data.local.follow.*
+import com.avalon.calizer.data.local.profile.AccountsInfoData
+import com.avalon.calizer.data.remote.insresponse.ApiResponseUserDetails
+import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollow
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.facebook.shimmer.Shimmer
@@ -34,8 +37,8 @@ fun ImageView.loadPPUrl(url: String?) {
         .into(this)
 }
 
-fun TextView.isShimmerEnabled(start:Boolean){
-    if (start){
+fun TextView.isShimmerEnabled(start: Boolean) {
+    if (start) {
         val shimmer = Shimmer.AlphaHighlightBuilder()
             .setDuration(1800)
             .setBaseAlpha(0.7f)
@@ -44,13 +47,16 @@ fun TextView.isShimmerEnabled(start:Boolean){
             .setAutoStart(true)
             .build()
         val shimmerDrawable = ShimmerDrawable().apply { setShimmer(shimmer) }
-        this.text = "1111"
-        this.setTextColor(Color.TRANSPARENT)
-        this.background =shimmerDrawable
-    }else{
+        this.hint = "111111"
+        this.setHintTextColor(Color.TRANSPARENT)
+        this.background = shimmerDrawable
+    } else {
+        this.hint = ""
         this.background = null
     }
 }
+
+
 
 
 fun ImageView.clearRecycled() {
@@ -58,17 +64,17 @@ fun ImageView.clearRecycled() {
         .clear(this)
 }
 
-fun TextView.analyzeTextColor(score:Int){
-    when(score){
-        in 0..30 -> this.setTextColor(ContextCompat.getColor(this.context,R.color.red_light))
-        in 31..69 -> this.setTextColor(ContextCompat.getColor(this.context,R.color.yellow_light))
-        in 70..100 -> this.setTextColor(ContextCompat.getColor(this.context,R.color.green))
+fun TextView.analyzeTextColor(score: Int) {
+    when (score) {
+        in 0..30 -> this.setTextColor(ContextCompat.getColor(this.context, R.color.red_light))
+        in 31..69 -> this.setTextColor(ContextCompat.getColor(this.context, R.color.yellow_light))
+        in 70..100 -> this.setTextColor(ContextCompat.getColor(this.context, R.color.green))
     }
 
 }
 
 fun ArrayList<FollowData>.getItemByID(item: Long?): Int {
-    return indexOf(this.first { it.dsUserID==item})
+    return indexOf(this.first { it.dsUserID == item })
 }
 
 fun getBitmap(context: Context, url: String?): Bitmap {
@@ -91,17 +97,92 @@ fun withGlide(imageView: ImageView, url: String?) {
 }
 
 fun View.showSnackBar(
-    msg:String,
-    length:Int,
-    actionMessage:CharSequence?,
-    action:(View) -> Unit
-){
-    val snackbar = Snackbar.make(this,msg,length)
-    if (actionMessage!=null){
-        snackbar.setAction(actionMessage){
+    msg: String,
+    length: Int,
+    actionMessage: CharSequence?,
+    action: (View) -> Unit
+) {
+    val snackbar = Snackbar.make(this, msg, length)
+    if (actionMessage != null) {
+        snackbar.setAction(actionMessage) {
             action(this)
         }.show()
-    }else{
+    } else {
         snackbar.show()
     }
 }
+
+
+fun ApiResponseUserFollow.toFollowersData(userId: Long) = users.map { itUserData ->
+    FollowersData(
+        uniqueType = itUserData.pk.toString().plus(userId.toString().take(6)).toLong(),
+        analyzeUserId = userId,
+        dsUserID = itUserData.pk,
+        fullName = itUserData.fullName,
+        hasAnonymousProfilePicture = itUserData.hasAnonymousProfilePicture,
+        isPrivate = itUserData.isPrivate,
+        isVerified = itUserData.isVerified,
+        latestReelMedia = itUserData.latestReelMedia,
+        profilePicUrl = itUserData.profilePicUrl,
+        profilePicId = itUserData.profilePicId,
+        username = itUserData.username
+    )
+}
+
+fun ApiResponseUserFollow.toFollowingData(userId: Long) = users.map { itUserData ->
+    FollowingData(
+        uniqueType = itUserData.pk.toString().plus(userId.toString().take(6)).toLong(),
+        analyzeUserId = userId,
+        dsUserID = itUserData.pk,
+        fullName = itUserData.fullName,
+        hasAnonymousProfilePicture = itUserData.hasAnonymousProfilePicture,
+        isPrivate = itUserData.isPrivate,
+        isVerified = itUserData.isVerified,
+        latestReelMedia = itUserData.latestReelMedia,
+        profilePicUrl = itUserData.profilePicUrl,
+        profilePicId = itUserData.profilePicId,
+        username = itUserData.username
+    )
+}
+
+fun List<FollowersData>.toOldFollowersData() = map {
+    OldFollowersData(
+        uniqueType = it.uniqueType,
+        analyzeUserId = it.analyzeUserId,
+        dsUserID = it.dsUserID,
+        fullName = it.fullName,
+        hasAnonymousProfilePicture = it.hasAnonymousProfilePicture,
+        isPrivate = it.isPrivate,
+        isVerified = it.isVerified,
+        latestReelMedia = it.latestReelMedia,
+        profilePicUrl = it.profilePicUrl,
+        profilePicId = it.profilePicId,
+        username = it.username
+    )
+
+}
+
+fun List<FollowingData>.toOldFollowingData() = map {
+    OldFollowingData(
+        uniqueType = it.uniqueType,
+        analyzeUserId = it.analyzeUserId,
+        dsUserID = it.dsUserID,
+        fullName = it.fullName,
+        hasAnonymousProfilePicture = it.hasAnonymousProfilePicture,
+        isPrivate = it.isPrivate,
+        isVerified = it.isVerified,
+        latestReelMedia = it.latestReelMedia,
+        profilePicUrl = it.profilePicUrl,
+        profilePicId = it.profilePicId,
+        username = it.username
+    )
+}
+
+fun ApiResponseUserDetails.toAccountsInfoData() = AccountsInfoData(
+    userName = user.username,
+    profilePic = user.profilePicUrl,
+    followers = user.followerCount.toLong(),
+    following = user.followingCount.toLong(),
+    posts = user.mediaCount.toLong(),
+    userId = user.pk
+)

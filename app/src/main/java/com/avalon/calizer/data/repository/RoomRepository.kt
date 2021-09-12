@@ -2,27 +2,25 @@ package com.avalon.calizer.data.repository
 
 
 import com.avalon.calizer.data.local.*
+import com.avalon.calizer.data.local.follow.*
 import com.avalon.calizer.data.local.profile.AccountsInfoData
+import com.avalon.calizer.utils.MySharedPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
+class RoomRepository @Inject constructor(private val roomDao: RoomDao,private val prefs:MySharedPreferences) {
 
 
-    suspend fun addAccountInfo(accountsInfoData: AccountsInfoData){
-        roomDao.addAccountInfo(accountsInfoData)
+    suspend fun getSaveFollowingType(userId: Long):AccountsData{
+        return roomDao.getSaveFollowingType(userId)
+    }
+    suspend fun getSaveFollowersType(userId: Long):AccountsData{
+        return roomDao.getSaveFollowersType(userId)
     }
 
-    suspend fun getUserInfo(userId:Long):AccountsInfoData{
-       return roomDao.getUserInfo(userId)
-    }
-
-    suspend fun updateUserType(userId:Long,followersType:Long,followingType:Long){
-        roomDao.updateUserType(userId,followersType,followingType)
-    }
 
     suspend fun getAccountCookies(userId: Long):AccountsData{
         return roomDao.getUserCookies(userId)
@@ -36,8 +34,12 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
     fun getAccounts(): List<AccountsData> {
         return roomDao.getAllAccountDetails
     }
-   suspend fun getFollowersData(position:Int):List<FollowData>{
-        return roomDao.getFollowersData(position)
+   suspend fun getFollowersData(position:Int):List<FollowersData>{
+        return roomDao.getFollowersData(position,prefs.selectedAccount)
+    }
+
+    suspend fun getFollowingData(position:Int):List<FollowingData>{
+        return roomDao.getFollowingData(position,prefs.selectedAccount)
     }
 
     suspend fun updateAccount(profile_Pic : String?, user_name:String?, ds_userId:String?){
@@ -50,12 +52,40 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao) {
 //        return roomDao.getUnFollowers()
 //    }
 
-    suspend fun addFollowData(followData: List<FollowData>,userId: Long) {
-        CoroutineScope(Dispatchers.IO).launch {
-            //roomDao.deleteLastData(userId)
-            roomDao.addFollowData(followData)
-        }
 
+    suspend fun getUserInfo(): AccountsInfoData {
+        return roomDao.getUserInfo(prefs.selectedAccount)
+    }
+    suspend fun addFollowersData(followersData: List<FollowersData>){
+            roomDao.addFollowersData(followersData)
+    }
+    suspend fun addFollowingData(followingData:List<FollowingData> ){
+        roomDao.addFollowingData(followingData)
+    }
+    suspend fun addOldFollowersData(oldFollowersData: List<OldFollowersData>){
+        roomDao.addOldFollowersData(oldFollowersData)
+    }
+    suspend fun addOldFollowingData(oldFollowingData:List<OldFollowingData>){
+        roomDao.addOldFollowingData(oldFollowingData)
+    }
+
+    suspend fun deleteFollowersData(){
+        roomDao.deleteFollowersData(prefs.selectedAccount)
+    }
+    suspend fun deleteFollowingData(){
+        roomDao.deleteFollowingData(prefs.selectedAccount)
+    }
+    suspend fun updateFollowersSaveType(){
+        roomDao.updateFollowersSaveType(prefs.selectedAccount)
+    }
+    suspend fun updateFollowingSaveType(){
+        roomDao.updateFollowingSaveType(prefs.selectedAccount)
+    }
+    suspend fun getSaveFollowingType():Boolean{
+       return roomDao.getSaveFollowingType(prefs.selectedAccount).isFirstFollowingAnalyze
+    }
+    suspend fun getSaveFollowersType():Boolean{
+       return roomDao.getSaveFollowersType(prefs.selectedAccount).isFirstFollowersAnalyze
     }
     /**
     suspend fun addLastFollowers(followersData: List<LastFollowersData>) {

@@ -11,7 +11,7 @@ data class ApiResponseUserFollow(
     @SerializedName("global_blacklist_sample")
     val globalBlacklistSample: Any,
     @SerializedName("next_max_id")
-    val nextMaxId: String,
+    val nextMaxId: String?,
     @SerializedName("page_size")
     val pageSize: Int,
     @SerializedName("sections")

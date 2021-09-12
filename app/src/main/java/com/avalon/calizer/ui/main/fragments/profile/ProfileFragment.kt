@@ -10,8 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.toColorInt
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
 import com.avalon.calizer.R
 import com.avalon.calizer.databinding.ProfileFragmentBinding
@@ -30,8 +32,10 @@ import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 import com.google.mlkit.vision.face.FaceLandmark
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.pow
@@ -59,32 +63,57 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = ProfileFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
 
-    fun initData() {
-        viewModel.getUserDetails(prefs.selectedAccount)
-        binding.clPhotoAnalyze.setOnClickListener {
-            it.findNavController().navigate(R.id.action_destination_profile_to_photoUploadFragment)
-        }
-        binding.clGoAccounts.setOnClickListener {
-            it.findNavController().navigate(R.id.action_destination_profile_to_destination_accounts)
+
+    private fun initData() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.setUserDetailsLoading()
+             viewModel.getUserDetails()
         }
 
     }
 
+    private fun observeNavigateFlow(){
+        lifecycleScope.launch {
+            viewModel.navigateFlow.collect {
+                when(it){
+                    is ProfileViewModel.NavigateFlow.AccountsPage->{
+                        view?.findNavController()?.navigate(R.id.action_destination_profile_to_destination_accounts)
+                    }
+                    is ProfileViewModel.NavigateFlow.PhotoAnalyze->{
+                        view?.findNavController()?.navigate(R.id.action_destination_profile_to_photoUploadFragment)
+                    }
+                }
+            }
+        }
+    }
+
     private fun observeUserFlow() {
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             viewModel.userData.collect {
                 when (it) {
                     is ProfileViewModel.UserDataFlow.Empty -> {
 
                     }
+                    is ProfileViewModel.UserDataFlow.Loading->{
+                         binding.tvProfileFollowers.isShimmerEnabled(true)
+                        binding.tvProfileFollowing.isShimmerEnabled(true)
+                        binding.tvProfilePosts.isShimmerEnabled(true)
+                        binding.tvProfileUsername.isShimmerEnabled(true)
+                    }
                     is ProfileViewModel.UserDataFlow.GetUserDetails -> {
-
+                        viewModel.setViewUserData(it.accountsInfoData)
+                        createProfilePhoto(it.accountsInfoData.profilePic)
+                        binding.tvProfileFollowers.isShimmerEnabled(false)
+                        binding.tvProfileFollowing.isShimmerEnabled(false)
+                        binding.tvProfilePosts.isShimmerEnabled(false)
+                        binding.tvProfileUsername.isShimmerEnabled(false)
+                        binding.viewmodel = viewModel
                     }
 
 
@@ -95,16 +124,13 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun observeUserProfileData() {
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.userModel.collect { userData ->
-                generateUrlToBitmap(userData.profilePic)
-                binding.viewmodel = viewModel
-            }
+    private fun createProfilePhoto(profileUrl:String?){
+        profileUrl?.let { itProfileUrl->
+            generateUrlToBitmap(itProfileUrl)
         }
 
     }
+
 
     private fun generateUrlToBitmap(photoUrl: String?) {
         photoUrl?.let { itUrl ->
@@ -147,15 +173,15 @@ class ProfileFragment : Fragment() {
 
     }
 
-    fun getPoseScore(bitmap: Bitmap){
+    fun getPoseScore(bitmap: Bitmap) {
         poseAnalyzeManager.setBodyAnalyzeBitmap(bitmap)
         lifecycleScope.launchWhenCreated {
-            poseAnalyzeManager.bodyAnalyze.collectLatest { itPoseState->
-                when(itPoseState){
-                    is PoseAnalyzeManager.BodyAnalyzeState.Loading ->{
+            poseAnalyzeManager.bodyAnalyze.collectLatest { itPoseState ->
+                when (itPoseState) {
+                    is PoseAnalyzeManager.BodyAnalyzeState.Loading -> {
                         binding.tvPozeOdds.isShimmerEnabled(true)
                     }
-                    is PoseAnalyzeManager.BodyAnalyzeState.Success->{
+                    is PoseAnalyzeManager.BodyAnalyzeState.Success -> {
                         binding.tvPozeOdds.isShimmerEnabled(false)
                         binding.tvPozeOdds.analyzeTextColor(itPoseState.score)
                         binding.tvPozeOdds.text = "${itPoseState.score}%"
@@ -168,8 +194,9 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initData()
-        observeUserProfileData()
         observeUserFlow()
+        observeNavigateFlow()
+
 
 
     }

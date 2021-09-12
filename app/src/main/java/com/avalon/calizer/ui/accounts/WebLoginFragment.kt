@@ -12,6 +12,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.AccountsData
@@ -62,7 +63,14 @@ class WebLoginFragment : Fragment() {
         cookieValid()
         getCookie()
         loginSuccess()
+        initData()
 
+    }
+
+    private fun initData(){
+        binding.ivBackBtn.setOnClickListener {
+            it.findNavController().navigate(R.id.action_webLoginFragment_to_destination_accounts)
+        }
     }
 
     private fun loginSuccess() {
