@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/splashFragment">
+    app:startDestination="@id/storyFragment">
 
     <fragment
         android:id="@+id/destination_profile"
@@ -48,6 +48,9 @@
         <action
             android:id="@+id/action_destination_analyze_to_unFollowersFragment"
             app:destination="@id/unFollowersFragment" />
+        <action
+            android:id="@+id/action_destination_analyze_to_storyFragment"
+            app:destination="@id/storyFragment" />
     </fragment>
     <fragment
         android:id="@+id/destination_settings"
@@ -176,6 +179,15 @@
         android:label="UnFollowersFragment" >
         <action
             android:id="@+id/action_unFollowersFragment_to_destination_analyze"
+            app:destination="@id/destination_analyze" />
+    </fragment>
+    <fragment
+        android:id="@+id/storyFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.StoryFragment"
+        android:label="fragment_story"
+        tools:layout="@layout/fragment_story" >
+        <action
+            android:id="@+id/action_storyFragment_to_destination_analyze"
             app:destination="@id/destination_analyze" />
     </fragment>
 </navigation>

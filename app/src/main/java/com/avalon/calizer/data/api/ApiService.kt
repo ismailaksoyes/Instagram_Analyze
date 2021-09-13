@@ -26,11 +26,26 @@ interface ApiService {
         @Header("Cookie") cookies:String?
     ):Response<ApiResponseReelsTray>
 
+   @GET("feed/user/{userId}/story/")
+   suspend fun getStory(
+       @Path("userId") userId:Long,
+       @Header("Cookie") cookies:String?
+   )
+
     @GET("users/{userId}/info/")
     suspend fun getUserDetails(
         @Path("userId") userId:Long,
         @Header("Cookie") cookies: String?
     ):Response<ApiResponseUserDetails>
+
+    @GET("friendships/set_reel_block_status/")
+    suspend fun getBlockStatus(
+        //params userlist
+    )
+    @GET("friendships/remove_follower/{user_id!s}/")
+    suspend fun removeFollower(
+
+    )
 
 
 
