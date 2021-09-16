@@ -197,8 +197,6 @@ class ProfileFragment : Fragment() {
         observeUserFlow()
         observeNavigateFlow()
 
-
-
     }
 
 

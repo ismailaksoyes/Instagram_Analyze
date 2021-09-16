@@ -1,16 +1,68 @@
 package com.avalon.calizer.data.api
 
+import com.avalon.calizer.data.error.NETWORK_ERROR
+import com.avalon.calizer.data.error.NO_INTERNET_CONNECTION
 import com.avalon.calizer.data.remote.insresponse.ApiResponseReelsTray
+import com.avalon.calizer.data.remote.insresponse.ApiResponseStory
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserDetails
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollow
-import com.avalon.calizer.utils.MySharedPreferences
+import com.avalon.calizer.utils.NetworkConnectivity
+import com.avalon.calizer.utils.Resource
 import retrofit2.Response
+import java.io.IOException
 import javax.inject.Inject
+import kotlin.reflect.KSuspendFunction2
 
-class ApiHelperImpl  @Inject constructor(private val apiService: ApiService):ApiHelper {
-    override suspend fun getReelsTray(cookies:String?): Response<ApiResponseReelsTray> = apiService.getReelsTray(cookies = cookies)
-    override suspend fun getUserDetails(userId: Long,cookies:String?): Response<ApiResponseUserDetails> = apiService.getUserDetails(cookies = cookies,userId = userId)
-    override suspend fun getUserFollowers(userId: Long, maxId: String?, rnkToken: String?,cookies:String?): Response<ApiResponseUserFollow> = apiService.getFollowers(userId = userId,maxId = maxId,rnkToken = rnkToken,cookies = cookies)
-    override suspend fun getUserFollowing(userId: Long, maxId: String?, rnkToken: String?,cookies:String?): Response<ApiResponseUserFollow> = apiService.getFollowing(userId = userId,maxId = maxId,rnkToken = rnkToken,cookies = cookies)
+class ApiHelperImpl  @Inject constructor(private val apiService: ApiService, private val networkConnectivity: NetworkConnectivity):ApiHelper {
+    override suspend fun getReelsTray(cookies:String?): Resource<ApiResponseReelsTray> {
+        return when(val response = checkResponse { (apiService::getReelsTray)(cookies) }){
+            is ApiResponseReelsTray->Resource.Success(data = response)
+            else->Resource.DataError(errorCode = response as Int)
+        }
+    }
+    override suspend fun getUserDetails(userId: Long,cookies:String?): Resource<ApiResponseUserDetails>{
+        return when(val response = checkResponse { (apiService::getUserDetails)(userId, cookies) }){
+            is ApiResponseUserDetails->Resource.Success(data = response)
+            else->Resource.DataError(errorCode = response as Int)
+        }
+    }
+
+    override suspend fun getUserFollowers(userId: Long, maxId: String?, rnkToken: String?,cookies:String?): Resource<ApiResponseUserFollow> {
+        return when(val response = checkResponse { (apiService::getFollowers)(userId, maxId, rnkToken, cookies) }){
+            is ApiResponseUserFollow-> Resource.Success(data = response)
+            else-> Resource.DataError(errorCode = response as Int)
+        }
+    }
+
+    override suspend fun getUserFollowing(userId: Long, maxId: String?, rnkToken: String?,cookies:String?): Resource<ApiResponseUserFollow>{
+        return when(val response= checkResponse { (apiService::getFollowing)(userId, maxId, rnkToken, cookies) }){
+            is ApiResponseUserFollow-> Resource.Success(data = response)
+            else-> Resource.DataError(errorCode = response as Int)
+        }
+    }
+
+    override suspend fun getStory(userId: Long, cookies: String?): Resource<ApiResponseStory> {
+        return when(val response = checkResponse { (apiService::getStory)(userId, cookies) }){
+            is ApiResponseStory-> Resource.Success(data = response)
+            else-> Resource.DataError(errorCode = response as Int)
+        }
+    }
+
+    private suspend fun checkResponse(call:suspend() -> Response<*>):Any?{
+        if (!networkConnectivity.isConnected()){
+            return NO_INTERNET_CONNECTION
+        }
+        return try {
+            val response = call.invoke()
+            val responseCode = response.code()
+            if (response.isSuccessful){
+                response.body()
+            }else{
+               responseCode
+            }
+        } catch (e:IOException){
+            NETWORK_ERROR
+        }
+    }
 
 }

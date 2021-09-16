@@ -87,8 +87,8 @@ class AllFollowingFragment : Fragment() {
             viewModel.updateAllFollowing.collect {
                 when (it) {
                     is AllFollowingViewModel.UpdateState.Success -> {
-                        it.userDetails.data?.user.let { userData ->
-                            followsAdapter.updatePpItem(userData?.pk, userData?.profilePicUrl)
+                        it.userDetails.user.apply {
+                            followsAdapter.updatePpItem(pk, profilePicUrl)
                         }
                     }
 

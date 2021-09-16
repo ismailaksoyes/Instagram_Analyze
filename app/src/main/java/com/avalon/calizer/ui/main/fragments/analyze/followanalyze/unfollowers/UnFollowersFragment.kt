@@ -10,17 +10,13 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.R
-import com.avalon.calizer.data.local.follow.FollowData
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.databinding.FragmentUnFollowersBinding
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
-import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allfollowers.AllFollowersViewModel
-import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.notfollowers.NotFollowersViewModel
 import com.avalon.calizer.utils.followersToFollowList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -71,7 +67,7 @@ class UnFollowersFragment : Fragment() {
             viewModel.getFollowData(startItem)
         }
     }
-    fun updatePpItemReq(followData: List<FollowersData>) {
+    private fun updatePpItemReq(followData: List<FollowersData>) {
         lifecycleScope.launch {
             followData.forEach { data ->
                 data.dsUserID?.let {
@@ -87,8 +83,8 @@ class UnFollowersFragment : Fragment() {
             viewModel.updateUnFollowers.collect {
                 when (it) {
                     is UnFollowersViewModel.UpdateState.Success -> {
-                        it.userDetails.data?.user.let { userData ->
-                            followsAdapter.updatePpItem(userData?.pk, userData?.profilePicUrl)
+                        it.userDetails.user.apply {
+                            followsAdapter.updatePpItem(pk,profilePicUrl)
                         }
                     }
 

@@ -60,8 +60,6 @@ class TutorialFragment : Fragment() {
     }
 
 
-
-
     private fun getTutorialData():ArrayList<TutorialData>{
         val dataList = ArrayList<TutorialData>()
         dataList.add(TutorialData(R.drawable.ic_tutorial1_ico,"Test1"))

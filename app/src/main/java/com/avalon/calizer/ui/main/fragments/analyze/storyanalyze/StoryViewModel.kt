@@ -1,11 +1,17 @@
 package com.avalon.calizer.ui.main.fragments.analyze.storyanalyze
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.avalon.calizer.data.error.ErrorMapper
 import com.avalon.calizer.data.local.story.StoryData
 import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.utils.MySharedPreferences
+import com.avalon.calizer.utils.Resource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class StoryViewModel @Inject constructor(
@@ -19,31 +25,56 @@ class StoryViewModel @Inject constructor(
     sealed class StoryState {
         object Empty : StoryState()
         data class Success(val storyData: List<StoryData>) : StoryState()
+        data class OpenStory(val urlList:List<String>):StoryState()
         object Error : StoryState()
     }
 
     suspend fun getStoryList() {
-        repository.getReelsTray(prefs.allCookie).let { itStoryData ->
-            if (itStoryData.isSuccessful) {
-                itStoryData.body()?.tray?.let { itTray ->
-                    val storyList = ArrayList<StoryData>()
-                    itTray.forEach { itFor ->
-                        storyList.add(
-                            StoryData(
-                                itFor.user.profilePicUrl,
-                                itFor.user.pk,
-                                itFor.hasVideo
+        viewModelScope.launch {
+            when (val response = repository.getReelsTray(prefs.allCookie)) {
+                is Resource.Success -> {
+                    response.data?.tray?.let { itTray ->
+                        val storyList = ArrayList<StoryData>()
+                        itTray.forEach { itFor ->
+                            storyList.add(
+                                StoryData(
+                                    itFor.user.profilePicUrl, itFor.user.pk, itFor.hasVideo
+                                )
                             )
-                        )
-
-                    }
-                    if (storyList.size > 0) {
-                        _storyData.value = StoryState.Success(storyList)
-                    } else {
-                        _storyData.value = StoryState.Error
+                        }
+                        if (storyList.size > 0) {
+                            _storyData.value = StoryState.Success(storyList)
+                        } else {
+                            _storyData.value = StoryState.Error
+                        }
                     }
                 }
+            }
+        }
+    }
 
+    suspend fun getStory(userId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val response = repository.getStory(userId, prefs.allCookie)) {
+                is Resource.Success -> {
+                    response.data?.reel?.let { itReel ->
+                        val urlList = ArrayList<String>()
+                        itReel.items.forEach { itItems ->
+                            itItems.videoVersions?.let { itVideo ->
+                                urlList.add(itVideo[0].url)
+                            } ?: kotlin.run {
+                                itItems.imageVersions2?.let { itImage ->
+                                    urlList.add(itImage.candidates[0].url)
+                                }
+                            }
+                        }
+                        _storyData.value = StoryState.OpenStory(urlList)
+
+                    }
+                }
+                is Resource.DataError -> {
+                    val errorcode = response.errorCode
+                }
             }
 
         }

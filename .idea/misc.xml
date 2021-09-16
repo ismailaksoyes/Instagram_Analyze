@@ -28,6 +28,8 @@
         <entry key="app/src/main/res/layout/fragment_photo_upload.xml" value="0.12685185185185185" />
         <entry key="app/src/main/res/layout/fragment_splash.xml" value="0.15092592592592594" />
         <entry key="app/src/main/res/layout/fragment_story.xml" value="0.28396739130434784" />
+        <entry key="app/src/main/res/layout/fragment_story_show.xml" value="0.15982776089159068" />
+        <entry key="app/src/main/res/layout/fragment_story_views.xml" value="0.1529888551165147" />
         <entry key="app/src/main/res/layout/fragment_tutorial.xml" value="0.15982776089159068" />
         <entry key="app/src/main/res/layout/fragment_un_followers.xml" value="0.29936594202898553" />
         <entry key="app/src/main/res/layout/fragment_view_pager.xml" value="0.15982776089159068" />

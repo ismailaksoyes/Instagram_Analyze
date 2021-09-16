@@ -1,6 +1,7 @@
 package com.avalon.calizer.data.api
 
 import com.avalon.calizer.data.remote.insresponse.ApiResponseReelsTray
+import com.avalon.calizer.data.remote.insresponse.ApiResponseStory
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserDetails
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollow
 import retrofit2.Response
@@ -30,7 +31,7 @@ interface ApiService {
    suspend fun getStory(
        @Path("userId") userId:Long,
        @Header("Cookie") cookies:String?
-   )
+   ):Response<ApiResponseStory>
 
     @GET("users/{userId}/info/")
     suspend fun getUserDetails(
@@ -41,7 +42,7 @@ interface ApiService {
     @GET("friendships/set_reel_block_status/")
     suspend fun getBlockStatus(
         //params userlist
-    )
+    ):Response<String>
     @GET("friendships/remove_follower/{user_id!s}/")
     suspend fun removeFollower(
 

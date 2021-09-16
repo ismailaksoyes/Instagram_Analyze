@@ -1,22 +1,11 @@
 package com.avalon.calizer.utils
 
 
-data class Resource<out T>(
-    val status: Status,
-    val data : T?,
-    val message:String?
-
-){
-    companion object{
-        fun <T> success(data:T?):Resource<T>{
-            return Resource(Status.SUCCESS,data,null)
-        }
-        fun <T> error(msg:String,data:T?):Resource<T>{
-            return Resource(Status.ERROR,data,msg)
-        }
-        fun <T> loading(data:T?):Resource<T>{
-            return Resource(Status.LOADING,data,null)
-        }
-    }
+sealed class Resource<T>(
+    val data: T? = null,
+    val errorCode: Int? = null
+) {
+    class Success<T>(data: T) : Resource<T>(data)
+    class DataError<T>(errorCode: Int) : Resource<T>(null, errorCode)
 
 }

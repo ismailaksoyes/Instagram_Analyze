@@ -11,6 +11,7 @@ import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollow
 import com.avalon.calizer.data.repository.RoomRepository
 import com.avalon.calizer.data.repository.Repository
+import com.avalon.calizer.utils.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,6 +22,7 @@ class MainViewModel @Inject constructor(
     private val dbRepository: RoomRepository,
     private val repository: Repository
 ) : ViewModel() {
+
 
 
     private val _userData = MutableStateFlow<UserDataFlow>(UserDataFlow.Empty)
@@ -54,30 +56,18 @@ class MainViewModel @Inject constructor(
     }
 
 
-    suspend fun getUserFollowers(
-        userId: Long,
-        maxId: String?,
-        rnkToken: String?,
-        cookies: String?
-    ) {
-
+    suspend fun getUserFollowers(userId: Long, maxId: String?, rnkToken: String?, cookies: String?) {
         viewModelScope.launch(Dispatchers.IO) {
-
-            repository.getUserFollowers(userId, maxId, rnkToken,cookies).let { itUserFollowers->
-                if (itUserFollowers.isSuccessful) {
-
-                    itUserFollowers.body()?.let { itFollowersBody->
-                        if (!itFollowersBody.nextMaxId.isNullOrEmpty()) {
-                            _followersData.value = FollowDataFlow.GetFollowersDataSync(itFollowersBody)
+            when(val response = repository.getUserFollowers(userId, maxId, rnkToken, cookies)){
+                is Resource.Success->{
+                    response.data?.let { itData->
+                        if (!itData.nextMaxId.isNullOrEmpty()) {
+                            _followersData.value = FollowDataFlow.GetFollowersDataSync(itData)
                         } else {
-                            _followersData.value =
-                                FollowDataFlow.GetFollowersDataSuccess(itFollowersBody)
+                            _followersData.value = FollowDataFlow.GetFollowersDataSuccess(itData)
 
                         }
                     }
-
-                } else {
-                    _followersData.value = FollowDataFlow.Error(itUserFollowers.message())
                 }
             }
 
@@ -95,36 +85,23 @@ class MainViewModel @Inject constructor(
         _saveFollowData.value = FollowSaveState.SaveFollowers(dbRepository.getSaveFollowersType())
     }
 
-    suspend fun getUserFollowing(
-        userId: Long,
-        maxId: String?,
-        rnkToken: String?,
-        cookies: String?
-    ) {
-
+    suspend fun getUserFollowing(userId: Long, maxId: String?, rnkToken: String?, cookies: String?) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getUserFollowing(userId, maxId, rnkToken,cookies).let { itUserFollowing->
-                if (itUserFollowing.isSuccessful) {
-                    itUserFollowing.body()?.let { itFollowingBody->
-                        if (!itFollowingBody.nextMaxId.isNullOrEmpty()) {
+            when(val response = repository.getUserFollowing(userId, maxId, rnkToken, cookies)){
+                is Resource.Success->{
+                    response.data?.let { itData->
+                        if (!itData.nextMaxId.isNullOrEmpty()) {
                             _followersData.value =
-                                FollowDataFlow.GetFollowingDataSync(itFollowingBody)
+                                FollowDataFlow.GetFollowingDataSync(itData)
                         } else {
-
                             _followersData.value =
-                                FollowDataFlow.GetFollowingDataSuccess(itFollowingBody)
+                                FollowDataFlow.GetFollowingDataSuccess(itData)
                         }
                     }
-
-
-                } else {
-                    _followersData.value = FollowDataFlow.Error(itUserFollowing.message())
                 }
             }
-
         }
     }
-
 
 
     suspend fun addFollowersData(followersData:List<FollowersData> ){

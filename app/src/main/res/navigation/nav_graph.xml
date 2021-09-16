@@ -189,5 +189,31 @@
         <action
             android:id="@+id/action_storyFragment_to_destination_analyze"
             app:destination="@id/destination_analyze" />
+        <action
+            android:id="@+id/action_storyFragment_to_storyViewsFragment"
+            app:destination="@id/storyViewsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/storyViewsFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.StoryViewsFragment"
+        android:label="fragment_story_views"
+        tools:layout="@layout/fragment_story_views" >
+        <action
+            android:id="@+id/action_storyViewsFragment_to_storyShowFragment"
+            app:destination="@id/storyShowFragment"
+            app:popUpTo="@id/storyViewsFragment"
+            app:popUpToInclusive="true"/>
+        <argument
+            android:name="story_list"
+            app:argType="string[]" />
+    </fragment>
+    <fragment
+        android:id="@+id/storyShowFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.StoryShowFragment"
+        android:label="fragment_story_show"
+        tools:layout="@layout/fragment_story_show" >
+        <action
+            android:id="@+id/action_storyShowFragment_to_storyFragment"
+            app:destination="@id/storyFragment" />
     </fragment>
 </navigation>

@@ -81,7 +81,7 @@ data class ApiResponseStory(
             @SerializedName("id")
             val id: String,
             @SerializedName("image_versions2")
-            val imageVersions2: ImageVersions2,
+            val imageVersions2: ImageVersions2?,
             @SerializedName("imported_taken_at")
             val importedTakenAt: Int,
             @SerializedName("integrity_review_decision")
@@ -139,7 +139,7 @@ data class ApiResponseStory(
             @SerializedName("video_duration")
             val videoDuration: Double,
             @SerializedName("video_versions")
-            val videoVersions: List<VideoVersion>
+            val videoVersions: List<VideoVersion>?
         ) {
             @Keep
             data class ImageVersions2(
@@ -180,7 +180,7 @@ data class ApiResponseStory(
                 @SerializedName("name")
                 val name: String,
                 @SerializedName("pk")
-                val pk: Int,
+                val pk: Long,
                 @SerializedName("short_name")
                 val shortName: String
             )
@@ -237,7 +237,7 @@ data class ApiResponseStory(
                     @SerializedName("name")
                     val name: String,
                     @SerializedName("pk")
-                    val pk: Int,
+                    val pk: String,
                     @SerializedName("short_name")
                     val shortName: String
                 )

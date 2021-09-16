@@ -1,4 +1,4 @@
-package com.avalon.calizer.ui.main.fragments.analyze.storyanalyze
+package com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,17 +7,20 @@ import com.avalon.calizer.data.local.story.StoryData
 import com.avalon.calizer.databinding.StoryViewsItemBinding
 import com.avalon.calizer.utils.loadPPUrl
 
-class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class StoryAdapter(val showStoryInterface: ShowStoryInterface) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var storyList = emptyList<StoryData>()
 
-    class MainViewHolder(val binding: StoryViewsItemBinding):RecyclerView.ViewHolder(binding.root){
+    class MainViewHolder(val binding: StoryViewsItemBinding,val showStoryInterface: ShowStoryInterface):RecyclerView.ViewHolder(binding.root){
         fun bind(storyData: StoryData){
             binding.ivStoryView.loadPPUrl(storyData.imageUrl)
+            binding.ivStoryView.setOnClickListener {
+                showStoryInterface.openStory(storyData.pk)
+            }
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding = StoryViewsItemBinding.inflate(LayoutInflater.from(parent.context))
-       return MainViewHolder(binding)
+       return MainViewHolder(binding,showStoryInterface)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

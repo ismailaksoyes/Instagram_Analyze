@@ -12,4 +12,6 @@
     <string name="analyze_title_new_following">Yeni Takip Ettiklerim</string>
     <string name="analyze_title_new_unfollowing">Yeni Takipten Ciktiklarim</string>
     <string name="analyze_title_new_unfollowers">Takipten Cikanlar</string>
+    <string name="no_internet_error">No Internet Connection</string>
+    <string name="network_error">Error Network</string>
 </resources>
