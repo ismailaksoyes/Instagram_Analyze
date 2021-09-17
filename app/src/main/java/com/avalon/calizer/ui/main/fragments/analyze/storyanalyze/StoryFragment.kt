@@ -19,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -67,7 +68,7 @@ class StoryFragment : Fragment() {
 
     private fun observeStoryData() {
         lifecycleScope.launch {
-            viewModel.storyData.collect {
+            viewModel.storyData.collectLatest {
                 when (it) {
                     is StoryViewModel.StoryState.Success -> {
                         setAdapterStory(it.storyData)

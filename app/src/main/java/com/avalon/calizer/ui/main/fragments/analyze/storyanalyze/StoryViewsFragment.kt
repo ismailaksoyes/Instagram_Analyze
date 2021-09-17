@@ -1,17 +1,15 @@
 package com.avalon.calizer.ui.main.fragments.analyze.storyanalyze
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import com.avalon.calizer.databinding.FragmentStoryViewsBinding
 import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.adapter.StoryViewsAdapter
-import com.avalon.calizer.ui.tutorial.TutorialPagerAdapter
+import com.avalon.calizer.utils.CubeTransformer
 
 
 class StoryViewsFragment : Fragment() {
@@ -23,7 +21,6 @@ class StoryViewsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // urlList =  args.storyList.toList()
         binding = FragmentStoryViewsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -40,7 +37,7 @@ class StoryViewsFragment : Fragment() {
     private fun createViewPagerAdapter(list: List<String>) {
          val storyAdapter = StoryViewsAdapter(this, list)
         viewPager = binding.viewPagerStory
-        viewPager.setPageTransformer(ZoomOutPageTransformer())
+        viewPager.setPageTransformer(CubeTransformer())
         viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         viewPager.adapter = storyAdapter
 
