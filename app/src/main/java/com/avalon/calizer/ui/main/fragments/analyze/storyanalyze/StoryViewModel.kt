@@ -9,6 +9,7 @@ import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Resource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -22,10 +23,11 @@ class StoryViewModel @Inject constructor(
     private val _storyData = MutableStateFlow<StoryState>(StoryState.Empty)
     val storyData: StateFlow<StoryState> = _storyData
 
+
     sealed class StoryState {
         object Empty : StoryState()
         data class Success(val storyData: List<StoryData>) : StoryState()
-        data class OpenStory(val urlList:List<String>):StoryState()
+        data class OpenStory(val urlList: List<String>) : StoryState()
         object Error : StoryState()
     }
 
@@ -51,6 +53,13 @@ class StoryViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.cancel()
     }
 
     suspend fun getStory(userId: Long) {

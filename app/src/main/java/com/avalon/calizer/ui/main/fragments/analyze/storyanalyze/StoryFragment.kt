@@ -6,14 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager2.widget.ViewPager2
+import com.avalon.calizer.R
 import com.avalon.calizer.data.local.story.StoryData
 import com.avalon.calizer.databinding.FragmentStoryBinding
 import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.adapter.ShowStoryInterface
 import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.adapter.StoryAdapter
+import com.avalon.calizer.utils.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -69,7 +73,7 @@ class StoryFragment : Fragment() {
                         setAdapterStory(it.storyData)
                     }
                     is StoryViewModel.StoryState.OpenStory->{
-                        setStoryViews(it.urlList)
+                       setStoryViews(it.urlList)
                     }
                     is StoryViewModel.StoryState.Error -> {
 
@@ -80,7 +84,7 @@ class StoryFragment : Fragment() {
         }
     }
 
-    private fun setStoryViews(urlList: List<String>){
+    private  fun setStoryViews(urlList: List<String>){
         if (urlList.isNotEmpty()){
             val action = StoryFragmentDirections.actionStoryFragmentToStoryViewsFragment(urlList.toTypedArray())
             findNavController().navigate(action)
@@ -94,15 +98,15 @@ class StoryFragment : Fragment() {
 
 
     private fun getStory(userId:Long) {
-        lifecycleScope.launch {
-           viewModel.getStory(userId)
+
+        lifecycleScope.launch(Dispatchers.IO) {
+          viewModel.getStory(userId)
         }
     }
 
     private fun initData() {
         lifecycleScope.launch {
             viewModel.getStoryList()
-
         }
 
     }

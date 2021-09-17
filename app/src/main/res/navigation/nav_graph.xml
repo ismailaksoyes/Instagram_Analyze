@@ -187,22 +187,16 @@
         android:label="fragment_story"
         tools:layout="@layout/fragment_story" >
         <action
-            android:id="@+id/action_storyFragment_to_destination_analyze"
-            app:destination="@id/destination_analyze" />
-        <action
             android:id="@+id/action_storyFragment_to_storyViewsFragment"
             app:destination="@id/storyViewsFragment" />
+        <action android:id="@+id/action_splash_to_test"
+            app:destination="@id/splashFragment"/>
     </fragment>
     <fragment
         android:id="@+id/storyViewsFragment"
         android:name="com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.StoryViewsFragment"
         android:label="fragment_story_views"
         tools:layout="@layout/fragment_story_views" >
-        <action
-            android:id="@+id/action_storyViewsFragment_to_storyShowFragment"
-            app:destination="@id/storyShowFragment"
-            app:popUpTo="@id/storyViewsFragment"
-            app:popUpToInclusive="true"/>
         <argument
             android:name="story_list"
             app:argType="string[]" />
@@ -216,4 +210,6 @@
             android:id="@+id/action_storyShowFragment_to_storyFragment"
             app:destination="@id/storyFragment" />
     </fragment>
+
+
 </navigation>
