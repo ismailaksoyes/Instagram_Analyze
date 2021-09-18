@@ -189,10 +189,10 @@
         <action
             android:id="@+id/action_storyFragment_to_storyViewsFragment"
             app:destination="@id/storyViewsFragment"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"/>
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"/>
 
     </fragment>
     <fragment
@@ -203,15 +203,22 @@
         <argument
             android:name="story_list"
             app:argType="string[]" />
+        <action
+            android:id="@+id/action_storyViewsFragment_to_storyFragment"
+            app:destination="@id/storyFragment"
+            app:popUpTo="@id/storyFragment"
+            app:popUpToInclusive="true"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"/>
     </fragment>
     <fragment
         android:id="@+id/storyShowFragment"
         android:name="com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.StoryShowFragment"
         android:label="fragment_story_show"
         tools:layout="@layout/fragment_story_show" >
-        <action
-            android:id="@+id/action_storyShowFragment_to_storyFragment"
-            app:destination="@id/storyFragment" />
+
     </fragment>
 
 

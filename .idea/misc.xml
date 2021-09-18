@@ -4,11 +4,36 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1398148148148148" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2814814814814815" />
         <entry key="app/src/main/res/drawable/circle_shape_gra.xml" value="0.3394871794871795" />
+        <entry key="app/src/main/res/drawable/ic_acc_open.xml" value="0.2814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_analyze.xml" value="0.2814814814814815" />
         <entry key="app/src/main/res/drawable/ic_analyze_gra.xml" value="0.15208333333333332" />
+        <entry key="app/src/main/res/drawable/ic_back_ico.xml" value="0.2814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_block_ico.xml" value="0.2814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_calizer_logo_ico.xml" value="0.2814814814814815" />
         <entry key="app/src/main/res/drawable/ic_check_false.xml" value="0.15208333333333332" />
+        <entry key="app/src/main/res/drawable/ic_check_true.xml" value="0.3394871794871795" />
+        <entry key="app/src/main/res/drawable/ic_close_story.xml" value="0.3394871794871795" />
+        <entry key="app/src/main/res/drawable/ic_face_detection.xml" value="0.2814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_follow_neg_ico.xml" value="0.2814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_follow_poz_ico.xml" value="0.2814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.2814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_menu.xml" value="0.2814814814814815" />
         <entry key="app/src/main/res/drawable/ic_next_icon.xml" value="0.2324074074074074" />
+        <entry key="app/src/main/res/drawable/ic_plus_ico.xml" value="0.2814814814814815" />
         <entry key="app/src/main/res/drawable/ic_point_circle.xml" value="0.15208333333333332" />
+        <entry key="app/src/main/res/drawable/ic_pose_analyze.xml" value="0.2814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_profile.xml" value="0.2814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_resolution.xml" value="0.2814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_selfie_character.xml" value="0.2814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.2814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_story_ico.xml" value="0.2814814814814815" />
+        <entry key="app/src/main/res/drawable/ic_tutorial1_ico.xml" value="0.2814814814814815" />
+        <entry key="app/src/main/res/drawable/radius_circ.xml" value="0.2814814814814815" />
+        <entry key="app/src/main/res/drawable/radius_rect.xml" value="0.2814814814814815" />
+        <entry key="app/src/main/res/drawable/shadow_gra_top.xml" value="0.3466666666666667" />
+        <entry key="app/src/main/res/drawable/thumb_selector.xml" value="0.2814814814814815" />
         <entry key="app/src/main/res/layout/accounts_item.xml" value="0.15982776089159068" />
         <entry key="app/src/main/res/layout/accounts_shimmer_view.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.12685185185185185" />
@@ -35,6 +60,7 @@
         <entry key="app/src/main/res/layout/fragment_view_pager.xml" value="0.15982776089159068" />
         <entry key="app/src/main/res/layout/fragment_web_login.xml" value="0.15982776089159068" />
         <entry key="app/src/main/res/layout/profile_fragment.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/settings_fragment.xml" value="0.16337386018237082" />
         <entry key="app/src/main/res/layout/story_views_item.xml" value="0.45" />
       </map>
     </option>

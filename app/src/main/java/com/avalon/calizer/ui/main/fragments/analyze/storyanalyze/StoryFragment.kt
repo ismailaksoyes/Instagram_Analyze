@@ -32,12 +32,8 @@ class StoryFragment : Fragment() {
     @Inject
     lateinit var viewModel: StoryViewModel
 
-    private val storyAdapter by lazy { StoryAdapter(object : ShowStoryInterface{
-        override fun openStory(userId: Long) {
-            super.openStory(userId)
-            getStory(userId)
-        }
-    }) }
+    lateinit var storyAdapter:StoryAdapter
+
     private lateinit var layoutManager: LinearLayoutManager
 
     override fun onCreateView(
@@ -58,6 +54,7 @@ class StoryFragment : Fragment() {
     }
 
     private fun setupRecyclerview() {
+        storyAdapter = StoryAdapter(viewModel)
         binding.rcStoryView.adapter = storyAdapter
         binding.rcStoryView.layoutManager = LinearLayoutManager(
             this.context,
@@ -75,6 +72,9 @@ class StoryFragment : Fragment() {
                     }
                     is StoryViewModel.StoryState.OpenStory->{
                        setStoryViews(it.urlList)
+                    }
+                    is StoryViewModel.StoryState.ClickItem->{
+                        getStory(it.userId)
                     }
                     is StoryViewModel.StoryState.Error -> {
 
@@ -96,10 +96,7 @@ class StoryFragment : Fragment() {
         storyAdapter.setStoryData(storyData)
     }
 
-
-
     private fun getStory(userId:Long) {
-
         lifecycleScope.launch(Dispatchers.IO) {
           viewModel.getStory(userId)
         }

@@ -8,6 +8,6 @@ class CubeTransformer:ViewPager2.PageTransformer {
         val deltaY = 0.5F
         page.pivotX = if (position < 0F) page.width.toFloat() else 0F
         page.pivotY = page.height * deltaY
-        page.rotationY = 30F * position
+        page.rotationY = 15F * position
     }
 }

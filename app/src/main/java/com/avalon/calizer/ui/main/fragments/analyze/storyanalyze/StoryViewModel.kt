@@ -27,8 +27,13 @@ class StoryViewModel @Inject constructor(
     sealed class StoryState {
         object Empty : StoryState()
         data class Success(val storyData: List<StoryData>) : StoryState()
+        data class ClickItem(val userId: Long):StoryState()
         data class OpenStory(val urlList: List<String>) : StoryState()
         object Error : StoryState()
+    }
+
+    fun setClickItemId(userId: Long){
+        _storyData.value = StoryState.ClickItem(userId)
     }
 
     suspend fun getStoryList() {

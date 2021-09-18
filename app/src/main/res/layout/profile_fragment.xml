@@ -12,7 +12,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?colorPrimary"
+    android:background="?backgroundColor"
     >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_go_accounts"
@@ -81,9 +81,8 @@
             android:id="@+id/tv_profile_followers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/ibm_plex_sans_bold"
             android:text="@{viewmodel.userModel.followers.toString()}"
-            android:textColor="?colorOnSecondary"
+            style="@style/text_normal_style"
             app:layout_constraintBottom_toTopOf="@id/tv_followers_title"
             app:layout_constraintEnd_toStartOf="@id/tv_profile_following"
             app:layout_constraintStart_toStartOf="parent"
@@ -93,9 +92,8 @@
             android:id="@+id/tv_profile_following"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/ibm_plex_sans_bold"
             android:text="@{viewmodel.userModel.following.toString()}"
-            android:textColor="?colorOnSecondary"
+            style="@style/text_normal_style"
             app:layout_constraintBottom_toTopOf="@id/tv_following_title"
             app:layout_constraintEnd_toStartOf="@id/tv_profile_posts"
             app:layout_constraintStart_toEndOf="@id/tv_profile_followers"
@@ -105,9 +103,8 @@
             android:id="@+id/tv_profile_posts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/ibm_plex_sans_bold"
             android:text="@{viewmodel.userModel.posts.toString()}"
-            android:textColor="?colorOnSecondary"
+            style="@style/text_normal_style"
             app:layout_constraintBottom_toTopOf="@id/tv_posts_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_profile_following"
@@ -173,7 +170,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?colorSecondary"
+            android:background="?colorSurface"
             android:padding="12dp">
 
             <ImageView
@@ -233,7 +230,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?colorSecondary"
+            android:background="?colorSurface"
             android:padding="12dp">
             <ImageView
                 android:id="@+id/iv_unfollowers_plus"
@@ -329,7 +326,7 @@
         app:layout_constraintStart_toStartOf="@id/tv_calc_odd_title"
         app:layout_constraintEnd_toEndOf="@id/tv_calc_odd_title"
         android:layout_marginTop="3dp"
-        android:background="@color/blue_night"/>
+        android:background="?colorOnBackground"/>
     <TextView
         android:id="@+id/tv_face_odds"
         style="@style/text_h1_uncolored_style"
@@ -358,7 +355,7 @@
         app:layout_constraintStart_toStartOf="@+id/tv_calc_odd_poze"
         app:layout_constraintEnd_toEndOf="@+id/tv_calc_odd_poze"
         android:layout_marginTop="3dp"
-        android:background="@color/blue_night"/>
+        android:background="?colorOnBackground"/>
     <TextView
         android:id="@+id/tv_poze_odds"
         android:layout_width="wrap_content"

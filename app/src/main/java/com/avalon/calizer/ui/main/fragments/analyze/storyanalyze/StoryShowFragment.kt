@@ -1,5 +1,6 @@
 package com.avalon.calizer.ui.main.fragments.analyze.storyanalyze
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,6 +13,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.avalon.calizer.R
 import com.avalon.calizer.databinding.FragmentStoryShowBinding
 import com.avalon.calizer.ui.tutorial.TutorialFragment
@@ -21,7 +23,7 @@ class StoryShowFragment : Fragment() {
 
     lateinit var binding: FragmentStoryShowBinding
 
-    lateinit var webView: WebView
+    private lateinit var webView: WebView
 
     companion object {
         private const val ARG_URL = "ARG_URL"
@@ -44,25 +46,23 @@ class StoryShowFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupWebView()
         val url = requireArguments().getString(ARG_URL)
-        Log.d("getUrlStory","$url")
+        openWebUrl(url)
+        closeStoryOb()
+    }
+
+    private fun openWebUrl(url: String?){
         url?.let { itUrl->
             webView.loadUrl(itUrl)
         }
-        webView.webViewClient = object : WebViewClient() {
-            override fun onPageFinished(view: WebView?, url: String?) {
-                super.onPageFinished(view, url)
-                Log.d("getUrlStoryFin",url.toString())
-            }
-
-            override fun onLoadResource(view: WebView?, url: String?) {
-                super.onLoadResource(view, url)
-                Log.d("getUrlStoryRe",url.toString())
-            }
-
-        }
-
-
     }
+
+    private fun closeStoryOb(){
+        binding.ivCloseStory.setOnClickListener {
+            val action = StoryViewsFragmentDirections.actionStoryViewsFragmentToStoryFragment()
+            findNavController().navigate(action)
+        }
+    }
+
 
     private fun setupWebView() {
         webView = binding.webView
@@ -72,6 +72,7 @@ class StoryShowFragment : Fragment() {
         webView.settings.domStorageEnabled = true
         webView.settings.loadWithOverviewMode = true
         webView.settings.useWideViewPort = true
+        webView.setBackgroundColor(Color.TRANSPARENT)
         webView.settings.loadsImagesAutomatically = true
     }
 
