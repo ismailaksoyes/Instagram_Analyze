@@ -52,6 +52,7 @@ class StoryShowFragment : Fragment() {
 
     private fun openWebUrl(url: String?){
         url?.let { itUrl->
+            Log.d("TESTURL",itUrl)
             webView.loadUrl(itUrl)
         }
     }
@@ -66,8 +67,9 @@ class StoryShowFragment : Fragment() {
 
     private fun setupWebView() {
         webView = binding.webView
+        webView.webViewClient = WebViewClient()
         webView.settings.javaScriptEnabled = true
-        webView.settings.javaScriptCanOpenWindowsAutomatically = true
+        webView.settings.javaScriptCanOpenWindowsAutomatically = false
         webView.settings.setSupportZoom(true)
         webView.settings.domStorageEnabled = true
         webView.settings.loadWithOverviewMode = true

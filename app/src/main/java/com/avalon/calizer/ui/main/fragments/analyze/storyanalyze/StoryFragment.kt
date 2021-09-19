@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -14,7 +15,10 @@ import com.avalon.calizer.data.local.story.StoryData
 import com.avalon.calizer.databinding.FragmentStoryBinding
 import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.adapter.ShowStoryInterface
 import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.adapter.StoryAdapter
+import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.dialog.StoryBottomSheet
 import com.avalon.calizer.utils.safeNavigate
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -34,7 +38,12 @@ class StoryFragment : Fragment() {
 
     lateinit var storyAdapter:StoryAdapter
 
+    @Inject
+    lateinit var modalBottomSheet :StoryBottomSheet
+
     private lateinit var layoutManager: LinearLayoutManager
+
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +60,14 @@ class StoryFragment : Fragment() {
         setupRecyclerview()
         initData()
         observeStoryData()
+
+        binding.clUsernameStory.setOnClickListener {
+
+           modalBottomSheet.show(childFragmentManager, StoryBottomSheet.TAG)
+
+        }
+
+
     }
 
     private fun setupRecyclerview() {

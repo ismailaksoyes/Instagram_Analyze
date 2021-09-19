@@ -8,7 +8,9 @@
 
         <!-- Customize your theme here. -->
 
+
     </style>
+
 
     <style name="Theme.Calizer" parent="Base.Theme.Calizer">
         <item name="colorPrimary">@color/white</item>
