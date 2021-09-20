@@ -27,6 +27,8 @@ class Repository @Inject constructor(private val apiHelper: ApiHelper) {
     suspend fun getStory(userId: Long,cookies: String?)=
         apiHelper.getStory(userId, cookies)
 
+    suspend fun getUserPk(username:String) = apiHelper.getUserPk("https://www.instagram.com/$username/?__a=1")
+
     /**
     suspend fun getStory(userId: Long,cookies: String?):Flow<Resource<ApiResponseStory>>{
         return flow {

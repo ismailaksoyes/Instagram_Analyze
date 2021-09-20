@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -26,6 +27,10 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.core.content.ContextCompat.getSystemService
+
+
+
 
 @AndroidEntryPoint
 class StoryFragment : Fragment() {
@@ -38,8 +43,7 @@ class StoryFragment : Fragment() {
 
     lateinit var storyAdapter:StoryAdapter
 
-    @Inject
-    lateinit var modalBottomSheet :StoryBottomSheet
+
 
     private lateinit var layoutManager: LinearLayoutManager
 
@@ -62,6 +66,7 @@ class StoryFragment : Fragment() {
         observeStoryData()
 
         binding.clUsernameStory.setOnClickListener {
+            val modalBottomSheet  = StoryBottomSheet()
 
            modalBottomSheet.show(childFragmentManager, StoryBottomSheet.TAG)
 

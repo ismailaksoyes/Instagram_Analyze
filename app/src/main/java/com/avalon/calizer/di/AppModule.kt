@@ -106,9 +106,6 @@ object AppModule {
         return Network(context)
     }
 
-    @Provides
-    @Singleton
-    fun provideBottomSheet():StoryBottomSheet = StoryBottomSheet()
 
 
 

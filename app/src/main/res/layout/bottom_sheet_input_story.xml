@@ -36,6 +36,7 @@
             app:endIconMode="clear_text"
             app:helperTextEnabled="true"
             app:errorEnabled="true"
+            app:hintTextColor="@color/blue_night"
             android:labelFor="@+id/et_input"
             android:hint="Kullanıcı Adı Giriniz...">
             <com.google.android.material.textfield.TextInputEditText

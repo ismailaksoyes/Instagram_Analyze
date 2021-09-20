@@ -1,9 +1,6 @@
 package com.avalon.calizer.data.api
 
-import com.avalon.calizer.data.remote.insresponse.ApiResponseReelsTray
-import com.avalon.calizer.data.remote.insresponse.ApiResponseStory
-import com.avalon.calizer.data.remote.insresponse.ApiResponseUserDetails
-import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollow
+import com.avalon.calizer.data.remote.insresponse.*
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -47,6 +44,9 @@ interface ApiService {
     suspend fun removeFollower(
 
     )
+
+    @GET()
+    suspend fun getUserPk(@Url url:String):Response<ApiResponseUserPk>
 
 
 

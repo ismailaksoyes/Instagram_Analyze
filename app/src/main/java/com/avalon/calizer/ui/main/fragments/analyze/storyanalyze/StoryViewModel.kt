@@ -66,6 +66,14 @@ class StoryViewModel @Inject constructor(
         super.onCleared()
         viewModelScope.cancel()
     }
+    suspend fun getUserPk(username:String){
+        viewModelScope.launch(Dispatchers.IO) {
+            when(val response = repository.getUserPk(username)){
+
+            }
+        }
+
+    }
 
     suspend fun getStory(userId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
