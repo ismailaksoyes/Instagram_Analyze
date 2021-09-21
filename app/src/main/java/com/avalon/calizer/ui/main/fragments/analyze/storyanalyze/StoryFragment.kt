@@ -124,6 +124,12 @@ class StoryFragment : Fragment() {
         }
     }
 
+
+
+    override fun onPause() {
+        super.onPause()
+    }
+
     private fun initData() {
         lifecycleScope.launch {
             viewModel.getStoryList()

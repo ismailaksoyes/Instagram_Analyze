@@ -3,6 +3,8 @@ package com.avalon.calizer.di
 import android.content.Context
 import android.content.SharedPreferences
 import android.webkit.WebView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.room.Room
 import com.avalon.calizer.data.api.ApiHelper
 import com.avalon.calizer.data.api.ApiHelperImpl
@@ -12,6 +14,7 @@ import com.avalon.calizer.data.local.MyDatabase
 import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.dialog.StoryBottomSheet
 import com.avalon.calizer.utils.Constants
 import com.avalon.calizer.utils.Constants.USER_DATABASE
+import com.avalon.calizer.utils.LoadingAnim
 import com.avalon.calizer.utils.Network
 import com.avalon.calizer.utils.NetworkConnectivity
 import com.bumptech.glide.Glide

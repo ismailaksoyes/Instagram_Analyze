@@ -23,6 +23,9 @@ class StoryViewModel @Inject constructor(
     private val _storyData = MutableStateFlow<StoryState>(StoryState.Empty)
     val storyData: StateFlow<StoryState> = _storyData
 
+    private val _userPk = MutableStateFlow<UserPkState>(UserPkState.Empty)
+    val userPk :StateFlow<UserPkState> = _userPk
+
 
     sealed class StoryState {
         object Empty : StoryState()
@@ -30,6 +33,14 @@ class StoryViewModel @Inject constructor(
         data class ClickItem(val userId: Long):StoryState()
         data class OpenStory(val urlList: List<String>) : StoryState()
         object Error : StoryState()
+    }
+
+    sealed class UserPkState{
+        object Empty:UserPkState()
+        data class Success(val userId: Long):UserPkState()
+        object Loading:UserPkState()
+        object Error:UserPkState()
+
     }
 
     fun setClickItemId(userId: Long){
@@ -66,13 +77,35 @@ class StoryViewModel @Inject constructor(
         super.onCleared()
         viewModelScope.cancel()
     }
+
     suspend fun getUserPk(username:String){
+
         viewModelScope.launch(Dispatchers.IO) {
             when(val response = repository.getUserPk(username)){
 
+                is Resource.Success->{
+                    response.data?.let { itUserPk->
+                       val userpk =  itUserPk.graphql.user.id
+                        _userPk.value = UserPkState.Success(userpk.toLong())
+                        Log.d("ResponseStory","$userpk")
+                    }
+                }
+                is Resource.DataError->{
+                    //no such user
+                    _userPk.value = UserPkState.Error
+                    Log.d("ResponseStory","${response.errorCode}")
+                }
             }
         }
 
+    }
+
+    suspend fun setOpenStory(userId: Long){
+        getStory(userId)
+    }
+
+    fun setLoadingPk(){
+        _userPk.value = UserPkState.Loading
     }
 
     suspend fun getStory(userId: Long) {

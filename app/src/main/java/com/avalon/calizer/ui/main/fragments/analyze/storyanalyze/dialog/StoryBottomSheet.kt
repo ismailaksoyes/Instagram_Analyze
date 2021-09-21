@@ -1,24 +1,24 @@
 package com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.dialog
 
-import android.app.Activity
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.DialogFragment
 import com.avalon.calizer.R
 import com.avalon.calizer.databinding.BottomSheetInputStoryBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import javax.inject.Inject
-import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.StoryViewModel
 import com.avalon.calizer.utils.Keyboard
+import com.avalon.calizer.utils.LoadingAnim
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class StoryBottomSheet : BottomSheetDialogFragment() {
@@ -28,9 +28,13 @@ class StoryBottomSheet : BottomSheetDialogFragment() {
     lateinit var viewModel: StoryViewModel
 
 
+    lateinit var loadingAnim: LoadingAnim
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogStyle)
+        loadingAnim = LoadingAnim(childFragmentManager)
     }
 
     override fun onCreateView(
@@ -50,23 +54,34 @@ class StoryBottomSheet : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
        Keyboard.show(view)
+        observeUserPk()
+        showStoryClick()
 
 
     }
 
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-
+    private fun showStoryClick(){
+        binding.btnStoryShow.setOnClickListener {
+            viewModel.setLoadingPk()
+           getUserPk()
+        }
+    }
+    private fun getInputText(): String? {
+        val usernameEdit= binding.etInput.text
+        return if (!usernameEdit.isNullOrEmpty()) {
+            usernameEdit.toString().trim()
+        }else {
+            null
+        }
     }
 
     private fun getUserPk(){
-      val usernameEdit= binding.etInput.text
-        if (!usernameEdit.isNullOrEmpty()){
-            val username = usernameEdit.trim()
-            viewModel.get
+        lifecycleScope.launch {
+            getInputText()?.let { itUsername->
+                viewModel.getUserPk(itUsername)
+            }
         }
+
     }
 
 
@@ -86,5 +101,45 @@ class StoryBottomSheet : BottomSheetDialogFragment() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         bottomSheetBehavior.isHideable = true
         bottomSheetBehavior.skipCollapsed = true
+    }
+    private fun observeUserPk(){
+        lifecycleScope.launch {
+            viewModel.userPk.collect {
+                when(it){
+                    is StoryViewModel.UserPkState.Loading->{
+                        isLoadingDialog(true)
+                    }
+                    is StoryViewModel.UserPkState.Success->{
+                        isLoadingDialog(false)
+                        openStory(it.userId)
+                    }
+                    is StoryViewModel.UserPkState.Error->{
+                        isLoadingDialog(false)
+                        noSuchUser()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun openStory(userPk:Long){
+        lifecycleScope.launch {
+            viewModel.setOpenStory(userPk)
+        }
+
+    }
+
+    private fun noSuchUser(){
+        view?.let { itView->
+            Keyboard.show(itView)
+        }
+
+    }
+    private fun isLoadingDialog(isStatus:Boolean){
+        if (isStatus){
+           loadingAnim.showDialog()
+        }else{
+            loadingAnim.closeDialog()
+        }
     }
 }
