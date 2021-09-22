@@ -2,6 +2,7 @@ package com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.dialog
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +13,11 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import javax.inject.Inject
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.StoryViewModel
 import com.avalon.calizer.utils.Keyboard
 import com.avalon.calizer.utils.LoadingAnim
+import com.avalon.calizer.utils.NavDataType.USER_PK_TYPE
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -25,7 +28,7 @@ class StoryBottomSheet : BottomSheetDialogFragment() {
     lateinit var binding: BottomSheetInputStoryBinding
 
     @Inject
-    lateinit var viewModel: StoryViewModel
+    lateinit var viewModel: StorySheetViewModel
 
 
     lateinit var loadingAnim: LoadingAnim
@@ -53,29 +56,36 @@ class StoryBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-       Keyboard.show(view)
+        Keyboard.show(view)
         observeUserPk()
         showStoryClick()
+        onFocusInput()
 
 
     }
 
-    private fun showStoryClick(){
+    private fun showStoryClick() {
         binding.btnStoryShow.setOnClickListener {
-            viewModel.setLoadingPk()
-           getUserPk()
+            if (!binding.etInput.text.isNullOrEmpty()){
+                viewModel.setLoadingPk()
+                getUserPk()
+            }else{
+                binding.etInputLayout.error = "not null"
+            }
+
         }
     }
+
     private fun getInputText(): String? {
-        val usernameEdit= binding.etInput.text
+        val usernameEdit = binding.etInput.text
         return if (!usernameEdit.isNullOrEmpty()) {
             usernameEdit.toString().trim()
-        }else {
+        } else {
             null
         }
     }
 
-    private fun getUserPk(){
+    private fun getUserPk() {
         lifecycleScope.launch {
             getInputText()?.let { itUsername->
                 viewModel.getUserPk(itUsername)
@@ -102,18 +112,19 @@ class StoryBottomSheet : BottomSheetDialogFragment() {
         bottomSheetBehavior.isHideable = true
         bottomSheetBehavior.skipCollapsed = true
     }
-    private fun observeUserPk(){
+
+    private fun observeUserPk() {
         lifecycleScope.launch {
             viewModel.userPk.collect {
-                when(it){
-                    is StoryViewModel.UserPkState.Loading->{
+                when (it) {
+                    is StorySheetViewModel.UserPkState.Loading -> {
                         isLoadingDialog(true)
                     }
-                    is StoryViewModel.UserPkState.Success->{
+                    is StorySheetViewModel.UserPkState.Success -> {
                         isLoadingDialog(false)
                         openStory(it.userId)
                     }
-                    is StoryViewModel.UserPkState.Error->{
+                    is StorySheetViewModel.UserPkState.Error -> {
                         isLoadingDialog(false)
                         noSuchUser()
                     }
@@ -122,23 +133,31 @@ class StoryBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    private fun openStory(userPk:Long){
-        lifecycleScope.launch {
-            viewModel.setOpenStory(userPk)
-        }
+    private fun openStory(userPk: Long) {
+
+        findNavController().previousBackStackEntry?.savedStateHandle?.set(USER_PK_TYPE, userPk)
+        findNavController().popBackStack()
+
 
     }
+    private fun onFocusInput(){
+        binding.etInput.setOnClickListener {
+            binding.etInputLayout.error = null
+        }
+    }
 
-    private fun noSuchUser(){
-        view?.let { itView->
+    private fun noSuchUser() {
+        binding.etInputLayout.error = "nosuchuser"
+        view?.let { itView ->
             Keyboard.show(itView)
         }
 
     }
-    private fun isLoadingDialog(isStatus:Boolean){
-        if (isStatus){
-           loadingAnim.showDialog()
-        }else{
+
+    private fun isLoadingDialog(isStatus: Boolean) {
+        if (isStatus) {
+            loadingAnim.showDialog()
+        } else {
             loadingAnim.closeDialog()
         }
     }

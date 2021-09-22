@@ -30,6 +30,13 @@ interface ApiService {
        @Header("Cookie") cookies:String?
    ):Response<ApiResponseStory>
 
+   @GET("feed/user/{userId}/")
+   suspend fun getFeedUser(
+       @Path("userId") userId:Long,
+       @Query("max_id")maxId: String?,
+       @Header("Cookie") cookies: String?
+   )
+
     @GET("users/{userId}/info/")
     suspend fun getUserDetails(
         @Path("userId") userId:Long,
@@ -40,13 +47,46 @@ interface ApiService {
     suspend fun getBlockStatus(
         //params userlist
     ):Response<String>
-    @GET("friendships/remove_follower/{user_id!s}/")
+    @GET("friendships/remove_follower/{user_id}/")
     suspend fun removeFollower(
-
+        @Path("userId") userId:Long,
+        @Header("Cookie") cookies: String?
     )
 
-    @GET()
-    suspend fun getUserPk(@Url url:String):Response<ApiResponseUserPk>
+    @GET("friendships/create/{user_id}/")
+    suspend fun addFollower(
+        @Path("userId") userId:Long,
+        @Header("Cookie") cookies: String?
+    )
+
+    @GET("users/blocked_list/")
+    suspend fun getBlockedList(
+        @Header("Cookie") cookies: String?
+    )
+
+    @GET("users/{userId}/usernameinfo/")
+    suspend fun getUserInfo(
+        @Path("userId") userId:Long,
+        @Header("Cookie") cookies: String?
+    ):Response<ApiResponseUserPk>
+
+    @GET("feed/user/{userId}/reel_media/")
+    suspend fun getUserReelsMedia(
+        @Path("userId") userId:Long,
+        @Header("Cookie") cookies: String?
+    )
+
+    @GET("friendships/show/{userId}/")
+    suspend fun getFriendShipStatusShow(
+        @Path("userId") userId:Long,
+        @Header("Cookie") cookies: String?
+    )
+
+    @GET("highlights/{userId}/highlights_tray/")
+    suspend fun getHighlightsStory(
+        @Path("userId") userId:Long,
+        @Header("Cookie") cookies: String?
+    )
 
 
 

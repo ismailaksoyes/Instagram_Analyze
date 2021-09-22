@@ -1,5 +1,6 @@
 package com.avalon.calizer.data.api
 
+import android.util.Log
 import com.avalon.calizer.data.error.NETWORK_ERROR
 import com.avalon.calizer.data.error.NO_INTERNET_CONNECTION
 import com.avalon.calizer.data.remote.insresponse.*
@@ -59,6 +60,7 @@ class ApiHelperImpl  @Inject constructor(private val apiService: ApiService, pri
         return try {
             val response = call.invoke()
             val responseCode = response.code()
+            Log.d("responsetestapi","${response.body()}")
             if (response.isSuccessful){
                 response.body()
             }else{

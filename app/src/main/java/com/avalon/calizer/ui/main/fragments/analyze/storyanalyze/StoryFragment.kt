@@ -1,10 +1,12 @@
 package com.avalon.calizer.ui.main.fragments.analyze.storyanalyze
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -28,8 +30,9 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.core.content.ContextCompat.getSystemService
-
-
+import com.avalon.calizer.utils.LoadingAnim
+import com.avalon.calizer.utils.NavDataType
+import com.avalon.calizer.utils.NavDataType.USER_PK_TYPE
 
 
 @AndroidEntryPoint
@@ -41,19 +44,20 @@ class StoryFragment : Fragment() {
     @Inject
     lateinit var viewModel: StoryViewModel
 
-    lateinit var storyAdapter:StoryAdapter
+    lateinit var storyAdapter: StoryAdapter
 
+    lateinit var loadingAnim: LoadingAnim
 
 
     private lateinit var layoutManager: LinearLayoutManager
 
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentStoryBinding.inflate(inflater, container, false)
+        loadingAnim = LoadingAnim(childFragmentManager)
         return binding.root
     }
 
@@ -64,14 +68,13 @@ class StoryFragment : Fragment() {
         setupRecyclerview()
         initData()
         observeStoryData()
+        observeUserPk()
 
         binding.clUsernameStory.setOnClickListener {
-            val modalBottomSheet  = StoryBottomSheet()
-
-           modalBottomSheet.show(childFragmentManager, StoryBottomSheet.TAG)
+            val action = StoryFragmentDirections.actionStoryFragmentToStoryBottomSheet()
+            findNavController().navigate(action)
 
         }
-
 
     }
 
@@ -92,13 +95,20 @@ class StoryFragment : Fragment() {
                     is StoryViewModel.StoryState.Success -> {
                         setAdapterStory(it.storyData)
                     }
-                    is StoryViewModel.StoryState.OpenStory->{
-                       setStoryViews(it.urlList)
+                    is StoryViewModel.StoryState.OpenStory -> {
+                        viewModel.setLoadingState(false)
+                        setStoryViews(it.urlList)
                     }
-                    is StoryViewModel.StoryState.ClickItem->{
+                    is StoryViewModel.StoryState.ClickItem -> {
+                        viewModel.setLoadingState(true)
                         getStory(it.userId)
                     }
+                    is StoryViewModel.StoryState.Loading -> {
+                        isLoadingDialog(it.isLoading)
+                    }
                     is StoryViewModel.StoryState.Error -> {
+                        Toast.makeText(requireContext(),"HIKAYE YOK",Toast.LENGTH_SHORT).show()
+                        viewModel.setLoadingState(false)
 
                     }
                 }
@@ -107,9 +117,22 @@ class StoryFragment : Fragment() {
         }
     }
 
-    private  fun setStoryViews(urlList: List<String>){
-        if (urlList.isNotEmpty()){
-            val action = StoryFragmentDirections.actionStoryFragmentToStoryViewsFragment(urlList.toTypedArray())
+    private fun observeUserPk() {
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Long>(USER_PK_TYPE)
+            ?.observe(
+                viewLifecycleOwner
+            ) { result ->
+                lifecycleScope.launch {
+                    viewModel.setLoadingState(true)
+                    viewModel.getStory(result)
+                }
+            }
+    }
+
+    private fun setStoryViews(urlList: List<String>) {
+        if (urlList.isNotEmpty()) {
+            val action =
+                StoryFragmentDirections.actionStoryFragmentToStoryViewsFragment(urlList.toTypedArray())
             findNavController().navigate(action)
         }
     }
@@ -118,23 +141,25 @@ class StoryFragment : Fragment() {
         storyAdapter.setStoryData(storyData)
     }
 
-    private fun getStory(userId:Long) {
-        lifecycleScope.launch(Dispatchers.IO) {
-          viewModel.getStory(userId)
+    private fun getStory(userId: Long) {
+        lifecycleScope.launch {
+            viewModel.getStory(userId)
         }
     }
 
-
-
-    override fun onPause() {
-        super.onPause()
-    }
 
     private fun initData() {
         lifecycleScope.launch {
             viewModel.getStoryList()
         }
 
+    }
+    private fun isLoadingDialog(isStatus: Boolean) {
+        if (isStatus) {
+            loadingAnim.showDialog()
+        } else {
+            loadingAnim.closeDialog()
+        }
     }
 
 }

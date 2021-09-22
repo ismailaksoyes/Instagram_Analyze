@@ -193,6 +193,9 @@
             app:popExitAnim="@anim/fade_out"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"/>
+        <action
+            android:id="@+id/action_storyFragment_to_storyBottomSheet"
+            app:destination="@id/storyBottomSheet" />
 
     </fragment>
     <fragment
@@ -220,6 +223,14 @@
         tools:layout="@layout/fragment_story_show" >
 
     </fragment>
+    <dialog
+        android:id="@+id/storyBottomSheet"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.dialog.StoryBottomSheet"
+        android:label="StoryBottomSheet" >
+        <action
+            android:id="@+id/action_storyBottomSheet_to_storyFragment"
+            app:destination="@id/storyFragment" />
+    </dialog>
 
 
 </navigation>

@@ -1,11 +1,13 @@
 package com.avalon.calizer.utils
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.fragment.findNavController
 import com.avalon.calizer.R
 import com.avalon.calizer.databinding.GlobalLoadingAnimBinding
 import javax.inject.Inject
