@@ -114,4 +114,23 @@ class StoryViewModel @Inject constructor(
 
         }
     }
+
+    suspend fun getHighlights(userId: Long){
+        viewModelScope.launch {
+            when(val response = repository.getHighlights(userId,prefs.allCookie)){
+                is Resource.Success->{
+                    response.data?.let { itData->
+                        val highlightIdList = ArrayList<String>()
+                        itData.tray.forEach { itTray->
+                            highlightIdList.add(itTray.id)
+                        }
+                        val highlightId = itData.tray[0].id
+                    }
+                }
+            }
+        }
+    }
+    suspend fun getHighlightsStory(){
+
+    }
 }

@@ -64,9 +64,9 @@ interface ApiService {
         @Header("Cookie") cookies: String?
     )
 
-    @GET("users/{userId}/usernameinfo/")
+    @GET("users/{userName}/usernameinfo/")
     suspend fun getUserInfo(
-        @Path("userId") userId:Long,
+        @Path("userName") userName:String,
         @Header("Cookie") cookies: String?
     ):Response<ApiResponseUserPk>
 
@@ -83,10 +83,16 @@ interface ApiService {
     )
 
     @GET("highlights/{userId}/highlights_tray/")
-    suspend fun getHighlightsStory(
+    suspend fun getHighlights(
         @Path("userId") userId:Long,
         @Header("Cookie") cookies: String?
-    )
+    ):Response<ApiResponseHighlights>
+
+    @GET("feed/reels_media/?reel_ids={highlightId}")
+    suspend fun getHighlightsStory(
+        @Path("highlightId") highlightId:String,
+        @Header("Cookie") cookies: String?
+    ):Response<ApiResponseHighlightsStory>
 
 
 

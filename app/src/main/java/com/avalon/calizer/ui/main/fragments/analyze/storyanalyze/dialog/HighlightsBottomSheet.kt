@@ -2,34 +2,31 @@ package com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.avalon.calizer.R
-import com.avalon.calizer.databinding.BottomSheetInputStoryBinding
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import javax.inject.Inject
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.StoryViewModel
+import com.avalon.calizer.R
+import com.avalon.calizer.databinding.BottomSheetHighlightsStoryBinding
 import com.avalon.calizer.utils.Keyboard
 import com.avalon.calizer.utils.LoadingAnim
-import com.avalon.calizer.utils.NavDataType.USER_PK_TYPE
+import com.avalon.calizer.utils.NavDataType
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+
 
 @AndroidEntryPoint
-class StoryBottomSheet : BottomSheetDialogFragment() {
-    lateinit var binding: BottomSheetInputStoryBinding
+class HighlightsBottomSheet : DialogFragment() {
+    lateinit var binding: BottomSheetHighlightsStoryBinding
 
     @Inject
-    lateinit var viewModel: StorySheetViewModel
+    lateinit var viewModel: HighlightsSheetViewModel
 
 
     lateinit var loadingAnim: LoadingAnim
@@ -37,7 +34,7 @@ class StoryBottomSheet : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogStyle)
+        setStyle(STYLE_NORMAL, R.style.DialogStyle)
         loadingAnim = LoadingAnim(childFragmentManager)
     }
 
@@ -46,7 +43,7 @@ class StoryBottomSheet : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = BottomSheetInputStoryBinding.inflate(inflater, container, false)
+        binding = BottomSheetHighlightsStoryBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -56,13 +53,10 @@ class StoryBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         Keyboard.show(view)
         observeUserPk()
         showStoryClick()
         onFocusInput()
-
-
     }
 
     private fun showStoryClick() {
@@ -116,16 +110,16 @@ class StoryBottomSheet : BottomSheetDialogFragment() {
 
     private fun observeUserPk() {
         lifecycleScope.launch {
-            viewModel.userPk.collect {
+            viewModel.userPkHigh.collect {
                 when (it) {
-                    is StorySheetViewModel.UserPkState.Loading -> {
+                    is HighlightsSheetViewModel.UserPkState.Loading -> {
                         isLoadingDialog(true)
                     }
-                    is StorySheetViewModel.UserPkState.Success -> {
+                    is HighlightsSheetViewModel.UserPkState.Success -> {
                         isLoadingDialog(false)
                         openStory(it.userId)
                     }
-                    is StorySheetViewModel.UserPkState.Error -> {
+                    is HighlightsSheetViewModel.UserPkState.Error -> {
                         isLoadingDialog(false)
                         noSuchUser()
                     }
@@ -136,7 +130,7 @@ class StoryBottomSheet : BottomSheetDialogFragment() {
 
     private fun openStory(userPk: Long) {
 
-        findNavController().previousBackStackEntry?.savedStateHandle?.set(USER_PK_TYPE, userPk)
+        findNavController().previousBackStackEntry?.savedStateHandle?.set(NavDataType.USER_PK_HIGHLIGHTS, userPk)
         findNavController().popBackStack()
 
 
@@ -162,4 +156,5 @@ class StoryBottomSheet : BottomSheetDialogFragment() {
             loadingAnim.closeDialog()
         }
     }
+
 }

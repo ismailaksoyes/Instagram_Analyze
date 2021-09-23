@@ -10,6 +10,8 @@ interface ApiHelper{
     suspend fun getUserFollowers(userId:Long,maxId: String?,rnkToken:String?,cookies: String?):Resource<ApiResponseUserFollow>
     suspend fun getUserFollowing(userId:Long,maxId: String?,rnkToken:String?,cookies: String?):Resource<ApiResponseUserFollow>
     suspend fun getStory(userId: Long,cookies: String?):Resource<ApiResponseStory>
-    suspend fun getUserPk(url:String):Resource<ApiResponseUserPk>
+    suspend fun getUserInfo(userName: String,cookies: String?):Resource<ApiResponseUserPk>
+    suspend fun getHighlights(userId: Long,cookies: String?):Resource<ApiResponseHighlights>
+    suspend fun getHighlightsStory(highlightId:String,cookies: String?):Resource<ApiResponseHighlightsStory>
     //usercase update details
 }

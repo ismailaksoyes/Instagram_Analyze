@@ -32,6 +32,7 @@ import javax.inject.Inject
 import androidx.core.content.ContextCompat.getSystemService
 import com.avalon.calizer.utils.LoadingAnim
 import com.avalon.calizer.utils.NavDataType
+import com.avalon.calizer.utils.NavDataType.USER_PK_HIGHLIGHTS
 import com.avalon.calizer.utils.NavDataType.USER_PK_TYPE
 
 
@@ -68,7 +69,8 @@ class StoryFragment : Fragment() {
         setupRecyclerview()
         initData()
         observeStoryData()
-        observeUserPk()
+        observeUserStoryPk()
+        observeUserHighlightPk()
 
         binding.clUsernameStory.setOnClickListener {
             val action = StoryFragmentDirections.actionStoryFragmentToStoryBottomSheet()
@@ -117,8 +119,19 @@ class StoryFragment : Fragment() {
         }
     }
 
-    private fun observeUserPk() {
+    private fun observeUserStoryPk() {
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Long>(USER_PK_TYPE)
+            ?.observe(
+                viewLifecycleOwner
+            ) { result ->
+                lifecycleScope.launch {
+                    viewModel.setLoadingState(true)
+                    viewModel.getStory(result)
+                }
+            }
+    }
+    private fun observeUserHighlightPk() {
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Long>(USER_PK_HIGHLIGHTS)
             ?.observe(
                 viewLifecycleOwner
             ) { result ->

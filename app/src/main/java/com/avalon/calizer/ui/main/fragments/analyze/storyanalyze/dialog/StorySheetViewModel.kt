@@ -31,19 +31,20 @@ class StorySheetViewModel@Inject constructor(
     suspend fun getUserPk(username:String){
 
         viewModelScope.launch {
-            when(val response = repository.getUserPk(username)){
+            when(val response = repository.getUserPk(username,prefs.allCookie)){
 
                 is Resource.Success->{
-                    response.data?.let { itUserPk->
-                        val userpk =  itUserPk.graphql.user.id
-                        _userPk.value = UserPkState.Success(userpk.toLong())
-                        Log.d("ResponseStory","$userpk")
+                    response.data?.user?.let { itUser->
+                        val userPk =  itUser.pk
+                        _userPk.value = UserPkState.Success(userPk.toLong())
+                    }?: kotlin.run {
+                        _userPk.value = UserPkState.Error
                     }
+
                 }
                 is Resource.DataError->{
                     //no such user
                     _userPk.value = UserPkState.Error
-                    Log.d("ResponseStory","${response.errorCode}")
                 }
             }
         }

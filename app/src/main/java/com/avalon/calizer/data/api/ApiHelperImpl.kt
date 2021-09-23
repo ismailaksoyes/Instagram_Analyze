@@ -46,11 +46,25 @@ class ApiHelperImpl  @Inject constructor(private val apiService: ApiService, pri
         }
     }
 
-    override suspend fun getUserPk(url: String): Resource<ApiResponseUserPk> {
-        return when(val response = checkResponse { (apiService::getUserPk)(url) }){
+    override suspend fun getUserInfo(userName: String,cookies: String?): Resource<ApiResponseUserPk> {
+        return when(val response = checkResponse { (apiService::getUserInfo)(userName, cookies) }){
             is ApiResponseUserPk->Resource.Success(data = response)
             else-> Resource.DataError(errorCode = response as Int)
         }
+    }
+
+    override suspend fun getHighlights(userId: Long, cookies: String?): Resource<ApiResponseHighlights> {
+        return when(val response= checkResponse { (apiService::getHighlights)(userId, cookies) }){
+            is ApiResponseHighlights->Resource.Success(data = response)
+            else-> Resource.DataError(errorCode = response as Int)
+        }
+    }
+
+    override suspend fun getHighlightsStory(highlightId: String, cookies: String?): Resource<ApiResponseHighlightsStory> {
+       return when(val response= checkResponse { (apiService::getHighlightsStory)(highlightId, cookies) }){
+           is ApiResponseHighlightsStory->Resource.Success(data = response)
+           else->Resource.DataError(errorCode = response as Int)
+       }
     }
 
     private suspend fun checkResponse(call:suspend() -> Response<*>):Any?{
