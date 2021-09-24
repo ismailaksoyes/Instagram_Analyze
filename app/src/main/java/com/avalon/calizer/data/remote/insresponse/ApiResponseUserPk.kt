@@ -96,7 +96,7 @@ data class ApiResponseUserPk(
         @SerializedName("mutual_followers_count")
         val mutualFollowersCount: Int,
         @SerializedName("pk")
-        val pk: Int,
+        val pk: Long,
         @SerializedName("professional_conversion_suggested_account_type")
         val professionalConversionSuggestedAccountType: Int,
         @SerializedName("profile_context")
@@ -104,7 +104,7 @@ data class ApiResponseUserPk(
         @SerializedName("profile_context_links_with_user_ids")
         val profileContextLinksWithUserIds: List<ProfileContextLinksWithUserId>,
         @SerializedName("profile_context_mutual_follow_ids")
-        val profileContextMutualFollowIds: List<Int>,
+        val profileContextMutualFollowIds: List<String>,
         @SerializedName("profile_pic_url")
         val profilePicUrl: String,
         @SerializedName("profile_pic_id")

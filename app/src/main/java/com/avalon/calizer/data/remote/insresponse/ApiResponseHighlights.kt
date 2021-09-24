@@ -34,7 +34,7 @@ data class ApiResponseHighlights(
         @SerializedName("items")
         val items: List<Item>,
         @SerializedName("latest_reel_media")
-        val latestReelMedia: Int,
+        val latestReelMedia: String,
         @SerializedName("media_count")
         val mediaCount: Int,
         @SerializedName("media_ids")
@@ -56,8 +56,6 @@ data class ApiResponseHighlights(
     ) {
         @Keep
         data class CoverMedia(
-            @SerializedName("crop_rect")
-            val cropRect: List<Int>,
             @SerializedName("cropped_image_version")
             val croppedImageVersion: CroppedImageVersion,
             @SerializedName("media_id")
@@ -118,6 +116,10 @@ data class ApiResponseHighlights(
             val isReelMedia: Boolean,
             @SerializedName("is_unified_video")
             val isUnifiedVideo: Boolean,
+            @SerializedName("is_in_profile_grid")
+            val isInProfileGrid: Boolean,
+            @SerializedName("like_and_view_counts_disabled")
+            val likeAndViewCountsDisabled: Boolean,
             @SerializedName("media_type")
             val mediaType: Int,
             @SerializedName("organic_tracking_token")
@@ -129,11 +131,13 @@ data class ApiResponseHighlights(
             @SerializedName("photo_of_you")
             val photoOfYou: Boolean,
             @SerializedName("pk")
-            val pk: Long,
+            val pk: String,
             @SerializedName("playlist_eligibility")
             val playlistEligibility: Boolean,
             @SerializedName("product_type")
             val productType: String,
+            @SerializedName("profile_grid_control_enabled")
+            val profileGridControlEnabled: Boolean,
             @SerializedName("sharing_friction_info")
             val sharingFrictionInfo: SharingFrictionInfo,
             @SerializedName("show_one_tap_fb_share_tooltip")
@@ -143,7 +147,7 @@ data class ApiResponseHighlights(
             @SerializedName("supports_reel_reactions")
             val supportsReelReactions: Boolean,
             @SerializedName("taken_at")
-            val takenAt: Int,
+            val takenAt: String,
             @SerializedName("user")
             val user: User
         ) {
@@ -192,7 +196,7 @@ data class ApiResponseHighlights(
                 @SerializedName("is_verified")
                 val isVerified: Boolean,
                 @SerializedName("pk")
-                val pk: Int,
+                val pk: Long,
                 @SerializedName("profile_pic_url")
                 val profilePicUrl: String,
                 @SerializedName("profile_pic_id")
@@ -213,7 +217,7 @@ data class ApiResponseHighlights(
             @SerializedName("is_verified")
             val isVerified: Boolean,
             @SerializedName("pk")
-            val pk: Int,
+            val pk: Long,
             @SerializedName("profile_pic_url")
             val profilePicUrl: String,
             @SerializedName("profile_pic_id")

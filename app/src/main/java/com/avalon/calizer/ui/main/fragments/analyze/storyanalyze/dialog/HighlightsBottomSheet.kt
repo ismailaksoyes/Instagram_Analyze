@@ -8,8 +8,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.avalon.calizer.R
+import com.avalon.calizer.data.local.story.HighlightsData
+import com.avalon.calizer.data.local.story.StoryData
 import com.avalon.calizer.databinding.BottomSheetHighlightsStoryBinding
+import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.adapter.HighlightsAdapter
+import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.adapter.StoryAdapter
 import com.avalon.calizer.utils.Keyboard
 import com.avalon.calizer.utils.LoadingAnim
 import com.avalon.calizer.utils.NavDataType
@@ -29,7 +34,11 @@ class HighlightsBottomSheet : DialogFragment() {
     lateinit var viewModel: HighlightsSheetViewModel
 
 
-    lateinit var loadingAnim: LoadingAnim
+    private lateinit var loadingAnim: LoadingAnim
+
+    lateinit var highlightsAdapter: HighlightsAdapter
+
+    private lateinit var layoutManager: LinearLayoutManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,10 +62,13 @@ class HighlightsBottomSheet : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        layoutManager = LinearLayoutManager(view.context)
+        binding.rcHighlights.layoutManager = layoutManager
         Keyboard.show(view)
         observeUserPk()
         showStoryClick()
         onFocusInput()
+        setupRecyclerview()
     }
 
     private fun showStoryClick() {
@@ -69,6 +81,15 @@ class HighlightsBottomSheet : DialogFragment() {
             }
 
         }
+    }
+    private fun setupRecyclerview() {
+        highlightsAdapter = HighlightsAdapter(viewModel)
+        binding.rcHighlights.adapter = highlightsAdapter
+        binding.rcHighlights.layoutManager = LinearLayoutManager(
+            this.context,
+            LinearLayoutManager.HORIZONTAL, false
+        )
+
     }
 
     private fun getInputText(): String? {
@@ -103,7 +124,7 @@ class HighlightsBottomSheet : DialogFragment() {
     }
 
     private fun setupBehavior(bottomSheetBehavior: BottomSheetBehavior<View>) {
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         bottomSheetBehavior.isHideable = true
         bottomSheetBehavior.skipCollapsed = true
     }
@@ -116,8 +137,14 @@ class HighlightsBottomSheet : DialogFragment() {
                         isLoadingDialog(true)
                     }
                     is HighlightsSheetViewModel.UserPkState.Success -> {
+                        //isLoadingDialog(false)
+                        viewModel.getHighlights(it.userId)
+                        binding.rcHighlights.visibility = View.VISIBLE
+                       // openStory(it.userId)
+                    }
+                    is HighlightsSheetViewModel.UserPkState.Highlights->{
                         isLoadingDialog(false)
-                        openStory(it.userId)
+                        setAdapterHighlights(it.highlightsData)
                     }
                     is HighlightsSheetViewModel.UserPkState.Error -> {
                         isLoadingDialog(false)
@@ -129,15 +156,14 @@ class HighlightsBottomSheet : DialogFragment() {
     }
 
     private fun openStory(userPk: Long) {
-
         findNavController().previousBackStackEntry?.savedStateHandle?.set(NavDataType.USER_PK_HIGHLIGHTS, userPk)
         findNavController().popBackStack()
-
 
     }
     private fun onFocusInput(){
         binding.etInput.setOnClickListener {
             binding.etInputLayout.error = null
+            binding.rcHighlights.visibility = View.GONE
         }
     }
 
@@ -147,6 +173,9 @@ class HighlightsBottomSheet : DialogFragment() {
             Keyboard.show(itView)
         }
 
+    }
+    private fun setAdapterHighlights(highlightsData:List<HighlightsData>) {
+        highlightsAdapter.setHighlightsData(highlightsData)
     }
 
     private fun isLoadingDialog(isStatus: Boolean) {

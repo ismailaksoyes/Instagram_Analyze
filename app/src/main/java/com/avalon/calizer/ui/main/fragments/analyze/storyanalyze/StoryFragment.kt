@@ -77,6 +77,10 @@ class StoryFragment : Fragment() {
             findNavController().navigate(action)
 
         }
+        binding.clUsernameHighlights.setOnClickListener {
+            val action = StoryFragmentDirections.actionStoryFragmentToHighlightsBottomSheet()
+            findNavController().navigate(action)
+        }
 
     }
 
