@@ -64,13 +64,13 @@ class HighlightsBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         layoutManager = LinearLayoutManager(view.context)
-       // binding.rcHighlights.layoutManager = layoutManager
+        binding.rcHighlights.layoutManager = layoutManager
         binding.etInput.requestFocus()
         Keyboard.show(view)
         observeUserPk()
         showStoryClick()
         onFocusInput()
-
+        setupRecyclerview()
     }
 
     private fun showStoryClick() {
@@ -84,7 +84,15 @@ class HighlightsBottomSheet : BottomSheetDialogFragment() {
 
         }
     }
+    private fun setupRecyclerview() {
+        highlightsAdapter = HighlightsAdapter(viewModel)
+        binding.rcHighlights.adapter = highlightsAdapter
+        binding.rcHighlights.layoutManager = LinearLayoutManager(
+            this.context,
+            LinearLayoutManager.HORIZONTAL, false
+        )
 
+    }
 
     private fun getInputText(): String? {
         val usernameEdit = binding.etInput.text
@@ -138,7 +146,7 @@ class HighlightsBottomSheet : BottomSheetDialogFragment() {
                     }
                     is HighlightsSheetViewModel.UserPkState.Highlights->{
                         isLoadingDialog(false)
-                       // binding.rcHighlights.visibility = View.VISIBLE
+                        binding.rcHighlights.visibility = View.VISIBLE
                         setAdapterHighlights(it.highlightsData)
                     }
                     is HighlightsSheetViewModel.UserPkState.Error -> {
@@ -158,7 +166,7 @@ class HighlightsBottomSheet : BottomSheetDialogFragment() {
     private fun onFocusInput(){
         binding.etInput.setOnClickListener {
             binding.etInputLayout.error = null
-           // binding.rcHighlights.visibility = View.GONE
+            binding.rcHighlights.visibility = View.GONE
         }
     }
 
