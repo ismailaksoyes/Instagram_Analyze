@@ -3,11 +3,14 @@ package com.avalon.calizer.utils
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.Point
+import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import androidx.fragment.app.DialogFragment
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.follow.*
 import com.avalon.calizer.data.local.profile.AccountsInfoData
@@ -186,3 +189,15 @@ fun ApiResponseUserDetails.toAccountsInfoData() = AccountsInfoData(
     posts = user.mediaCount.toLong(),
     userId = user.pk
 )
+
+fun DialogFragment.fixDialogSize(widthPercent: Double, heightPercent: Double){
+    val size = Point()
+    dialog?.window?.apply {
+        windowManager.defaultDisplay.getSize(size)
+
+        setLayout(widthPercent of size.x, heightPercent of size.y)
+        setGravity(Gravity.CENTER)
+    }
+}
+
+private infix fun Double.of(value: Int) = (this * value).toInt()

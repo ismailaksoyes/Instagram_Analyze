@@ -19,6 +19,7 @@ import com.avalon.calizer.utils.Keyboard
 import com.avalon.calizer.utils.LoadingAnim
 import com.avalon.calizer.utils.NavDataType
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -27,7 +28,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class HighlightsBottomSheet : DialogFragment() {
+class HighlightsBottomSheet : BottomSheetDialogFragment() {
     lateinit var binding: BottomSheetHighlightsStoryBinding
 
     @Inject
@@ -43,7 +44,7 @@ class HighlightsBottomSheet : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.DialogStyle)
+         setStyle(STYLE_NORMAL, R.style.DialogStyle)
         loadingAnim = LoadingAnim(childFragmentManager)
     }
 
@@ -63,12 +64,13 @@ class HighlightsBottomSheet : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         layoutManager = LinearLayoutManager(view.context)
-        binding.rcHighlights.layoutManager = layoutManager
+       // binding.rcHighlights.layoutManager = layoutManager
+        binding.etInput.requestFocus()
         Keyboard.show(view)
         observeUserPk()
         showStoryClick()
         onFocusInput()
-        setupRecyclerview()
+
     }
 
     private fun showStoryClick() {
@@ -82,15 +84,7 @@ class HighlightsBottomSheet : DialogFragment() {
 
         }
     }
-    private fun setupRecyclerview() {
-        highlightsAdapter = HighlightsAdapter(viewModel)
-        binding.rcHighlights.adapter = highlightsAdapter
-        binding.rcHighlights.layoutManager = LinearLayoutManager(
-            this.context,
-            LinearLayoutManager.HORIZONTAL, false
-        )
 
-    }
 
     private fun getInputText(): String? {
         val usernameEdit = binding.etInput.text
@@ -139,11 +133,12 @@ class HighlightsBottomSheet : DialogFragment() {
                     is HighlightsSheetViewModel.UserPkState.Success -> {
                         //isLoadingDialog(false)
                         viewModel.getHighlights(it.userId)
-                        binding.rcHighlights.visibility = View.VISIBLE
+
                        // openStory(it.userId)
                     }
                     is HighlightsSheetViewModel.UserPkState.Highlights->{
                         isLoadingDialog(false)
+                       // binding.rcHighlights.visibility = View.VISIBLE
                         setAdapterHighlights(it.highlightsData)
                     }
                     is HighlightsSheetViewModel.UserPkState.Error -> {
@@ -163,7 +158,7 @@ class HighlightsBottomSheet : DialogFragment() {
     private fun onFocusInput(){
         binding.etInput.setOnClickListener {
             binding.etInputLayout.error = null
-            binding.rcHighlights.visibility = View.GONE
+           // binding.rcHighlights.visibility = View.GONE
         }
     }
 
