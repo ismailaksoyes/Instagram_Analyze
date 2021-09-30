@@ -234,14 +234,14 @@
             android:id="@+id/action_storyBottomSheet_to_storyFragment"
             app:destination="@id/storyFragment" />
     </dialog>
-    <fragment
+    <dialog
         android:id="@+id/highlightsBottomSheet"
         android:name="com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.dialog.HighlightsBottomSheet"
         android:label="HighlightsBottomSheet" >
         <action
             android:id="@+id/action_highlightsBottomSheet_to_storyFragment"
             app:destination="@id/storyFragment" />
-    </fragment>
+    </dialog>
 
 
 </navigation>

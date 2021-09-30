@@ -31,6 +31,7 @@ class StoryViewModel @Inject constructor(
         data class Success(val storyData: List<StoryData>) : StoryState()
         data class ClickItem(val userId: Long):StoryState()
         data class OpenStory(val urlList: List<String>) : StoryState()
+        data class OpenHg(val urlList: List<String>):StoryState()
         data class Loading(val isLoading:Boolean):StoryState()
         object Error : StoryState()
     }
@@ -115,22 +116,38 @@ class StoryViewModel @Inject constructor(
         }
     }
 
-    suspend fun getHighlights(userId: Long){
+    suspend fun getHighlightsStory(userHg:String){
         viewModelScope.launch {
-            when(val response = repository.getHighlights(userId,prefs.allCookie)){
+            val test1 = userHg
+                when(val response = repository.getHighlightsStory(userHg,prefs.allCookie)){
+
                 is Resource.Success->{
-                    response.data?.let { itData->
-                        val highlightIdList = ArrayList<String>()
-                        itData.tray.forEach { itTray->
-                            highlightIdList.add(itTray.id)
+                    response.data?.reelsMedia?.let { itReelMedia->
+                        val urlList = ArrayList<String>()
+                        itReelMedia[0].items.forEach { itItems->
+                            itItems.videoVersions?.let { itVideo ->
+                                urlList.add(itVideo[0].url)
+                            } ?: kotlin.run {
+                                itItems.imageVersions2?.let { itImage ->
+                                    urlList.add(itImage.candidates[0].url)
+                                }
+                            }
                         }
-                        val highlightId = itData.tray[0].id
-                    }
+                        val test = urlList
+                        if (urlList.isNotEmpty()){
+                            _storyData.value = StoryState.OpenHg(urlList)
+                        }else{
+                            _storyData.value = StoryState.Error
+                        }
+
+
+                    }?: kotlin.run { _storyData.value = StoryState.Error  }
+                }
+                is Resource.DataError -> {
+                    _storyData.value = StoryState.Error
+                    val errorcode = response.errorCode
                 }
             }
         }
-    }
-    suspend fun getHighlightsStory(){
-
     }
 }

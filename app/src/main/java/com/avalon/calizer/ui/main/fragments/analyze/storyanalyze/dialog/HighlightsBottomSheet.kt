@@ -2,10 +2,10 @@ package com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.dialog
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,6 +40,7 @@ class HighlightsBottomSheet : BottomSheetDialogFragment() {
     lateinit var highlightsAdapter: HighlightsAdapter
 
     private lateinit var layoutManager: LinearLayoutManager
+    
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -126,7 +127,7 @@ class HighlightsBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun setupBehavior(bottomSheetBehavior: BottomSheetBehavior<View>) {
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         bottomSheetBehavior.isHideable = true
         bottomSheetBehavior.skipCollapsed = true
     }
@@ -144,6 +145,10 @@ class HighlightsBottomSheet : BottomSheetDialogFragment() {
 
                        // openStory(it.userId)
                     }
+                    is HighlightsSheetViewModel.UserPkState.ClickItem->{
+                        Log.d("CLICKITEM",it.highlightsId)
+                        openStory(it.highlightsId)
+                    }
                     is HighlightsSheetViewModel.UserPkState.Highlights->{
                         isLoadingDialog(false)
                         binding.rcHighlights.visibility = View.VISIBLE
@@ -158,8 +163,8 @@ class HighlightsBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    private fun openStory(userPk: Long) {
-        findNavController().previousBackStackEntry?.savedStateHandle?.set(NavDataType.USER_PK_HIGHLIGHTS, userPk)
+    private fun openStory(userHg: String) {
+        findNavController().previousBackStackEntry?.savedStateHandle?.set(NavDataType.USER_PK_HIGHLIGHTS, userHg)
         findNavController().popBackStack()
 
     }

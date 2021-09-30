@@ -135,13 +135,13 @@ class StoryFragment : Fragment() {
             }
     }
     private fun observeUserHighlightPk() {
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Long>(USER_PK_HIGHLIGHTS)
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(USER_PK_HIGHLIGHTS)
             ?.observe(
                 viewLifecycleOwner
             ) { result ->
                 lifecycleScope.launch {
                     viewModel.setLoadingState(true)
-                    viewModel.getStory(result)
+                    viewModel.getHighlightsStory(result)
                 }
             }
     }
