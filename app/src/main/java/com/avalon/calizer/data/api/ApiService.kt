@@ -88,7 +88,7 @@ interface ApiService {
         @Header("Cookie") cookies: String?
     ):Response<ApiResponseHighlights>
 
-    @GET("feed/reels_media/?reel_ids=highlight%18144746983022288")
+    @GET("feed/reels_media/")
     suspend fun getHighlightsStory(
         @Query("reel_ids") highlightId:String,
         @Header("Cookie") cookies: String?

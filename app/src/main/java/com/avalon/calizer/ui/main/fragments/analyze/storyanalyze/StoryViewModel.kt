@@ -24,25 +24,22 @@ class StoryViewModel @Inject constructor(
     val storyData: StateFlow<StoryState> = _storyData
 
 
-
-
     sealed class StoryState {
         object Empty : StoryState()
         data class Success(val storyData: List<StoryData>) : StoryState()
-        data class ClickItem(val userId: Long):StoryState()
+        data class ClickItem(val userId: Long) : StoryState()
         data class OpenStory(val urlList: List<String>) : StoryState()
-        data class OpenHg(val urlList: List<String>):StoryState()
-        data class Loading(val isLoading:Boolean):StoryState()
+        data class OpenHg(val urlList: List<String>) : StoryState()
+        data class Loading(val isLoading: Boolean) : StoryState()
         object Error : StoryState()
     }
 
 
-
-    fun setClickItemId(userId: Long){
+    fun setClickItemId(userId: Long) {
         _storyData.value = StoryState.ClickItem(userId)
     }
 
-    fun setLoadingState(isLoading:Boolean){
+    fun setLoadingState(isLoading: Boolean) {
         _storyData.value = StoryState.Loading(isLoading)
 
     }
@@ -65,22 +62,17 @@ class StoryViewModel @Inject constructor(
                         } else {
                             _storyData.value = StoryState.Error
                         }
-                    }?: kotlin.run { _storyData.value = StoryState.Error  }
+                    } ?: kotlin.run { _storyData.value = StoryState.Error }
                 }
             }
         }
     }
 
 
-
     override fun onCleared() {
         super.onCleared()
         viewModelScope.cancel()
     }
-
-
-
-
 
 
     suspend fun getStory(userId: Long) {
@@ -98,14 +90,14 @@ class StoryViewModel @Inject constructor(
                                 }
                             }
                         }
-                        if (urlList.isNotEmpty()){
+                        if (urlList.isNotEmpty()) {
                             _storyData.value = StoryState.OpenStory(urlList)
-                        }else{
+                        } else {
                             _storyData.value = StoryState.Error
                         }
 
 
-                    }?: kotlin.run { _storyData.value = StoryState.Error  }
+                    } ?: kotlin.run { _storyData.value = StoryState.Error }
                 }
                 is Resource.DataError -> {
                     _storyData.value = StoryState.Error
@@ -116,15 +108,14 @@ class StoryViewModel @Inject constructor(
         }
     }
 
-    suspend fun getHighlightsStory(userHg:String){
+    suspend fun getHighlightsStory(userHg: String) {
         viewModelScope.launch {
-            val test1 = userHg
-                when(val response = repository.getHighlightsStory(userHg,prefs.allCookie)){
 
-                is Resource.Success->{
-                    response.data?.reelsMedia?.let { itReelMedia->
+            when (val response = repository.getHighlightsStory(userHg, prefs.allCookie)) {
+                is Resource.Success -> {
+                    response.data?.reels?.map { itData ->
                         val urlList = ArrayList<String>()
-                        itReelMedia[0].items.forEach { itItems->
+                        itData.value.items.forEach { itItems ->
                             itItems.videoVersions?.let { itVideo ->
                                 urlList.add(itVideo[0].url)
                             } ?: kotlin.run {
@@ -133,15 +124,13 @@ class StoryViewModel @Inject constructor(
                                 }
                             }
                         }
-                        val test = urlList
-                        if (urlList.isNotEmpty()){
-                            _storyData.value = StoryState.OpenHg(urlList)
-                        }else{
+                        if (urlList.isNotEmpty()) {
+                            _storyData.value = StoryState.OpenStory(urlList)
+                        } else {
                             _storyData.value = StoryState.Error
                         }
 
-
-                    }?: kotlin.run { _storyData.value = StoryState.Error  }
+                    }?: kotlin.run { _storyData.value = StoryState.Error }
                 }
                 is Resource.DataError -> {
                     _storyData.value = StoryState.Error
