@@ -13,5 +13,6 @@ interface ApiHelper{
     suspend fun getUserInfo(userName: String,cookies: String?):Resource<ApiResponseUserPk>
     suspend fun getHighlights(userId: Long,cookies: String?):Resource<ApiResponseHighlights>
     suspend fun getHighlightsStory(highlightId:String,cookies: String?):Resource<ApiResponseHighlightsStory>
+    suspend fun getStoryViewer(storyId:String,cookies: String?,maxId:String?):Resource<ApiResponseStoryViewer>
     //usercase update details
 }

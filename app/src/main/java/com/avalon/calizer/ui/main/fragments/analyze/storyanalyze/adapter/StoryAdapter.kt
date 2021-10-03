@@ -17,7 +17,10 @@ class StoryAdapter(val viewModel: StoryViewModel) : RecyclerView.Adapter<Recycle
         fun bind(storyData: StoryData){
             binding.ivStoryView.loadPPUrl(storyData.imageUrl)
             binding.ivStoryView.setOnClickListener {
-                viewModel.setClickItemId(storyData.pk)
+                storyData.pk?.let { itPk->
+                    viewModel.setClickItemId(itPk)
+                }
+
             }
         }
     }

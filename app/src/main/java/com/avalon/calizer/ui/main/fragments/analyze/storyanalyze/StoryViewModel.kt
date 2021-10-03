@@ -53,7 +53,10 @@ class StoryViewModel @Inject constructor(
                         itTray.forEach { itFor ->
                             storyList.add(
                                 StoryData(
-                                    itFor.user.profilePicUrl, itFor.user.pk, itFor.hasVideo
+                                    imageUrl = itFor.user.profilePicUrl,
+                                    pk = itFor.user.pk,
+                                    hasVideo = itFor.hasVideo,
+                                    storyId = null
                                 )
                             )
                         }

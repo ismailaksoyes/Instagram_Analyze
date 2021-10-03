@@ -67,6 +67,13 @@ class ApiHelperImpl  @Inject constructor(private val apiService: ApiService, pri
        }
     }
 
+    override suspend fun getStoryViewer(storyId: String, cookies: String?,maxId:String?): Resource<ApiResponseStoryViewer> {
+        return when(val response = checkResponse { (apiService::getStoryViewer)(storyId, cookies,maxId) }){
+            is ApiResponseStoryViewer->Resource.Success(data = response)
+            else->Resource.DataError(errorCode = response as Int)
+        }
+    }
+
     private suspend fun checkResponse(call:suspend() -> Response<*>):Any?{
         if (!networkConnectivity.isConnected()){
             return NO_INTERNET_CONNECTION

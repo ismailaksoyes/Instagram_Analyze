@@ -94,6 +94,13 @@ interface ApiService {
         @Header("Cookie") cookies: String?
     ):Response<ApiResponseHighlightsStory>
 
+    @GET("media/{storyId}/list_reel_media_viewer")
+    suspend fun getStoryViewer(
+        @Path("storyId") storyId:String,
+        @Query("max_id")maxId: String?,
+        @Header("Cookie") cookies: String?
+    ):Response<ApiResponseStoryViewer>
+
 
 
 }

@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.avalon.calizer.R
 import com.avalon.calizer.databinding.FragmentNotFollowStoryViewsBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,7 +47,27 @@ class NotFollowStoryViewsFragment : Fragment() {
         }
     }
     fun observeFollowers(){
+        lifecycleScope.launch {
+            viewModel.followersData.collect {
+                when(it){
+                    is NotFollowStoryViewsViewModel.FollowersState.FollowersList->{
 
+                    }
+                }
+            }
+        }
+    }
+
+    fun observeStoryViewer(){
+        lifecycleScope.launch {
+            viewModel.storyViewData.collect {
+                when(it){
+                    is NotFollowStoryViewsViewModel.NotStoryState.StoryList->{
+
+                    }
+                }
+            }
+        }
     }
 
 }
