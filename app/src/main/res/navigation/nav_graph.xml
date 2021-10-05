@@ -199,6 +199,9 @@
         <action
             android:id="@+id/action_storyFragment_to_highlightsBottomSheet"
             app:destination="@id/highlightsBottomSheet" />
+        <action
+            android:id="@+id/action_storyFragment_to_notFollowStoryViewsFragment"
+            app:destination="@id/notFollowStoryViewsFragment" />
 
     </fragment>
     <fragment
@@ -242,6 +245,15 @@
             android:id="@+id/action_highlightsBottomSheet_to_storyFragment"
             app:destination="@id/storyFragment" />
     </dialog>
+    <fragment
+        android:id="@+id/notFollowStoryViewsFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.NotFollowStoryViewsFragment"
+        android:label="fragment_not_follow_story_views"
+        tools:layout="@layout/fragment_not_follow_story_views" >
+        <action
+            android:id="@+id/action_notFollowStoryViewsFragment_to_storyFragment"
+            app:destination="@id/storyFragment" />
+    </fragment>
 
 
 </navigation>

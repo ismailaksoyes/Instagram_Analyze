@@ -81,6 +81,10 @@ class StoryFragment : Fragment() {
             val action = StoryFragmentDirections.actionStoryFragmentToHighlightsBottomSheet()
             findNavController().navigate(action)
         }
+        binding.clNoFollowStory.setOnClickListener {
+            val action = StoryFragmentDirections.actionStoryFragmentToNotFollowStoryViewsFragment()
+            findNavController().navigate(action)
+        }
 
     }
 

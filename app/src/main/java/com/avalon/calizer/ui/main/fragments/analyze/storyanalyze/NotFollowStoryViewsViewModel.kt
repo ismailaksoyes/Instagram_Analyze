@@ -32,6 +32,7 @@ class NotFollowStoryViewsViewModel @Inject constructor(
         object Loading : NotStoryState()
         object Error : NotStoryState()
         data class StoryList(val storyList: List<StoryData>) : NotStoryState()
+        data class StoryViewerSync(val storyViewer:List<StoryViewerData>):NotStoryState()
         data class StoryViewerList(val storyViewer:List<StoryViewerData>):NotStoryState()
 
     }
@@ -94,7 +95,7 @@ class NotFollowStoryViewsViewModel @Inject constructor(
 
 
 
-    private suspend fun getStoryViewer(storyId: String, maxId: String? = null) {
+     suspend fun getStoryViewer(storyId: String, maxId: String? = null) {
         viewModelScope.launch {
             when (val response = repository.getStoryViewer(
                 cookies = prefs.allCookie,

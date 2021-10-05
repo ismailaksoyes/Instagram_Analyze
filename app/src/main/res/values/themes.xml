@@ -28,16 +28,20 @@
         <item name="colorOnBackground">@color/blue_night</item>
 
 
-
         <item name="colorOnSecondary">@color/blue_night</item>
         <item name="colorSecondary">@color/white</item>
 
 
-
-
-
     </style>
 
+    <style name="Theme.Calizer.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Calizer.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Calizer.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
 </resources>

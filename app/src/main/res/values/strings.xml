@@ -14,4 +14,5 @@
     <string name="analyze_title_new_unfollowers">Takipten Cikanlar</string>
     <string name="no_internet_error">No Internet Connection</string>
     <string name="network_error">Error Network</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>
