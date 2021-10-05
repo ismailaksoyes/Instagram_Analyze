@@ -9,6 +9,7 @@ import com.avalon.calizer.data.local.follow.FollowingData
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserDetails
 import com.avalon.calizer.data.repository.FollowRepository
 import com.avalon.calizer.data.repository.Repository
+import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class AllFollowingViewModel @Inject constructor(private val followRepository: FollowRepository, private val repository: Repository):
+class AllFollowingViewModel @Inject constructor(private val followRepository: FollowRepository, private val repository: Repository,private val prefs:MySharedPreferences):
     ViewModel() {
     private val _allFollowing = MutableStateFlow<AllFollowingState>(
         AllFollowingState.Empty)
@@ -29,7 +30,7 @@ class AllFollowingViewModel @Inject constructor(private val followRepository: Fo
 
     sealed class UpdateState{
         object Empty:UpdateState()
-        data class Success(var userDetails: Resource<ApiResponseUserDetails>):UpdateState()
+        data class Success(var userDetails: ApiResponseUserDetails):UpdateState()
 
     }
     sealed class AllFollowingState{
@@ -47,14 +48,16 @@ class AllFollowingViewModel @Inject constructor(private val followRepository: Fo
         }
 
     }
-    private  fun getCookies() =followRepository.getUserCookie()
 
-    suspend fun getUserDetails(userId: Long) = viewModelScope.launch(Dispatchers.IO) {
-        val cookies = getCookies()
-        repository.getUserDetails(userId,cookies).let {
-            if (it.isSuccessful){
-                _updateAllFollowing.value = UpdateState.Success(Resource.success(it.body()))
+
+    suspend fun getUserDetails(userId: Long) = viewModelScope.launch {
+        when(val response = repository.getUserDetails(userId,prefs.allCookie)){
+            is Resource.Success->{
+                response.data?.let { itResponse->
+                    _updateAllFollowing.value = UpdateState.Success(itResponse)
+                }
             }
         }
+
     }
 }

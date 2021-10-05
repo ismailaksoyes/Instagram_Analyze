@@ -7,13 +7,14 @@ import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserDetails
 import com.avalon.calizer.data.repository.FollowRepository
 import com.avalon.calizer.data.repository.Repository
+import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class NotFollowersViewModel @Inject constructor (private val followRepository: FollowRepository, private val repository: Repository):
+class NotFollowersViewModel @Inject constructor (private val followRepository: FollowRepository, private val repository: Repository,private val prefs:MySharedPreferences):
     ViewModel(){
     private val _notFollowers = MutableStateFlow<NotFollowersState>(
         NotFollowersState.Empty)
@@ -26,7 +27,7 @@ class NotFollowersViewModel @Inject constructor (private val followRepository: F
 
     sealed class UpdateState{
         object Empty:UpdateState()
-        data class Success(var userDetails: Resource<ApiResponseUserDetails>):UpdateState()
+        data class Success(var userDetails: ApiResponseUserDetails):UpdateState()
 
     }
     sealed class NotFollowersState{
@@ -46,13 +47,14 @@ class NotFollowersViewModel @Inject constructor (private val followRepository: F
     }
 
 
-    private suspend fun getCookies() =followRepository.getUserCookie()
-
-    suspend fun getUserDetails(userId: Long) = viewModelScope.launch {
-        val cookies = getCookies()
-        repository.getUserDetails(userId,cookies).let {
-            if (it.isSuccessful){
-                _updateNotFollowers.value = UpdateState.Success(Resource.success(it.body()))
+    suspend fun getUserDetails(userId: Long){
+        viewModelScope.launch {
+            when(val response = repository.getUserDetails(userId,prefs.allCookie)){
+                is Resource.Success->{
+                    response.data?.let { itData->
+                        _updateNotFollowers.value = UpdateState.Success(itData)
+                    }
+                }
             }
         }
     }

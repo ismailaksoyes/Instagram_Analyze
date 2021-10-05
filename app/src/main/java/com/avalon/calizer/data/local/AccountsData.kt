@@ -1,10 +1,11 @@
 package com.avalon.calizer.data.local
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 
-@Entity(tableName = "accounts_table")
+@Entity(tableName = "accounts_table",indices = [Index(value = arrayOf("dsUserID") ,unique = true)])
 data class AccountsData(
     @PrimaryKey(autoGenerate = true)
     var uid:Long?=null,

@@ -55,12 +55,11 @@ class AllFollowersViewModel @Inject constructor(
     }
 
     suspend fun getUserDetails(userId: Long) = viewModelScope.launch(Dispatchers.IO) {
-        repository.getUserDetails(userId, prefs.allCookie).let {
-            if (it.isSuccessful) {
-                it.body()?.let { itBody ->
-                    _updateAllFollowers.value = UpdateState.Success(itBody)
+        when(val response = repository.getUserDetails(userId,prefs.allCookie)){
+            is Resource.Success->{
+                response.data?.let {  itResponse->
+                    _updateAllFollowers.value = UpdateState.Success(itResponse)
                 }
-
             }
         }
     }

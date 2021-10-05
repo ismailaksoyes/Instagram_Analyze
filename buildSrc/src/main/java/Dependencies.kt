@@ -1,8 +1,8 @@
 object Versions {
     const val constraint_layout_version = "2.1.0"
     const val lifecycle_version = "2.3.1"
-    const val coroutines_version = "1.4.3"
-    const val kotlin_version = "1.5.30-M1"
+    const val coroutines_version = "1.5.2"
+    const val kotlin_version = "1.5.21"
     const val hilt_version = "2.38.1"
     const val room_version = "2.3.0"
 
@@ -36,13 +36,15 @@ object Versions {
 
     const val coroutines_play_services_version = "1.2.1"
 
-    const val android_gradle_plugin_version = "7.0.1"
+    const val android_gradle_plugin_version = "7.0.2"
     const val gms_play_services_version = "4.3.8"
+
+    const val compose_version = "1.0.1"
 
 }
 object buildConfigVersions{
     const val compileSdkVersion = 30
-    const val buildToolsVersion = "30.0.3"
+    const val buildToolsVersion = "30.0.2"
     const val minSdkVersion = 21
     const val targetSdkVersion = 30
     const val versionCode = 1
@@ -76,7 +78,7 @@ object androidxsupportDependencies {
 }
 
 object kotlinDependencies {
-    const val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin_version}"
+    const val kotlin = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin_version}"
     const val coroutines_core =
         "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines_version}"
     const val coroutines =
@@ -127,6 +129,18 @@ object shimmerDependencies {
 
 object lottieDependencies {
     const val lottie = "com.airbnb.android:lottie:${Versions.airbnb_lottie_version}"
+}
+
+object composeDependencies{
+    const val composeUi = "androidx.compose.ui:ui:${Versions.compose_version}"
+    const val composeUiToolkit = "androidx.compose.ui:ui-tooling:${Versions.compose_version}"
+    const val composeFoundation = "androidx.compose.foundation:foundation:${Versions.compose_version}"
+    const val composeMaterial = "androidx.compose.material:material:${Versions.compose_version}"
+    const val composeMaterialIconsCore = "androidx.compose.material:material-icons-core:${Versions.compose_version}"
+    const val composeMaterialIconsExtended = "androidx.compose.material:material-icons-extended:${Versions.compose_version}"
+    const val composeLiveData = "androidx.compose.runtime:runtime-livedata:${Versions.compose_version}"
+    const val composeRxJava = "androidx.compose.runtime:runtime-rxjava2:${Versions.compose_version}"
+
 }
 
 

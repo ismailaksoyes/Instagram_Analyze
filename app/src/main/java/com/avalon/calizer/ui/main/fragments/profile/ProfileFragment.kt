@@ -24,22 +24,15 @@ import com.avalon.calizer.utils.analyzeTextColor
 import com.avalon.calizer.utils.isShimmerEnabled
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.face.FaceDetection
-import com.google.mlkit.vision.face.FaceDetectorOptions
-import com.google.mlkit.vision.face.FaceLandmark
+
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.abs
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 
 @AndroidEntryPoint
@@ -196,8 +189,6 @@ class ProfileFragment : Fragment() {
         initData()
         observeUserFlow()
         observeNavigateFlow()
-
-
 
     }
 

@@ -15,7 +15,6 @@ import com.avalon.calizer.R
 import com.avalon.calizer.data.local.follow.FollowData
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.databinding.FragmentAllFollowersBinding
-import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowViewModel
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
 import com.avalon.calizer.utils.followersToFollowList
 import dagger.hilt.android.AndroidEntryPoint
@@ -86,8 +85,8 @@ class AllFollowersFragment : Fragment() {
             viewModel.updateAllFollowers.collect {
                 when (it) {
                     is AllFollowersViewModel.UpdateState.Success -> {
-                        it.userDetails.user.let { userData ->
-                            followsAdapter.updatePpItem(userData.pk, userData.profilePicUrl)
+                        it.userDetails.user.apply {
+                            followsAdapter.updatePpItem(pk, profilePicUrl)
                         }
                     }
 

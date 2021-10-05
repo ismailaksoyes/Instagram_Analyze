@@ -36,6 +36,9 @@ interface RoomDao {
     @Query("SELECT * FROM followers_table WHERE analyzeUserId=:userId ORDER BY dsUserID ASC LIMIT 12 OFFSET :position")
     suspend fun getFollowersData(position: Int, userId: Long): List<FollowersData>
 
+    @Query("SELECT * FROM followers_table WHERE analyzeUserId=:userId ORDER BY dsUserID ASC")
+    suspend fun getAllFollowers(userId: Long):List<FollowersData>
+
     @Query("SELECT * FROM following_table WHERE analyzeUserId=:userId ORDER BY dsUserID ASC LIMIT 12 OFFSET :position")
     suspend fun getFollowingData(position: Int, userId: Long): List<FollowingData>
 

@@ -1,12 +1,10 @@
 package com.avalon.calizer.ui.accounts
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.avalon.calizer.data.local.AccountsData
-import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.data.local.weblogin.CookiesData
 import com.avalon.calizer.data.remote.insresponse.ApiResponseReelsTray
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserDetails
@@ -14,7 +12,6 @@ import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.data.repository.RoomRepository
 import com.avalon.calizer.utils.Resource
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -24,7 +21,6 @@ class AccountsViewModel @Inject constructor(
     private val roomRepository: RoomRepository,
     private val repository: Repository
 ) : ViewModel() {
-
 
     private val _allAccounts = MutableStateFlow<LastAccountsState>(LastAccountsState.Empty)
     val allAccounts: StateFlow<LastAccountsState> = _allAccounts
@@ -65,28 +61,25 @@ class AccountsViewModel @Inject constructor(
         get() = _userDetails
 
 
-   suspend fun getReelsTray(cookies:String) = viewModelScope.launch {
-        repository.getReelsTray(cookies).let {
-            if (it.isSuccessful) {
-                _cookieData.value = AccountCookieState.CookieValid(cookies)
-            }
-        }
+   suspend fun getReelsTray(cookies:String){
+       when(val response = repository.getReelsTray(cookies)){
+           is Resource.Success->{
+               response.data?.let { itData->
+                   _cookieData.value = AccountCookieState.CookieValid(cookies)
+               }
+           }
+       }
+   }
 
-    }
-
-
-
-   suspend fun getUserDetails(cookies: String, userId: Long) = viewModelScope.launch(Dispatchers.IO) {
-        repository.getUserDetails(userId,cookies).let {
-            if (it.isSuccessful) {
-                it.body()?.let { itBody->
-                    _allAccounts.value = LastAccountsState.UserDetails(itBody)
-                }
-            } else {
-                _allAccounts.value = LastAccountsState.Error(it.errorBody().toString())
-            }
-        }
-    }
+   suspend fun getUserDetails(cookies: String, userId: Long){
+       when(val response = repository.getUserDetails(userId, cookies)){
+           is Resource.Success->{
+               response.data?.let { itData->
+                   _allAccounts.value = LastAccountsState.UserDetails(itData)
+               }
+           }
+       }
+   }
 
    suspend fun getAccountList() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -107,12 +100,12 @@ class AccountsViewModel @Inject constructor(
         }
     }
 
-   suspend fun setCookies(cookies: String){
+    fun setCookies(cookies: String){
         viewModelScope.launch(Dispatchers.IO) {
             _cookieData.value = AccountCookieState.Cookies(cookies)
         }
     }
-    suspend fun setSplitCookies(cookiesData: CookiesData){
+     fun setSplitCookies(cookiesData: CookiesData){
         viewModelScope.launch(Dispatchers.IO) {
             _cookieData.value = AccountCookieState.SplitCookie(cookiesData)
         }

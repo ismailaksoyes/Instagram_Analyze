@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.main.fragments.analyze.storyanalyze.StoryFragment"
+    android:background="?colorPrimary">
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/cl_top_story_analyze"
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:background="?colorPrimary"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      android:padding="12dp"
+      android:elevation="12dp">
+    <ImageView
+        android:id="@+id/iv_back_btn"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/ic_back_ico"
+        android:contentDescription="TODO" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Story Analyze"
+        style="@style/text_medium_style"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <TextView
+      android:id="@+id/tv_anonymously_title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+    app:layout_constraintTop_toBottomOf="@id/cl_top_story_analyze"
+      app:layout_constraintStart_toStartOf="parent"
+    android:layout_marginTop="20dp"
+      android:layout_marginStart="20dp"
+    style="@style/text_normal_style"
+    android:text="Watch stories anonymously"/>
+
+  <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/rc_story_view"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="20dp"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/tv_anonymously_title"
+      app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+      android:layout_marginStart="20dp"
+      android:layout_marginEnd="20dp"
+      android:overScrollMode="never"
+      android:clipToPadding="false"/>
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/cl_username_story"
+      android:layout_width="match_parent"
+      android:layout_height="60dp"
+      app:layout_constraintTop_toBottomOf="@id/rc_story_view"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      android:layout_marginTop="20dp"
+      android:layout_marginStart="20dp"
+      android:layout_marginEnd="20dp"
+      android:background="@drawable/radius_rect"
+      android:elevation="8dp">
+    <TextView
+        android:id="@+id/tv_watch_story"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"
+        android:text="Hikaye Ara"
+        style="@style/text_medium_style"/>
+    <ImageView
+        android:layout_width="10dp"
+        android:layout_height="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_next_icon"/>
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/cl_username_highlights"
+      android:layout_width="match_parent"
+      android:layout_height="60dp"
+      app:layout_constraintTop_toBottomOf="@id/cl_username_story"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      android:layout_marginTop="20dp"
+      android:layout_marginStart="20dp"
+      android:layout_marginEnd="20dp"
+      android:background="@drawable/radius_rect"
+      android:elevation="8dp">
+    <TextView
+        android:id="@+id/tv_watch_highlights"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"
+        android:text="Öne Çıkarılan Hikaye Ara"
+        style="@style/text_medium_style"/>
+    <ImageView
+        android:layout_width="10dp"
+        android:layout_height="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_next_icon"/>
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/cl_no_follow_story"
+      android:layout_width="match_parent"
+      android:layout_height="60dp"
+      app:layout_constraintTop_toBottomOf="@id/cl_username_highlights"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      android:layout_marginTop="20dp"
+      android:layout_marginStart="20dp"
+      android:layout_marginEnd="20dp"
+      android:background="@drawable/radius_rect"
+      android:elevation="8dp">
+    <TextView
+        android:id="@+id/tv_no_follow_story"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"
+        android:text="Takip Etmeden İzleyenler"
+        style="@style/text_medium_style"/>
+    <ImageView
+        android:layout_width="10dp"
+        android:layout_height="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_next_icon"/>
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

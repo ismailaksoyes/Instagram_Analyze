@@ -61,7 +61,7 @@ class ViewPagerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentViewPagerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -82,7 +82,7 @@ class ViewPagerFragment : Fragment() {
         binding.viewPager2.unregisterOnPageChangeCallback(onTutorialPageChangeCallBack)
         super.onDestroy()
     }
-    fun setupPagerClick(){
+    private fun setupPagerClick(){
         binding.tvNextIntro.setOnClickListener {
             viewPager.setCurrentItem(2,true)
         }
@@ -104,7 +104,6 @@ class ViewPagerFragment : Fragment() {
                     binding.clStartNowNext.closeAnim()
                 }
 
-
             }
             2 -> {
                 if (binding.tvNextIntro.isVisible) {
@@ -119,7 +118,7 @@ class ViewPagerFragment : Fragment() {
         }
     }
 
-    fun ConstraintLayout.openAnim() {
+    private fun ConstraintLayout.openAnim() {
 
             val getParams = this.layoutParams
 
@@ -142,7 +141,7 @@ class ViewPagerFragment : Fragment() {
 
 
     }
-    fun ConstraintLayout.closeAnim() {
+    private fun ConstraintLayout.closeAnim() {
         binding.tvStartNow.textAnimGone()
         val getParams = this.layoutParams
 

@@ -3,7 +3,7 @@
 
     <style name="text_h1_style">
         <item name="fontFamily">@font/ibm_plex_sans_bold</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
         <item name="android:textSize">@dimen/text_size_h1</item>
     </style>
 
@@ -14,7 +14,7 @@
 
     <style name="text_medium_style">
         <item name="fontFamily">@font/ibm_plex_sans_medium</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
     </style>
 
@@ -25,13 +25,13 @@
 
     <style name="text_medium_light_style">
         <item name="fontFamily">@font/ibm_plex_sans_light</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
     </style>
 
     <style name="text_normal_style">
         <item name="fontFamily">@font/ibm_plex_sans_bold</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
         <item name="android:textSize">@dimen/text_size_normal</item>
     </style>
 
@@ -41,9 +41,34 @@
         <item name="strokeColor">@color/mtrl_btn_stroke_color_selector</item>
         <item name="strokeWidth">@dimen/button_stroke_size</item>
         <item name="fontFamily">@font/ibm_plex_sans_medium</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
     </style>
+    <style name="text_input_layout_medium_style" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense">
+        <item name="android:paddingLeft">@dimen/button_padding_left</item>
+        <item name="android:paddingRight">@dimen/button_padding_right</item>
+        <item name="strokeColor">@color/mtrl_btn_stroke_color_selector</item>
+        <item name="strokeWidth">@dimen/button_stroke_size</item>
+        <item name="fontFamily">@font/ibm_plex_sans_medium</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textCursorDrawable">@drawable/color_cursor</item>
+        <item name="endIconMode">clear_text</item>
+        <item name="helperTextEnabled">true</item>
+        <item name="errorEnabled">true</item>
+        <item name="hintTextColor">?attr/colorOnBackground</item>
+    </style>
+
+    <style name="DialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="LoadingDialog" parent="Base.Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+
 
 
 </resources>

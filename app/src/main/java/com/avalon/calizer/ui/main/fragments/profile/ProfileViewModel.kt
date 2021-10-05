@@ -9,6 +9,7 @@ import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.data.repository.RoomRepository
 import com.avalon.calizer.ui.main.MainViewModel
 import com.avalon.calizer.utils.MySharedPreferences
+import com.avalon.calizer.utils.Resource
 import com.avalon.calizer.utils.toAccountsInfoData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -64,13 +65,11 @@ class ProfileViewModel @Inject constructor(
 
     suspend fun getUserDetails() {
         viewModelScope.launch {
-            repository.getUserDetails(prefs.selectedAccount, prefs.allCookie).let { itUserDetails ->
-                if (itUserDetails.isSuccessful) {
-                    itUserDetails.body()?.let { itBody ->
-                        val accountsInfoData = itBody.toAccountsInfoData()
-                        _userData.value = UserDataFlow.GetUserDetails(accountsInfoData)
+            when(val response = repository.getUserDetails(prefs.selectedAccount,prefs.allCookie)){
+                is Resource.Success->{
+                    response.data?.let { itData->
+                        _userData.value = UserDataFlow.GetUserDetails(itData.toAccountsInfoData())
                     }
-
                 }
             }
 

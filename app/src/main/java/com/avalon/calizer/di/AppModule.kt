@@ -2,14 +2,21 @@ package com.avalon.calizer.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.webkit.WebView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.room.Room
 import com.avalon.calizer.data.api.ApiHelper
 import com.avalon.calizer.data.api.ApiHelperImpl
 import com.avalon.calizer.data.api.ApiInterceptor
 import com.avalon.calizer.data.api.ApiService
 import com.avalon.calizer.data.local.MyDatabase
+import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.dialog.StoryBottomSheet
 import com.avalon.calizer.utils.Constants
 import com.avalon.calizer.utils.Constants.USER_DATABASE
+import com.avalon.calizer.utils.LoadingAnim
+import com.avalon.calizer.utils.Network
+import com.avalon.calizer.utils.NetworkConnectivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.mlkit.vision.face.FaceDetection
@@ -77,7 +84,6 @@ object AppModule {
     fun providePoseDetector(options: PoseDetectorOptions):PoseDetector = PoseDetection.getClient(options)
 
 
-
    @Singleton
    @Provides
     fun provideGlide(
@@ -96,6 +102,13 @@ object AppModule {
             Context.MODE_PRIVATE
         )
     }
+
+    @Provides
+    @Singleton
+    fun provideNetwork(@ApplicationContext context: Context):NetworkConnectivity{
+        return Network(context)
+    }
+
 
 
 
