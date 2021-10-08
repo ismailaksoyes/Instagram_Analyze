@@ -140,5 +140,8 @@ dependencies {
     implementation(composeDependencies.composeUi)
     implementation(composeDependencies.composeUiToolkit)
 
+    //coil
+    implementation(coilDependencies.coil)
+
 
 }
