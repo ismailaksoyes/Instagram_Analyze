@@ -213,7 +213,7 @@ data class ApiResponseStoryViewer(
             @SerializedName("is_verified")
             val isVerified: Boolean,
             @SerializedName("pk")
-            val pk: Int,
+            val pk: Long,
             @SerializedName("profile_pic_url")
             val profilePicUrl: String,
             @SerializedName("profile_pic_id")
@@ -240,7 +240,7 @@ data class ApiResponseStoryViewer(
         @SerializedName("latest_reel_media")
         val latestReelMedia: Int,
         @SerializedName("pk")
-        val pk: Int,
+        val pk: Long,
         @SerializedName("profile_pic_url")
         val profilePicUrl: String,
         @SerializedName("profile_pic_id")

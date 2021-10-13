@@ -19,9 +19,10 @@ import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.story.NoFollowStoryData
+import com.avalon.calizer.data.local.story.StoryViewerData
 
 @Composable
-fun StoryListItem(user: NoFollowStoryData) {
+fun StoryListItem(user: StoryViewerData) {
     Card(
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 8.dp)
@@ -32,14 +33,14 @@ fun StoryListItem(user: NoFollowStoryData) {
     ) {
         Row (verticalAlignment = Alignment.CenterVertically
         ,modifier = Modifier.padding(15.dp)){
-            UserImage()
+            UserImage(user.profileUrl.toString())
             Column(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()
                     .align(Alignment.CenterVertically)
             ) {
-                user.username?.let { Text(text = it, style = MaterialTheme.typography.subtitle1) }
+                user.userName?.let { Text(text = it, style = MaterialTheme.typography.subtitle1) }
             }
         }
     }
@@ -48,10 +49,10 @@ fun StoryListItem(user: NoFollowStoryData) {
 
 
 @Composable
-private fun UserImage() {
+private fun UserImage(imageUrl:String) {
     Image(
         painter = rememberImagePainter(
-            data = "https://cdn.business2community.com/wp-content/uploads/2014/04/profile-picture-300x300.jpg",
+            data = imageUrl,
             builder = {
                 transformations(CircleCropTransformation())
             }

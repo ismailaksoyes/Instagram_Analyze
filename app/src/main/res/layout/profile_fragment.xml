@@ -9,10 +9,11 @@
             name="viewmodel"
             type="com.avalon.calizer.ui.main.fragments.profile.ProfileViewModel" />
     </data>
+
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:background="?colorPrimary"
     >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_go_accounts"

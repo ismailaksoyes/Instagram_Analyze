@@ -139,6 +139,7 @@ dependencies {
     implementation(composeDependencies.composeRxJava)
     implementation(composeDependencies.composeUi)
     implementation(composeDependencies.composeUiToolkit)
+    implementation(composeDependencies.composeUiToolkit)
 
     //coil
     implementation(coilDependencies.coil)
