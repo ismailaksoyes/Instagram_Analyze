@@ -28,7 +28,6 @@ import kotlin.coroutines.coroutineContext
 fun AppTopBar(viewModel: NotFollowStoryViewsViewModel) {
     Surface(modifier = Modifier
         .fillMaxWidth()
-        .background(Color.White)
         .height(50.dp)
         ,elevation = 2.dp
     ) {

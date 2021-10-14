@@ -40,9 +40,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:fontFamily="@font/ibm_plex_sans_bold"
             android:text="@{viewmodel.userModel.userName}"
-            android:textColor="?colorOnSecondary"
+            style="@style/text_normal_style"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_acc_list"
             app:layout_constraintTop_toTopOf="parent" />

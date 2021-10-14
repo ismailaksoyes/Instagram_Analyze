@@ -1,5 +1,7 @@
 package com.avalon.calizer.utils
 
+import com.avalon.calizer.R
+import com.avalon.calizer.data.local.analyze.AnalyzeViewData
 import com.avalon.calizer.data.local.story.NoFollowStoryData
 
 object DataProvider {
@@ -8,35 +10,8 @@ object DataProvider {
         NoFollowStoryData(4343L,"urlpic","username2"),
         NoFollowStoryData(4343L,"urlpic","username3"),
         NoFollowStoryData(4343L,"urlpic","username4"),
-        NoFollowStoryData(4343L,"urlpic","username5"),
-        NoFollowStoryData(4343L,"urlpic","username5"),
-        NoFollowStoryData(4343L,"urlpic","username5"),
-        NoFollowStoryData(4343L,"urlpic","username5"),
-        NoFollowStoryData(4343L,"urlpic","username1"),
-        NoFollowStoryData(4343L,"urlpic","username2"),
-        NoFollowStoryData(4343L,"urlpic","username3"),
-        NoFollowStoryData(4343L,"urlpic","username4"),
-        NoFollowStoryData(4343L,"urlpic","username5"),
-        NoFollowStoryData(4343L,"urlpic","username5"),
-        NoFollowStoryData(4343L,"urlpic","username5"),
-        NoFollowStoryData(4343L,"urlpic","username5"),
-        NoFollowStoryData(4343L,"urlpic","username1"),
-        NoFollowStoryData(4343L,"urlpic","username2"),
-        NoFollowStoryData(4343L,"urlpic","username3"),
-        NoFollowStoryData(4343L,"urlpic","username4"),
-        NoFollowStoryData(4343L,"urlpic","username5"),
-        NoFollowStoryData(4343L,"urlpic","username5"),
-        NoFollowStoryData(4343L,"urlpic","username5"),
-        NoFollowStoryData(4343L,"urlpic","username5"),
-        NoFollowStoryData(4343L,"urlpic","username1"),
-        NoFollowStoryData(4343L,"urlpic","username2"),
-        NoFollowStoryData(4343L,"urlpic","username3"),
-        NoFollowStoryData(4343L,"urlpic","username4"),
-        NoFollowStoryData(4343L,"urlpic","username5"),
-        NoFollowStoryData(4343L,"urlpic","username5"),
-        NoFollowStoryData(4343L,"urlpic","username5"),
-        NoFollowStoryData(4343L,"urlpic","username5"),
-
+        NoFollowStoryData(4343L,"urlpic","username5")
 
     )
+
 }

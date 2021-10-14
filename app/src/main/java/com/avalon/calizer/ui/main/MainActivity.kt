@@ -2,15 +2,20 @@ package com.avalon.calizer.ui.main
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.data.local.follow.FollowRequestParams
@@ -40,6 +45,8 @@ class MainActivity : AppCompatActivity() {
     private val followersDataList = ArrayList<FollowersData>()
     private val followingDataList = ArrayList<FollowingData>()
 
+    private lateinit var navController: NavController
+
 
     private fun setupBottomNavigationMenu(navController: NavController) {
         binding.bottomNavigation.let {
@@ -49,7 +56,14 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        return Navigation.findNavController(this,
+            R.id.navHostFragment
+        ).navigateUp() || super.onSupportNavigateUp()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Log.d("action1",item.toString())
         return super.onOptionsItemSelected(item) || item.onNavDestinationSelected(
             findNavController(
                 R.id.navHostFragment
@@ -67,11 +81,10 @@ class MainActivity : AppCompatActivity() {
         observeFollowData()
         observeSaveFollowData()
 
-
     }
 
     private fun initNavController() {
-        val navController = Navigation.findNavController(this, R.id.navHostFragment)
+        navController = Navigation.findNavController(this, R.id.navHostFragment)
         setupBottomNavigationMenu(navController)
         binding.bottomNavigation.setOnNavigationItemReselectedListener {
 
@@ -91,6 +104,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
 
 
     }
