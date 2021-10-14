@@ -23,6 +23,12 @@
         <action
             android:id="@+id/action_destination_profile_to_photoUploadFragment"
             app:destination="@id/photoUploadFragment" />
+        <action
+            android:id="@+id/action_destination_profile_to_destination_analyze"
+            app:destination="@id/destination_analyze"
+            app:enterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right"
+            app:popEnterAnim="@anim/slide_out_left"/>
     </fragment>
     <fragment
         android:id="@+id/destination_analyze"
@@ -202,6 +208,9 @@
         <action
             android:id="@+id/action_storyFragment_to_notFollowStoryViewsFragment"
             app:destination="@id/notFollowStoryViewsFragment" />
+        <action
+            android:id="@+id/action_storyFragment_to_destination_analyze"
+            app:destination="@id/destination_analyze" />
 
     </fragment>
     <fragment

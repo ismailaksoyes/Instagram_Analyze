@@ -72,19 +72,7 @@ class StoryFragment : Fragment() {
         observeUserStoryPk()
         observeUserHighlightPk()
 
-        binding.clUsernameStory.setOnClickListener {
-            val action = StoryFragmentDirections.actionStoryFragmentToStoryBottomSheet()
-            findNavController().navigate(action)
-
-        }
-        binding.clUsernameHighlights.setOnClickListener {
-            val action = StoryFragmentDirections.actionStoryFragmentToHighlightsBottomSheet()
-            findNavController().navigate(action)
-        }
-        binding.clNoFollowStory.setOnClickListener {
-            val action = StoryFragmentDirections.actionStoryFragmentToNotFollowStoryViewsFragment()
-            findNavController().navigate(action)
-        }
+        actionNavigate()
 
     }
 
@@ -180,6 +168,26 @@ class StoryFragment : Fragment() {
             loadingAnim.showDialog()
         } else {
             loadingAnim.closeDialog()
+        }
+    }
+
+    private fun actionNavigate(){
+        binding.clUsernameStory.setOnClickListener {
+            val action = StoryFragmentDirections.actionStoryFragmentToStoryBottomSheet()
+            findNavController().navigate(action)
+
+        }
+        binding.clUsernameHighlights.setOnClickListener {
+            val action = StoryFragmentDirections.actionStoryFragmentToHighlightsBottomSheet()
+            findNavController().navigate(action)
+        }
+        binding.clNoFollowStory.setOnClickListener {
+            val action = StoryFragmentDirections.actionStoryFragmentToNotFollowStoryViewsFragment()
+            findNavController().navigate(action)
+        }
+        binding.ivBackBtn.setOnClickListener {
+            val action = StoryFragmentDirections.actionStoryFragmentToDestinationAnalyze()
+            findNavController().navigate(action)
         }
     }
 

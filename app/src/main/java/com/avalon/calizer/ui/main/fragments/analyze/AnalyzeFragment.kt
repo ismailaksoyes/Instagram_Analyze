@@ -57,10 +57,10 @@ class AnalyzeFragment : Fragment() {
             AnalyzeViewData(
                 uri = R.drawable.ic_story_ico,
                 title = resources.getString(R.string.analyze_title_stories),
-                type = AnalyzeAdapterType.STORY_VIEWS.type
+                type = R.id.action_destination_analyze_to_storyFragment
             ),
             AnalyzeViewData(
-                uri = R.drawable.common_full_open_on_phone,
+                uri = R.drawable.ic_resolution,
                 title = resources.getString(R.string.analyze_title_posts),
                 type = AnalyzeAdapterType.ALL_POST.type
             ),
@@ -88,16 +88,7 @@ class AnalyzeFragment : Fragment() {
                 uri = R.drawable.ic_follow_neg_ico,
                 title = "Takip Etmeyenler",
                 type = R.id.action_destination_analyze_to_noFollowFragment
-            ),
-            AnalyzeViewData(
-                uri = R.drawable.ic_follow_poz_ico,
-                title = resources.getString(R.string.analyze_title_new_following)
-            ),
-            AnalyzeViewData(
-                uri = R.drawable.ic_follow_neg_ico,
-                title = resources.getString(R.string.analyze_title_new_unfollowing)
             )
-
 
         )
     }

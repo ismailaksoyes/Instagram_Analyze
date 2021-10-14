@@ -6,8 +6,18 @@
         <entry key="../../../../layout/compose-model-1633372892867.xml" value="0.16666666666666666" />
         <entry key="../../../../layout/compose-model-1633425051053.xml" value="0.12204391891891891" />
         <entry key="../../../../layout/compose-model-1633430526893.xml" value="0.26984797297297297" />
+        <entry key="../../../../layout/compose-model-1633504773646.xml" value="0.27323943661971833" />
+        <entry key="../../../../layout/compose-model-1633634593823.xml" value="0.23148148148148148" />
+        <entry key="../../../../layout/compose-model-1633639616644.xml" value="0.22870370370370371" />
+        <entry key="../../../../layout/compose-model-1633677952023.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1633686895781.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1634030198281.xml" value="0.22314814814814815" />
+        <entry key="../../../../layout/compose-model-1634072065117.xml" value="0.171875" />
+        <entry key="../../../../layout/compose-model-1634113379560.xml" value="0.16976351351351351" />
+        <entry key="../../../../layout/compose-model-1634124586699.xml" value="0.33" />
         <entry key="../../../../layout/custom_preview.xml" value="0.1398148148148148" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2814814814814815" />
+        <entry key="app/src/main/res/drawable/analyze_gra_anim_base.xml" value="0.17314814814814813" />
         <entry key="app/src/main/res/drawable/circle_shape_gra.xml" value="0.3394871794871795" />
         <entry key="app/src/main/res/drawable/color_cursor.xml" value="0.19722222222222222" />
         <entry key="app/src/main/res/drawable/ic_acc_open.xml" value="0.2814814814814815" />
@@ -69,6 +79,7 @@
         <entry key="app/src/main/res/layout/profile_fragment.xml" value="0.25" />
         <entry key="app/src/main/res/layout/settings_fragment.xml" value="0.16337386018237082" />
         <entry key="app/src/main/res/layout/story_views_item.xml" value="0.45" />
+        <entry key="app/src/main/res/menu/navigation_item.xml" value="0.13240740740740742" />
       </map>
     </option>
   </component>

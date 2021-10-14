@@ -1,5 +1,8 @@
 package com.avalon.calizer.ui.main.fragments.analyze.storyanalyze
 
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.avalon.calizer.data.local.follow.FollowersData
@@ -9,6 +12,7 @@ import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.data.repository.RoomRepository
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Resource
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -22,41 +26,43 @@ class NotFollowStoryViewsViewModel @Inject constructor(
     private val _storyViewData = MutableStateFlow<NotStoryState>(NotStoryState.Empty)
     val storyViewData: StateFlow<NotStoryState> = _storyViewData
 
-    private val _followersData = MutableStateFlow<FollowersState>(FollowersState.Empty)
-    val followersData:StateFlow<FollowersState> = _followersData
+
 
     private val storyViewerList = ArrayList<StoryViewerData>()
+    private val followList = ArrayList<FollowersData>()
+
+    val testObserve = MutableLiveData<List<StoryViewerData>>()
 
     sealed class NotStoryState {
         object Empty : NotStoryState()
         object Loading : NotStoryState()
         object Error : NotStoryState()
         data class StoryList(val storyList: List<StoryData>) : NotStoryState()
-        data class StoryViewerSync(val storyViewer:List<StoryViewerData>):NotStoryState()
-        data class StoryViewerList(val storyViewer:List<StoryViewerData>):NotStoryState()
+        object Success :NotStoryState()
+       object Navigate:NotStoryState()
 
     }
 
-    sealed class FollowersState{
-        object Empty : FollowersState()
-        object Loading : FollowersState()
-        object Error : FollowersState()
-        data class FollowersList(val followersData: List<FollowersData>) : FollowersState()
-    }
+
 
     suspend fun getFollowers() {
         viewModelScope.launch {
             val response = roomRepo.getAllFollowers()
             if (response.isNotEmpty()) {
-                _followersData.value = FollowersState.FollowersList(response)
+                followList.addAll(response)
+                getStoryId()
             } else {
-                _followersData.value = FollowersState.Error
+                _storyViewData.value = NotStoryState.Error
             }
         }
     }
 
     fun setLoadingState() {
         _storyViewData.value = NotStoryState.Loading
+    }
+
+    fun navigateStory(){
+        _storyViewData.value = NotStoryState.Navigate
     }
 
     suspend fun getStoryId() {
@@ -98,9 +104,9 @@ class NotFollowStoryViewsViewModel @Inject constructor(
      suspend fun getStoryViewer(storyId: String, maxId: String? = null) {
         viewModelScope.launch {
             when (val response = repository.getStoryViewer(
-                cookies = prefs.allCookie,
-                maxId = maxId,
-                storyId = storyId
+                storyId = storyId,
+                cookies= prefs.allCookie,
+                maxId = maxId
             )) {
                 is Resource.Success -> {
                     response.data?.let { itData ->
@@ -114,14 +120,25 @@ class NotFollowStoryViewsViewModel @Inject constructor(
                             )
                         }
                         itData.nextMaxId?.let { itNextMaxId ->
-                         getStoryViewer(itData.updatedMedia.id,itNextMaxId)
+                        getStoryViewer(
+                            storyId = itData.updatedMedia.id ,
+                             maxId= itNextMaxId)
                         }?: kotlin.run {
-                            _storyViewData.value = NotStoryState.StoryViewerList(storyViewerList)
+                         testObserve.postValue(differenceList())
+                            _storyViewData.value = NotStoryState.Success
                         }
                     }
                 }
             }
         }
+    }
+
+     private fun differenceList():List<StoryViewerData>{
+        return storyViewerList.asSequence().filter { storyList->
+             followList.none { followList->
+                 storyList.pk == followList.dsUserID
+             }
+         }.toList()
     }
 
 

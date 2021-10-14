@@ -8,6 +8,9 @@
         <item name="colorAccent">@color/blue_night</item>
         <item name="colorOnPrimary">@color/blue_night</item>
 
+        <item name="android:statusBarColor">@color/blue_night</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+
         <!--  App Background Color -->
         <item name="android:colorBackground">@color/blue_night</item>
         <item name="colorSurface">@color/blue_night_dark</item>

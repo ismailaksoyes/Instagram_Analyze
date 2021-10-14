@@ -41,6 +41,8 @@ object Versions {
 
     const val compose_version = "1.0.1"
 
+    const val coil_version = "1.4.0"
+
 }
 object buildConfigVersions{
     const val compileSdkVersion = 30
@@ -111,6 +113,10 @@ object testingDepencies {
 object glideDependencies {
     const val glide = "com.github.bumptech.glide:glide:${Versions.glide_version}"
     const val glide_compiler = "com.github.bumptech.glide:compiler:${Versions.glide_version}"
+}
+
+object coilDependencies{
+    const val coil = "io.coil-kt:coil-compose:${Versions.coil_version}"
 }
 
 object mlkitDependencies {
