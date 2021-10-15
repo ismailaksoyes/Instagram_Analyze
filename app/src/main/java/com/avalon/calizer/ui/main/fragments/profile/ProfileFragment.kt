@@ -1,21 +1,19 @@
 package com.avalon.calizer.ui.main.fragments.profile
 
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.toColorInt
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
-import com.avalon.calizer.R
+import androidx.navigation.fragment.findNavController
 import com.avalon.calizer.databinding.ProfileFragmentBinding
 import com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.FaceAnalyzeManager
 import com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.PoseAnalyzeManager
@@ -28,7 +26,6 @@ import com.bumptech.glide.request.transition.Transition
 
 
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -39,9 +36,11 @@ import javax.inject.Inject
 class ProfileFragment : Fragment() {
 
 
-    @Inject
-    lateinit var viewModel: ProfileViewModel
-    private lateinit var binding: ProfileFragmentBinding
+    val viewModel: ProfileViewModel by viewModels()
+
+    private var _binding: ProfileFragmentBinding? = null
+
+    private val binding get() = _binding!!
 
     @Inject
     lateinit var faceAnalyzeManager: FaceAnalyzeManager
@@ -56,45 +55,44 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        binding = ProfileFragmentBinding.inflate(inflater, container, false)
+    ): View? {
+        _binding = ProfileFragmentBinding.inflate(inflater, container, false)
+        _binding!!.lifecycleOwner = viewLifecycleOwner
+        _binding!!.viewmodel = viewModel
+
         return binding.root
     }
 
 
-
     private fun initData() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.setUserDetailsLoading()
-             viewModel.getUserDetails()
-        }
-
-    }
-
-    private fun observeNavigateFlow(){
         lifecycleScope.launch {
-            viewModel.navigateFlow.collect {
-                when(it){
-                    is ProfileViewModel.NavigateFlow.AccountsPage->{
-                        view?.findNavController()?.navigate(R.id.action_destination_profile_to_destination_accounts)
-                    }
-                    is ProfileViewModel.NavigateFlow.PhotoAnalyze->{
-                        view?.findNavController()?.navigate(R.id.action_destination_profile_to_photoUploadFragment)
-                    }
-                }
-            }
+            viewModel.setUserDetailsLoading()
+            viewModel.getUserDetails()
+            viewModel.getFollowersCount()
         }
+
+
     }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+       _binding = null
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initData()
+    }
+
 
     private fun observeUserFlow() {
         lifecycleScope.launch {
             viewModel.userData.collect {
                 when (it) {
-                    is ProfileViewModel.UserDataFlow.Empty -> {
 
-                    }
-                    is ProfileViewModel.UserDataFlow.Loading->{
-                         binding.tvProfileFollowers.isShimmerEnabled(true)
+                    is ProfileViewModel.UserDataFlow.Loading -> {
+                        binding.tvProfileFollowers.isShimmerEnabled(true)
                         binding.tvProfileFollowing.isShimmerEnabled(true)
                         binding.tvProfilePosts.isShimmerEnabled(true)
                         binding.tvProfileUsername.isShimmerEnabled(true)
@@ -106,7 +104,11 @@ class ProfileFragment : Fragment() {
                         binding.tvProfileFollowing.isShimmerEnabled(false)
                         binding.tvProfilePosts.isShimmerEnabled(false)
                         binding.tvProfileUsername.isShimmerEnabled(false)
-                        binding.viewmodel = viewModel
+                    }
+
+                    is ProfileViewModel.UserDataFlow.Error->{
+                        val action = ProfileFragmentDirections.actionDestinationProfileToDestinationAccounts()
+                        findNavController().navigate(action)
                     }
 
 
@@ -117,8 +119,8 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun createProfilePhoto(profileUrl:String?){
-        profileUrl?.let { itProfileUrl->
+    private fun createProfilePhoto(profileUrl: String?) {
+        profileUrl?.let { itProfileUrl ->
             generateUrlToBitmap(itProfileUrl)
         }
 
@@ -149,27 +151,29 @@ class ProfileFragment : Fragment() {
 
     fun getFaceScore(bitmap: Bitmap) {
         faceAnalyzeManager.setFaceAnalyzeBitmap(bitmap)
-        lifecycleScope.launchWhenCreated {
-            faceAnalyzeManager.faceAnalyze.collectLatest { itFaceState ->
-                when (itFaceState) {
-                    is FaceAnalyzeManager.FaceAnalyzeState.Loading -> {
-                        binding.tvFaceOdds.isShimmerEnabled(true)
-                    }
-                    is FaceAnalyzeManager.FaceAnalyzeState.Success -> {
-                        binding.tvFaceOdds.isShimmerEnabled(false)
-                        binding.tvFaceOdds.analyzeTextColor(itFaceState.score)
-                        binding.tvFaceOdds.text = "${itFaceState.score}%"
+        lifecycleScope.launch {
+                faceAnalyzeManager.faceAnalyze.collect { itFaceState ->
+                    when (itFaceState) {
+                        is FaceAnalyzeManager.FaceAnalyzeState.Loading -> {
+                            binding.tvFaceOdds.isShimmerEnabled(true)
+                        }
+                        is FaceAnalyzeManager.FaceAnalyzeState.Success -> {
+                            binding.tvFaceOdds.isShimmerEnabled(false)
+                            binding.tvFaceOdds.analyzeTextColor(itFaceState.score)
+                            binding.tvFaceOdds.text = "${itFaceState.score}%"
+                        }
                     }
                 }
-            }
+
+
         }
 
     }
 
     fun getPoseScore(bitmap: Bitmap) {
         poseAnalyzeManager.setBodyAnalyzeBitmap(bitmap)
-        lifecycleScope.launchWhenCreated {
-            poseAnalyzeManager.bodyAnalyze.collectLatest { itPoseState ->
+        lifecycleScope.launch {
+            poseAnalyzeManager.bodyAnalyze.collect { itPoseState ->
                 when (itPoseState) {
                     is PoseAnalyzeManager.BodyAnalyzeState.Loading -> {
                         binding.tvPozeOdds.isShimmerEnabled(true)
@@ -186,9 +190,28 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initData()
+
         observeUserFlow()
-        observeNavigateFlow()
+        navigateEvent()
+        viewModel.testLiveData.observe(viewLifecycleOwner, Observer {
+            Log.d("OBSERVETEST", "initData: $it  ")
+        })
+        observeTest(viewModel.testLiveData){
+            Log.d("OBSERVETEST", "EX: $it ")
+        }
+
+    }
+
+
+    private fun navigateEvent() {
+        binding.clGoAccounts.setOnClickListener {
+            val action = ProfileFragmentDirections.actionDestinationProfileToDestinationAccounts()
+            it.findNavController().navigate(action)
+        }
+        binding.clPhotoAnalyze.setOnClickListener {
+            val action = ProfileFragmentDirections.actionDestinationProfileToPhotoUploadFragment()
+            it.findNavController().navigate(action)
+        }
 
     }
 

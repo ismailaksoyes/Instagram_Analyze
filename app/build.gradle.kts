@@ -143,6 +143,7 @@ dependencies {
 
     //coil
     implementation(coilDependencies.coil)
+    implementation("androidx.core:core-ktx:1.6.0")
 
 
 }

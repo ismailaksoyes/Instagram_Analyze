@@ -6,6 +6,6 @@ sealed class Resource<T>(
     val errorCode: Int? = null
 ) {
     class Success<T>(data: T) : Resource<T>(data)
-    class DataError<T>(errorCode: Int) : Resource<T>(null, errorCode)
+    class Error<T>(errorCode: Int) : Resource<T>(null, errorCode)
 
 }

@@ -51,12 +51,6 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao,private va
     }
 
 
-
-//    suspend fun getNotFollow(): List<FollowData> {
-//        return roomDao.getUnFollowers()
-//    }
-
-
     suspend fun getUserInfo(): AccountsInfoData {
         return roomDao.getUserInfo(prefs.selectedAccount)
     }
@@ -90,6 +84,19 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao,private va
     }
     suspend fun getSaveFollowersType():Boolean{
        return roomDao.getSaveFollowersType(prefs.selectedAccount).isFirstFollowersAnalyze
+    }
+
+    suspend fun getNewFollowersCount():Long{
+        return roomDao.getNewFollowersCount(prefs.selectedAccount)
+    }
+    suspend fun getOldFollowersCount():Long{
+        return roomDao.getOldFollowersCount(prefs.selectedAccount)
+    }
+    suspend fun getFollowersCount():Long{
+        return roomDao.getFollowersCount(prefs.selectedAccount)
+    }
+    suspend fun getUnFollowersCount():Long{
+        return roomDao.getUnFollowersCount(prefs.selectedAccount)
     }
     /**
     suspend fun addLastFollowers(followersData: List<LastFollowersData>) {

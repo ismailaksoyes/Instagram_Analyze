@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import androidx.core.graphics.scale
 import com.avalon.calizer.data.local.profile.photoanalyze.PoseData
+import com.avalon.calizer.ui.main.fragments.profile.ProfileViewModel
 import kotlin.math.roundToInt
 
 
@@ -29,8 +30,6 @@ class CanvasView @JvmOverloads constructor(
                 drawData(poseData, canvas, paint, ww, hh, newBitmap.first, newBitmap.second)
             }
         }
-
-
     }
 
     fun scaleBitmap(imageBitmap: Bitmap, height: Float): Pair<Bitmap, Float> {

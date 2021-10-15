@@ -1,7 +1,5 @@
 package com.avalon.calizer.ui.main.fragments.analyze.storyanalyze
 
-import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +10,6 @@ import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.data.repository.RoomRepository
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Resource
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -92,7 +89,7 @@ class NotFollowStoryViewsViewModel @Inject constructor(
                         _storyViewData.value = NotStoryState.Error
                     }
                 }
-                is Resource.DataError -> {
+                is Resource.Error -> {
                     _storyViewData.value = NotStoryState.Error
                 }
             }

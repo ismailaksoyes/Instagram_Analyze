@@ -40,6 +40,7 @@ fun ImageView.loadPPUrl(url: String?) {
         .into(this)
 }
 
+
 fun TextView.isShimmerEnabled(start: Boolean) {
     if (start) {
         val shimmer = Shimmer.AlphaHighlightBuilder()
@@ -184,7 +185,7 @@ fun List<FollowingData>.toOldFollowingData() = map {
 fun ApiResponseUserDetails.toAccountsInfoData() = AccountsInfoData(
     userName = user.username,
     profilePic = user.profilePicUrl,
-    followers = user.followerCount.toLong(),
+    followers = user.followerCount?.toLong(),
     following = user.followingCount.toLong(),
     posts = user.mediaCount.toLong(),
     userId = user.pk

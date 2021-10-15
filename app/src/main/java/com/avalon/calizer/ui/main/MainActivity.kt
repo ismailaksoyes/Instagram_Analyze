@@ -56,11 +56,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return Navigation.findNavController(this,
-            R.id.navHostFragment
-        ).navigateUp() || super.onSupportNavigateUp()
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Log.d("action1",item.toString())
