@@ -49,7 +49,7 @@ class HighlightsSheetViewModel @Inject constructor(
                         _userPkHigh.value = UserPkState.Error
                     }
                 }
-                is Resource.DataError->{
+                is Resource.Error ->{
                     _userPkHigh.value = UserPkState.Error
                 }
             }
@@ -70,7 +70,7 @@ class HighlightsSheetViewModel @Inject constructor(
                     }
 
                 }
-                is Resource.DataError -> {
+                is Resource.Error -> {
                     _userPkHigh.value = UserPkState.Error
                 }
             }

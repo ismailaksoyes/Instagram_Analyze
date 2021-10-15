@@ -154,6 +154,10 @@ class PhotoUploadFragment : Fragment() {
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
     private fun initData() {
         binding.btnUploadImage.setOnClickListener {
 
@@ -162,7 +166,7 @@ class PhotoUploadFragment : Fragment() {
         }
 
         binding.ivBackBtn.setOnClickListener {
-            it.findNavController().navigate(R.id.action_photoUploadFragment_to_destination_profile)
+            it.findNavController().popBackStack()
         }
     }
 

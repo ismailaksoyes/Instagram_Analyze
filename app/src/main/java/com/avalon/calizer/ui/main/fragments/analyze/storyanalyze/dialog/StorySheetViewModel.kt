@@ -1,12 +1,10 @@
 package com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.dialog
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Resource
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -42,7 +40,7 @@ class StorySheetViewModel@Inject constructor(
                     }
 
                 }
-                is Resource.DataError->{
+                is Resource.Error ->{
                     //no such user
                     _userPk.value = UserPkState.Error
                 }

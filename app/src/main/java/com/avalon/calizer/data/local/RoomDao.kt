@@ -82,4 +82,10 @@ interface RoomDao {
     @Query("SELECT Count() FROM followers_table WHERE analyzeUserId=:userId AND uniqueType IN (SELECT uniqueType FROM followers_table WHERE analyzeUserId=:userId  EXCEPT SELECT uniqueType FROM old_followers_table WHERE analyzeUserId=:userId )")
     suspend fun getNewFollowersCount(userId: Long): Long
 
+    @Query("SELECT Count() FROM old_followers_table WHERE analyzeUserId=:userId")
+    suspend fun getOldFollowersCount(userId:Long):Long
+
+    @Query("SELECT Count() FROM followers_table WHERE analyzeUserId=:userId")
+    suspend fun getFollowersCount(userId: Long):Long
+
 }

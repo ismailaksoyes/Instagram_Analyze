@@ -48,6 +48,7 @@ data class FaceAnalyzeData(
 
     }
 
+
     private fun getTwoRatioCheck(n1: Float?,n2: Float?):Boolean{
         var controlRatio = false
         Utils.ifTwoNotNull(n1,n2){x,y->

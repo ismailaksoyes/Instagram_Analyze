@@ -103,7 +103,7 @@ data class ApiResponseUserDetails(
         @SerializedName("feed_post_reshare_disabled")
         val feedPostReshareDisabled: Boolean,
         @SerializedName("follower_count")
-        val followerCount: Int,
+        val followerCount: Int?,
         @SerializedName("following_count")
         val followingCount: Int,
         @SerializedName("following_tag_count")

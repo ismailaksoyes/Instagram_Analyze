@@ -110,7 +110,7 @@ class AccountsFragment  : Fragment() {
                                 profilePic = itUserData.profilePicUrl,
                                 userName =  itUserData.username.toString(),
                                 userId =  itUserData.pk,
-                                followers = itUserData.followerCount.toLong(),
+                                followers = itUserData.followerCount?.toLong(),
                                 following = itUserData.followingCount.toLong(),
                                 posts = itUserData.mediaCount.toLong()
                             )

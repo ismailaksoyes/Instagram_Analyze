@@ -8,6 +8,7 @@
         <variable
             name="viewmodel"
             type="com.avalon.calizer.ui.main.fragments.profile.ProfileViewModel" />
+
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,7 +18,6 @@
     >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_go_accounts"
-        android:onClick="@{() ->viewmodel.navigateProfileToAccountsPage()}"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -188,7 +188,7 @@
                 android:layout_marginTop="9dp"
                 android:layout_marginBottom="9dp"
                 style="@style/text_h1_style"
-                android:text="541"
+                android:text="@{viewmodel.followersCount.newFollowersCount.toString()}"
                 app:layout_constraintBottom_toTopOf="@id/tv_followers_text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_followers_plus" />
@@ -198,7 +198,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                style="@style/text_medium_uncolored_style"
-                android:text="%12"
+                android:text="@{viewmodel.followersCount.newFollowersRatio.toString()}"
                 android:textColor="@color/green"
                 app:layout_constraintBottom_toBottomOf="@id/tv_followers_plus"
                 app:layout_constraintStart_toEndOf="@id/tv_followers_plus"
@@ -246,7 +246,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_unfollowers_plus"
                 app:layout_constraintBottom_toTopOf="@id/tv_unfollowers_text"
-                android:text="541"
+                android:text="@{viewmodel.followersCount.unFollowersCount.toString()}"
                 style="@style/text_h1_style"
                 android:layout_marginTop="9dp"
                 android:layout_marginBottom="9dp"
@@ -259,7 +259,7 @@
                 app:layout_constraintStart_toEndOf="@id/tv_unfollowers_plus"
                 android:layout_marginStart="10dp"
                 android:textColor="@color/red_light"
-                android:text="%19"
+                android:text="@{viewmodel.followersCount.unFollowersRatio.toString()}"
                style="@style/text_medium_uncolored_style"/>
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_unfollowers_text"
@@ -376,7 +376,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:onClick="@{() ->viewmodel.navigateProfileToPhotoAnalyze()}"
         android:background="@drawable/radius_rect"
         android:elevation="8dp">
         <ImageView

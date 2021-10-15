@@ -1,14 +1,11 @@
 package com.avalon.calizer.ui.main.fragments.analyze.storyanalyze
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.avalon.calizer.data.error.ErrorMapper
 import com.avalon.calizer.data.local.story.StoryData
 import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Resource
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -102,7 +99,7 @@ class StoryViewModel @Inject constructor(
 
                     } ?: kotlin.run { _storyData.value = StoryState.Error }
                 }
-                is Resource.DataError -> {
+                is Resource.Error -> {
                     _storyData.value = StoryState.Error
                     val errorcode = response.errorCode
                 }
@@ -135,7 +132,7 @@ class StoryViewModel @Inject constructor(
 
                     }?: kotlin.run { _storyData.value = StoryState.Error }
                 }
-                is Resource.DataError -> {
+                is Resource.Error -> {
                     _storyData.value = StoryState.Error
                     val errorcode = response.errorCode
                 }
