@@ -10,12 +10,14 @@ import com.avalon.calizer.data.repository.FollowRepository
 import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class AllFollowersViewModel @Inject constructor(
     private val followRepository: FollowRepository,
     private val repository: Repository,

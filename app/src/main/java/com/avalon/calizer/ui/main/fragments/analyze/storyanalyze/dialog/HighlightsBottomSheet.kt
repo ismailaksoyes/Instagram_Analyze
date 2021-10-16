@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,8 +32,7 @@ import javax.inject.Inject
 class HighlightsBottomSheet : BottomSheetDialogFragment() {
     lateinit var binding: BottomSheetHighlightsStoryBinding
 
-    @Inject
-    lateinit var viewModel: HighlightsSheetViewModel
+    val viewModel: HighlightsSheetViewModel  by viewModels()
 
 
     private lateinit var loadingAnim: LoadingAnim

@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.avalon.calizer.R
@@ -35,8 +36,7 @@ import javax.inject.Inject
 class NotFollowStoryViewsFragment : Fragment() {
 
 
-    @Inject
-    lateinit var viewModel: NotFollowStoryViewsViewModel
+    val viewModel: NotFollowStoryViewsViewModel  by viewModels()
 
     private lateinit var loadingAnim: LoadingAnim
 

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,8 +24,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class UnFollowersFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModel: UnFollowersViewModel
+    val viewModel: UnFollowersViewModel  by viewModels()
     lateinit var binding: FragmentUnFollowersBinding
     private val followsAdapter by lazy { FollowsAdapter() }
     private lateinit var layoutManager: LinearLayoutManager

@@ -7,18 +7,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.analyze.AnalyzeViewData
 import com.avalon.calizer.databinding.AnalyzeFragmentBinding
 import com.avalon.calizer.ui.accounts.adapters.AccountsAdapter
 import com.avalon.calizer.utils.AnalyzeAdapterType
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class AnalyzeFragment : Fragment() {
     private lateinit var binding: AnalyzeFragmentBinding
     private val viewsAdapter by lazy { AnalyzeViewAdapter() }
-    private lateinit var viewModel: AnalyzeViewModel
+    val viewModel: AnalyzeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,11 +40,7 @@ class AnalyzeFragment : Fragment() {
 
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(AnalyzeViewModel::class.java)
 
-    }
 
     private fun setupRecyclerview() {
         binding.rcViewTitle.adapter = viewsAdapter
