@@ -11,12 +11,14 @@ import com.avalon.calizer.data.remote.insresponse.ApiResponseUserDetails
 import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.data.repository.RoomRepository
 import com.avalon.calizer.utils.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class AccountsViewModel @Inject constructor(
     private val roomRepository: RoomRepository,
     private val repository: Repository

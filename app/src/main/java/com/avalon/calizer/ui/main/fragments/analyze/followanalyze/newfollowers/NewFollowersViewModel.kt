@@ -9,11 +9,13 @@ import com.avalon.calizer.data.repository.FollowRepository
 import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class NewFollowersViewModel @Inject constructor (private val followRepository: FollowRepository, private val repository: Repository,private val prefs:MySharedPreferences):ViewModel(){
     private val _newFollowers = MutableStateFlow<NewFollowersState>(
         NewFollowersState.Empty)

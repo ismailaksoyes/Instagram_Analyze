@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -36,8 +37,8 @@ import javax.inject.Inject
 class WebLoginFragment : Fragment() {
     private lateinit var binding: FragmentWebLoginBinding
 
-    @Inject
-    lateinit var viewModel: AccountsViewModel
+
+    val viewModel: AccountsViewModel by viewModels()
 
     lateinit var webView: WebView
 

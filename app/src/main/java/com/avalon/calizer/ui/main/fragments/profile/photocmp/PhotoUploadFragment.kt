@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.avalon.calizer.R
@@ -30,8 +31,7 @@ import javax.inject.Inject
 class PhotoUploadFragment : Fragment() {
     private lateinit var binding: FragmentPhotoUploadBinding
 
-    @Inject
-    lateinit var viewModel: PhotoAnalyzeViewModel
+   val viewModel: PhotoAnalyzeViewModel by viewModels()
 
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->

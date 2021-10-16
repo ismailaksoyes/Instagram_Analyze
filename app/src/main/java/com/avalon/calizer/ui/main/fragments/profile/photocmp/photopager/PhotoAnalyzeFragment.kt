@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
@@ -37,8 +38,7 @@ class PhotoAnalyzeFragment : Fragment() {
 
     private lateinit var binding: FragmentPhotoAnalyzeBinding
 
-    @Inject
-    lateinit var viewModel: PhotoAnalyzeViewModel
+    val viewModel: PhotoAnalyzeViewModel by viewModels()
 
     @Inject
     lateinit var poseAnalyzeManager: PoseAnalyzeManager

@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.viewModels
 import com.avalon.calizer.utils.LoadingAnim
 import com.avalon.calizer.utils.NavDataType
 import com.avalon.calizer.utils.NavDataType.USER_PK_HIGHLIGHTS
@@ -42,8 +43,7 @@ class StoryFragment : Fragment() {
 
     lateinit var binding: FragmentStoryBinding
 
-    @Inject
-    lateinit var viewModel: StoryViewModel
+    val viewModel: StoryViewModel by viewModels()
 
     lateinit var storyAdapter: StoryAdapter
 

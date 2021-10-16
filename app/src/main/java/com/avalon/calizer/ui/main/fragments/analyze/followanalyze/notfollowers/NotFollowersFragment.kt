@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,8 +26,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class NotFollowersFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModel:NotFollowersViewModel
+    val viewModel:NotFollowersViewModel  by viewModels()
 
     @Inject
     lateinit var prefs:MySharedPreferences
@@ -43,7 +43,7 @@ class NotFollowersFragment : Fragment() {
         binding.rcNoFollowData.layoutManager = layoutManager
         observeFollowData()
         observePpItemRes()
-        loadData(0)
+
         scrollListener()
         binding.ivBackBtn.setOnClickListener {
             it.findNavController().navigate(R.id.action_noFollowFragment_to_destination_analyze)
@@ -57,6 +57,11 @@ class NotFollowersFragment : Fragment() {
         binding = FragmentNoFollowBinding.inflate(inflater,container,false)
        return binding.root
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        loadData(0)
+    }
     private fun setupRecyclerview() {
         binding.rcNoFollowData.adapter = followsAdapter
         binding.rcNoFollowData.layoutManager = LinearLayoutManager(
@@ -66,7 +71,7 @@ class NotFollowersFragment : Fragment() {
 
     }
     fun loadData(startItem: Int) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch {
             viewModel.getFollowData(startItem)
         }
     }

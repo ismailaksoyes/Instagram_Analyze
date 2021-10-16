@@ -10,11 +10,13 @@ import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.data.repository.RoomRepository
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class NotFollowStoryViewsViewModel @Inject constructor(
     val roomRepo: RoomRepository,
     val prefs: MySharedPreferences,

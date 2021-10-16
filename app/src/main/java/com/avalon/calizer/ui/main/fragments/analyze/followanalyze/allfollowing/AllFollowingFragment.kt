@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,8 +30,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class AllFollowingFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModel: AllFollowingViewModel
+   val viewModel: AllFollowingViewModel by viewModels()
 
     lateinit var binding: FragmentAllFollowingBinding
 

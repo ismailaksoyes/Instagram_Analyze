@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import com.avalon.calizer.R
 import com.avalon.calizer.databinding.BottomSheetInputStoryBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -28,8 +29,7 @@ import kotlinx.coroutines.launch
 class StoryBottomSheet : BottomSheetDialogFragment() {
     lateinit var binding: BottomSheetInputStoryBinding
 
-    @Inject
-    lateinit var viewModel: StorySheetViewModel
+    val viewModel: StorySheetViewModel  by viewModels()
 
 
     lateinit var loadingAnim: LoadingAnim

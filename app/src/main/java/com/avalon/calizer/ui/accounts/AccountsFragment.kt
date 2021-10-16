@@ -34,7 +34,8 @@ class AccountsFragment  : Fragment() {
     @Inject
     lateinit var prefs: MySharedPreferences
 
-    @Inject lateinit var viewModel: AccountsViewModel
+
+     val viewModel: AccountsViewModel by viewModels()
 
     private val accountsAdapter by lazy {
         AccountsAdapter(object : SelectedUserInterface {

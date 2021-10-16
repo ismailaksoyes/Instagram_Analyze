@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.avalon.calizer.R
 import com.avalon.calizer.databinding.FragmentStoryShowBinding
 import com.avalon.calizer.ui.tutorial.TutorialFragment
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 
 class StoryShowFragment : Fragment() {
