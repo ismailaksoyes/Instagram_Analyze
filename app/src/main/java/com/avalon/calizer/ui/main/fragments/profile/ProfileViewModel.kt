@@ -97,33 +97,41 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-   suspend fun getFollowersCount() {
+    suspend fun getFollowersCount() {
         viewModelScope.launch {
             followersCount.postValue(
                 FollowersCount(
                     roomDb.getNewFollowersCount().toString(),
                     roomDb.getUnFollowersCount().toString(),
-                    getEarnedFollowersPercentage().toString().plus("%"),
-                    getLostFollowersPercentage().toString().plus("%")
-                )
+                    if (getEarnedFollowersPercentage() == 0f) {
+                        "%0"
+                    } else {
+                        "%" + getEarnedFollowersPercentage().toString().substring(0, 3)
+                    },
+                    if (getLostFollowersPercentage() == 0f) {
+                        "%0"
+                    } else {
+                        "%" + getLostFollowersPercentage().toString().substring(0, 3)
+                    }
+                        )
             )
         }
     }
 
 
-    suspend fun getEarnedFollowersCount(): Long {
-        return roomDb.getFollowersCount() - roomDb.getOldFollowersCount()
+    private suspend fun getEarnedFollowersPercentage(): Float {
+        val oldFollowerCount = roomDb.getOldFollowersCount().toFloat()
+        val followersCount = roomDb.getNewFollowersCount().toFloat()
+        if (oldFollowerCount == 0f) return 0f
+        if (followersCount == 0f) return 0f
+        return (((followersCount - (followersCount - oldFollowerCount)) / followersCount) * 100)
     }
 
-    private suspend fun getEarnedFollowersPercentage(): Long {
-        val oldFollowerCount = roomDb.getOldFollowersCount()
-        if (oldFollowerCount == 0L) return 0L
-        return ((roomDb.getFollowersCount() - oldFollowerCount) / oldFollowerCount) * 100L
-    }
-
-    private suspend fun getLostFollowersPercentage(): Long {
-        val followersCount = roomDb.getFollowersCount()
-        if (roomDb.getUnFollowersCount() == 0L) return 0L
-        return ((followersCount - roomDb.getUnFollowersCount()) / followersCount) * 100L
+    private suspend fun getLostFollowersPercentage(): Float {
+        val followersCount = roomDb.getFollowersCount().toFloat()
+        val unFollowersCount = roomDb.getUnFollowersCount().toFloat()
+        if (followersCount == 0f) return 0f
+        if (unFollowersCount == 0f) return 0f
+        return (((followersCount - (followersCount - unFollowersCount)) / followersCount) * 100)
     }
 }
