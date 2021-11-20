@@ -128,7 +128,6 @@ dependencies {
 
     implementation(lottieDependencies.lottie)
 
-    implementation(kotlinDependencies.coroutines_play_services)
 
     //compose
     implementation(composeDependencies.composeFoundation)
