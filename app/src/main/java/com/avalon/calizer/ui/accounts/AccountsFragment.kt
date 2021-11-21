@@ -18,6 +18,7 @@ import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.databinding.FragmentAccountsBinding
 import com.avalon.calizer.ui.accounts.adapters.AccountsAdapter
 import com.avalon.calizer.ui.accounts.adapters.SelectedUserInterface
+import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.utils.MySharedPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -28,8 +29,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AccountsFragment  : Fragment() {
-    private lateinit var binding: FragmentAccountsBinding
+class AccountsFragment  : BaseFragment<FragmentAccountsBinding>(FragmentAccountsBinding::inflate) {
+
 
     @Inject
     lateinit var prefs: MySharedPreferences
@@ -55,13 +56,6 @@ class AccountsFragment  : Fragment() {
         findNavController().navigate(R.id.action_destination_accounts_to_destination_profile)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentAccountsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

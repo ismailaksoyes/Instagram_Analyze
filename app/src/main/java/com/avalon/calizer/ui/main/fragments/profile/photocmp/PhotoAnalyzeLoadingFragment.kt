@@ -15,17 +15,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
-import com.avalon.calizer.data.local.profile.photoanalyze.PoseData
+
 import com.avalon.calizer.databinding.FragmentPhotoAnalyzeLoadingBinding
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.pose.Pose
-import com.google.mlkit.vision.pose.PoseDetection
-import com.google.mlkit.vision.pose.PoseDetector
-import com.google.mlkit.vision.pose.PoseLandmark
-import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
+
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
+
 
 class PhotoAnalyzeLoadingFragment : Fragment() {
     private val args: PhotoAnalyzeLoadingFragmentArgs by navArgs()
