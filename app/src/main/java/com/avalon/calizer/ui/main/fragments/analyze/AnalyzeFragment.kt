@@ -13,24 +13,17 @@ import com.avalon.calizer.R
 import com.avalon.calizer.data.local.analyze.AnalyzeViewData
 import com.avalon.calizer.databinding.AnalyzeFragmentBinding
 import com.avalon.calizer.ui.accounts.adapters.AccountsAdapter
+import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.utils.AnalyzeAdapterType
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AnalyzeFragment : Fragment() {
-    private lateinit var binding: AnalyzeFragmentBinding
+class AnalyzeFragment : BaseFragment<AnalyzeFragmentBinding>(AnalyzeFragmentBinding::inflate) {
+
     private val viewsAdapter by lazy { AnalyzeViewAdapter() }
     val viewModel: AnalyzeViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = AnalyzeFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -16,6 +16,7 @@ import com.avalon.calizer.data.local.follow.FollowData
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.data.local.follow.FollowingData
 import com.avalon.calizer.databinding.FragmentAllFollowingBinding
+import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allfollowers.AllFollowersViewModel
 import com.avalon.calizer.utils.followersToFollowList
@@ -28,24 +29,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AllFollowingFragment : Fragment() {
+class AllFollowingFragment : BaseFragment<FragmentAllFollowingBinding>(FragmentAllFollowingBinding::inflate) {
 
    val viewModel: AllFollowingViewModel by viewModels()
-
-    lateinit var binding: FragmentAllFollowingBinding
 
     private val followsAdapter by lazy { FollowsAdapter() }
     private lateinit var layoutManager: LinearLayoutManager
     private var isLoading: Boolean = false
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentAllFollowingBinding.inflate(layoutInflater)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.avalon.calizer.databinding.ProfileFragmentBinding
+import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.FaceAnalyzeManager
 import com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.PoseAnalyzeManager
 import com.avalon.calizer.utils.MySharedPreferences
@@ -33,12 +34,10 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class ProfileFragment : Fragment() {
+class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBinding::inflate) {
 
 
     val viewModel: ProfileViewModel by viewModels()
-
-    lateinit var binding: ProfileFragmentBinding
 
 
     @Inject
@@ -50,16 +49,6 @@ class ProfileFragment : Fragment() {
 
     @Inject
     lateinit var prefs: MySharedPreferences
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = ProfileFragmentBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewmodel = viewModel
-        return binding.root
-    }
 
 
     private fun initData() {
@@ -73,10 +62,6 @@ class ProfileFragment : Fragment() {
     }
 
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -188,7 +173,8 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewmodel = viewModel
         observeUserFlow()
         navigateEvent()
         viewModel.testLiveData.observe(viewLifecycleOwner, Observer {

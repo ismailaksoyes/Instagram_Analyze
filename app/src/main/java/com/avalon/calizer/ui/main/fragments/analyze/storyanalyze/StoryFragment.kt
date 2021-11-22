@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.viewModels
+import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.utils.LoadingAnim
 import com.avalon.calizer.utils.NavDataType
 import com.avalon.calizer.utils.NavDataType.USER_PK_HIGHLIGHTS
@@ -38,10 +39,8 @@ import com.avalon.calizer.utils.NavDataType.USER_PK_TYPE
 
 
 @AndroidEntryPoint
-class StoryFragment : Fragment() {
+class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::inflate) {
 
-
-    lateinit var binding: FragmentStoryBinding
 
     val viewModel: StoryViewModel by viewModels()
 
@@ -53,19 +52,11 @@ class StoryFragment : Fragment() {
     private lateinit var layoutManager: LinearLayoutManager
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentStoryBinding.inflate(inflater, container, false)
-        loadingAnim = LoadingAnim(childFragmentManager)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         layoutManager = LinearLayoutManager(view.context)
         binding.rcStoryView.layoutManager = layoutManager
+        loadingAnim = LoadingAnim(childFragmentManager)
         setupRecyclerview()
         initData()
         observeStoryData()

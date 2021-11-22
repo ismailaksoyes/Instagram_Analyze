@@ -19,6 +19,7 @@ import com.avalon.calizer.R
 import com.avalon.calizer.data.local.AccountsData
 import com.avalon.calizer.data.local.weblogin.CookiesData
 import com.avalon.calizer.databinding.FragmentWebLoginBinding
+import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.utils.CheckInternetConnection
 import com.avalon.calizer.utils.Constants
 import com.avalon.calizer.utils.showSnackBar
@@ -34,9 +35,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class WebLoginFragment : Fragment() {
-    private lateinit var binding: FragmentWebLoginBinding
-
+class WebLoginFragment : BaseFragment<FragmentWebLoginBinding>(FragmentWebLoginBinding::inflate) {
 
     val viewModel: AccountsViewModel by viewModels()
 
@@ -44,13 +43,6 @@ class WebLoginFragment : Fragment() {
 
     var lastControl: Boolean = true
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentWebLoginBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
