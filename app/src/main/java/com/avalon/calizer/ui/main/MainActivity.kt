@@ -15,9 +15,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.data.local.follow.FollowRequestParams
@@ -49,23 +51,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
 
 
-    private fun setupBottomNavigationMenu(navController: NavController) {
-        binding.bottomNavigation.let {
-            NavigationUI.setupWithNavController(it, navController)
-        }
-
-
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Log.d("action1",item.toString())
-        return super.onOptionsItemSelected(item) || item.onNavDestinationSelected(
-            findNavController(
-                R.id.navHostFragment
-            )
-        )
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,11 +65,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initNavController() {
-        navController = Navigation.findNavController(this, R.id.navHostFragment)
-        setupBottomNavigationMenu(navController)
-        binding.bottomNavigation.setOnNavigationItemReselectedListener {
+        navController = binding.navHost.getFragment<NavHostFragment>().navController
+        binding.bottomNavigation.setupWithNavController(navController)
 
-        }
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.destination_profile || destination.id == R.id.destination_analyze || destination.id == R.id.destination_settings) {
 

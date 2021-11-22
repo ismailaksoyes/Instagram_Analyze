@@ -122,9 +122,12 @@ dependencies {
     // Activity KTX for viewModels()
     implementation(androidxsupportDependencies.activity_ktx)
 
+    implementation(androidxsupportDependencies.fragment_ktx)
+
     //navigation comp
     implementation(androidxsupportDependencies.navigation_fragment)
     implementation(androidxsupportDependencies.navigation_ui)
+    implementation(androidxsupportDependencies.navigation_runtime)
 
     implementation(lottieDependencies.lottie)
 

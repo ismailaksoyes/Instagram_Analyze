@@ -30,7 +30,7 @@ object Versions {
 
     const val activity_ktx_version = "1.3.1"
 
-    const val navigation_comp_version = "2.3.5"
+    const val navigation_comp_version = "2.4.0-alpha01"
 
     const val airbnb_lottie_version = "3.4.0"
 
@@ -43,9 +43,11 @@ object Versions {
 
     const val coil_version = "1.4.0"
 
+    const val fragment_ktx_version = "1.4.0"
+
 }
 object buildConfigVersions{
-    const val compileSdkVersion = 30
+    const val compileSdkVersion = 31
     const val buildToolsVersion = "30.0.2"
     const val minSdkVersion = 21
     const val targetSdkVersion = 30
@@ -75,8 +77,10 @@ object androidxsupportDependencies {
     const val navigation_fragment =
         "androidx.navigation:navigation-fragment-ktx:${Versions.navigation_comp_version}"
     const val navigation_ui = "androidx.navigation:navigation-ui-ktx:${Versions.navigation_comp_version}"
+    const val navigation_runtime = "androidx.navigation:navigation-runtime-ktx:${Versions.navigation_comp_version}"
     const val core_ktx = "androidx.core:core-ktx:${Versions.core_ktx_version}"
     const val multidex = "com.android.support:multidex:${Versions.multidex_version}"
+    const val fragment_ktx = "androidx.fragment:fragment-ktx:${Versions.fragment_ktx_version}"
 }
 
 object kotlinDependencies {
