@@ -38,9 +38,8 @@ class ProfileFragment : Fragment() {
 
     val viewModel: ProfileViewModel by viewModels()
 
-    private var _binding: ProfileFragmentBinding? = null
+    lateinit var binding: ProfileFragmentBinding
 
-    private val binding get() = _binding!!
 
     @Inject
     lateinit var faceAnalyzeManager: FaceAnalyzeManager
@@ -56,10 +55,9 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = ProfileFragmentBinding.inflate(inflater, container, false)
-        _binding!!.lifecycleOwner = viewLifecycleOwner
-        _binding!!.viewmodel = viewModel
-
+        binding = ProfileFragmentBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewmodel = viewModel
         return binding.root
     }
 
@@ -77,7 +75,7 @@ class ProfileFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-       _binding = null
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

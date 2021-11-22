@@ -12,6 +12,7 @@ buildscript {
         classpath (BuildPluginsDependencies.gmsPlayServicesPlugin)
         classpath (BuildPluginsDependencies.hiltGradlePlugin)
         classpath (BuildPluginsDependencies.navigationGradlePlugin)
+        classpath("com.android.tools.build:gradle:7.0.3")
     }
 }
 

@@ -85,8 +85,7 @@ object kotlinDependencies {
         "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines_version}"
     const val coroutines =
         "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines_version}"
-    const val coroutines_play_services =
-        "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:${Versions.coroutines_play_services_version}"
+
 
 }
 
