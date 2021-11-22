@@ -20,11 +20,12 @@ import com.avalon.calizer.R
 import com.avalon.calizer.data.local.TutorialData
 import com.avalon.calizer.databinding.FragmentTutorialBinding
 import com.avalon.calizer.databinding.FragmentViewPagerBinding
+import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.utils.MySharedPreferences
 import javax.inject.Inject
 
 
-class TutorialFragment : Fragment() {
+class TutorialFragment : BaseFragment<FragmentTutorialBinding>(FragmentTutorialBinding::inflate) {
 
     companion object {
         private const val ARG_POSITION = "ARG_POSITION"
@@ -35,19 +36,10 @@ class TutorialFragment : Fragment() {
 
     }
 
-    private lateinit var binding: FragmentTutorialBinding
     @Inject
     lateinit var prefs: MySharedPreferences
 
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentTutorialBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -69,8 +61,6 @@ class TutorialFragment : Fragment() {
         return dataList
     }
     //this svg error gra. line
-
-
 
 
 }

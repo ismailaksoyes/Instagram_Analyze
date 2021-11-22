@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.databinding.FragmentUnFollowersBinding
+import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
 import com.avalon.calizer.utils.followersToFollowList
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,22 +23,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class UnFollowersFragment : Fragment() {
+class UnFollowersFragment : BaseFragment<FragmentUnFollowersBinding>(FragmentUnFollowersBinding::inflate) {
 
     val viewModel: UnFollowersViewModel  by viewModels()
-    lateinit var binding: FragmentUnFollowersBinding
     private val followsAdapter by lazy { FollowsAdapter() }
     private lateinit var layoutManager: LinearLayoutManager
     private var isLoading: Boolean = false
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentUnFollowersBinding.inflate(layoutInflater)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -16,6 +16,7 @@ import com.avalon.calizer.R
 import com.avalon.calizer.data.local.follow.FollowData
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.databinding.FragmentAllFollowersBinding
+import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
 import com.avalon.calizer.utils.followersToFollowList
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,8 +27,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AllFollowersFragment : Fragment() {
-    private lateinit var binding: FragmentAllFollowersBinding
+class AllFollowersFragment : BaseFragment<FragmentAllFollowersBinding>(FragmentAllFollowersBinding::inflate) {
 
     val viewModel: AllFollowersViewModel by viewModels()
     private val followsAdapter by lazy { FollowsAdapter() }
@@ -51,13 +51,6 @@ class AllFollowersFragment : Fragment() {
 
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentAllFollowersBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     private fun setupRecyclerview() {
         binding.rcFollowData.adapter = followsAdapter

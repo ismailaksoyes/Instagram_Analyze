@@ -21,6 +21,7 @@ import androidx.navigation.fragment.findNavController
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 import com.avalon.calizer.databinding.FragmentPhotoUploadBinding
+import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.utils.showSnackBar
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,8 +29,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class PhotoUploadFragment : Fragment() {
-    private lateinit var binding: FragmentPhotoUploadBinding
+class PhotoUploadFragment : BaseFragment<FragmentPhotoUploadBinding>(FragmentPhotoUploadBinding::inflate) {
 
    val viewModel: PhotoAnalyzeViewModel by viewModels()
 
@@ -78,18 +78,6 @@ class PhotoUploadFragment : Fragment() {
     }
 
 
-
-
-
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentPhotoUploadBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -154,9 +142,6 @@ class PhotoUploadFragment : Fragment() {
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 
     private fun initData() {
         binding.btnUploadImage.setOnClickListener {

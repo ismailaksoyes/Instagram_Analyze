@@ -17,29 +17,21 @@ import androidx.navigation.fragment.navArgs
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 
 import com.avalon.calizer.databinding.FragmentPhotoAnalyzeLoadingBinding
+import com.avalon.calizer.ui.base.BaseFragment
 
 import kotlinx.coroutines.delay
 
 
-class PhotoAnalyzeLoadingFragment : Fragment() {
+class PhotoAnalyzeLoadingFragment : BaseFragment<FragmentPhotoAnalyzeLoadingBinding>(FragmentPhotoAnalyzeLoadingBinding::inflate) {
     private val args: PhotoAnalyzeLoadingFragmentArgs by navArgs()
-    private lateinit var binding: FragmentPhotoAnalyzeLoadingBinding
+
     private lateinit var analyzeData: List<PhotoAnalyzeData>
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentPhotoAnalyzeLoadingBinding.inflate(inflater, container, false)
-        analyzeData = args.photoNotAnalyzeData.toList()
-        return binding.root
-    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        analyzeData = args.photoNotAnalyzeData.toList()
         val photoAnalyzeData = ArrayList<PhotoAnalyzeData>()
 
         lifecycleScope.launchWhenStarted {

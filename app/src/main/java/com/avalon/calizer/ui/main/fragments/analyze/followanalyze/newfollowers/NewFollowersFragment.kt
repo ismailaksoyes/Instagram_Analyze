@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.databinding.FragmentNewFollowersBinding
+import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.followersToFollowList
@@ -23,7 +24,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class NewFollowersFragment : Fragment() {
+class NewFollowersFragment : BaseFragment<FragmentNewFollowersBinding>(FragmentNewFollowersBinding::inflate) {
     val viewModel: NewFollowersViewModel  by viewModels()
     @Inject
     lateinit var prefs: MySharedPreferences
@@ -32,16 +33,6 @@ class NewFollowersFragment : Fragment() {
     private lateinit var layoutManager: LinearLayoutManager
     private var isLoading: Boolean = false
 
-    private lateinit var binding: FragmentNewFollowersBinding
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentNewFollowersBinding.inflate(inflater,container,false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

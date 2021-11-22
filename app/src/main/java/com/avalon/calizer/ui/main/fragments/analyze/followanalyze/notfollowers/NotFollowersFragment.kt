@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.databinding.FragmentNoFollowBinding
+import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.followersToFollowList
@@ -24,14 +25,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class NotFollowersFragment : Fragment() {
+class NotFollowersFragment : BaseFragment<FragmentNoFollowBinding>(FragmentNoFollowBinding::inflate) {
 
     val viewModel:NotFollowersViewModel  by viewModels()
 
     @Inject
     lateinit var prefs:MySharedPreferences
 
-    private lateinit var binding: FragmentNoFollowBinding
     private val followsAdapter by lazy { FollowsAdapter() }
     private lateinit var layoutManager: LinearLayoutManager
     private var isLoading: Boolean = false
@@ -50,13 +50,6 @@ class NotFollowersFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentNoFollowBinding.inflate(inflater,container,false)
-       return binding.root
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -24,14 +24,15 @@ import androidx.viewpager2.widget.ViewPager2
 import com.avalon.calizer.R
 import com.avalon.calizer.databinding.FragmentTutorialBinding
 import com.avalon.calizer.databinding.FragmentViewPagerBinding
+import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.utils.MySharedPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ViewPagerFragment : Fragment() {
+class ViewPagerFragment : BaseFragment<FragmentViewPagerBinding>(FragmentViewPagerBinding::inflate) {
     private lateinit var viewPager: ViewPager2
-    private lateinit var binding: FragmentViewPagerBinding
+
     @Inject
     lateinit var prefs: MySharedPreferences
     private val tutorialAdapter by lazy { TutorialPagerAdapter(this) }
@@ -58,13 +59,6 @@ class ViewPagerFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentViewPagerBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

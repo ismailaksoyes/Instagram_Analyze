@@ -10,22 +10,15 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.avalon.calizer.databinding.FragmentStoryViewsBinding
+import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.adapter.StoryViewsAdapter
 import com.avalon.calizer.utils.CubeTransformer
 
 
-class StoryViewsFragment : Fragment() {
+class StoryViewsFragment : BaseFragment<FragmentStoryViewsBinding>(FragmentStoryViewsBinding::inflate) {
     private val args: StoryViewsFragmentArgs by navArgs()
-    lateinit var binding: FragmentStoryViewsBinding
     private lateinit var viewPager: ViewPager2
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentStoryViewsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,9 +26,6 @@ class StoryViewsFragment : Fragment() {
         if (urlList.isNotEmpty()){
             createViewPagerAdapter(urlList.toList())
         }
-
-
-
     }
 
 

@@ -16,13 +16,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.avalon.calizer.R
 import com.avalon.calizer.databinding.FragmentStoryShowBinding
+import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.tutorial.TutorialFragment
 import dagger.hilt.android.lifecycle.HiltViewModel
 
 
-class StoryShowFragment : Fragment() {
+class StoryShowFragment : BaseFragment<FragmentStoryShowBinding>(FragmentStoryShowBinding::inflate) {
 
-    lateinit var binding: FragmentStoryShowBinding
 
     private lateinit var webView: WebView
 
@@ -33,14 +33,6 @@ class StoryShowFragment : Fragment() {
             arguments = bundleOf(ARG_URL to url)
         }
 
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentStoryShowBinding.inflate(inflater,container,false)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
