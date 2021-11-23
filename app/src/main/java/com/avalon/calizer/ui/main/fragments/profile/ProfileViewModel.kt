@@ -22,11 +22,7 @@ import retrofit2.Response
 import javax.inject.Inject
 
 
-fun <R, A> Fragment.observeTest(liveData: MutableLiveData<A>, block: (A) -> R) {
-    liveData.observe(viewLifecycleOwner, Observer {
-        block.invoke(it)
-    })
-}
+
 
 
 @HiltViewModel
@@ -43,6 +39,10 @@ class ProfileViewModel @Inject constructor(
 
     val followersCount: MutableLiveData<FollowersCount> = MutableLiveData<FollowersCount>()
 
+    val poseScore:MutableLiveData<Int> = MutableLiveData()
+
+    val faceScore:MutableLiveData<Int> = MutableLiveData()
+
     val testLiveData: MutableLiveData<String> = MutableLiveData<String>()
 
 
@@ -54,15 +54,21 @@ class ProfileViewModel @Inject constructor(
 
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        Log.d("TAG12312312", "onCleared: ")
-    }
 
 
     fun setViewUserData(accountsInfoData: AccountsInfoData) {
         userModel.value = accountsInfoData
     }
+
+    fun setFaceScore(score:Int){
+        faceScore.postValue(score)
+    }
+
+    fun setPoseScore(score: Int){
+        poseScore.postValue(score)
+    }
+
+
 
     fun setUserDetailsLoading() {
         viewModelScope.launch {

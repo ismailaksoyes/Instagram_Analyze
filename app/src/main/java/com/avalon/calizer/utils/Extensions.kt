@@ -11,6 +11,9 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.follow.*
 import com.avalon.calizer.data.local.profile.AccountsInfoData
@@ -202,3 +205,9 @@ fun DialogFragment.fixDialogSize(widthPercent: Double, heightPercent: Double){
 }
 
 private infix fun Double.of(value: Int) = (this * value).toInt()
+
+fun <R, A> Fragment.observeLive(liveData: MutableLiveData<A>, block: (A) -> R) {
+    liveData.observe(viewLifecycleOwner, Observer {
+        block.invoke(it)
+    })
+}

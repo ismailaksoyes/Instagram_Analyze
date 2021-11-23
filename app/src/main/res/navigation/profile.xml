@@ -14,7 +14,7 @@
         <action
             android:id="@+id/action_destination_profile_to_destination_accounts"
             app:destination="@id/destination_accounts"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_destination_profile_to_photoUploadFragment"
             app:destination="@id/photoUploadFragment" />
@@ -41,7 +41,8 @@
         <action
             android:id="@+id/action_destination_accounts_to_destination_profile"
             app:destination="@id/destination_profile"
-            app:launchSingleTop="false" />
+           app:popUpToInclusive="true"
+            app:popUpTo="@id/destination_profile"/>
         <action
             android:id="@+id/action_destination_accounts_to_webLoginFragment"
             app:destination="@id/webLoginFragment" />

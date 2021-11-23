@@ -45,7 +45,6 @@ class StoryShowFragment : BaseFragment<FragmentStoryShowBinding>(FragmentStorySh
 
     private fun openWebUrl(url: String?){
         url?.let { itUrl->
-            Log.d("TESTURL",itUrl)
             webView.loadUrl(itUrl)
         }
     }
@@ -53,7 +52,7 @@ class StoryShowFragment : BaseFragment<FragmentStoryShowBinding>(FragmentStorySh
     private fun closeStoryOb(){
         binding.ivCloseStory.setOnClickListener {
             val action = StoryViewsFragmentDirections.actionStoryViewsFragmentToStoryFragment()
-            findNavController().navigate(action)
+            findNavController().navigateUp()
         }
     }
 
