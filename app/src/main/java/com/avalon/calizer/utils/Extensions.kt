@@ -103,6 +103,26 @@ fun withGlide(imageView: ImageView, url: String?) {
 
 }
 
+
+fun String.toShortName():String{
+    return  if (this.isNotEmpty()){
+       when (this.length) {
+            in 1..9 -> {
+                this
+            }
+            in 10..50 -> {
+                "${this.substring(0, 9)}..."
+            }
+            else -> {
+               ""
+            }
+
+        }
+    }else{
+        ""
+    }
+}
+
 fun View.showSnackBar(
     msg: String,
     length: Int,

@@ -14,9 +14,7 @@
         <action
             android:id="@+id/action_destination_analyze_to_allFollowersFragment"
             app:destination="@id/allFollowersFragment"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popUpTo="@id/destination_analyze"
-            app:popUpToInclusive="true" />
+            app:popEnterAnim="@android:anim/slide_in_left" />
         <action
             android:id="@+id/action_destination_analyze_to_noFollowFragment"
             app:destination="@id/noFollowFragment" />
@@ -33,7 +31,17 @@
             android:id="@+id/action_destination_analyze_to_storyFragment"
             app:destination="@id/storyFragment" />
     </fragment>
-
+    <fragment
+        android:id="@+id/allFollowersFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allfollowers.AllFollowersFragment"
+        android:label="fragment_all_followers"
+        tools:layout="@layout/fragment_all_followers" >
+        <action
+            android:id="@+id/action_allFollowersFragment_to_destination_analyze"
+            app:destination="@id/destination_analyze"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
     <fragment
         android:id="@+id/noFollowFragment"
         android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.notfollowers.NotFollowersFragment"

@@ -33,7 +33,6 @@ class AllFollowingFragment : BaseFragment<FragmentAllFollowingBinding>(FragmentA
 
    val viewModel: AllFollowingViewModel by viewModels()
 
-    private val followsAdapter by lazy { FollowsAdapter() }
     private lateinit var layoutManager: LinearLayoutManager
     private var isLoading: Boolean = false
 
@@ -53,7 +52,7 @@ class AllFollowingFragment : BaseFragment<FragmentAllFollowingBinding>(FragmentA
     }
 
     private fun setupRecyclerview() {
-        binding.rcFollowData.adapter = followsAdapter
+        binding.rcFollowData.adapter = FollowsAdapter()
         binding.rcFollowData.layoutManager = LinearLayoutManager(
             this.context,
             LinearLayoutManager.VERTICAL, false
@@ -79,7 +78,7 @@ class AllFollowingFragment : BaseFragment<FragmentAllFollowingBinding>(FragmentA
                 when (it) {
                     is AllFollowingViewModel.UpdateState.Success -> {
                         it.userDetails.user.apply {
-                            followsAdapter.updatePpItem(pk, profilePicUrl)
+                           // followsAdapter.updatePpItem(pk, profilePicUrl)
                         }
                     }
 
@@ -114,7 +113,8 @@ class AllFollowingFragment : BaseFragment<FragmentAllFollowingBinding>(FragmentA
             viewModel.allFollowing.collect {
                 when (it) {
                     is AllFollowingViewModel.AllFollowingState.Success -> {
-                            followsAdapter.setData(it.followData.followingToFollowList())
+                        (binding.rcFollowData.adapter as FollowsAdapter).submitList(it.followData.followingToFollowList())
+
                             isLoading = false
 
                     }

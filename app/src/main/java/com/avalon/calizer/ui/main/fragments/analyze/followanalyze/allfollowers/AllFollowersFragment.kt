@@ -31,12 +31,10 @@ import javax.inject.Inject
 class AllFollowersFragment : BaseFragment<FragmentAllFollowersBinding>(FragmentAllFollowersBinding::inflate) {
 
     val viewModel: AllFollowersViewModel by viewModels()
-    private val followsAdapter by lazy { FollowsAdapter() }
     private lateinit var layoutManager: LinearLayoutManager
     private var isLoading: Boolean = false
 
 
-    @SuppressLint("ShowToast")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerview()
@@ -56,7 +54,7 @@ class AllFollowersFragment : BaseFragment<FragmentAllFollowersBinding>(FragmentA
 
 
     private fun setupRecyclerview() {
-        binding.rcFollowData.adapter = followsAdapter
+        binding.rcFollowData.adapter = FollowsAdapter()
         binding.rcFollowData.layoutManager = LinearLayoutManager(
             this.context,
             LinearLayoutManager.VERTICAL, false
@@ -82,7 +80,8 @@ class AllFollowersFragment : BaseFragment<FragmentAllFollowersBinding>(FragmentA
                 when (it) {
                     is AllFollowersViewModel.UpdateState.Success -> {
                         it.userDetails.user.apply {
-                            followsAdapter.updatePpItem(pk, profilePicUrl)
+                           // followsAdapter.updatePpItem(pk, profilePicUrl)
+                         //   (binding.rcFollowData.adapter as FollowsAdapter).submitList()
                         }
                     }
 
@@ -92,7 +91,7 @@ class AllFollowersFragment : BaseFragment<FragmentAllFollowersBinding>(FragmentA
         }
     }
     fun loadData(startItem: Int) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch {
             viewModel.getFollowData(startItem)
         }
     }
@@ -117,11 +116,11 @@ class AllFollowersFragment : BaseFragment<FragmentAllFollowersBinding>(FragmentA
             viewModel.allFollowers.collect {
                 when (it) {
                     is AllFollowersViewModel.AllFollowersState.Success -> {
-                            followsAdapter.setData(it.followData.followersToFollowList())
+                        (binding.rcFollowData.adapter as FollowsAdapter).submitList(it.followData.followersToFollowList())
                             isLoading = false
                     }
                     is AllFollowersViewModel.AllFollowersState.UpdateItem -> {
-                        updatePpItemReq(it.followData)
+                       // updatePpItemReq(it.followData)
                     }
 
                     else -> {

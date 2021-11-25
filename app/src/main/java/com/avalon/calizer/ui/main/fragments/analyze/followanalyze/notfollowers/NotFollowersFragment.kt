@@ -17,6 +17,7 @@ import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.followersToFollowList
+import com.avalon.calizer.utils.followingToFollowList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -32,7 +33,6 @@ class NotFollowersFragment : BaseFragment<FragmentNoFollowBinding>(FragmentNoFol
     @Inject
     lateinit var prefs:MySharedPreferences
 
-    private val followsAdapter by lazy { FollowsAdapter() }
     private lateinit var layoutManager: LinearLayoutManager
     private var isLoading: Boolean = false
 
@@ -56,7 +56,7 @@ class NotFollowersFragment : BaseFragment<FragmentNoFollowBinding>(FragmentNoFol
         loadData(0)
     }
     private fun setupRecyclerview() {
-        binding.rcNoFollowData.adapter = followsAdapter
+        binding.rcNoFollowData.adapter = FollowsAdapter()
         binding.rcNoFollowData.layoutManager = LinearLayoutManager(
             this.context,
             LinearLayoutManager.VERTICAL, false
@@ -86,7 +86,7 @@ class NotFollowersFragment : BaseFragment<FragmentNoFollowBinding>(FragmentNoFol
                 when (it) {
                     is NotFollowersViewModel.UpdateState.Success -> {
                         it.userDetails.user.apply {
-                         followsAdapter.updatePpItem(pk, profilePicUrl)
+                        // followsAdapter.updatePpItem(pk, profilePicUrl)
                         }
                     }
 
@@ -117,7 +117,7 @@ class NotFollowersFragment : BaseFragment<FragmentNoFollowBinding>(FragmentNoFol
                 when (it) {
                     is NotFollowersViewModel.NotFollowersState.Success -> {
                         val followData = it.followData.followersToFollowList()
-                        followsAdapter.setData(followData)
+                        (binding.rcNoFollowData.adapter as FollowsAdapter).submitList(followData)
                         isLoading = false
                     }
                     is NotFollowersViewModel.NotFollowersState.UpdateItem -> {
