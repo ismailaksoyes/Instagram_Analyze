@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/destination_profile"
+        android:name="com.avalon.calizer.ui.main.fragments.profile.ProfileFragment"
+        android:label="profile_fragment"
+        tools:layout="@layout/profile_fragment" >
+
+        <action
+            android:id="@+id/action_destination_profile_to_destination_accounts"
+            app:destination="@id/destination_accounts"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_destination_profile_to_photoUploadFragment"
+            app:destination="@id/photoUploadFragment" />
+        <action
+            android:id="@+id/action_destination_profile_to_destination_analyze"
+            app:destination="@id/destination_analyze"
+            />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/destination_tutorial"
+        android:name="com.avalon.calizer.ui.tutorial.ViewPagerFragment"
+        android:label="fragment_view_pager"
+        tools:layout="@layout/fragment_view_pager" >
+        <action
+            android:id="@+id/action_destination_tutorial_to_destination_accounts"
+            app:destination="@id/destination_accounts" />
+    </fragment>
+    <fragment
+        android:id="@+id/destination_accounts"
+        android:name="com.avalon.calizer.ui.accounts.AccountsFragment"
+        android:label="AccountsFragment" >
+        <action
+            android:id="@+id/action_destination_accounts_to_destination_profile"
+            app:destination="@id/destination_profile"
+           app:popUpToInclusive="true"
+            app:popUpTo="@id/destination_profile"/>
+        <action
+            android:id="@+id/action_destination_accounts_to_webLoginFragment"
+            app:destination="@id/webLoginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.avalon.calizer.ui.splash.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_destination_accounts"
+            app:destination="@id/destination_accounts" />
+        <action
+            android:id="@+id/action_splashFragment_to_destination_tutorial"
+            app:destination="@id/destination_tutorial" />
+    </fragment>
+    <fragment
+        android:id="@+id/webLoginFragment"
+        android:name="com.avalon.calizer.ui.accounts.WebLoginFragment"
+        android:label="fragment_web_login"
+        tools:layout="@layout/fragment_web_login" >
+        <action
+            android:id="@+id/action_webLoginFragment_to_destination_accounts"
+            app:destination="@id/destination_accounts" />
+    </fragment>
+    <fragment
+        android:id="@+id/allFollowersFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allfollowers.AllFollowersFragment"
+        android:label="fragment_all_followers"
+        tools:layout="@layout/fragment_all_followers" >
+        <action
+            android:id="@+id/action_allFollowersFragment_to_destination_analyze"
+            app:destination="@id/destination_analyze"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/photoUploadFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.profile.photocmp.PhotoUploadFragment"
+        android:label="PhotoUploadFragment" >
+        <action
+            android:id="@+id/action_photoUploadFragment_to_photoAnalyzeLoadingFragment"
+            app:destination="@id/photoAnalyzeLoadingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/photoPagerFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.PhotoPagerFragment"
+        android:label="fragment_photo_pager"
+        tools:layout="@layout/fragment_photo_pager" >
+
+        <action
+            android:id="@+id/action_photoPagerFragment_to_photoUploadFragment"
+            app:destination="@id/photoUploadFragment"
+            />
+        <argument
+            android:name="photoUriListArgs"
+            app:argType="com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData[]" />
+    </fragment>
+    <fragment
+        android:id="@+id/photoAnalyzeLoadingFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.profile.photocmp.PhotoAnalyzeLoadingFragment"
+        android:label="fragment_photo_analyze_loading"
+        tools:layout="@layout/fragment_photo_analyze_loading" >
+        <action
+            android:id="@+id/action_photoAnalyzeLoadingFragment_to_photoPagerFragment"
+            app:destination="@id/photoPagerFragment"
+            app:popUpTo="@id/photoAnalyzeLoadingFragment"
+            app:popUpToInclusive="true"/>
+        <argument
+            android:name="photoNotAnalyzeData"
+            app:argType="com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData[]" />
+    </fragment>
+
+
+
+</navigation>

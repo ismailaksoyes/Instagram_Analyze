@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/analyze"
+    app:startDestination="@id/destination_analyze">
+
+    <fragment
+        android:id="@+id/destination_analyze"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.AnalyzeFragment"
+        android:label="analyze_fragment"
+        tools:layout="@layout/analyze_fragment" >
+
+        <action
+            android:id="@+id/action_destination_analyze_to_allFollowersFragment"
+            app:destination="@id/allFollowersFragment"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popUpTo="@id/destination_analyze"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_destination_analyze_to_noFollowFragment"
+            app:destination="@id/noFollowFragment" />
+        <action
+            android:id="@+id/action_destination_analyze_to_newFollowersFragment"
+            app:destination="@id/newFollowersFragment" />
+        <action
+            android:id="@+id/action_destination_analyze_to_allFollowingFragment"
+            app:destination="@id/allFollowingFragment" />
+        <action
+            android:id="@+id/action_destination_analyze_to_unFollowersFragment"
+            app:destination="@id/unFollowersFragment" />
+        <action
+            android:id="@+id/action_destination_analyze_to_storyFragment"
+            app:destination="@id/storyFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/noFollowFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.notfollowers.NotFollowersFragment"
+        android:label="NoFollowFragment" >
+        <action
+            android:id="@+id/action_noFollowFragment_to_destination_analyze"
+            app:destination="@id/destination_analyze" />
+    </fragment>
+    <fragment
+        android:id="@+id/newFollowersFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.newfollowers.NewFollowersFragment"
+        android:label="NewFollowersFragment" >
+        <action
+            android:id="@+id/action_newFollowersFragment_to_destination_analyze"
+            app:destination="@id/destination_analyze" />
+    </fragment>
+    <fragment
+        android:id="@+id/allFollowingFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allfollowing.AllFollowingFragment"
+        android:label="AllFollowingFragment" >
+        <action
+            android:id="@+id/action_allFollowingFragment_to_destination_analyze"
+            app:destination="@id/destination_analyze" />
+    </fragment>
+    <fragment
+        android:id="@+id/unFollowersFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.unfollowers.UnFollowersFragment"
+        android:label="UnFollowersFragment" >
+        <action
+            android:id="@+id/action_unFollowersFragment_to_destination_analyze"
+            app:destination="@id/destination_analyze" />
+    </fragment>
+    <fragment
+        android:id="@+id/storyFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.StoryFragment"
+        android:label="fragment_story"
+        tools:layout="@layout/fragment_story" >
+        <action
+            android:id="@+id/action_storyFragment_to_storyViewsFragment"
+            app:destination="@id/storyViewsFragment"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"/>
+        <action
+            android:id="@+id/action_storyFragment_to_storyBottomSheet"
+            app:destination="@id/storyBottomSheet" />
+        <action
+            android:id="@+id/action_storyFragment_to_highlightsBottomSheet"
+            app:destination="@id/highlightsBottomSheet" />
+        <action
+            android:id="@+id/action_storyFragment_to_notFollowStoryViewsFragment"
+            app:destination="@id/notFollowStoryViewsFragment" />
+        <action
+            android:id="@+id/action_storyFragment_to_destination_analyze"
+            app:destination="@id/destination_analyze" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/storyViewsFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.StoryViewsFragment"
+        android:label="fragment_story_views"
+        tools:layout="@layout/fragment_story_views" >
+        <argument
+            android:name="story_list"
+            app:argType="string[]" />
+        <action
+            android:id="@+id/action_storyViewsFragment_to_storyFragment"
+            app:destination="@id/storyFragment"
+            app:popUpTo="@id/storyFragment"
+            app:popUpToInclusive="true"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"/>
+    </fragment>
+    <fragment
+        android:id="@+id/storyShowFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.StoryShowFragment"
+        android:label="fragment_story_show"
+        tools:layout="@layout/fragment_story_show" >
+
+    </fragment>
+    <dialog
+        android:id="@+id/storyBottomSheet"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.dialog.StoryBottomSheet"
+        android:label="StoryBottomSheet" >
+        <action
+            android:id="@+id/action_storyBottomSheet_to_storyFragment"
+            app:destination="@id/storyFragment" />
+    </dialog>
+    <dialog
+        android:id="@+id/highlightsBottomSheet"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.dialog.HighlightsBottomSheet"
+        android:label="HighlightsBottomSheet" >
+        <action
+            android:id="@+id/action_highlightsBottomSheet_to_storyFragment"
+            app:destination="@id/storyFragment" />
+    </dialog>
+    <fragment
+        android:id="@+id/notFollowStoryViewsFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.NotFollowStoryViewsFragment"
+        android:label="fragment_not_follow_story_views"
+        tools:layout="@layout/fragment_not_follow_story_views" >
+        <action
+            android:id="@+id/action_notFollowStoryViewsFragment_to_storyFragment"
+            app:destination="@id/storyFragment" />
+    </fragment>
+
+</navigation>

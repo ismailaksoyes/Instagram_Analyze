@@ -44,14 +44,17 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
 
     val viewModel: StoryViewModel by viewModels()
 
-    lateinit var storyAdapter: StoryAdapter
 
     lateinit var loadingAnim: LoadingAnim
 
 
     private lateinit var layoutManager: LinearLayoutManager
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        observeStoryData()
 
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         layoutManager = LinearLayoutManager(view.context)
@@ -59,17 +62,17 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
         loadingAnim = LoadingAnim(childFragmentManager)
         setupRecyclerview()
         initData()
-        observeStoryData()
+        actionNavigate()
         observeUserStoryPk()
         observeUserHighlightPk()
-
-        actionNavigate()
 
     }
 
     private fun setupRecyclerview() {
-        storyAdapter = StoryAdapter(viewModel)
-        binding.rcStoryView.adapter = storyAdapter
+        binding.rcStoryView.adapter = StoryAdapter{itStoryId->
+            viewModel.setLoadingState(true)
+            getStory(itStoryId)
+        }
         binding.rcStoryView.layoutManager = LinearLayoutManager(
             this.context,
             LinearLayoutManager.HORIZONTAL, false
@@ -78,7 +81,7 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
     }
 
     private fun observeStoryData() {
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             viewModel.storyData.collectLatest {
                 when (it) {
                     is StoryViewModel.StoryState.Success -> {
@@ -87,10 +90,6 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
                     is StoryViewModel.StoryState.OpenStory -> {
                         viewModel.setLoadingState(false)
                         setStoryViews(it.urlList)
-                    }
-                    is StoryViewModel.StoryState.ClickItem -> {
-                        viewModel.setLoadingState(true)
-                        getStory(it.userId)
                     }
                     is StoryViewModel.StoryState.Loading -> {
                         isLoadingDialog(it.isLoading)
@@ -138,7 +137,7 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
     }
 
     private fun setAdapterStory(storyData: List<StoryData>) {
-        storyAdapter.setStoryData(storyData)
+        (binding.rcStoryView.adapter as StoryAdapter).setStoryData(storyData)
     }
 
     private fun getStory(userId: Long) {

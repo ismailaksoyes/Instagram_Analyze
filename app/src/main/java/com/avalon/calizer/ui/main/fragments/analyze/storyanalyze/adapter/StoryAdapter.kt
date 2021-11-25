@@ -9,16 +9,16 @@ import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.StoryViewModel
 import com.avalon.calizer.utils.loadPPUrl
 import javax.inject.Inject
 
-class StoryAdapter(val viewModel: StoryViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class StoryAdapter(private val storyItemCLick:(Long)->Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var storyList = emptyList<StoryData>()
 
 
-    class MainViewHolder(val binding: StoryViewsItemBinding,val viewModel: StoryViewModel):RecyclerView.ViewHolder(binding.root){
+    class MainViewHolder(val binding: StoryViewsItemBinding,private val storyItemCLick:(Long)->Unit):RecyclerView.ViewHolder(binding.root){
         fun bind(storyData: StoryData){
             binding.ivStoryView.loadPPUrl(storyData.imageUrl)
             binding.ivStoryView.setOnClickListener {
                 storyData.pk?.let { itPk->
-                    viewModel.setClickItemId(itPk)
+                    storyItemCLick.invoke(itPk)
                 }
 
             }
@@ -26,7 +26,7 @@ class StoryAdapter(val viewModel: StoryViewModel) : RecyclerView.Adapter<Recycle
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding = StoryViewsItemBinding.inflate(LayoutInflater.from(parent.context))
-       return MainViewHolder(binding,viewModel)
+       return MainViewHolder(binding,storyItemCLick)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

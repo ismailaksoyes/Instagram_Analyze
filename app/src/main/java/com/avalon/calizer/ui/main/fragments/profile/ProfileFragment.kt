@@ -18,9 +18,7 @@ import com.avalon.calizer.databinding.ProfileFragmentBinding
 import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.FaceAnalyzeManager
 import com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.PoseAnalyzeManager
-import com.avalon.calizer.utils.MySharedPreferences
-import com.avalon.calizer.utils.analyzeTextColor
-import com.avalon.calizer.utils.isShimmerEnabled
+import com.avalon.calizer.utils.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -50,6 +48,10 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
     @Inject
     lateinit var prefs: MySharedPreferences
 
+    init {
+        Log.d("lifecycle", "-> initdata")
+    }
+
 
     private fun initData() {
         lifecycleScope.launch {
@@ -62,15 +64,17 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
     }
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initData()
+        observeUserFlow()
+
+
     }
 
 
     private fun observeUserFlow() {
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             viewModel.userData.collect {
                 when (it) {
 
@@ -89,8 +93,9 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
                         binding.tvProfileUsername.isShimmerEnabled(false)
                     }
 
-                    is ProfileViewModel.UserDataFlow.Error->{
-                        val action = ProfileFragmentDirections.actionDestinationProfileToDestinationAccounts()
+                    is ProfileViewModel.UserDataFlow.Error -> {
+                        val action =
+                            ProfileFragmentDirections.actionDestinationProfileToDestinationAccounts()
                         findNavController().navigate(action)
                     }
 
@@ -134,37 +139,48 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
 
     fun getFaceScore(bitmap: Bitmap) {
         faceAnalyzeManager.setFaceAnalyzeBitmap(bitmap)
-        lifecycleScope.launch {
-                faceAnalyzeManager.faceAnalyze.collect { itFaceState ->
-                    when (itFaceState) {
-                        is FaceAnalyzeManager.FaceAnalyzeState.Loading -> {
-                            binding.tvFaceOdds.isShimmerEnabled(true)
-                        }
-                        is FaceAnalyzeManager.FaceAnalyzeState.Success -> {
-                            binding.tvFaceOdds.isShimmerEnabled(false)
-                            binding.tvFaceOdds.analyzeTextColor(itFaceState.score)
-                            binding.tvFaceOdds.text = "${itFaceState.score}%"
-                        }
+        lifecycleScope.launchWhenStarted {
+            faceAnalyzeManager.faceAnalyze.collect { itFaceState ->
+                when (itFaceState) {
+                    is FaceAnalyzeManager.FaceAnalyzeState.Loading -> {
+                        binding.tvFaceOdds.isShimmerEnabled(true)
+                    }
+                    is FaceAnalyzeManager.FaceAnalyzeState.Success -> {
+                        viewModel.setFaceScore(itFaceState.score)
                     }
                 }
+            }
 
 
         }
 
     }
 
+    fun observeProfilePhotoAnalyze() {
+        observeLive(viewModel.poseScore) {
+            val score = "${it}%"
+            binding.tvPozeOdds.text = score
+            binding.tvPozeOdds.isShimmerEnabled(false)
+            binding.tvPozeOdds.analyzeTextColor(it)
+        }
+        observeLive(viewModel.faceScore) {
+            val score = "${it}%"
+            binding.tvFaceOdds.text = score
+            binding.tvFaceOdds.isShimmerEnabled(false)
+            binding.tvFaceOdds.analyzeTextColor(it)
+        }
+    }
+
     fun getPoseScore(bitmap: Bitmap) {
         poseAnalyzeManager.setBodyAnalyzeBitmap(bitmap)
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             poseAnalyzeManager.bodyAnalyze.collect { itPoseState ->
                 when (itPoseState) {
                     is PoseAnalyzeManager.BodyAnalyzeState.Loading -> {
                         binding.tvPozeOdds.isShimmerEnabled(true)
                     }
                     is PoseAnalyzeManager.BodyAnalyzeState.Success -> {
-                        binding.tvPozeOdds.isShimmerEnabled(false)
-                        binding.tvPozeOdds.analyzeTextColor(itPoseState.score)
-                        binding.tvPozeOdds.text = "${itPoseState.score}%"
+                        viewModel.setPoseScore(itPoseState.score)
                     }
                 }
             }
@@ -175,14 +191,9 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = viewModel
-        observeUserFlow()
         navigateEvent()
-        viewModel.testLiveData.observe(viewLifecycleOwner, Observer {
-            Log.d("OBSERVETEST", "initData: $it  ")
-        })
-        observeTest(viewModel.testLiveData){
-            Log.d("OBSERVETEST", "EX: $it ")
-        }
+        observeProfilePhotoAnalyze()
+
 
     }
 
