@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.R
@@ -46,8 +47,10 @@ class AllFollowersFragment : BaseFragment<FragmentAllFollowersBinding>(FragmentA
         loadData(0)
         scrollListener()
         binding.ivBackBtn.setOnClickListener {
-            it.findNavController().navigate(R.id.action_allFollowersFragment_to_destination_analyze)
+            findNavController().popBackStack()
         }
+
+
 
     }
 
