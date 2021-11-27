@@ -116,7 +116,7 @@ class AllFollowersFragment : BaseFragment<FragmentAllFollowersBinding>(FragmentA
             viewModel.allFollowers.collect {
                 when (it) {
                     is AllFollowersViewModel.AllFollowersState.Success -> {
-                        (binding.rcFollowData.adapter as FollowsAdapter).submitList(it.followData.followersToFollowList())
+                        (binding.rcFollowData.adapter as FollowsAdapter).addItem(it.followData.followersToFollowList())
                             isLoading = false
                     }
                     is AllFollowersViewModel.AllFollowersState.UpdateItem -> {

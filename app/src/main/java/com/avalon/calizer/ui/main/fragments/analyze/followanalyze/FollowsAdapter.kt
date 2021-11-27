@@ -22,17 +22,24 @@ class FollowsAdapter : ListAdapter<FollowData, FollowViewHolder>(DiffCallback())
     private var followList = mutableListOf<FollowData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FollowViewHolder {
-      val binding = FollowViewItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding =
+            FollowViewItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return FollowViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: FollowViewHolder, position: Int) {
-       holder.bind(getItem(position))
+        holder.bind(getItem(position))
     }
 
-    fun setData(list: List<FollowData>){
+    fun setData(list: List<FollowData>) {
         followList = list.toMutableList()
         submitList(followList)
+    }
+
+    fun addItem(list: List<FollowData>) {
+        val oldList = currentList.toMutableList()
+        oldList.addAll(list)
+        submitList(oldList)
     }
 
 }
@@ -43,12 +50,11 @@ private class DiffCallback : DiffUtil.ItemCallback<FollowData>() {
     }
 
     override fun areContentsTheSame(oldItem: FollowData, newItem: FollowData): Boolean {
-       // return ObjectsCompat.equals(oldItem, newItem)
+        // return ObjectsCompat.equals(oldItem, newItem)
         return oldItem == newItem
     }
 
 }
-
 
 
 class FollowViewHolder(private val binding: FollowViewItemBinding) :
@@ -60,17 +66,17 @@ class FollowViewHolder(private val binding: FollowViewItemBinding) :
             } ?: kotlin.run {
                 binding.ivViewPp.setImageDrawable(null)
             }
-            data.username?.let { itUsername->
+            data.username?.let { itUsername ->
                 binding.tvPpUsername.text = itUsername.toShortName()
             }
-            data.fullName?.let { itFullName->
-                if (itFullName.isNotEmpty()){
+            data.fullName?.let { itFullName ->
+                if (itFullName.isNotEmpty()) {
                     binding.tvPpFullname.text = itFullName.toShortName()
-                }else{
-                    binding.tvPpFullname.visibility= View.GONE
+                } else {
+                    binding.tvPpFullname.visibility = View.GONE
                 }
 
-            }?: kotlin.run { binding.tvPpFullname.visibility= View.GONE}
+            } ?: kotlin.run { binding.tvPpFullname.visibility = View.GONE }
         }
     }
 }
