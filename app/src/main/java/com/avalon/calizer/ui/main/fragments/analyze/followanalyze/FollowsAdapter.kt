@@ -1,6 +1,7 @@
 package com.avalon.calizer.ui.main.fragments.analyze.followanalyze
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,17 +15,24 @@ import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.databinding.FollowItemLoadingBinding
 import com.avalon.calizer.databinding.FollowViewItemBinding
 import com.avalon.calizer.utils.getItemByID
+import com.avalon.calizer.utils.glideCacheControl
 import com.avalon.calizer.utils.loadPPUrl
 import com.avalon.calizer.utils.toShortName
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 
-class FollowsAdapter : ListAdapter<FollowData, FollowViewHolder>(DiffCallback()) {
+class FollowsAdapter(private val followImageLoad:(FollowData)->Unit) : ListAdapter<FollowData, FollowViewHolder>(DiffCallback()) {
 
     private var followList = mutableListOf<FollowData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FollowViewHolder {
         val binding =
             FollowViewItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return FollowViewHolder(binding)
+        return FollowViewHolder(binding,followImageLoad)
     }
 
     override fun onBindViewHolder(holder: FollowViewHolder, position: Int) {
@@ -50,21 +58,26 @@ private class DiffCallback : DiffUtil.ItemCallback<FollowData>() {
     }
 
     override fun areContentsTheSame(oldItem: FollowData, newItem: FollowData): Boolean {
-        // return ObjectsCompat.equals(oldItem, newItem)
-        return oldItem == newItem
+        return ObjectsCompat.equals(oldItem, newItem)
     }
 
 }
 
 
-class FollowViewHolder(private val binding: FollowViewItemBinding) :
+class FollowViewHolder(private val binding: FollowViewItemBinding,private val followImageLoad:(FollowData)->Unit ) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(followData: FollowData?) {
         followData?.let { data ->
             data.profilePicUrl?.let {
-                binding.ivViewPp.loadPPUrl(it)
+                //binding.ivViewPp.loadPPUrl(it)
+                binding.ivViewPp.glideCacheControl(it).let { isLoadImage->
+                    if (!isLoadImage){
+                        followImageLoad.invoke(data)
+                    }
+
+                }
             } ?: kotlin.run {
-                binding.ivViewPp.setImageDrawable(null)
+               // binding.ivViewPp.setImageDrawable(null)
             }
             data.username?.let { itUsername ->
                 binding.tvPpUsername.text = itUsername.toShortName()
