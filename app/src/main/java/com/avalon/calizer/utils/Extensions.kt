@@ -30,6 +30,7 @@ import com.bumptech.glide.request.target.Target
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.snackbar.Snackbar
+import okhttp3.internal.wait
 
 
 fun ImageView.loadPPUrl(url: String?) {
@@ -49,8 +50,9 @@ fun ImageView.loadPPUrl(url: String?) {
         .into(this)
 }
 
-fun ImageView.glideCacheControl(url:String):Boolean{
-    var isLoadImage = false
+fun ImageView.glideCacheControl(url:String, isLoadImage:(Boolean)->Unit){
+    //var isLoadImage = false
+
     val shimmer = Shimmer.AlphaHighlightBuilder()
         .setDuration(1800)
         .setBaseAlpha(0.7f)
@@ -70,7 +72,7 @@ fun ImageView.glideCacheControl(url:String):Boolean{
                 target: Target<Drawable>?,
                 isFirstResource: Boolean
             ): Boolean {
-                isLoadImage = false
+                isLoadImage.invoke(false)
                 Log.d("GlideResource", "onLoadFailed: $e")
                return false
             }
@@ -82,14 +84,15 @@ fun ImageView.glideCacheControl(url:String):Boolean{
                 dataSource: DataSource?,
                 isFirstResource: Boolean
             ): Boolean {
-                isLoadImage = true
+                isLoadImage.invoke(true)
                 Log.d("GlideResource", "OKK!")
                 return false
             }
 
         })
         .into(this)
-    return isLoadImage
+    Log.d("GlideResource", "LISTENER! $isLoadImage")
+
 }
 
 

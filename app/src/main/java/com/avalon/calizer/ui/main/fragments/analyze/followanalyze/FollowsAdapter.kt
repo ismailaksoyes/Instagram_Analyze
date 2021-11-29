@@ -39,10 +39,6 @@ class FollowsAdapter(private val followImageLoad:(FollowData)->Unit) : ListAdapt
         holder.bind(getItem(position))
     }
 
-    fun setData(list: List<FollowData>) {
-        followList = list.toMutableList()
-        submitList(followList)
-    }
 
     fun addItem(list: List<FollowData>) {
         val oldList = currentList.toMutableList()
@@ -50,15 +46,59 @@ class FollowsAdapter(private val followImageLoad:(FollowData)->Unit) : ListAdapt
         submitList(oldList)
     }
 
+    fun updateItem(followData: FollowData){
+        val newList = arrayListOf(followData)
+        val oldList = currentList.toMutableList()
+        oldList.addAll(newList)
+        submitList(oldList)
+    }
+
+    fun updateProfileImage(url:String,userId:Long){
+        if (url.isNotEmpty()){
+            val list = currentList.toMutableList()
+
+            list.withIndex().firstOrNull { it.value.dsUserID == userId }?.let { itItem->
+             val index =  itItem.index
+                val newItem = FollowData(
+                    uid = itItem.value.uid,
+                    analyzeUserId = itItem.value.analyzeUserId,
+                    profilePicUrl = url,
+                    dsUserID = itItem.value.dsUserID,
+                    fullName = itItem.value.fullName,
+                    username = itItem.value.username
+                )
+                list.removeAt(index)
+                list.add(index,newItem)
+                submitList(list)
+            }
+
+        }
+    }
+
+    fun removeItem(uid:Long?){
+        uid?.let { itUid->
+            val oldList = currentList.toMutableList()
+            oldList.filter { it.uid ==itUid }.let { itItemList->
+                if (itItemList.isNotEmpty()){
+                    itItemList.forEach { itItem->
+                        oldList.remove(itItem)
+                        submitList(oldList)
+                    }
+
+                }
+            }
+        }
+    }
+
 }
 
 private class DiffCallback : DiffUtil.ItemCallback<FollowData>() {
     override fun areItemsTheSame(oldItem: FollowData, newItem: FollowData): Boolean {
-        return oldItem.uid == newItem.uid
+        return oldItem.dsUserID == newItem.dsUserID
     }
 
     override fun areContentsTheSame(oldItem: FollowData, newItem: FollowData): Boolean {
-        return ObjectsCompat.equals(oldItem, newItem)
+        return oldItem.profilePicUrl.equals(newItem.profilePicUrl)
     }
 
 }
@@ -69,12 +109,13 @@ class FollowViewHolder(private val binding: FollowViewItemBinding,private val fo
     fun bind(followData: FollowData?) {
         followData?.let { data ->
             data.profilePicUrl?.let {
-                //binding.ivViewPp.loadPPUrl(it)
-                binding.ivViewPp.glideCacheControl(it).let { isLoadImage->
+                binding.ivViewPp.glideCacheControl(it){ isLoadImage->
                     if (!isLoadImage){
+                        Log.d("isChangedImage", "No cache Item ${data.username} ")
                         followImageLoad.invoke(data)
+                    }else{
+                        Log.d("isChangedImage", "OK! cache Item ${data.username} ")
                     }
-
                 }
             } ?: kotlin.run {
                // binding.ivViewPp.setImageDrawable(null)

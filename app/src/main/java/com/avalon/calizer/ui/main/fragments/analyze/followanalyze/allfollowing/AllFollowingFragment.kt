@@ -52,7 +52,7 @@ class AllFollowingFragment : BaseFragment<FragmentAllFollowingBinding>(FragmentA
     }
 
     private fun setupRecyclerview() {
-        binding.rcFollowData.adapter = FollowsAdapter()
+       // binding.rcFollowData.adapter = FollowsAdapter()
         binding.rcFollowData.layoutManager = LinearLayoutManager(
             this.context,
             LinearLayoutManager.VERTICAL, false
@@ -117,9 +117,6 @@ class AllFollowingFragment : BaseFragment<FragmentAllFollowingBinding>(FragmentA
 
                             isLoading = false
 
-                    }
-                    is AllFollowingViewModel.AllFollowingState.UpdateItem -> {
-                        updatePpItemReq(it.followData)
                     }
 
                     else -> {

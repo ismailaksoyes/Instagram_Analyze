@@ -56,7 +56,7 @@ class NotFollowersFragment : BaseFragment<FragmentNoFollowBinding>(FragmentNoFol
         loadData(0)
     }
     private fun setupRecyclerview() {
-        binding.rcNoFollowData.adapter = FollowsAdapter()
+       // binding.rcNoFollowData.adapter = FollowsAdapter()
         binding.rcNoFollowData.layoutManager = LinearLayoutManager(
             this.context,
             LinearLayoutManager.VERTICAL, false

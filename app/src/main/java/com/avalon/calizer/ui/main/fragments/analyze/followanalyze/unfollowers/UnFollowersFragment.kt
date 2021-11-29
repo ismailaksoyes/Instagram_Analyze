@@ -49,7 +49,7 @@ class UnFollowersFragment : BaseFragment<FragmentUnFollowersBinding>(FragmentUnF
     }
 
     private fun setupRecyclerview() {
-        binding.rcNoFollowData.adapter = FollowsAdapter()
+       // binding.rcNoFollowData.adapter = FollowsAdapter()
         binding.rcNoFollowData.layoutManager = LinearLayoutManager(
             this.context,
             LinearLayoutManager.VERTICAL, false

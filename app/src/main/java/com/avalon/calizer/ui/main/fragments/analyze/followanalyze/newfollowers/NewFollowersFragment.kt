@@ -49,7 +49,7 @@ class NewFollowersFragment : BaseFragment<FragmentNewFollowersBinding>(FragmentN
     }
 
     private fun setupRecyclerview() {
-        binding.rcNewFollowersData.adapter = FollowsAdapter()
+        //binding.rcNewFollowersData.adapter = FollowsAdapter()
         binding.rcNewFollowersData.layoutManager = LinearLayoutManager(
             this.context,
             LinearLayoutManager.VERTICAL, false

@@ -54,7 +54,9 @@ class AllFollowersFragment : BaseFragment<FragmentAllFollowersBinding>(FragmentA
 
 
     private fun setupRecyclerview() {
-        binding.rcFollowData.adapter = FollowsAdapter()
+        binding.rcFollowData.adapter = FollowsAdapter{ itFollowData->
+            updatePpItemReq(itFollowData)
+        }
         binding.rcFollowData.layoutManager = LinearLayoutManager(
             this.context,
             LinearLayoutManager.VERTICAL, false
@@ -62,30 +64,19 @@ class AllFollowersFragment : BaseFragment<FragmentAllFollowersBinding>(FragmentA
 
     }
 
-    private fun updatePpItemReq(followData: List<FollowersData>) {
+    private fun updatePpItemReq(followData: FollowData) {
         lifecycleScope.launch {
-            followData.forEach { data ->
-                data.dsUserID?.let {
-                    viewModel.getUserDetails(it)
+                followData.dsUserID?.let { itDsUserId->
+                    viewModel.getUserDetails(itDsUserId)
                 }
-
-            }
         }
 
     }
 
     private fun observePpItemRes() {
         lifecycleScope.launch {
-            viewModel.updateAllFollowers.collect {
-                when (it) {
-                    is AllFollowersViewModel.UpdateState.Success -> {
-                        it.userDetails.user.apply {
-                           // followsAdapter.updatePpItem(pk, profilePicUrl)
-                         //   (binding.rcFollowData.adapter as FollowsAdapter).submitList()
-                        }
-                    }
-
-                }
+            viewModel.profileUrl.collect { itItem->
+                (binding.rcFollowData.adapter as FollowsAdapter).updateProfileImage(itItem.first,itItem.second)
             }
 
         }
@@ -118,9 +109,6 @@ class AllFollowersFragment : BaseFragment<FragmentAllFollowersBinding>(FragmentA
                     is AllFollowersViewModel.AllFollowersState.Success -> {
                         (binding.rcFollowData.adapter as FollowsAdapter).addItem(it.followData.followersToFollowList())
                             isLoading = false
-                    }
-                    is AllFollowersViewModel.AllFollowersState.UpdateItem -> {
-                       // updatePpItemReq(it.followData)
                     }
 
                     else -> {
