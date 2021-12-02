@@ -14,6 +14,8 @@ interface RoomDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAccount(accountsData: AccountsData)
 
+    @Query("UPDATE followers_table SET profilePicUrl = :url WHERE dsUserID=:userId")
+    suspend fun updateNewProfilePicture(userId:Long,url:String)
 
     @Query("SELECT * FROM accounts_table WHERE dsUserID= :userId")
     suspend fun getUserCookies(userId: Long): AccountsData

@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Point
+import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
@@ -20,10 +22,15 @@ import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserDetails
 import com.avalon.calizer.data.remote.insresponse.ApiResponseUserFollow
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.snackbar.Snackbar
+import okhttp3.internal.wait
 
 
 fun ImageView.loadPPUrl(url: String?) {
@@ -41,6 +48,51 @@ fun ImageView.loadPPUrl(url: String?) {
         .diskCacheStrategy(DiskCacheStrategy.NONE)
         .placeholder(shimmerDrawable)
         .into(this)
+}
+
+fun ImageView.glideCacheControl(url:String, isLoadImage:(Boolean)->Unit){
+    //var isLoadImage = false
+
+    val shimmer = Shimmer.AlphaHighlightBuilder()
+        .setDuration(1800)
+        .setBaseAlpha(0.7f)
+        .setHighlightAlpha(0.6f)
+        .setDirection(Shimmer.Direction.LEFT_TO_RIGHT)
+        .setAutoStart(true)
+        .build()
+    val shimmerDrawable = ShimmerDrawable().apply { setShimmer(shimmer) }
+    Glide.with(context)
+        .load(url)
+        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+        .placeholder(shimmerDrawable)
+        .listener(object :RequestListener<Drawable>{
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                isLoadImage.invoke(false)
+                Log.d("GlideResource", "onLoadFailed: $e")
+               return false
+            }
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                isLoadImage.invoke(true)
+                Log.d("GlideResource", "OKK!")
+                return false
+            }
+
+        })
+        .into(this)
+    Log.d("GlideResource", "LISTENER! $isLoadImage")
+
 }
 
 
@@ -101,6 +153,26 @@ fun withGlide(imageView: ImageView, url: String?) {
         imageView.loadPPUrl(url)
     }
 
+}
+
+
+fun String.toShortName():String{
+    return  if (this.isNotEmpty()){
+       when (this.length) {
+            in 1..9 -> {
+                this
+            }
+            in 10..50 -> {
+                "${this.substring(0, 9)}..."
+            }
+            else -> {
+               ""
+            }
+
+        }
+    }else{
+        ""
+    }
 }
 
 fun View.showSnackBar(

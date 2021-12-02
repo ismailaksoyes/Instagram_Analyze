@@ -16,6 +16,7 @@ import com.avalon.calizer.databinding.FragmentUnFollowersBinding
 import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
 import com.avalon.calizer.utils.followersToFollowList
+import com.avalon.calizer.utils.followingToFollowList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -26,7 +27,7 @@ import javax.inject.Inject
 class UnFollowersFragment : BaseFragment<FragmentUnFollowersBinding>(FragmentUnFollowersBinding::inflate) {
 
     val viewModel: UnFollowersViewModel  by viewModels()
-    private val followsAdapter by lazy { FollowsAdapter() }
+
     private lateinit var layoutManager: LinearLayoutManager
     private var isLoading: Boolean = false
 
@@ -48,7 +49,7 @@ class UnFollowersFragment : BaseFragment<FragmentUnFollowersBinding>(FragmentUnF
     }
 
     private fun setupRecyclerview() {
-        binding.rcNoFollowData.adapter = followsAdapter
+       // binding.rcNoFollowData.adapter = FollowsAdapter()
         binding.rcNoFollowData.layoutManager = LinearLayoutManager(
             this.context,
             LinearLayoutManager.VERTICAL, false
@@ -77,7 +78,7 @@ class UnFollowersFragment : BaseFragment<FragmentUnFollowersBinding>(FragmentUnF
                 when (it) {
                     is UnFollowersViewModel.UpdateState.Success -> {
                         it.userDetails.user.apply {
-                            followsAdapter.updatePpItem(pk,profilePicUrl)
+                            //followsAdapter.updatePpItem(pk,profilePicUrl)
                         }
                     }
 
@@ -107,7 +108,7 @@ class UnFollowersFragment : BaseFragment<FragmentUnFollowersBinding>(FragmentUnF
                 when (it) {
                     is UnFollowersViewModel.UnFollowersState.Success -> {
                         val followData = it.followData.followersToFollowList()
-                        followsAdapter.setData(followData)
+                        (binding.rcNoFollowData.adapter as FollowsAdapter).submitList(followData)
                         isLoading = false
                     }
                     is UnFollowersViewModel.UnFollowersState.UpdateItem -> {

@@ -1,103 +1,140 @@
 package com.avalon.calizer.ui.main.fragments.analyze.followanalyze
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.util.ObjectsCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.data.local.follow.FollowData
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.databinding.FollowItemLoadingBinding
 import com.avalon.calizer.databinding.FollowViewItemBinding
 import com.avalon.calizer.utils.getItemByID
+import com.avalon.calizer.utils.glideCacheControl
 import com.avalon.calizer.utils.loadPPUrl
+import com.avalon.calizer.utils.toShortName
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 
-class FollowsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FollowsAdapter(private val followImageLoad:(FollowData)->Unit) : ListAdapter<FollowData, FollowViewHolder>(DiffCallback()) {
 
+    private var followList = mutableListOf<FollowData>()
 
-    private var _followsList = arrayListOf<FollowData>()
-
-
-    class MainViewHolder(var binding: FollowViewItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        @SuppressLint("SetTextI18n")
-        fun bind(followList: FollowData?) {
-            followList?.let { data ->
-                data.profilePicUrl?.let {
-                    binding.ivViewPp.loadPPUrl(it)
-                } ?: kotlin.run {
-                    binding.ivViewPp.setImageDrawable(null)
-                }
-
-
-                getSubString(data.username)?.let { itUserName ->
-                    binding.tvPpUsername.text = "@${itUserName}"
-                }
-
-                getSubString(data.fullName)?.let { itFullName ->
-                    binding.tvPpFullname.text = itFullName
-                } ?: kotlin.run { binding.tvPpFullname.visibility = View.GONE }
-
-            }
-
-        }
-
-        private fun getSubString(name: String?): String? {
-            return name?.let { itName ->
-                when (itName.length) {
-                    in 1..9 -> {
-                        itName
-                    }
-                    in 10..50 -> {
-                        "${itName.substring(0, 9)}..."
-                    }
-                    else -> {
-                        null
-                    }
-
-                }
-            }
-        }
-    }
-
-
-    private fun getItemPosition(item: Long?): Int {
-        return _followsList.getItemByID(item)
-    }
-
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FollowViewHolder {
         val binding =
             FollowViewItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return MainViewHolder(binding)
-
+        return FollowViewHolder(binding,followImageLoad)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        _followsList[position].let { data ->
-            (holder as MainViewHolder).bind(data)
+    override fun onBindViewHolder(holder: FollowViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+
+
+    fun addItem(list: List<FollowData>) {
+        val oldList = currentList.toMutableList()
+        oldList.addAll(list)
+        submitList(oldList)
+    }
+
+    fun updateItem(followData: FollowData){
+        val newList = arrayListOf(followData)
+        val oldList = currentList.toMutableList()
+        oldList.addAll(newList)
+        submitList(oldList)
+    }
+
+    fun updateProfileImage(url:String,userId:Long){
+        if (url.isNotEmpty()){
+            val list = currentList.toMutableList()
+
+            list.withIndex().firstOrNull { it.value.dsUserID == userId }?.let { itItem->
+             val index =  itItem.index
+                val newItem = FollowData(
+                    uid = itItem.value.uid,
+                    analyzeUserId = itItem.value.analyzeUserId,
+                    profilePicUrl = url,
+                    dsUserID = itItem.value.dsUserID,
+                    fullName = itItem.value.fullName,
+                    username = itItem.value.username
+                )
+                list.removeAt(index)
+                list.add(index,newItem)
+                submitList(list)
+            }
+
         }
-
     }
 
-    override fun getItemCount(): Int {
-        return _followsList.size
+    fun removeItem(uid:Long?){
+        uid?.let { itUid->
+            val oldList = currentList.toMutableList()
+            oldList.filter { it.uid ==itUid }.let { itItemList->
+                if (itItemList.isNotEmpty()){
+                    itItemList.forEach { itItem->
+                        oldList.remove(itItem)
+                        submitList(oldList)
+                    }
+
+                }
+            }
+        }
     }
 
+}
 
-    fun setData(followList: List<FollowData>) {
-        _followsList.addAll(followList)
-        notifyDataSetChanged()
+private class DiffCallback : DiffUtil.ItemCallback<FollowData>() {
+    override fun areItemsTheSame(oldItem: FollowData, newItem: FollowData): Boolean {
+        return oldItem.dsUserID == newItem.dsUserID
     }
 
+    override fun areContentsTheSame(oldItem: FollowData, newItem: FollowData): Boolean {
+        return oldItem.profilePicUrl.equals(newItem.profilePicUrl)
+    }
 
-    fun updatePpItem(item: Long?, profilePhoto: String?) {
-        _followsList[getItemPosition(item)].profilePicUrl = profilePhoto
-        notifyItemChanged(getItemPosition(item))
+}
 
+
+class FollowViewHolder(private val binding: FollowViewItemBinding,private val followImageLoad:(FollowData)->Unit ) :
+    RecyclerView.ViewHolder(binding.root) {
+    fun bind(followData: FollowData?) {
+        followData?.let { data ->
+            data.profilePicUrl?.let {
+                binding.ivViewPp.glideCacheControl(it){ isLoadImage->
+                    if (!isLoadImage){
+                        Log.d("isChangedImage", "No cache Item ${data.username} ")
+                        followImageLoad.invoke(data)
+                    }else{
+                        Log.d("isChangedImage", "OK! cache Item ${data.username} ")
+                    }
+                }
+            } ?: kotlin.run {
+               // binding.ivViewPp.setImageDrawable(null)
+            }
+            data.username?.let { itUsername ->
+                binding.tvPpUsername.text = itUsername.toShortName()
+            }
+            data.fullName?.let { itFullName ->
+                if (itFullName.isNotEmpty()) {
+                    binding.tvPpFullname.text = itFullName.toShortName()
+                } else {
+                    binding.tvPpFullname.visibility = View.GONE
+                }
+
+            } ?: kotlin.run { binding.tvPpFullname.visibility = View.GONE }
+        }
     }
 }
+
 
 
 

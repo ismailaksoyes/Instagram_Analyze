@@ -17,6 +17,7 @@ import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.followersToFollowList
+import com.avalon.calizer.utils.followingToFollowList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -29,7 +30,6 @@ class NewFollowersFragment : BaseFragment<FragmentNewFollowersBinding>(FragmentN
     @Inject
     lateinit var prefs: MySharedPreferences
 
-    private val followsAdapter by lazy { FollowsAdapter() }
     private lateinit var layoutManager: LinearLayoutManager
     private var isLoading: Boolean = false
 
@@ -49,7 +49,7 @@ class NewFollowersFragment : BaseFragment<FragmentNewFollowersBinding>(FragmentN
     }
 
     private fun setupRecyclerview() {
-        binding.rcNewFollowersData.adapter = followsAdapter
+        //binding.rcNewFollowersData.adapter = FollowsAdapter()
         binding.rcNewFollowersData.layoutManager = LinearLayoutManager(
             this.context,
             LinearLayoutManager.VERTICAL, false
@@ -78,7 +78,7 @@ class NewFollowersFragment : BaseFragment<FragmentNewFollowersBinding>(FragmentN
                 when (it) {
                     is NewFollowersViewModel.UpdateState.Success -> {
                         it.userDetails.user.apply {
-                            followsAdapter.updatePpItem(pk, profilePicUrl)
+                           // followsAdapter.updatePpItem(pk, profilePicUrl)
                         }
                     }
 
@@ -108,7 +108,7 @@ class NewFollowersFragment : BaseFragment<FragmentNewFollowersBinding>(FragmentN
                 when (it) {
                     is NewFollowersViewModel.NewFollowersState.Success -> {
                         val followData = it.followData.followersToFollowList()
-                        followsAdapter.setData(followData)
+                        (binding.rcNewFollowersData.adapter as FollowsAdapter).submitList(followData)
                         isLoading = false
                     }
                     is NewFollowersViewModel.NewFollowersState.UpdateItem -> {
