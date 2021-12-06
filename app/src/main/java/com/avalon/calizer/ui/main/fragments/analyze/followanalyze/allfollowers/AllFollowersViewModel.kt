@@ -25,10 +25,8 @@ class AllFollowersViewModel @Inject constructor(
     private val prefs: MySharedPreferences
 ) :
     ViewModel() {
-    private val _allFollowers = MutableStateFlow<AllFollowersState>(
-        AllFollowersState.Empty
-    )
-    val allFollowers: StateFlow<AllFollowersState> = _allFollowers
+
+    val allFollowers =  MutableSharedFlow<List<FollowersData>>()
 
     private val _updateAllFollowers = MutableStateFlow<UpdateState>(UpdateState.Empty)
     val updateAllFollowers: StateFlow<UpdateState> = _updateAllFollowers
@@ -51,7 +49,7 @@ class AllFollowersViewModel @Inject constructor(
     suspend fun getFollowData(dataSize: Int) {
         viewModelScope.launch {
             val data = followRepository.getFollowers(dataSize)
-            _allFollowers.value = AllFollowersState.Success(data)
+            allFollowers.emit(data)
         }
 
     }

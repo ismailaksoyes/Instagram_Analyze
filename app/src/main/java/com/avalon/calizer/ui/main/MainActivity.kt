@@ -71,14 +71,14 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.destination_profile || destination.id == R.id.destination_analyze || destination.id == R.id.destination_settings) {
 
-                binding.bottomNavigation.visibility = View.VISIBLE
+               binding.bottomNavigation.visibility = View.VISIBLE
                 if (getFirstData) {
                     getFirstData = false
                     viewModel.startAnalyze()
                 }
 
             } else {
-                binding.bottomNavigation.visibility = View.GONE
+                //binding.bottomNavigation.visibility = View.GONE
 
             }
 
