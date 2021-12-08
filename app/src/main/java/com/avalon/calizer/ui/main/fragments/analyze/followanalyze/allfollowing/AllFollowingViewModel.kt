@@ -13,6 +13,7 @@ import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -21,45 +22,35 @@ import javax.inject.Inject
 @HiltViewModel
 class AllFollowingViewModel @Inject constructor(private val followRepository: FollowRepository, private val repository: Repository,private val prefs:MySharedPreferences):
     ViewModel() {
-    private val _allFollowing = MutableStateFlow<AllFollowingState>(
-        AllFollowingState.Empty)
-    val allFollowing : StateFlow<AllFollowingState> = _allFollowing
+    val allFollowing =  MutableSharedFlow<List<FollowingData>>()
 
-    private val _updateAllFollowing = MutableStateFlow<UpdateState>(UpdateState.Empty)
-    val updateAllFollowing: StateFlow<UpdateState> = _updateAllFollowing
+    val profileUrl = MutableSharedFlow<Pair<String,Long>>()
 
 
-
-    sealed class UpdateState{
-        object Empty:UpdateState()
-        data class Success(var userDetails: ApiResponseUserDetails):UpdateState()
-
-    }
-    sealed class AllFollowingState{
-        object Empty :AllFollowingState()
-        data class UpdateItem(val followData:List<FollowingData>) :AllFollowingState()
-        data class Success(val followData:List<FollowingData>) :AllFollowingState()
-
-    }
-
-    suspend fun getFollowData(dataSize:Int){
-        viewModelScope.launch{
+    suspend fun getFollowData(dataSize: Int) {
+        viewModelScope.launch {
             val data = followRepository.getFollowing(dataSize)
-            _allFollowing.value = AllFollowingState.Success(data)
-            _allFollowing.value = AllFollowingState.UpdateItem(data)
+            allFollowing.emit(data)
         }
 
     }
 
+    private suspend fun updateNewProfilePicture(userId:Long, url:String){
+        viewModelScope.launch {
+            followRepository.updateFollowingNewProfilePicture(userId = userId,url = url)
+        }
+    }
 
-    suspend fun getUserDetails(userId: Long) = viewModelScope.launch {
+    suspend fun getUserDetails(userId: Long) = viewModelScope.launch(Dispatchers.IO) {
         when(val response = repository.getUserDetails(userId,prefs.allCookie)){
             is Resource.Success->{
-                response.data?.let { itResponse->
-                    _updateAllFollowing.value = UpdateState.Success(itResponse)
+                response.data?.let {  itResponse->
+                    val ppUrl =  itResponse.user.profilePicUrl
+                    val dsUserId = itResponse.user.pk
+                    profileUrl.emit(Pair(ppUrl,dsUserId))
+                    updateNewProfilePicture(dsUserId,ppUrl)
                 }
             }
         }
-
     }
 }

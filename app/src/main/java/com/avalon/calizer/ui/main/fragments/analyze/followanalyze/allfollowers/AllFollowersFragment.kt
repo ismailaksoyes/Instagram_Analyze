@@ -38,21 +38,9 @@ class AllFollowersFragment :
 
     val viewModel: AllFollowersViewModel by viewModels()
 
-    private var isLoading: Boolean = false
 
     override fun getRecyclerView(): RecyclerView {
         return binding.rcFollowData
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        // observeFollowData()
-        //observePpItemRes()
-        //loadData(0)
-        //scrollListener()
-        //init()
-
     }
 
     override fun getToolbarTitle(): String {
@@ -82,43 +70,25 @@ class AllFollowersFragment :
         }
     }
 
-    override suspend fun observePpItemRes() {
+
+
+    override  fun observePpItemRes(itemRes: (Pair<String, Long>) -> Unit) {
         lifecycleScope.launch {
             viewModel.profileUrl.collect {
-                return@collect
+                itemRes.invoke(it)
             }
         }
     }
 
-    override suspend fun observeFollowData(): MutableSharedFlow<List<FollowersData>> {
+
+    override  fun observeFollowData(itemRes: (List<FollowData>) -> Unit) {
         lifecycleScope.launch {
             viewModel.allFollowers.collect {
-                return@collect
+               itemRes.invoke(it.followersToFollowList())
             }
         }
     }
 
-    private fun observePpItemRes1() {
-        lifecycleScope.launch {
-            viewModel.profileUrl.collect { itItem ->
-                (binding.rcFollowData.adapter as FollowsAdapter).updateProfileImage(
-                    itItem.first,
-                    itItem.second
-                )
-            }
-
-        }
-    }
-
-
-    private fun observeFollowData1() {
-        lifecycleScope.launch {
-            viewModel.allFollowers.collect {
-                (binding.rcFollowData.adapter as FollowsAdapter).addItem(it.followersToFollowList())
-                isLoading = false
-            }
-        }
-    }
 
 
 }

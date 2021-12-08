@@ -1,6 +1,7 @@
 package com.avalon.calizer.ui.base
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.avalon.calizer.data.local.follow.FollowData
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.ui.custom.CustomToolbar
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
+import com.avalon.calizer.utils.followersToFollowList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import java.util.concurrent.Flow
@@ -43,13 +45,18 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
         return binding.root
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        loadData(0)
+        collectItem()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
     }
 
     private fun init(){
-
         setupRecyclerview()
         toolbarSettings()
     }
@@ -80,17 +87,24 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
 
     abstract fun loadData(itemSize:Int)
 
-    abstract suspend fun observePpItemRes()
-    abstract suspend fun observeFollowData(): MutableSharedFlow<List<FollowersData>>
+    abstract  fun observePpItemRes(itemRes:(Pair<String,Long>)->Unit)
+
+    abstract  fun observeFollowData(itemRes:(List<FollowData>)->Unit)
 
 
-    private suspend fun testObserve(){
-      val data =  observePpItemRes()
+    private fun collectItem(){
+        observeFollowData {
+            (recyclerView.adapter as FollowsAdapter).addItem(it)
+            isLoading = false
+        }
+        observePpItemRes {
+            (recyclerView.adapter as FollowsAdapter).updateProfileImage(
+                it.first,
+                it.second
+            )
+        }
     }
 
-    private suspend fun testObserve2(){
-        val data = observeFollowData()
-    }
 
 
     private fun toolbarSettings(){
