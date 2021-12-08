@@ -56,6 +56,10 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
         init()
     }
 
+    open fun test3(){
+        val abc = 4
+    }
+
     private fun init(){
         setupRecyclerview()
         toolbarSettings()

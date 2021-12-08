@@ -53,4 +53,12 @@ class FollowRepository @Inject constructor(
         roomDao.updateFollowingNewProfilePicture(userId,url)
     }
 
+    suspend fun updateOldFollowersNewProfilePicture(userId:Long,url:String){
+        roomDao.updateOldFollowersNewProfilePicture(userId, url)
+    }
+
+    suspend fun updateOldFollowingNewProfilePicture(userId:Long,url:String){
+        roomDao.updateOldFollowingNewProfilePicture(userId, url)
+    }
+
 }

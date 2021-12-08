@@ -11,9 +11,12 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.R
+import com.avalon.calizer.data.local.follow.FollowData
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.databinding.FragmentUnFollowersBinding
+import com.avalon.calizer.ui.base.BaseFollowFragment
 import com.avalon.calizer.ui.base.BaseFragment
+import com.avalon.calizer.ui.custom.CustomToolbar
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
 import com.avalon.calizer.utils.followersToFollowList
 import com.avalon.calizer.utils.followingToFollowList
@@ -24,103 +27,56 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class UnFollowersFragment : BaseFragment<FragmentUnFollowersBinding>(FragmentUnFollowersBinding::inflate) {
+class UnFollowersFragment : BaseFollowFragment<FragmentUnFollowersBinding>(FragmentUnFollowersBinding::inflate) {
 
     val viewModel: UnFollowersViewModel  by viewModels()
 
-    private lateinit var layoutManager: LinearLayoutManager
-    private var isLoading: Boolean = false
 
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupRecyclerview()
-        layoutManager = LinearLayoutManager(view.context)
-        binding.rcNoFollowData.layoutManager = layoutManager
-        observeFollowData()
-        observePpItemRes()
-        loadData(0)
-        scrollListener()
-        binding.ivBackBtn.setOnClickListener {
-            it.findNavController().navigate(R.id.action_unFollowersFragment_to_destination_analyze)
-        }
-
+    override fun getRecyclerView(): RecyclerView {
+       return binding.rcFollowData
     }
 
-    private fun setupRecyclerview() {
-       // binding.rcNoFollowData.adapter = FollowsAdapter()
-        binding.rcNoFollowData.layoutManager = LinearLayoutManager(
-            this.context,
-            LinearLayoutManager.VERTICAL, false
-        )
+    override fun getCustomToolbar(): CustomToolbar {
+       return binding.toolbar
+    }
 
-    }
-    fun loadData(startItem: Int) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.getFollowData(startItem)
-        }
-    }
-    private fun updatePpItemReq(followData: List<FollowersData>) {
+    override fun updatePpItemReq(followData: FollowData) {
         lifecycleScope.launch {
-            followData.forEach { data ->
-                data.dsUserID?.let {
-                    viewModel.getUserDetails(it)
-                }
-
+            followData.dsUserID?.let { itDsUserId ->
+                viewModel.getUserDetails(itDsUserId)
             }
         }
-
     }
-    private fun observePpItemRes() {
+
+    override fun getToolbarTitle(): String {
+        return "TestTitle"
+    }
+
+    override fun getLayoutManager(): LinearLayoutManager {
+        return LinearLayoutManager(context)
+    }
+
+    override fun loadData(itemSize: Int) {
         lifecycleScope.launch {
-            viewModel.updateUnFollowers.collect {
-                when (it) {
-                    is UnFollowersViewModel.UpdateState.Success -> {
-                        it.userDetails.user.apply {
-                            //followsAdapter.updatePpItem(pk,profilePicUrl)
-                        }
-                    }
-
-                }
-            }
-
+            viewModel.getFollowData(itemSize)
         }
     }
-    private fun scrollListener() {
-        binding.rcNoFollowData.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                recyclerView.layoutManager?.let { itLayoutManager ->
-                    if (!isLoading && itLayoutManager.itemCount == (layoutManager.findLastVisibleItemPosition() + 1) && itLayoutManager.itemCount > 1) {
-                        loadData(itLayoutManager.itemCount)
-                        isLoading = true
-                    }
 
-                }
-            }
-
-        })
-    }
-    private fun observeFollowData(){
+    override fun observePpItemRes(itemRes: (Pair<String, Long>) -> Unit) {
         lifecycleScope.launch {
-            viewModel.unFollowers.collect {
-                when (it) {
-                    is UnFollowersViewModel.UnFollowersState.Success -> {
-                        val followData = it.followData.followersToFollowList()
-                        (binding.rcNoFollowData.adapter as FollowsAdapter).submitList(followData)
-                        isLoading = false
-                    }
-                    is UnFollowersViewModel.UnFollowersState.UpdateItem -> {
-                        updatePpItemReq(it.followData)
-                    }
-
-                    else -> {
-                    }
-                }
-
+            viewModel.profileUrl.collect {
+                itemRes.invoke(it)
             }
         }
     }
+
+    override fun observeFollowData(itemRes: (List<FollowData>) -> Unit) {
+        lifecycleScope.launch {
+            viewModel.allUnFollowers.collect {
+                itemRes.invoke(it.followersToFollowList())
+            }
+        }
+    }
+
 
 }

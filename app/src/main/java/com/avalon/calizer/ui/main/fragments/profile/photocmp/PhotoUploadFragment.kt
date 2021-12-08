@@ -112,7 +112,7 @@ class PhotoUploadFragment : BaseFragment<FragmentPhotoUploadBinding>(FragmentPho
 
     }
 
-    private fun onclickRequestPermission(view: View) {
+    private fun onclickRequestPermission() {
 
         when {
             ContextCompat.checkSelfPermission(
@@ -146,7 +146,7 @@ class PhotoUploadFragment : BaseFragment<FragmentPhotoUploadBinding>(FragmentPho
     private fun initData() {
         binding.btnUploadImage.setOnClickListener {
 
-            onclickRequestPermission(it)
+            onclickRequestPermission()
 
         }
 

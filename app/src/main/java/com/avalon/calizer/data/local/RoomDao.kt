@@ -20,6 +20,12 @@ interface RoomDao {
     @Query("UPDATE following_table SET profilePicUrl = :url WHERE dsUserID=:userId")
     suspend fun updateFollowingNewProfilePicture(userId:Long,url:String)
 
+    @Query("UPDATE old_followers_table SET profilePicUrl = :url WHERE dsUserID=:userId")
+    suspend fun updateOldFollowersNewProfilePicture(userId:Long,url:String)
+
+    @Query("UPDATE old_following_table SET profilePicUrl = :url WHERE dsUserID=:userId")
+    suspend fun updateOldFollowingNewProfilePicture(userId:Long,url:String)
+
     @Query("SELECT * FROM accounts_table WHERE dsUserID= :userId")
     suspend fun getUserCookies(userId: Long): AccountsData
 
