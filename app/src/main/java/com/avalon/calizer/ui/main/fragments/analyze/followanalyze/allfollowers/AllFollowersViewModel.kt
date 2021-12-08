@@ -25,40 +25,23 @@ class AllFollowersViewModel @Inject constructor(
     private val prefs: MySharedPreferences
 ) :
     ViewModel() {
-    private val _allFollowers = MutableStateFlow<AllFollowersState>(
-        AllFollowersState.Empty
-    )
-    val allFollowers: StateFlow<AllFollowersState> = _allFollowers
 
-    private val _updateAllFollowers = MutableStateFlow<UpdateState>(UpdateState.Empty)
-    val updateAllFollowers: StateFlow<UpdateState> = _updateAllFollowers
+    val allFollowers =  MutableSharedFlow<List<FollowersData>>()
 
     val profileUrl = MutableSharedFlow<Pair<String,Long>>()
 
 
-    sealed class UpdateState {
-        object Empty : UpdateState()
-        data class Success(var userDetails: ApiResponseUserDetails) : UpdateState()
-
-    }
-
-    sealed class AllFollowersState {
-        object Empty : AllFollowersState()
-        data class Success(val followData: List<FollowersData>) : AllFollowersState()
-
-    }
-
     suspend fun getFollowData(dataSize: Int) {
         viewModelScope.launch {
             val data = followRepository.getFollowers(dataSize)
-            _allFollowers.value = AllFollowersState.Success(data)
+            allFollowers.emit(data)
         }
 
     }
 
-    suspend fun updateNewProfilePicture(userId:Long,url:String){
+    private suspend fun updateNewProfilePicture(userId:Long, url:String){
         viewModelScope.launch {
-            followRepository.updateNewProfilePicture(userId = userId,url = url)
+            followRepository.updateFollowersNewProfilePicture(userId = userId,url = url)
         }
     }
 
@@ -70,7 +53,6 @@ class AllFollowersViewModel @Inject constructor(
                     val dsUserId = itResponse.user.pk
                     profileUrl.emit(Pair(ppUrl,dsUserId))
                     updateNewProfilePicture(dsUserId,ppUrl)
-                    //_updateAllFollowers.value = UpdateState.Success(itResponse)
                 }
             }
         }

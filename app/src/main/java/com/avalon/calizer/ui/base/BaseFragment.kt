@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import com.avalon.calizer.R
 
 typealias Inflate<T> = (LayoutInflater, ViewGroup?, Boolean) ->T
 abstract class BaseFragment<viewBinding: ViewBinding>(private val inflate: Inflate<viewBinding>) :

@@ -3,6 +3,9 @@
     <dimen name="pageMargin">30dp</dimen>
     <dimen name="offset">30dp</dimen>
     <dimen name="pageMarginAndOffset">50dp</dimen>
+    <dimen name="card_elevation_small">4dp</dimen>
+    <dimen name="card_elevation_mid">8dp</dimen>
+    <dimen name="card_elevation_large">12dp</dimen>
     <dimen name="text_size_h1">27sp</dimen>
     <dimen name="text_size_h2">21sp</dimen>
     <dimen name="text_size_h3">19sp</dimen>
