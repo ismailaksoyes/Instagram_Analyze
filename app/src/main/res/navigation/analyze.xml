@@ -100,6 +100,7 @@
             app:destination="@id/destination_analyze" />
 
     </fragment>
+
     <fragment
         android:id="@+id/storyViewsFragment"
         android:name="com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.StoryViewsFragment"
@@ -111,9 +112,8 @@
         <action
             android:id="@+id/action_storyViewsFragment_to_storyFragment"
             app:destination="@id/storyFragment"
-            app:popUpTo="@id/storyFragment"
-            app:popUpToInclusive="true"
             app:popEnterAnim="@anim/fade_in"
+            app:popUpTo="@id/destination_analyze"
             app:popExitAnim="@anim/fade_out"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"/>

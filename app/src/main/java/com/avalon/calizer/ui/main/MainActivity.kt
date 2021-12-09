@@ -67,25 +67,38 @@ class MainActivity : AppCompatActivity() {
     private fun initNavController() {
         navController = binding.navHost.getFragment<NavHostFragment>().navController
         binding.bottomNavigation.setupWithNavController(navController)
+        var lastNavigateId = -1
 
+        binding.bottomNavigation.setOnItemReselectedListener {
+           navController.popBackStack(R.id.destination_profile,false)
+        }
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.destination_profile || destination.id == R.id.destination_analyze || destination.id == R.id.destination_settings) {
 
-               binding.bottomNavigation.visibility = View.VISIBLE
-                if (getFirstData) {
-                    getFirstData = false
-                    viewModel.startAnalyze()
+                Log.d("destination->", "initNavController: ${destination.id}")
+                if (lastNavigateId != -1 && lastNavigateId == destination.id){
+                   navController.navigateUp()
                 }
+                lastNavigateId = destination.id
+               binding.bottomNavigation.visibility = View.VISIBLE
+             firstOpen()
 
-            } else {
-                //binding.bottomNavigation.visibility = View.GONE
-
+            } else if (destination.id == R.id.destination_accounts) {
+                binding.bottomNavigation.visibility = View.GONE
             }
 
         }
 
 
 
+    }
+
+
+    private fun firstOpen(){
+        if (getFirstData) {
+            getFirstData = false
+            viewModel.startAnalyze()
+        }
     }
 
     private fun analyzeStartCheck(){
