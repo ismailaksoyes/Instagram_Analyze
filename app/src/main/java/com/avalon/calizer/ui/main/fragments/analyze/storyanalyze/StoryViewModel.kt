@@ -8,7 +8,9 @@ import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,6 +23,10 @@ class StoryViewModel @Inject constructor(
 
     private val _storyData = MutableStateFlow<StoryState>(StoryState.Empty)
     val storyData: StateFlow<StoryState> = _storyData
+
+    private val _storyList = MutableSharedFlow<StoryState>()
+    val storyList:SharedFlow<StoryState> = _storyList
+
 
 
     sealed class StoryState {
@@ -39,8 +45,10 @@ class StoryViewModel @Inject constructor(
     }
 
     fun setLoadingState(isLoading: Boolean) {
-        _storyData.value = StoryState.Loading(isLoading)
-
+       // _storyData.value = StoryState.Loading(isLoading)
+        viewModelScope.launch {
+            _storyList.emit(StoryState.Loading(isLoading = isLoading))
+        }
     }
 
     suspend fun getStoryList() {
@@ -60,11 +68,13 @@ class StoryViewModel @Inject constructor(
                             )
                         }
                         if (storyList.size > 0) {
-                            _storyData.value = StoryState.Success(storyList)
+                           // _storyData.value = StoryState.Success(storyList)
+                            _storyList.emit(StoryState.Success(storyList))
                         } else {
-                            _storyData.value = StoryState.Error
+                           // _storyData.value = StoryState.Error
+                            _storyList.emit(StoryState.Error)
                         }
-                    } ?: kotlin.run { _storyData.value = StoryState.Error }
+                    } ?: kotlin.run {  _storyList.emit(StoryState.Error) }
                 }
             }
         }
@@ -93,17 +103,20 @@ class StoryViewModel @Inject constructor(
                             }
                         }
                         if (urlList.isNotEmpty()) {
-                            _storyData.value = StoryState.OpenStory(urlList)
+                            //_storyData.value = StoryState.OpenStory(urlList)
+                            _storyList.emit(StoryState.OpenStory(urlList))
                         } else {
-                            _storyData.value = StoryState.Error
+                            //_storyData.value = StoryState.Error
+                            _storyList.emit(StoryState.Error)
                         }
 
 
-                    } ?: kotlin.run { _storyData.value = StoryState.Error }
+                    } ?: kotlin.run {  _storyList.emit(StoryState.Error) }
                 }
                 is Resource.Error -> {
-                    _storyData.value = StoryState.Error
-                    val errorcode = response.errorCode
+                   // _storyData.value = StoryState.Error
+                    _storyList.emit(StoryState.Error)
+                    //val errorcode = response.errorCode
                 }
             }
 
@@ -127,16 +140,19 @@ class StoryViewModel @Inject constructor(
                             }
                         }
                         if (urlList.isNotEmpty()) {
-                            _storyData.value = StoryState.OpenStory(urlList)
+                            //_storyData.value = StoryState.OpenStory(urlList)
+                            _storyList.emit(StoryState.OpenStory(urlList))
                         } else {
-                            _storyData.value = StoryState.Error
+                           // _storyData.value = StoryState.Error
+                            _storyList.emit(StoryState.Error)
                         }
 
-                    }?: kotlin.run { _storyData.value = StoryState.Error }
+                    }?: kotlin.run {  _storyList.emit(StoryState.Error) }
                 }
                 is Resource.Error -> {
-                    _storyData.value = StoryState.Error
-                    val errorcode = response.errorCode
+                   // _storyData.value = StoryState.Error
+                    _storyList.emit(StoryState.Error)
+                   // val errorcode = response.errorCode
                 }
             }
         }

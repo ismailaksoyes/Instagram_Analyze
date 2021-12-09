@@ -10,6 +10,8 @@ import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -18,44 +20,33 @@ import javax.inject.Inject
 @HiltViewModel
 class NotFollowersViewModel @Inject constructor (private val followRepository: FollowRepository, private val repository: Repository,private val prefs:MySharedPreferences):
     ViewModel(){
-    private val _notFollowers = MutableStateFlow<NotFollowersState>(
-        NotFollowersState.Empty)
-    val notFollowers: StateFlow<NotFollowersState> = _notFollowers
+    val allNotFollowers =  MutableSharedFlow<List<FollowersData>>()
 
-    private val _updateNotFollowers = MutableStateFlow<UpdateState>(UpdateState.Empty)
-    val updateNotFollowers: StateFlow<UpdateState> = _updateNotFollowers
+    val profileUrl = MutableSharedFlow<Pair<String,Long>>()
 
 
-
-    sealed class UpdateState{
-        object Empty:UpdateState()
-        data class Success(var userDetails: ApiResponseUserDetails):UpdateState()
-
-    }
-    sealed class NotFollowersState{
-        object Empty :NotFollowersState()
-        data class UpdateItem(val followData:List<FollowersData>) :NotFollowersState()
-        data class Success(val followData:List<FollowersData>) :NotFollowersState()
-
-    }
-
-    suspend fun getFollowData(dataSize:Int){
+    suspend fun getFollowData(dataSize: Int) {
         viewModelScope.launch {
             val data = followRepository.getNotFollowers(dataSize)
-            _notFollowers.value = NotFollowersState.Success(data)
-            _notFollowers.value = NotFollowersState.UpdateItem(data)
+            allNotFollowers.emit(data)
         }
 
     }
 
-
-    suspend fun getUserDetails(userId: Long){
+    private suspend fun updateNewProfilePicture(userId:Long, url:String){
         viewModelScope.launch {
-            when(val response = repository.getUserDetails(userId,prefs.allCookie)){
-                is Resource.Success->{
-                    response.data?.let { itData->
-                        _updateNotFollowers.value = UpdateState.Success(itData)
-                    }
+            followRepository.updateFollowersNewProfilePicture(userId = userId,url = url)
+        }
+    }
+
+    suspend fun getUserDetails(userId: Long) = viewModelScope.launch(Dispatchers.IO) {
+        when(val response = repository.getUserDetails(userId,prefs.allCookie)){
+            is Resource.Success->{
+                response.data?.let {  itResponse->
+                    val ppUrl =  itResponse.user.profilePicUrl
+                    val dsUserId = itResponse.user.pk
+                    profileUrl.emit(Pair(ppUrl,dsUserId))
+                    updateNewProfilePicture(dsUserId,ppUrl)
                 }
             }
         }

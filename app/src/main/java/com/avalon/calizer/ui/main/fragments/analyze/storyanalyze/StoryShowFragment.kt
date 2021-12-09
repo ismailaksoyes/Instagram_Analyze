@@ -35,6 +35,7 @@ class StoryShowFragment : BaseFragment<FragmentStoryShowBinding>(FragmentStorySh
 
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupWebView()
@@ -52,7 +53,7 @@ class StoryShowFragment : BaseFragment<FragmentStoryShowBinding>(FragmentStorySh
     private fun closeStoryOb(){
         binding.ivCloseStory.setOnClickListener {
             val action = StoryViewsFragmentDirections.actionStoryViewsFragmentToStoryFragment()
-            findNavController().navigateUp()
+            findNavController().navigate(action)
         }
     }
 

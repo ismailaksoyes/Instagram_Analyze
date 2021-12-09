@@ -52,24 +52,30 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        observeStoryData()
+        observeData()
+        initData()
 
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         layoutManager = LinearLayoutManager(view.context)
         binding.rcStoryView.layoutManager = layoutManager
         loadingAnim = LoadingAnim(childFragmentManager)
         setupRecyclerview()
-        initData()
-        actionNavigate()
         observeUserStoryPk()
         observeUserHighlightPk()
+        actionNavigate()
+    }
+
+    private fun observeData() {
+        observeStoryData()
+
 
     }
 
     private fun setupRecyclerview() {
-        binding.rcStoryView.adapter = StoryAdapter{itStoryId->
+        binding.rcStoryView.adapter = StoryAdapter { itStoryId ->
             viewModel.setLoadingState(true)
             getStory(itStoryId)
         }
@@ -81,8 +87,8 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
     }
 
     private fun observeStoryData() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.storyData.collectLatest {
+        lifecycleScope.launch {
+            viewModel.storyList.collect {
                 when (it) {
                     is StoryViewModel.StoryState.Success -> {
                         setAdapterStory(it.storyData)
@@ -95,7 +101,7 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
                         isLoadingDialog(it.isLoading)
                     }
                     is StoryViewModel.StoryState.Error -> {
-                        Toast.makeText(requireContext(),"HIKAYE YOK",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "HIKAYE YOK", Toast.LENGTH_SHORT).show()
                         viewModel.setLoadingState(false)
 
                     }
@@ -116,8 +122,11 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
                 }
             }
     }
+
     private fun observeUserHighlightPk() {
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(USER_PK_HIGHLIGHTS)
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
+            USER_PK_HIGHLIGHTS
+        )
             ?.observe(
                 viewLifecycleOwner
             ) { result ->
@@ -153,6 +162,7 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
         }
 
     }
+
     private fun isLoadingDialog(isStatus: Boolean) {
         if (isStatus) {
             loadingAnim.showDialog()
@@ -161,7 +171,7 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
         }
     }
 
-    private fun actionNavigate(){
+    private fun actionNavigate() {
         binding.clUsernameStory.setOnClickListener {
             val action = StoryFragmentDirections.actionStoryFragmentToStoryBottomSheet()
             findNavController().navigate(action)
@@ -175,9 +185,9 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
             val action = StoryFragmentDirections.actionStoryFragmentToNotFollowStoryViewsFragment()
             findNavController().navigate(action)
         }
-        binding.ivBackBtn.setOnClickListener {
+        binding.toolbar.onBack.setOnClickListener {
             val action = StoryFragmentDirections.actionStoryFragmentToDestinationAnalyze()
-            findNavController().navigate(action)
+            findNavController().navigateUp()
         }
     }
 

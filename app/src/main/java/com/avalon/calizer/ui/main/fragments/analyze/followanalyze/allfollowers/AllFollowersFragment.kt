@@ -71,7 +71,6 @@ class AllFollowersFragment :
     }
 
 
-
     override  fun observePpItemRes(itemRes: (Pair<String, Long>) -> Unit) {
         lifecycleScope.launch {
             viewModel.profileUrl.collect {
