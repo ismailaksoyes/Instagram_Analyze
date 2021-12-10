@@ -25,4 +25,5 @@ class CustomToolbar(context: Context, attrs: AttributeSet? = null) :
     val onBack = binding.ivBackBtn
 
 
+
 }

@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="?colorPrimary"
     android:clipChildren="false"
-    android:clipToPadding="false"
     tools:context=".ui.main.fragments.analyze.followanalyze.allfollowers.AllFollowersFragment">
 
 
