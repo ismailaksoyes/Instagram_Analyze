@@ -200,6 +200,7 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
         binding.viewmodel = viewModel
         navigateEvent()
         observeProfilePhotoAnalyze()
+        binding.tvCalcOddTitle.text = viewModel.getStringTest()
 
     }
 

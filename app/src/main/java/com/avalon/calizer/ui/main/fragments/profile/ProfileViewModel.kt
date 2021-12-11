@@ -11,6 +11,8 @@ import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.data.local.profile.FollowersCount
 import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.data.repository.RoomRepository
+import com.avalon.calizer.shared.localization.LocalizationManager
+import com.avalon.calizer.shared.model.LocalizationType.TEST_TITLE
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Resource
 import com.avalon.calizer.utils.toAccountsInfoData
@@ -29,7 +31,8 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val prefs: MySharedPreferences,
     private val repository: Repository,
-    private val roomDb: RoomRepository
+    private val roomDb: RoomRepository,
+    private val localizationManager: LocalizationManager
 ) : ViewModel() {
 
     private val _userData = MutableStateFlow<UserDataFlow>(UserDataFlow.Empty)
@@ -66,6 +69,10 @@ class ProfileViewModel @Inject constructor(
 
     fun setPoseScore(score: Int){
         poseScore.postValue(score)
+    }
+
+    fun getStringTest():String{
+        return localizationManager.localization(TEST_TITLE)
     }
 
 

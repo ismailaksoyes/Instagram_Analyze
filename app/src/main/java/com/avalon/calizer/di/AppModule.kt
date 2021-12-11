@@ -11,6 +11,7 @@ import com.avalon.calizer.data.api.ApiHelperImpl
 import com.avalon.calizer.data.api.ApiInterceptor
 import com.avalon.calizer.data.api.ApiService
 import com.avalon.calizer.data.local.MyDatabase
+import com.avalon.calizer.shared.localization.LocalizationManager
 import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.dialog.StoryBottomSheet
 import com.avalon.calizer.utils.Constants
 import com.avalon.calizer.utils.Constants.USER_DATABASE
@@ -108,6 +109,10 @@ object AppModule {
     fun provideNetwork(@ApplicationContext context: Context):NetworkConnectivity{
         return Network(context)
     }
+
+    @Provides
+    @Singleton
+    fun provideLocalization() = LocalizationManager()
 
 
 
