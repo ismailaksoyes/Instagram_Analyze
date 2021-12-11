@@ -14,22 +14,45 @@
         <action
             android:id="@+id/action_destination_analyze_to_allFollowersFragment"
             app:destination="@id/allFollowersFragment"
-            app:popEnterAnim="@android:anim/slide_in_left" />
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
         <action
             android:id="@+id/action_destination_analyze_to_noFollowFragment"
-            app:destination="@id/noFollowFragment" />
+            app:destination="@id/noFollowFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
         <action
             android:id="@+id/action_destination_analyze_to_newFollowersFragment"
-            app:destination="@id/newFollowersFragment" />
+            app:destination="@id/newFollowersFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
         <action
             android:id="@+id/action_destination_analyze_to_allFollowingFragment"
-            app:destination="@id/allFollowingFragment" />
+            app:destination="@id/allFollowingFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
         <action
             android:id="@+id/action_destination_analyze_to_unFollowersFragment"
-            app:destination="@id/unFollowersFragment" />
+            app:destination="@id/unFollowersFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
         <action
             android:id="@+id/action_destination_analyze_to_storyFragment"
-            app:destination="@id/storyFragment" />
+            app:destination="@id/storyFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
     </fragment>
     <fragment
         android:id="@+id/allFollowersFragment"

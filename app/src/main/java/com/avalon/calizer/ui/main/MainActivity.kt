@@ -51,8 +51,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
 
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -67,22 +65,27 @@ class MainActivity : AppCompatActivity() {
     private fun initNavController() {
         navController = binding.navHost.getFragment<NavHostFragment>().navController
         binding.bottomNavigation.setupWithNavController(navController)
-        var lastNavigateId = -1
 
         binding.bottomNavigation.setOnItemReselectedListener {
-           navController.popBackStack(R.id.destination_profile,false)
+
+            Log.d("MenuItemId-> ", "initNavController: ${it.itemId}")
+            when (it.itemId) {
+                R.id.profile -> {
+                    navController.popBackStack(R.id.destination_profile, false)
+                }
+                R.id.analyze -> {
+                    navController.popBackStack(R.id.destination_analyze, false)
+                }
+                R.id.settings -> {
+                    navController.popBackStack(R.id.destination_settings, false)
+                }
+            }
+
         }
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.destination_profile || destination.id == R.id.destination_analyze || destination.id == R.id.destination_settings) {
-
-                Log.d("destination->", "initNavController: ${destination.id}")
-                if (lastNavigateId != -1 && lastNavigateId == destination.id){
-                   navController.navigateUp()
-                }
-                lastNavigateId = destination.id
-               binding.bottomNavigation.visibility = View.VISIBLE
-             firstOpen()
-
+                binding.bottomNavigation.visibility = View.VISIBLE
+                firstOpen()
             } else if (destination.id == R.id.destination_accounts) {
                 binding.bottomNavigation.visibility = View.GONE
             }
@@ -90,26 +93,25 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
     }
 
 
-    private fun firstOpen(){
+    private fun firstOpen() {
         if (getFirstData) {
             getFirstData = false
             viewModel.startAnalyze()
         }
     }
 
-    private fun analyzeStartCheck(){
+    private fun analyzeStartCheck() {
         val followersAnalyzeTime = Date(prefs.followersUpdateDate)
         val followingAnalyzeTime = Date(prefs.followingUpdateDate)
-        if (Utils.getTimeDifference(followersAnalyzeTime)){
+        if (Utils.getTimeDifference(followersAnalyzeTime)) {
             lifecycleScope.launch(Dispatchers.IO) {
                 getUserFollowers(FollowRequestParams())
             }
         }
-        if (Utils.getTimeDifference(followingAnalyzeTime)){
+        if (Utils.getTimeDifference(followingAnalyzeTime)) {
             lifecycleScope.launch(Dispatchers.IO) {
                 getUserFollowing(FollowRequestParams())
             }
@@ -211,13 +213,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveFollowersData(isFirst: Boolean) {
         lifecycleScope.launch(Dispatchers.IO) {
-            if (isFirst){
+            if (isFirst) {
                 viewModel.addFollowersData(followersDataList)
                 val oldFollowers = followersDataList.toOldFollowersData()
                 viewModel.addOldFollowersData(oldFollowers)
                 viewModel.updateFollowersSaveType()
-                prefs.followersUpdateDate =System.currentTimeMillis()
-            }else{
+                prefs.followersUpdateDate = System.currentTimeMillis()
+            } else {
                 viewModel.addFollowersData(followersDataList)
             }
         }
@@ -226,13 +228,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveFollowingData(isFirst: Boolean) {
         lifecycleScope.launch(Dispatchers.IO) {
-            if (isFirst){
+            if (isFirst) {
                 viewModel.addFollowingData(followingDataList)
                 val oldFollowing = followingDataList.toOldFollowingData()
                 viewModel.addOldFollowingData(oldFollowing)
                 viewModel.updateFollowingSaveType()
-                prefs.followingUpdateDate =System.currentTimeMillis()
-            }else{
+                prefs.followingUpdateDate = System.currentTimeMillis()
+            } else {
                 viewModel.addFollowingData(followingDataList)
             }
         }
