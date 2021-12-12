@@ -3,6 +3,7 @@ package com.avalon.calizer.data.api
 import android.util.Log
 import com.avalon.calizer.data.error.NETWORK_ERROR
 import com.avalon.calizer.data.error.NO_INTERNET_CONNECTION
+import com.avalon.calizer.data.remote.insrequest.ApiTranslation
 import com.avalon.calizer.data.remote.insresponse.*
 import com.avalon.calizer.utils.NetworkConnectivity
 import com.avalon.calizer.utils.Resource
@@ -71,6 +72,15 @@ class ApiHelperImpl  @Inject constructor(private val apiService: ApiService, pri
             is ApiResponseStoryViewer->Resource.Success(data = response)
             else->Resource.Error(errorCode = response as Int)
         }
+    }
+
+    override suspend fun getTranslation(url: String, lang: String): Resource<HashMap<String, String>> {
+       return when(val response = checkResponse { (apiService::getTranslation)(url,
+           ApiTranslation(lang_code = lang))
+       }){
+           is HashMap<*, *> ->Resource.Success(data = response as HashMap<String,String>)
+           else -> Resource.Error(errorCode = response as Int)
+       }
     }
 
     private suspend fun checkResponse(call:suspend() -> Response<*>):Any?{

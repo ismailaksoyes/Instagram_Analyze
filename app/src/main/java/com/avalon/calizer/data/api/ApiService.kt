@@ -1,10 +1,18 @@
 package com.avalon.calizer.data.api
 
+import com.avalon.calizer.data.remote.insrequest.ApiTranslation
 import com.avalon.calizer.data.remote.insresponse.*
 import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiService {
+
+    @POST()
+    suspend fun getTranslation(
+        @Url url:String,
+        @Body lang:ApiTranslation
+    ):Response<HashMap<String,String>>
+
     @GET("friendships/{userId}/followers/")
     suspend fun getFollowers(
         @Path("userId") userId:Long,

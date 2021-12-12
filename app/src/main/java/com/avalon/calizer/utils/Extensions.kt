@@ -96,6 +96,7 @@ fun ImageView.glideCacheControl(url:String, isLoadImage:(Boolean)->Unit){
 }
 
 
+
 fun TextView.isShimmerEnabled(start: Boolean) {
     if (start) {
         val shimmer = Shimmer.AlphaHighlightBuilder()

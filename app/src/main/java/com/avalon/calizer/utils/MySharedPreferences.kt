@@ -13,6 +13,10 @@ class MySharedPreferences @Inject constructor(var prefs:SharedPreferences) {
 
     //  private val prefs = context.getSharedPreferences(fileName,Context.MODE_PRIVATE)
 
+    var translation:String?
+    get() = prefs.getString(Constants.TRANSLATION,"")
+    set(value) = prefs.edit().putString(Constants.TRANSLATION,value).apply()
+
     var selectedAccount: Long
         get() = prefs.getLong(Constants.SELECTED_ACCOUNT, -1)
         set(value) = prefs.edit().putLong(Constants.SELECTED_ACCOUNT, value).apply()

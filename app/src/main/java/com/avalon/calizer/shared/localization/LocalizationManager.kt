@@ -1,22 +1,27 @@
 package com.avalon.calizer.shared.localization
 
-import com.avalon.calizer.shared.model.LocalizationType.TEST_TITLE
+import com.avalon.calizer.shared.model.LocalizationType
 import javax.inject.Inject
 
 class LocalizationManager @Inject constructor() {
-   // private lateinit var lastNewLocalization:HashMap<String,String>
-    val lastNewLocalization:HashMap<String,String> = HashMap<String,String>()
+
+   private var lastNewLocalization:HashMap<String,String> = HashMap()
 
     private  fun getLocalizationValue(key:String):String{
         val value = lastNewLocalization[key]
         return value?:key
     }
 
-    fun setLocalization(test:String){
-        lastNewLocalization[TEST_TITLE] = test
+    fun setLocalization(localization:HashMap<String,String>){
+       lastNewLocalization = localization
     }
 
-    fun localization(key:String) = getLocalizationValue(key)
+    fun localization(key:String){
+        getLocalizationValue(key)
+    }
+
+
+
 
 
 

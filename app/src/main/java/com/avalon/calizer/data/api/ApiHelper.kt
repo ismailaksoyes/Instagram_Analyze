@@ -1,5 +1,6 @@
 package com.avalon.calizer.data.api
 
+import com.avalon.calizer.data.remote.insrequest.ApiTranslation
 import com.avalon.calizer.data.remote.insresponse.*
 import com.avalon.calizer.utils.Resource
 import retrofit2.Response
@@ -14,5 +15,6 @@ interface ApiHelper{
     suspend fun getHighlights(userId: Long,cookies: String?):Resource<ApiResponseHighlights>
     suspend fun getHighlightsStory(highlightId:String,cookies: String?):Resource<ApiResponseHighlightsStory>
     suspend fun getStoryViewer(storyId:String,cookies: String?,maxId:String?):Resource<ApiResponseStoryViewer>
+    suspend fun getTranslation(url:String,lang:String):Resource<HashMap<String,String>>
     //usercase update details
 }

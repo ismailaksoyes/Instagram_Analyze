@@ -12,6 +12,7 @@ import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.utils.MySharedPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,15 +29,16 @@ class SplashFragment :BaseFragment<FragmentSplashBinding>(FragmentSplashBinding:
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.createLocalization()
-        if(savedInstanceState ==null){
-            lifecycleScope.launchWhenStarted {
 
-              //  AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        val locale = context!!.resources.configuration.locale.country
+        viewModel.getLocalization("en")
 
+        lifecycleScope.launch {
+            viewModel.localHash.collect {
+                navOto()
             }
         }
-        navOto()
+
     }
 
     private fun navOto(){

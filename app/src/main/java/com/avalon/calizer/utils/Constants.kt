@@ -2,6 +2,7 @@ package com.avalon.calizer.utils
 
 object Constants {
 
+        const val TRANSLATION = "translation"
         const val BASE_URL = "https://i.instagram.com/api/v1/"
         const val INS_LOGIN_URL ="https://www.instagram.com/accounts/login/"
         const val USER_DATABASE = "user_database"
