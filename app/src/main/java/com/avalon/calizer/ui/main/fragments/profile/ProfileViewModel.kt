@@ -16,7 +16,9 @@ import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Resource
 import com.avalon.calizer.utils.toAccountsInfoData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -34,8 +36,8 @@ class ProfileViewModel @Inject constructor(
     private val localizationManager: LocalizationManager
 ) : ViewModel() {
 
-    private val _userData = MutableStateFlow<UserDataFlow>(UserDataFlow.Empty)
-    val userData: StateFlow<UserDataFlow> = _userData
+    private val _userData = MutableSharedFlow<UserDataFlow>()
+    val userData: SharedFlow<UserDataFlow> = _userData
 
     val userModel: MutableLiveData<AccountsInfoData> = MutableLiveData<AccountsInfoData>()
 
@@ -45,7 +47,6 @@ class ProfileViewModel @Inject constructor(
 
     val faceScore:MutableLiveData<Int> = MutableLiveData()
 
-    val testLiveData: MutableLiveData<String> = MutableLiveData<String>()
 
 
     sealed class UserDataFlow {
@@ -70,15 +71,10 @@ class ProfileViewModel @Inject constructor(
         poseScore.postValue(score)
     }
 
-    fun getStringTest():String{
-        return "localizationManager.localization(TEST_TITLE)"
-    }
-
-
 
     fun setUserDetailsLoading() {
         viewModelScope.launch {
-            _userData.value = UserDataFlow.Loading
+            _userData.emit(UserDataFlow.Loading)
         }
     }
 
@@ -90,17 +86,16 @@ class ProfileViewModel @Inject constructor(
                 is Resource.Success -> {
                     response.data?.let { itData ->
                         itData.user.followerCount?.let {
-                            _userData.value =
-                                UserDataFlow.GetUserDetails(itData.toAccountsInfoData())
-                            testLiveData.postValue("hakkirecep")
+                            _userData.emit(UserDataFlow.GetUserDetails(itData.toAccountsInfoData()))
+
                         } ?: kotlin.run {
-                            _userData.value = UserDataFlow.Error
+                            _userData.emit(UserDataFlow.Error)
                         }
 
                     }
                 }
                 is Resource.Error -> {
-                    _userData.value = UserDataFlow.Error
+                    _userData.emit(UserDataFlow.Error)
                     val errorCode = response.errorCode
 
                 }

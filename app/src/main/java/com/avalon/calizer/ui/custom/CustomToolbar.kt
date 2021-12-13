@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import com.avalon.calizer.databinding.CustomToolbarBinding
+import com.avalon.calizer.shared.localization.LocalizationManager
 
 class CustomToolbar @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
     ConstraintLayout(context, attrs) {
@@ -18,7 +19,7 @@ class CustomToolbar @JvmOverloads constructor(context: Context, attrs: Attribute
         addView(binding.root)
     }
 
-    var setTitle1:String
+    var setTitle:String
         get() = binding.toolbarTitle.text as String
         set(value) {
             binding.toolbarTitle.text = value
@@ -26,12 +27,7 @@ class CustomToolbar @JvmOverloads constructor(context: Context, attrs: Attribute
 
     val onBack = binding.ivBackBtn
 
-    @BindingAdapter("app:textTitle")
-    fun setTitle(title:String?,view: CustomToolbar){
-        title?.let { itTitle->
-            binding.toolbarTitle.text = itTitle
-        }
-    }
+
 
 
 

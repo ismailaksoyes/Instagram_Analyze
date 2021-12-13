@@ -64,8 +64,6 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
             viewModel.getUserDetails()
             viewModel.getFollowersCount()
         }
-
-
     }
 
 
@@ -74,8 +72,6 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
         super.onCreate(savedInstanceState)
         initData()
         observeUserFlow()
-
-
     }
 
 
@@ -201,8 +197,6 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
         binding.viewmodel = viewModel
         navigateEvent()
         observeProfilePhotoAnalyze()
-        binding.tvCalcOddTitle.text = viewModel.getStringTest()
-
     }
 
 

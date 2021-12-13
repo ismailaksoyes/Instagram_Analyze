@@ -16,6 +16,8 @@ import com.avalon.calizer.data.local.follow.FollowData
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.data.local.follow.FollowingData
 import com.avalon.calizer.databinding.FragmentAllFollowingBinding
+import com.avalon.calizer.shared.localization.LocalizationManager
+import com.avalon.calizer.shared.model.LocalizationType.ANALYZE_ALLFOLLOWING_TITLE
 import com.avalon.calizer.ui.base.BaseFollowFragment
 import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.custom.CustomToolbar
@@ -36,8 +38,12 @@ class AllFollowingFragment : BaseFollowFragment<FragmentAllFollowingBinding>(Fra
    val viewModel: AllFollowingViewModel by viewModels()
 
 
-    override fun initCreated() {
+    @Inject
+    lateinit var localizationManager: LocalizationManager
 
+
+    override fun initCreated() {
+        binding.toolbar.setTitle = localizationManager.localization(ANALYZE_ALLFOLLOWING_TITLE)
     }
 
     override fun getRecyclerView(): RecyclerView {
