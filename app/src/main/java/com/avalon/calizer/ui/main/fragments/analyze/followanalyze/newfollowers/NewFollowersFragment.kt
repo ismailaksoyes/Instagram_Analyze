@@ -32,6 +32,10 @@ class NewFollowersFragment : BaseFollowFragment<FragmentNewFollowersBinding>(Fra
     val viewModel: NewFollowersViewModel  by viewModels()
 
 
+    override fun initCreated() {
+
+    }
+
     override fun getRecyclerView(): RecyclerView {
         return binding.rcFollowData
     }
@@ -46,10 +50,6 @@ class NewFollowersFragment : BaseFollowFragment<FragmentNewFollowersBinding>(Fra
                 viewModel.getUserDetails(itDsUserId)
             }
         }
-    }
-
-    override fun getToolbarTitle(): String {
-        return "TestTitle"
     }
 
     override fun getLayoutManager(): LinearLayoutManager {

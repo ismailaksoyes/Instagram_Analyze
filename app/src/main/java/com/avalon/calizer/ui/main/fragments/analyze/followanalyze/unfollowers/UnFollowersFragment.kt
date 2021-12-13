@@ -32,6 +32,10 @@ class UnFollowersFragment : BaseFollowFragment<FragmentUnFollowersBinding>(Fragm
     val viewModel: UnFollowersViewModel  by viewModels()
 
 
+    override fun initCreated() {
+
+    }
+
     override fun getRecyclerView(): RecyclerView {
        return binding.rcFollowData
     }
@@ -48,9 +52,6 @@ class UnFollowersFragment : BaseFollowFragment<FragmentUnFollowersBinding>(Fragm
         }
     }
 
-    override fun getToolbarTitle(): String {
-        return "TestTitle"
-    }
 
     override fun getLayoutManager(): LinearLayoutManager {
         return LinearLayoutManager(context)

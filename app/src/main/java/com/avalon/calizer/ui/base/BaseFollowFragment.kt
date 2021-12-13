@@ -42,6 +42,7 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
     ): View? {
         _binding = inflate(inflater,container,false)
          createView()
+        initCreated()
         return binding.root
     }
 
@@ -54,16 +55,16 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
+
     }
 
-    open fun test3(){
-        val abc = 4
-    }
 
     private fun init(){
         setupRecyclerview()
         toolbarSettings()
     }
+
+    abstract fun initCreated()
 
     private fun createView(){
         recyclerView = getRecyclerView()
@@ -85,7 +86,6 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
 
     abstract fun updatePpItemReq(followData: FollowData)
 
-    abstract fun getToolbarTitle():String
 
     abstract fun getLayoutManager():LinearLayoutManager
 
@@ -112,11 +112,11 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
 
 
     private fun toolbarSettings(){
-        customToolbar.setTitle = getToolbarTitle()
         customToolbar.onBack.setOnClickListener {
             findNavController().popBackStack()
         }
     }
+
 
     private fun scrollListener() {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {

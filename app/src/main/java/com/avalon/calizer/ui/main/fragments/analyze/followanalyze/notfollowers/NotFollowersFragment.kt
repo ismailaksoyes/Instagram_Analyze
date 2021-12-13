@@ -34,6 +34,10 @@ class NotFollowersFragment : BaseFollowFragment<FragmentNoFollowBinding>(Fragmen
     val viewModel:NotFollowersViewModel  by viewModels()
 
 
+    override fun initCreated() {
+
+    }
+
     override fun getRecyclerView(): RecyclerView {
         return binding.rcFollowData
     }
@@ -48,10 +52,6 @@ class NotFollowersFragment : BaseFollowFragment<FragmentNoFollowBinding>(Fragmen
                 viewModel.getUserDetails(itDsUserId)
             }
         }
-    }
-
-    override fun getToolbarTitle(): String {
-        return "TestTitle"
     }
 
     override fun getLayoutManager(): LinearLayoutManager {

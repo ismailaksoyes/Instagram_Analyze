@@ -12,7 +12,6 @@ import com.avalon.calizer.data.local.profile.FollowersCount
 import com.avalon.calizer.data.repository.Repository
 import com.avalon.calizer.data.repository.RoomRepository
 import com.avalon.calizer.shared.localization.LocalizationManager
-import com.avalon.calizer.shared.model.LocalizationType.TEST_TITLE
 import com.avalon.calizer.utils.MySharedPreferences
 import com.avalon.calizer.utils.Resource
 import com.avalon.calizer.utils.toAccountsInfoData
@@ -72,7 +71,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun getStringTest():String{
-        return localizationManager.localization(TEST_TITLE)
+        return "localizationManager.localization(TEST_TITLE)"
     }
 
 

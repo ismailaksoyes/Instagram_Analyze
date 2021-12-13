@@ -34,6 +34,12 @@ import javax.inject.Inject
 class AllFollowingFragment : BaseFollowFragment<FragmentAllFollowingBinding>(FragmentAllFollowingBinding::inflate) {
 
    val viewModel: AllFollowingViewModel by viewModels()
+
+
+    override fun initCreated() {
+
+    }
+
     override fun getRecyclerView(): RecyclerView {
         return binding.rcFollowData
     }
@@ -50,9 +56,7 @@ class AllFollowingFragment : BaseFollowFragment<FragmentAllFollowingBinding>(Fra
         }
     }
 
-    override fun getToolbarTitle(): String {
-        return "TestTitle"
-    }
+
 
     override fun getLayoutManager(): LinearLayoutManager {
         return LinearLayoutManager(context)
