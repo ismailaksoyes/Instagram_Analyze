@@ -3,6 +3,7 @@ package com.avalon.calizer.ui.main.fragments.profile
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +42,7 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
 
 
     val viewModel: ProfileViewModel by viewModels()
+
 
 
     @Inject
@@ -211,6 +213,7 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
         }
 
     }
+
 
 
 }

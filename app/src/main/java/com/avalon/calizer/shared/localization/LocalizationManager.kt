@@ -10,6 +10,7 @@ class LocalizationManager @Inject constructor() {
 
    private var lastNewLocalization:HashMap<String,String> = HashMap()
 
+
     private  fun getLocalizationValue(key:String):String{
         val value = lastNewLocalization[key]
         return value?:key
