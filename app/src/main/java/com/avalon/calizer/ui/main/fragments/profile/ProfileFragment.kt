@@ -4,13 +4,8 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -20,10 +15,6 @@ import com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.FaceAnal
 import com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.PoseAnalyzeManager
 import com.avalon.calizer.utils.*
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
@@ -42,7 +33,6 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
 
     val viewModel: ProfileViewModel by viewModels()
 
-
     @Inject
     lateinit var faceAnalyzeManager: FaceAnalyzeManager
 
@@ -53,10 +43,6 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
     @Inject
     lateinit var prefs: MySharedPreferences
 
-    init {
-        Log.d("lifecycle", "-> initdata")
-    }
-
 
     private fun initData() {
         lifecycleScope.launch {
@@ -64,27 +50,35 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
             viewModel.getUserDetails()
             viewModel.getFollowersCount()
         }
-
-
     }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initData()
         observeUserFlow()
+       // observeProfilePhotoAnalyze()
+        test3()
+    }
 
-
+    fun test3(){
+        lifecycleScope.launch {
+            viewModel.poseScore2.collect {
+                val score = "${it}%"
+                binding.tvFaceOdds.text = score
+                binding.tvFaceOdds.isShimmerEnabled(false)
+                binding.tvFaceOdds.analyzeTextColor(it)
+            }
+        }
     }
 
 
 
-
     private fun observeUserFlow() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.userData.collect {
+        lifecycleScope.launch {
+            viewModel.userData.collectLatest {
                 when (it) {
-
                     is ProfileViewModel.UserDataFlow.Loading -> {
                         binding.tvProfileFollowers.isShimmerEnabled(true)
                         binding.tvProfileFollowing.isShimmerEnabled(true)
@@ -92,6 +86,7 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
                         binding.tvProfileUsername.isShimmerEnabled(true)
                     }
                     is ProfileViewModel.UserDataFlow.GetUserDetails -> {
+                        Log.d("OBSERVETEST", "observeUserFlow: ")
                         viewModel.setViewUserData(it.accountsInfoData)
                         createProfilePhoto(it.accountsInfoData.profilePic)
                         binding.tvProfileFollowers.isShimmerEnabled(false)
@@ -117,6 +112,7 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
     private fun createProfilePhoto(profileUrl: String?) {
         profileUrl?.let { itProfileUrl ->
             generateUrlToBitmap(itProfileUrl)
+            Log.d("OBSERVETEST", "GENERATEURLTOBITMAP: ")
         }
 
     }
@@ -136,6 +132,7 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
                         resource: Bitmap,
                         transition: Transition<in Bitmap>?
                     ) {
+                        Log.d("OBSERVETEST", "ONRESOURCEREADY: ")
                         getFaceScore(resource)
                         getPoseScore(resource)
                     }
@@ -146,19 +143,9 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
 
     fun getFaceScore(bitmap: Bitmap) {
         faceAnalyzeManager.setFaceAnalyzeBitmap(bitmap)
-        lifecycleScope.launchWhenStarted {
-            faceAnalyzeManager.faceAnalyze.collect { itFaceState ->
-                when (itFaceState) {
-                    is FaceAnalyzeManager.FaceAnalyzeState.Loading -> {
-                        binding.tvFaceOdds.isShimmerEnabled(true)
-                    }
-                    is FaceAnalyzeManager.FaceAnalyzeState.Success -> {
-                        viewModel.setFaceScore(itFaceState.score)
-                    }
-                }
-            }
-
-
+        binding.tvFaceOdds.isShimmerEnabled(true)
+        faceAnalyzeManager.result = {
+            viewModel.setFaceScore(it)
         }
 
     }
@@ -199,9 +186,10 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = viewModel
         navigateEvent()
-        observeProfilePhotoAnalyze()
-
+        //observeProfilePhotoAnalyze()
     }
+
+
 
 
     private fun navigateEvent() {
@@ -215,6 +203,7 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
         }
 
     }
+
 
 
 }

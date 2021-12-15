@@ -14,6 +14,8 @@ import com.avalon.calizer.R
 import com.avalon.calizer.data.local.follow.FollowData
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.databinding.FragmentUnFollowersBinding
+import com.avalon.calizer.shared.localization.LocalizationManager
+import com.avalon.calizer.shared.model.LocalizationType
 import com.avalon.calizer.ui.base.BaseFollowFragment
 import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.custom.CustomToolbar
@@ -32,6 +34,14 @@ class UnFollowersFragment : BaseFollowFragment<FragmentUnFollowersBinding>(Fragm
     val viewModel: UnFollowersViewModel  by viewModels()
 
 
+    @Inject
+    lateinit var localizationManager: LocalizationManager
+
+
+    override fun initCreated() {
+        binding.toolbar.setTitle = localizationManager.localization(LocalizationType.ANALYZE_UNFOLLOWERS_TITLE)
+    }
+
     override fun getRecyclerView(): RecyclerView {
        return binding.rcFollowData
     }
@@ -48,9 +58,6 @@ class UnFollowersFragment : BaseFollowFragment<FragmentUnFollowersBinding>(Fragm
         }
     }
 
-    override fun getToolbarTitle(): String {
-        return "TestTitle"
-    }
 
     override fun getLayoutManager(): LinearLayoutManager {
         return LinearLayoutManager(context)

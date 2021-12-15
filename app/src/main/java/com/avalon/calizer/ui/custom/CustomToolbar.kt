@@ -3,10 +3,13 @@ package com.avalon.calizer.ui.custom
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.databinding.BindingAdapter
 import com.avalon.calizer.databinding.CustomToolbarBinding
+import com.avalon.calizer.shared.localization.LocalizationManager
 
-class CustomToolbar(context: Context, attrs: AttributeSet? = null) :
+class CustomToolbar @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
     ConstraintLayout(context, attrs) {
      val binding: CustomToolbarBinding
 
@@ -23,6 +26,10 @@ class CustomToolbar(context: Context, attrs: AttributeSet? = null) :
         }
 
     val onBack = binding.ivBackBtn
+
+
+
+
 
 
 

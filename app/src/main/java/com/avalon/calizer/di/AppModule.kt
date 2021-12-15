@@ -11,12 +11,10 @@ import com.avalon.calizer.data.api.ApiHelperImpl
 import com.avalon.calizer.data.api.ApiInterceptor
 import com.avalon.calizer.data.api.ApiService
 import com.avalon.calizer.data.local.MyDatabase
+import com.avalon.calizer.shared.localization.LocalizationManager
 import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.dialog.StoryBottomSheet
-import com.avalon.calizer.utils.Constants
+import com.avalon.calizer.utils.*
 import com.avalon.calizer.utils.Constants.USER_DATABASE
-import com.avalon.calizer.utils.LoadingAnim
-import com.avalon.calizer.utils.Network
-import com.avalon.calizer.utils.NetworkConnectivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.mlkit.vision.face.FaceDetection
@@ -108,6 +106,14 @@ object AppModule {
     fun provideNetwork(@ApplicationContext context: Context):NetworkConnectivity{
         return Network(context)
     }
+
+    @Provides
+    @Singleton
+    fun provideLocalization(mySharedPreferences: MySharedPreferences) = LocalizationManager(mySharedPreferences)
+
+    @Singleton
+    @Provides
+    fun provideMySharedPreferences(sharedPreferences: SharedPreferences):MySharedPreferences = MySharedPreferences(sharedPreferences)
 
 
 

@@ -16,6 +16,7 @@ import com.avalon.calizer.R
 import com.avalon.calizer.data.local.AccountsData
 import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.databinding.FragmentAccountsBinding
+import com.avalon.calizer.shared.localization.LocalizationManager
 import com.avalon.calizer.ui.accounts.adapters.AccountsAdapter
 import com.avalon.calizer.ui.accounts.adapters.SelectedUserInterface
 import com.avalon.calizer.ui.base.BaseFragment
@@ -34,6 +35,9 @@ class AccountsFragment  : BaseFragment<FragmentAccountsBinding>(FragmentAccounts
 
     @Inject
     lateinit var prefs: MySharedPreferences
+
+    @Inject
+    lateinit var localizationManager: LocalizationManager
 
 
      val viewModel: AccountsViewModel by viewModels()
@@ -62,6 +66,7 @@ class AccountsFragment  : BaseFragment<FragmentAccountsBinding>(FragmentAccounts
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerview()
         observeAccountData()
+        binding.localization = localizationManager
 
         lifecycleScope.launchWhenCreated {
             viewModel.getAccountList()

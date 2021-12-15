@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.avalon.calizer.data.local.follow.FollowData
 import com.avalon.calizer.data.local.follow.FollowersData
+import com.avalon.calizer.shared.localization.LocalizationManager
 import com.avalon.calizer.ui.custom.CustomToolbar
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.FollowsAdapter
 import com.avalon.calizer.utils.followersToFollowList
@@ -42,6 +43,7 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
     ): View? {
         _binding = inflate(inflater,container,false)
          createView()
+        initCreated()
         return binding.root
     }
 
@@ -54,16 +56,17 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
+
     }
 
-    open fun test3(){
-        val abc = 4
-    }
 
     private fun init(){
         setupRecyclerview()
         toolbarSettings()
+        scrollListener()
     }
+
+    abstract fun initCreated()
 
     private fun createView(){
         recyclerView = getRecyclerView()
@@ -85,7 +88,6 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
 
     abstract fun updatePpItemReq(followData: FollowData)
 
-    abstract fun getToolbarTitle():String
 
     abstract fun getLayoutManager():LinearLayoutManager
 
@@ -112,23 +114,30 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
 
 
     private fun toolbarSettings(){
-        customToolbar.setTitle = getToolbarTitle()
         customToolbar.onBack.setOnClickListener {
             findNavController().popBackStack()
         }
     }
 
+
     private fun scrollListener() {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                recyclerView.layoutManager?.let { itLayoutManager ->
-                    if (!isLoading && itLayoutManager.itemCount == (layoutManager.findLastVisibleItemPosition() + 1) && itLayoutManager.itemCount > 1) {
-                        loadData(itLayoutManager.itemCount)
-                        isLoading = true
+                if (dy>0){
+                    recyclerView.layoutManager?.let { itLayoutManager->
+                        val visibleItemCount = itLayoutManager.childCount
+                        val totalItemCount = itLayoutManager.itemCount
+                        val pastVisibleItem = (itLayoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+
+                        if (!isLoading && visibleItemCount + pastVisibleItem >= totalItemCount){
+                            loadData(itLayoutManager.itemCount)
+                            isLoading = true
+                        }
                     }
 
                 }
+
             }
 
         })

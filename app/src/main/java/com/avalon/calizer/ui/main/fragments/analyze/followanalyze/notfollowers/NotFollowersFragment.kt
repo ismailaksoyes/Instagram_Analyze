@@ -14,6 +14,8 @@ import com.avalon.calizer.R
 import com.avalon.calizer.data.local.follow.FollowData
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.databinding.FragmentNoFollowBinding
+import com.avalon.calizer.shared.localization.LocalizationManager
+import com.avalon.calizer.shared.model.LocalizationType
 import com.avalon.calizer.ui.base.BaseFollowFragment
 import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.custom.CustomToolbar
@@ -34,6 +36,14 @@ class NotFollowersFragment : BaseFollowFragment<FragmentNoFollowBinding>(Fragmen
     val viewModel:NotFollowersViewModel  by viewModels()
 
 
+    @Inject
+    lateinit var localizationManager: LocalizationManager
+
+
+    override fun initCreated() {
+        binding.toolbar.setTitle = localizationManager.localization(LocalizationType.ANALYZE_NOTFOLLOWERS_TITLE)
+    }
+
     override fun getRecyclerView(): RecyclerView {
         return binding.rcFollowData
     }
@@ -48,10 +58,6 @@ class NotFollowersFragment : BaseFollowFragment<FragmentNoFollowBinding>(Fragmen
                 viewModel.getUserDetails(itDsUserId)
             }
         }
-    }
-
-    override fun getToolbarTitle(): String {
-        return "TestTitle"
     }
 
     override fun getLayoutManager(): LinearLayoutManager {

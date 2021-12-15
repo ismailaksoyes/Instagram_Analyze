@@ -2,9 +2,11 @@ package com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager
 
 import android.graphics.Bitmap
 import android.util.Log
+import com.avalon.calizer.data.local.follow.FollowData
 import com.avalon.calizer.data.local.profile.photoanalyze.FaceAnalyzeData
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.*
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
@@ -13,6 +15,10 @@ import javax.inject.Inject
 class FaceAnalyzeManager @Inject constructor(var detector: FaceDetector)  {
     private val _faceAnalyze = MutableStateFlow<FaceAnalyzeState>(FaceAnalyzeState.Loading)
     val faceAnalyze :StateFlow<FaceAnalyzeState> = _faceAnalyze
+    val test :MutableSharedFlow<String> = MutableSharedFlow()
+
+    var result: ((Int) -> Unit?)? = null
+
 
     sealed class FaceAnalyzeState{
         object Loading : FaceAnalyzeState()
@@ -24,13 +30,15 @@ class FaceAnalyzeManager @Inject constructor(var detector: FaceDetector)  {
         }
     }
 
+
      fun runImageFaceDetector(bitmap: Bitmap) {
         val image = InputImage.fromBitmap(bitmap, 0)
         detector.process(image).addOnSuccessListener { faces ->
             if (faces.size > 0) {
                 faceParts(faces[0])
             }else{
-                _faceAnalyze.value = FaceAnalyzeState.Success(0)
+                result?.invoke(0)
+               // _faceAnalyze.value = FaceAnalyzeState.Success(0)
             }
         }
             .addOnFailureListener { e ->
@@ -85,10 +93,12 @@ class FaceAnalyzeManager @Inject constructor(var detector: FaceDetector)  {
             if(itFaceData.getBridgeToChipRatio()) scoreCalc += 100/5
             if(itFaceData.getEyeProbabilityRatio()) scoreCalc += 100/5
             if (itFaceData.getIsSmiling()) scoreCalc += 100/5
-            _faceAnalyze.value = FaceAnalyzeState.Success(scoreCalc.toInt())
+            //_faceAnalyze.value = FaceAnalyzeState.Success(scoreCalc.toInt())
+            result?.invoke(scoreCalc.toInt())
 
         }
 
     }
+
 
 }
