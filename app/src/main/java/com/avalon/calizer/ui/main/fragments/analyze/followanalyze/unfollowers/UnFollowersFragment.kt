@@ -39,7 +39,7 @@ class UnFollowersFragment : BaseFollowFragment<FragmentUnFollowersBinding>(Fragm
 
 
     override fun initCreated() {
-        binding.toolbar.setTitle = localizationManager.localization(LocalizationType.ANALYZE_ALLFOLLOWING_TITLE)
+        binding.toolbar.setTitle = localizationManager.localization(LocalizationType.ANALYZE_UNFOLLOWERS_TITLE)
     }
 
     override fun getRecyclerView(): RecyclerView {

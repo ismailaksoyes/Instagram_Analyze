@@ -47,6 +47,8 @@ class ProfileViewModel @Inject constructor(
 
     val faceScore:MutableLiveData<Int> = MutableLiveData()
 
+    val poseScore2:MutableSharedFlow<Int> = MutableSharedFlow()
+
 
 
     sealed class UserDataFlow {
@@ -65,6 +67,10 @@ class ProfileViewModel @Inject constructor(
 
     fun setFaceScore(score:Int){
         faceScore.postValue(score)
+        viewModelScope.launch {
+            poseScore2.emit(score)
+        }
+
     }
 
     fun setPoseScore(score: Int){

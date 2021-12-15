@@ -63,6 +63,7 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
     private fun init(){
         setupRecyclerview()
         toolbarSettings()
+        scrollListener()
     }
 
     abstract fun initCreated()
@@ -123,13 +124,20 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                recyclerView.layoutManager?.let { itLayoutManager ->
-                    if (!isLoading && itLayoutManager.itemCount == (layoutManager.findLastVisibleItemPosition() + 1) && itLayoutManager.itemCount > 1) {
-                        loadData(itLayoutManager.itemCount)
-                        isLoading = true
+                if (dy>0){
+                    recyclerView.layoutManager?.let { itLayoutManager->
+                        val visibleItemCount = itLayoutManager.childCount
+                        val totalItemCount = itLayoutManager.itemCount
+                        val pastVisibleItem = (itLayoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+
+                        if (!isLoading && visibleItemCount + pastVisibleItem >= totalItemCount){
+                            loadData(itLayoutManager.itemCount)
+                            isLoading = true
+                        }
                     }
 
                 }
+
             }
 
         })

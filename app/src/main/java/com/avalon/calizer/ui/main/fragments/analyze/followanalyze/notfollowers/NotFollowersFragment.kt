@@ -41,7 +41,7 @@ class NotFollowersFragment : BaseFollowFragment<FragmentNoFollowBinding>(Fragmen
 
 
     override fun initCreated() {
-        binding.toolbar.setTitle = localizationManager.localization(LocalizationType.ANALYZE_ALLFOLLOWING_TITLE)
+        binding.toolbar.setTitle = localizationManager.localization(LocalizationType.ANALYZE_NOTFOLLOWERS_TITLE)
     }
 
     override fun getRecyclerView(): RecyclerView {

@@ -28,7 +28,6 @@ class AllFollowersViewModel @Inject constructor(
     private val followRepository: FollowRepository,
     private val repository: Repository,
     private val prefs: MySharedPreferences,
-    private val localizationManager: LocalizationManager
 ) :
     ViewModel() {
 
@@ -37,12 +36,6 @@ class AllFollowersViewModel @Inject constructor(
     val profileUrl = MutableSharedFlow<Pair<String,Long>>()
 
 
-    val title = MutableLiveData<String>()
-
-
-    init {
-        title.value = localizationManager.localization(ANALYZE_ALLFOLLOWERS_TITLE)
-    }
     suspend fun getFollowData(dataSize: Int) {
         viewModelScope.launch {
             val data = followRepository.getFollowers(dataSize)
