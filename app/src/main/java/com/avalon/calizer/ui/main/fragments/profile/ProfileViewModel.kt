@@ -2,10 +2,7 @@ package com.avalon.calizer.ui.main.fragments.profile
 
 import android.util.Log
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.data.local.profile.FollowersCount
@@ -43,11 +40,10 @@ class ProfileViewModel @Inject constructor(
 
     val followersCount: MutableLiveData<FollowersCount> = MutableLiveData<FollowersCount>()
 
+
     val poseScore:MutableLiveData<Int> = MutableLiveData()
 
     val faceScore:MutableLiveData<Int> = MutableLiveData()
-
-    val poseScore2:MutableSharedFlow<Int> = MutableSharedFlow()
 
 
 
@@ -57,6 +53,11 @@ class ProfileViewModel @Inject constructor(
         object Loading : UserDataFlow()
         data class GetUserDetails(var accountsInfoData: AccountsInfoData) : UserDataFlow()
 
+    }
+    fun initData(){
+        setUserDetailsLoading()
+        getUserDetails()
+        getFollowersCountVm()
     }
 
 
@@ -68,7 +69,7 @@ class ProfileViewModel @Inject constructor(
     fun setFaceScore(score:Int){
         faceScore.postValue(score)
         viewModelScope.launch {
-            poseScore2.emit(score)
+            poseScore.postValue(score)
         }
 
     }
@@ -85,7 +86,7 @@ class ProfileViewModel @Inject constructor(
     }
 
 
-    suspend fun getUserDetails() {
+     fun getUserDetails() {
         viewModelScope.launch {
             when (val response =
                 repository.getUserDetails(prefs.selectedAccount, prefs.allCookie)) {
@@ -110,7 +111,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    suspend fun getFollowersCount() {
+     fun getFollowersCountVm() {
         viewModelScope.launch {
             followersCount.postValue(
                 FollowersCount(

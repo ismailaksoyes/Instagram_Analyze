@@ -45,11 +45,7 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
 
 
     private fun initData() {
-        lifecycleScope.launch {
-            viewModel.setUserDetailsLoading()
-            viewModel.getUserDetails()
-            viewModel.getFollowersCount()
-        }
+       viewModel.initData()
     }
 
 
@@ -58,26 +54,15 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
         super.onCreate(savedInstanceState)
         initData()
         observeUserFlow()
+        Log.d("LIFECYCLE CREATE-> ", "onCreate:Profile ")
        // observeProfilePhotoAnalyze()
-        test3()
-    }
 
-    fun test3(){
-        lifecycleScope.launch {
-            viewModel.poseScore2.collect {
-                val score = "${it}%"
-                binding.tvFaceOdds.text = score
-                binding.tvFaceOdds.isShimmerEnabled(false)
-                binding.tvFaceOdds.analyzeTextColor(it)
-            }
-        }
     }
-
 
 
     private fun observeUserFlow() {
         lifecycleScope.launch {
-            viewModel.userData.collectLatest {
+            viewModel.userData.collect {
                 when (it) {
                     is ProfileViewModel.UserDataFlow.Loading -> {
                         binding.tvProfileFollowers.isShimmerEnabled(true)
@@ -86,7 +71,6 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
                         binding.tvProfileUsername.isShimmerEnabled(true)
                     }
                     is ProfileViewModel.UserDataFlow.GetUserDetails -> {
-                        Log.d("OBSERVETEST", "observeUserFlow: ")
                         viewModel.setViewUserData(it.accountsInfoData)
                         createProfilePhoto(it.accountsInfoData.profilePic)
                         binding.tvProfileFollowers.isShimmerEnabled(false)
@@ -186,7 +170,8 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = viewModel
         navigateEvent()
-        //observeProfilePhotoAnalyze()
+        observeProfilePhotoAnalyze()
+        Log.d("LIFECYCLE VIEW-> ", " Profile ")
     }
 
 

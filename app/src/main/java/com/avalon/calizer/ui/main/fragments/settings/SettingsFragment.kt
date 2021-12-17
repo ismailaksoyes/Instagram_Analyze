@@ -2,6 +2,7 @@ package com.avalon.calizer.ui.main.fragments.settings
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 
 import androidx.preference.PreferenceFragmentCompat
 import com.avalon.calizer.R
@@ -22,6 +23,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
 
 
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d("LIFECYCLE CREATE-> ", "onCreate:Profile ")
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

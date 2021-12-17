@@ -1,7 +1,7 @@
 object Versions {
     const val constraint_layout_version = "2.1.0"
     const val lifecycle_version = "2.3.1"
-    const val coroutines_version = "1.5.2"
+    const val coroutines_version = "1.6.0-RC3"
     const val kotlin_version = "1.5.21"
     const val hilt_version = "2.38.1"
     const val room_version = "2.3.0"
@@ -30,7 +30,7 @@ object Versions {
 
     const val activity_ktx_version = "1.3.1"
 
-    const val navigation_comp_version = "2.4.0-alpha01"
+    const val navigation_comp_version = "2.4.0-rc01"
 
     const val airbnb_lottie_version = "3.4.0"
 
@@ -39,7 +39,7 @@ object Versions {
     const val android_gradle_plugin_version = "7.0.2"
     const val gms_play_services_version = "4.3.8"
 
-    const val compose_version = "1.0.1"
+    const val compose_version = "1.0.5"
 
     const val coil_version = "1.4.0"
 
