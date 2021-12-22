@@ -31,15 +31,17 @@ class AllFollowersViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    val allFollowers =  MutableSharedFlow<List<FollowersData>>()
+    val allFollowers =  MutableStateFlow<List<FollowersData>>(listOf())
 
     val profileUrl = MutableSharedFlow<Pair<String,Long>>()
 
 
-    suspend fun getFollowData(dataSize: Int) {
+    init {
+        getFollowData()
+    }
+     fun getFollowData() {
         viewModelScope.launch {
-            val data = followRepository.getFollowers(dataSize)
-            allFollowers.emit(data)
+            allFollowers.emit(followRepository.getFollowers())
         }
 
     }

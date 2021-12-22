@@ -21,10 +21,6 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
 
-
-
-
-
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val prefs: MySharedPreferences,
@@ -33,8 +29,8 @@ class ProfileViewModel @Inject constructor(
     private val localizationManager: LocalizationManager
 ) : ViewModel() {
 
-    private val _userData = MutableSharedFlow<UserDataFlow>()
-    val userData: SharedFlow<UserDataFlow> = _userData
+    private val _userData = MutableStateFlow<UserDataFlow>(UserDataFlow.Empty)
+    val userData: StateFlow<UserDataFlow> = _userData
 
     val userModel: MutableLiveData<AccountsInfoData> = MutableLiveData<AccountsInfoData>()
 
@@ -45,7 +41,11 @@ class ProfileViewModel @Inject constructor(
 
     val faceScore:MutableLiveData<Int> = MutableLiveData()
 
-
+    init {
+        getUserDetails()
+        setUserDetailsLoading()
+        getFollowersCountVm()
+    }
 
     sealed class UserDataFlow {
         object Empty : UserDataFlow()
@@ -54,12 +54,6 @@ class ProfileViewModel @Inject constructor(
         data class GetUserDetails(var accountsInfoData: AccountsInfoData) : UserDataFlow()
 
     }
-    fun initData(){
-        setUserDetailsLoading()
-        getUserDetails()
-        getFollowersCountVm()
-    }
-
 
 
     fun setViewUserData(accountsInfoData: AccountsInfoData) {
@@ -68,10 +62,6 @@ class ProfileViewModel @Inject constructor(
 
     fun setFaceScore(score:Int){
         faceScore.postValue(score)
-        viewModelScope.launch {
-            poseScore.postValue(score)
-        }
-
     }
 
     fun setPoseScore(score: Int){

@@ -42,20 +42,23 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
         savedInstanceState: Bundle?
     ): View? {
         _binding = inflate(inflater,container,false)
-         createView()
+        createView()
+        init()
+       // loadData(0)
+        collectItem()
         initCreated()
+
         return binding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loadData(0)
-        collectItem()
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        init()
+
 
     }
 
@@ -63,7 +66,6 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
     private fun init(){
         setupRecyclerview()
         toolbarSettings()
-        scrollListener()
     }
 
     abstract fun initCreated()
@@ -83,6 +85,7 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
             this.context,
             LinearLayoutManager.VERTICAL, false
         )
+        recyclerView.setHasFixedSize(true)
 
     }
 
@@ -91,7 +94,6 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
 
     abstract fun getLayoutManager():LinearLayoutManager
 
-    abstract fun loadData(itemSize:Int)
 
     abstract  fun observePpItemRes(itemRes:(Pair<String,Long>)->Unit)
 
@@ -119,29 +121,6 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
         }
     }
 
-
-    private fun scrollListener() {
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy>0){
-                    recyclerView.layoutManager?.let { itLayoutManager->
-                        val visibleItemCount = itLayoutManager.childCount
-                        val totalItemCount = itLayoutManager.itemCount
-                        val pastVisibleItem = (itLayoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-
-                        if (!isLoading && visibleItemCount + pastVisibleItem >= totalItemCount){
-                            loadData(itLayoutManager.itemCount)
-                            isLoading = true
-                        }
-                    }
-
-                }
-
-            }
-
-        })
-    }
 
 
 

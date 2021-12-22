@@ -44,22 +44,6 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
     lateinit var prefs: MySharedPreferences
 
 
-    private fun initData() {
-       viewModel.initData()
-    }
-
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initData()
-        observeUserFlow()
-        Log.d("LIFECYCLE CREATE-> ", "onCreate:Profile ")
-       // observeProfilePhotoAnalyze()
-
-    }
-
-
     private fun observeUserFlow() {
         lifecycleScope.launch {
             viewModel.userData.collect {
@@ -131,6 +115,13 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
         faceAnalyzeManager.result = {
             viewModel.setFaceScore(it)
         }
+    }
+    fun getPoseScore(bitmap: Bitmap){
+        poseAnalyzeManager.setBodyAnalyzeBitmap(bitmap)
+        binding.tvPozeOdds.isShimmerEnabled(true)
+        poseAnalyzeManager.poseResult = {
+            viewModel.setPoseScore(it)
+        }
 
     }
 
@@ -149,21 +140,7 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
         }
     }
 
-    fun getPoseScore(bitmap: Bitmap) {
-        poseAnalyzeManager.setBodyAnalyzeBitmap(bitmap)
-        lifecycleScope.launchWhenStarted {
-            poseAnalyzeManager.bodyAnalyze.collect { itPoseState ->
-                when (itPoseState) {
-                    is PoseAnalyzeManager.BodyAnalyzeState.Loading -> {
-                        binding.tvPozeOdds.isShimmerEnabled(true)
-                    }
-                    is PoseAnalyzeManager.BodyAnalyzeState.Success -> {
-                        viewModel.setPoseScore(itPoseState.score)
-                    }
-                }
-            }
-        }
-    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -171,6 +148,7 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
         binding.viewmodel = viewModel
         navigateEvent()
         observeProfilePhotoAnalyze()
+        observeUserFlow()
         Log.d("LIFECYCLE VIEW-> ", " Profile ")
     }
 

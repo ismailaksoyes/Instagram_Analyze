@@ -64,11 +64,7 @@ class NotFollowersFragment : BaseFollowFragment<FragmentNoFollowBinding>(Fragmen
         return LinearLayoutManager(context)
     }
 
-    override fun loadData(itemSize: Int) {
-        lifecycleScope.launch {
-            viewModel.getFollowData(itemSize)
-        }
-    }
+
 
     override fun observePpItemRes(itemRes: (Pair<String, Long>) -> Unit) {
         lifecycleScope.launch {
