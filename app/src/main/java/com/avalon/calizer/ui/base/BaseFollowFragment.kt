@@ -44,25 +44,12 @@ abstract class BaseFollowFragment<viewBinding: ViewBinding>(private val inflate:
         _binding = inflate(inflater,container,false)
         createView()
         init()
-       // loadData(0)
         collectItem()
         initCreated()
-
         return binding.root
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
-    }
-
-
+    
     private fun init(){
         setupRecyclerview()
         toolbarSettings()

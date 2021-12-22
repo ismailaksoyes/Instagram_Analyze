@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.analyze.AnalyzeViewData
 import com.avalon.calizer.databinding.AnalyzeFragmentBinding
+import com.avalon.calizer.shared.localization.LocalizationManager
+import com.avalon.calizer.shared.model.LocalizationType
 import com.avalon.calizer.ui.accounts.adapters.AccountsAdapter
 import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.utils.AnalyzeAdapterType
@@ -25,19 +27,15 @@ class AnalyzeFragment : BaseFragment<AnalyzeFragmentBinding>(AnalyzeFragmentBind
     private val viewsAdapter by lazy { AnalyzeViewAdapter() }
     val viewModel: AnalyzeViewModel by viewModels()
 
+    @Inject
+    lateinit var localizationManager: LocalizationManager
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val resources = view.resources
+        binding.localization = localizationManager
         setupRecyclerview()
-        viewsAdapter.setData(viewList(resources))
-        Log.d("LIFECYCLE VIEW-> ", " Analyze ")
-
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d("LIFECYCLE CREATE-> ", "onCreate:Profile ")
+        viewsAdapter.setData(createViewList())
     }
 
 
@@ -51,41 +49,45 @@ class AnalyzeFragment : BaseFragment<AnalyzeFragmentBinding>(AnalyzeFragmentBind
 
     }
 
-    fun viewList(resources: Resources): ArrayList<AnalyzeViewData> {
+    private fun getTextLocalization(key:String):String{
+        return localizationManager.localization(key)
+    }
+
+    private fun createViewList(): ArrayList<AnalyzeViewData> {
         return arrayListOf(
             AnalyzeViewData(
                 uri = R.drawable.ic_story_ico,
-                title = resources.getString(R.string.analyze_title_stories),
+                title = getTextLocalization(LocalizationType.ANALYZE_STORYANALYZE_TITLE),
                 type = R.id.action_destination_analyze_to_storyFragment
             ),
             AnalyzeViewData(
                 uri = R.drawable.ic_resolution,
-                title = resources.getString(R.string.analyze_title_posts),
+                title = getTextLocalization(LocalizationType.ANALYZE_ALLPOSTS_TITLE),
                 type = AnalyzeAdapterType.ALL_POST.type
             ),
             AnalyzeViewData(
                 uri = R.drawable.ic_follow_poz_ico,
-                title = resources.getString(R.string.analyze_title_all_followers),
+                title =  getTextLocalization(LocalizationType.ANALYZE_ALLFOLLOWERS_TITLE),
                 type = R.id.action_destination_analyze_to_allFollowersFragment
             ),
             AnalyzeViewData(
                 uri = R.drawable.ic_follow_poz_ico,
-                title = resources.getString(R.string.analyze_title_all_following),
+                title =  getTextLocalization(LocalizationType.ANALYZE_ALLFOLLOWING_TITLE),
                 type = R.id.action_destination_analyze_to_allFollowingFragment
             ),
             AnalyzeViewData(
                 uri = R.drawable.ic_follow_poz_ico,
-                title = resources.getString(R.string.analyze_title_new_followers),
+                title =  getTextLocalization(LocalizationType.ANALYZE_NEWFOLLOWERS_TITLE),
                 type = R.id.action_destination_analyze_to_newFollowersFragment
             ),
             AnalyzeViewData(
                 uri = R.drawable.ic_follow_neg_ico,
-                title = "Takipten Çıkanlar",
+                title =  getTextLocalization(LocalizationType.ANALYZE_UNFOLLOWERS_TITLE),
                 type = R.id.action_destination_analyze_to_unFollowersFragment
             ),
             AnalyzeViewData(
                 uri = R.drawable.ic_follow_neg_ico,
-                title = "Takip Etmeyenler",
+                title =  getTextLocalization(LocalizationType.ANALYZE_NOTFOLLOWERS_TITLE),
                 type = R.id.action_destination_analyze_to_noFollowFragment
             )
 

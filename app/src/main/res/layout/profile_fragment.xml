@@ -5,6 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.main.fragments.profile.ProfileFragment">
     <data>
+        <import type="com.avalon.calizer.shared.model.LocalizationType"/>
+        <variable
+            name="localization"
+            type="com.avalon.calizer.shared.localization.LocalizationManager" />
         <variable
             name="viewmodel"
             type="com.avalon.calizer.ui.main.fragments.profile.ProfileViewModel" />
@@ -115,7 +119,8 @@
             style="@style/text_medium_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Followers"
+            tools:text="Followers"
+            android:text="@{localization.localization(LocalizationType.PROFILE_FOLLOWERS_TITLE)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/tv_profile_followers"
             app:layout_constraintStart_toStartOf="@id/tv_profile_followers"
@@ -126,7 +131,8 @@
             style="@style/text_medium_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Following"
+            tools:text="Following"
+            android:text="@{localization.localization(LocalizationType.PROFILE_FOLLOWING_TITLE)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/tv_profile_following"
             app:layout_constraintStart_toStartOf="@id/tv_profile_following"
@@ -137,7 +143,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
            style="@style/text_medium_style"
-            android:text="Posts"
+            tools:text="Posts"
+            android:text="@{localization.localization(LocalizationType.PROFILE_POSTS_TITLE)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/tv_profile_posts"
             app:layout_constraintStart_toStartOf="@id/tv_profile_posts"
@@ -151,7 +158,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="Profil Analizi"
+        tools:text="Profil Analizi"
+        android:text="@{localization.localization(LocalizationType.PROFILE_ANALYZE_TITLE)}"
         app:layout_constraintTop_toBottomOf="@id/cv_profile_image"
         app:layout_constraintBottom_toTopOf="@id/cv_new_followers"
         app:layout_constraintStart_toStartOf="parent" />
@@ -209,7 +217,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                style="@style/text_medium_style"
-                android:text="Yeni Takipciler"
+                tools:text="Yeni Takipciler"
+                android:text="@{localization.localization(LocalizationType.PROFILE_NEWFOLLOWERS_TITLE)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_followers_plus" />
@@ -268,7 +277,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_unfollowers_plus"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:text="Kaybedilen Takipciler"
+                tools:text="Kaybedilen Takipciler"
+                android:text="@{localization.localization(LocalizationType.PROFILE_LOSTFOLLOWERS_TITLE)}"
                 style="@style/text_medium_style"
                 />
 
@@ -284,7 +294,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="Profil Resmi Analizi"
+        tools:text="Profil Resmi Analizi"
+        android:text="@{localization.localization(LocalizationType.PROFILE_PHOTOANALYZE_TITLE)}"
        app:layout_constraintTop_toBottomOf="@id/cv_new_followers"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/cv_profile_analyze_image" />
@@ -316,7 +327,8 @@
         app:layout_constraintTop_toTopOf="@id/cv_profile_analyze_image"
       app:layout_constraintStart_toEndOf="@id/cv_profile_analyze_image"
         app:layout_constraintEnd_toStartOf="@id/tv_calc_odd_poze"
-        android:text="Yuz Orani"
+        tools:text="Yuz Orani"
+        android:text="@{localization.localization(LocalizationType.PROFILE_FACERATE_TITLE)}"
         style="@style/text_medium_style"/>
     <View
         android:id="@+id/view_face_title"
@@ -344,7 +356,8 @@
         app:layout_constraintStart_toEndOf="@id/tv_calc_odd_title"
         app:layout_constraintTop_toTopOf="@id/tv_calc_odd_title"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="Poz Orani"
+        tools:text="Poz Orani"
+        android:text="@{localization.localization(LocalizationType.PROFILE_POSERATE_TITLE)}"
         style="@style/text_medium_style"
         android:layout_marginEnd="20dp"/>
     <View
@@ -393,7 +406,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:text="Fotograf Karsilastir"
+            tools:text="Fotograf Karsilastir"
+            android:text="@{localization.localization(LocalizationType.PROFILE_PHOTOCOMP_TITLE)}"
             style="@style/text_medium_style"/>
         <ImageView
             android:layout_width="20dp"

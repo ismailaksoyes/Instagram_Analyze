@@ -50,12 +50,6 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
 
     private lateinit var layoutManager: LinearLayoutManager
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        observeData()
-        initData()
-
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -66,13 +60,11 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
         observeUserStoryPk()
         observeUserHighlightPk()
         actionNavigate()
-    }
-
-    private fun observeData() {
+        observeLoadingState()
+        observeOpenStoryData()
         observeStoryData()
-
-
     }
+
 
     private fun setupRecyclerview() {
         binding.rcStoryView.adapter = StoryAdapter { itStoryId ->
@@ -86,6 +78,33 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
 
     }
 
+    private fun observeOpenStoryData(){
+        lifecycleScope.launch {
+            viewModel.openStory.collectLatest {
+                when(it){
+                    is StoryViewModel.OpenStoryState.Success->{
+                        viewModel.setLoadingState(false)
+                        setStoryViews(it.storyList)
+                    }
+                    is StoryViewModel.OpenStoryState.Error->{
+                        Toast.makeText(requireContext(), "HIKAYE YOK", Toast.LENGTH_SHORT).show()
+                        viewModel.setLoadingState(false)
+                    }
+                }
+
+
+            }
+        }
+    }
+
+    private fun observeLoadingState(){
+        lifecycleScope.launch {
+            viewModel.loading.collectLatest {
+                isLoadingDialog(it)
+            }
+        }
+    }
+
     private fun observeStoryData() {
         lifecycleScope.launch {
             viewModel.storyList.collect {
@@ -93,17 +112,9 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
                     is StoryViewModel.StoryState.Success -> {
                         setAdapterStory(it.storyData)
                     }
-                    is StoryViewModel.StoryState.OpenStory -> {
-                        viewModel.setLoadingState(false)
-                        setStoryViews(it.urlList)
-                    }
-                    is StoryViewModel.StoryState.Loading -> {
-                        isLoadingDialog(it.isLoading)
-                    }
                     is StoryViewModel.StoryState.Error -> {
                         Toast.makeText(requireContext(), "HIKAYE YOK", Toast.LENGTH_SHORT).show()
-                        viewModel.setLoadingState(false)
-
+                      //  viewModel.setLoadingState(false)
                     }
                 }
 
@@ -153,14 +164,6 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
         lifecycleScope.launch {
             viewModel.getStory(userId)
         }
-    }
-
-
-    private fun initData() {
-        lifecycleScope.launch {
-            viewModel.getStoryList()
-        }
-
     }
 
     private fun isLoadingDialog(isStatus: Boolean) {

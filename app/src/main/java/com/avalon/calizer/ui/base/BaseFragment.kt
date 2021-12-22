@@ -19,9 +19,6 @@ abstract class BaseFragment<viewBinding: ViewBinding>(private val inflate: Infla
     protected val binding get() = _binding
 
 
-    open class abc(surname:String){
-        val name =  "sdfsdfsd"
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
