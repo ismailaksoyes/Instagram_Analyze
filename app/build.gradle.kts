@@ -47,7 +47,6 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
-        compose = true
     }
 
     compileOptions {
@@ -66,11 +65,8 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion =  "1.0.1"
-    }
 
-
+    
 }
 
 dependencies {
@@ -83,7 +79,7 @@ dependencies {
     implementation(androidxsupportDependencies.legacy_support)
     //Kotlin components
     implementation(kotlinDependencies.kotlin)
-    implementation(kotlinDependencies.coroutines_core)
+   // implementation(kotlinDependencies.coroutines_core)
     implementation(kotlinDependencies.coroutines)
     //retrofit
     implementation(retrofitDependencies.retrofit2)
@@ -132,20 +128,9 @@ dependencies {
     implementation(lottieDependencies.lottie)
 
 
-    //compose
-    implementation(composeDependencies.composeFoundation)
-    implementation(composeDependencies.composeLiveData)
-    implementation(composeDependencies.composeMaterial)
-    implementation(composeDependencies.composeMaterialIconsCore)
-    implementation(composeDependencies.composeMaterialIconsExtended)
-    implementation(composeDependencies.composeRxJava)
-    implementation(composeDependencies.composeUi)
-    implementation(composeDependencies.composeUiToolkit)
-    implementation(composeDependencies.composeUiToolkit)
-
     //coil
     implementation(coilDependencies.coil)
-    implementation("androidx.core:core-ktx:1.6.0")
+    implementation("androidx.core:core-ktx:1.7.0")
 
 
 }

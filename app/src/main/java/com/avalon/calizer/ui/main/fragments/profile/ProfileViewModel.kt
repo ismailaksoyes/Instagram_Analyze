@@ -2,10 +2,7 @@ package com.avalon.calizer.ui.main.fragments.profile
 
 import android.util.Log
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.data.local.profile.FollowersCount
@@ -24,10 +21,6 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
 
-
-
-
-
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val prefs: MySharedPreferences,
@@ -36,20 +29,23 @@ class ProfileViewModel @Inject constructor(
     private val localizationManager: LocalizationManager
 ) : ViewModel() {
 
-    private val _userData = MutableSharedFlow<UserDataFlow>()
-    val userData: SharedFlow<UserDataFlow> = _userData
+    private val _userData = MutableStateFlow<UserDataFlow>(UserDataFlow.Empty)
+    val userData: StateFlow<UserDataFlow> = _userData
 
     val userModel: MutableLiveData<AccountsInfoData> = MutableLiveData<AccountsInfoData>()
 
     val followersCount: MutableLiveData<FollowersCount> = MutableLiveData<FollowersCount>()
 
+
     val poseScore:MutableLiveData<Int> = MutableLiveData()
 
     val faceScore:MutableLiveData<Int> = MutableLiveData()
 
-    val poseScore2:MutableSharedFlow<Int> = MutableSharedFlow()
-
-
+    init {
+        getUserDetails()
+        setUserDetailsLoading()
+        getFollowersCountVm()
+    }
 
     sealed class UserDataFlow {
         object Empty : UserDataFlow()
@@ -60,17 +56,12 @@ class ProfileViewModel @Inject constructor(
     }
 
 
-
     fun setViewUserData(accountsInfoData: AccountsInfoData) {
         userModel.value = accountsInfoData
     }
 
     fun setFaceScore(score:Int){
         faceScore.postValue(score)
-        viewModelScope.launch {
-            poseScore2.emit(score)
-        }
-
     }
 
     fun setPoseScore(score: Int){
@@ -85,7 +76,7 @@ class ProfileViewModel @Inject constructor(
     }
 
 
-    suspend fun getUserDetails() {
+     fun getUserDetails() {
         viewModelScope.launch {
             when (val response =
                 repository.getUserDetails(prefs.selectedAccount, prefs.allCookie)) {
@@ -110,7 +101,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    suspend fun getFollowersCount() {
+     fun getFollowersCountVm() {
         viewModelScope.launch {
             followersCount.postValue(
                 FollowersCount(

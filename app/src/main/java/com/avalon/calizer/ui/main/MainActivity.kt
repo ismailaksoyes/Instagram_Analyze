@@ -96,6 +96,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+
     private fun firstOpen() {
         if (getFirstData) {
             getFirstData = false

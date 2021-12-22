@@ -8,12 +8,12 @@
             name="localization"
             type="com.avalon.calizer.shared.localization.LocalizationManager" />
     </data>
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:background="?colorPrimary"
         app:cardElevation="@dimen/card_elevation_mid"
-        android:clipToPadding="false"
         >
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

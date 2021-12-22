@@ -18,8 +18,8 @@ class FollowRepository @Inject constructor(
         return prefs.allCookie
     }
 
-    suspend fun getFollowers(position: Int): List<FollowersData> {
-        return roomDao.getFollowersData(position, prefs.selectedAccount)
+    suspend fun getFollowers(): List<FollowersData> {
+        return roomDao.getFollowersData(prefs.selectedAccount)
     }
 
     suspend fun getFollowing(position: Int):List<FollowingData>{

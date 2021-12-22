@@ -13,15 +13,14 @@ import javax.inject.Inject
 
 
 class PoseAnalyzeManager @Inject constructor(private val poseDetector: PoseDetector) {
-    private val _bodyAnalyze = MutableStateFlow<BodyAnalyzeState>(BodyAnalyzeState.Loading)
-    val bodyAnalyze : StateFlow<BodyAnalyzeState> = _bodyAnalyze
+
     private var _imageBit: Bitmap? = null
 
-    sealed class BodyAnalyzeState{
-        object Loading : BodyAnalyzeState()
-        data class PoseDataSuccess(val poseManagerData: PoseManagerData):BodyAnalyzeState()
-        data class Success(val score:Int) : BodyAnalyzeState()
-    }
+    var poseResult: ((Int) -> Unit?)? = null
+
+    var poseDataResult:((PoseManagerData)->Unit?)? = null
+
+
 
 
     fun setBodyAnalyzeBitmap(bitmap: Bitmap?){
@@ -66,9 +65,11 @@ class PoseAnalyzeManager @Inject constructor(private val poseDetector: PoseDetec
                 rightAnkle = getXorYCoordinates(itResult.getPoseLandmark(PoseLandmark.RIGHT_ANKLE))
             )
             val poseManagerData = PoseManagerData(poseData = poseData,image = _imageBit)
-            _bodyAnalyze.value = BodyAnalyzeState.PoseDataSuccess(poseManagerData)
+            poseDataResult?.invoke(poseManagerData)
             createCalculateData(poseData)
-        }?: kotlin.run { _bodyAnalyze.value = BodyAnalyzeState.Success(0) }
+        }?: kotlin.run {
+            poseResult?.invoke(0)
+        }
     }
     private fun poseDetectorProcess(bitmapImage: Bitmap){
          poseDetector.process(InputImage.fromBitmap(bitmapImage, 0)).addOnSuccessListener { result->
@@ -104,7 +105,8 @@ class PoseAnalyzeManager @Inject constructor(private val poseDetector: PoseDetec
             pointList.add(index,scoreTemp)
         }
         val score = pointList.maxOrNull() ?:0f
-        _bodyAnalyze.value = BodyAnalyzeState.Success(score.toInt())
+       // _bodyAnalyze.value = BodyAnalyzeState.Success(score.toInt())
+        poseResult?.invoke(score.toInt())
     }
 
 

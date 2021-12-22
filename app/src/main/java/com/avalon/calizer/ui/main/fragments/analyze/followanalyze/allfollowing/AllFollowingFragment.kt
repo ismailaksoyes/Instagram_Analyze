@@ -68,11 +68,7 @@ class AllFollowingFragment : BaseFollowFragment<FragmentAllFollowingBinding>(Fra
         return LinearLayoutManager(context)
     }
 
-    override fun loadData(itemSize: Int) {
-        lifecycleScope.launch {
-            viewModel.getFollowData(itemSize)
-        }
-    }
+
 
     override fun observePpItemRes(itemRes: (Pair<String, Long>) -> Unit) {
         lifecycleScope.launch {

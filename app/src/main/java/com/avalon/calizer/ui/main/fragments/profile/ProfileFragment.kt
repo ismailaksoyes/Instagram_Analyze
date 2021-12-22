@@ -44,40 +44,9 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
     lateinit var prefs: MySharedPreferences
 
 
-    private fun initData() {
-        lifecycleScope.launch {
-            viewModel.setUserDetailsLoading()
-            viewModel.getUserDetails()
-            viewModel.getFollowersCount()
-        }
-    }
-
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initData()
-        observeUserFlow()
-       // observeProfilePhotoAnalyze()
-        test3()
-    }
-
-    fun test3(){
-        lifecycleScope.launch {
-            viewModel.poseScore2.collect {
-                val score = "${it}%"
-                binding.tvFaceOdds.text = score
-                binding.tvFaceOdds.isShimmerEnabled(false)
-                binding.tvFaceOdds.analyzeTextColor(it)
-            }
-        }
-    }
-
-
-
     private fun observeUserFlow() {
         lifecycleScope.launch {
-            viewModel.userData.collectLatest {
+            viewModel.userData.collect {
                 when (it) {
                     is ProfileViewModel.UserDataFlow.Loading -> {
                         binding.tvProfileFollowers.isShimmerEnabled(true)
@@ -86,7 +55,6 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
                         binding.tvProfileUsername.isShimmerEnabled(true)
                     }
                     is ProfileViewModel.UserDataFlow.GetUserDetails -> {
-                        Log.d("OBSERVETEST", "observeUserFlow: ")
                         viewModel.setViewUserData(it.accountsInfoData)
                         createProfilePhoto(it.accountsInfoData.profilePic)
                         binding.tvProfileFollowers.isShimmerEnabled(false)
@@ -147,6 +115,13 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
         faceAnalyzeManager.result = {
             viewModel.setFaceScore(it)
         }
+    }
+    fun getPoseScore(bitmap: Bitmap){
+        poseAnalyzeManager.setBodyAnalyzeBitmap(bitmap)
+        binding.tvPozeOdds.isShimmerEnabled(true)
+        poseAnalyzeManager.poseResult = {
+            viewModel.setPoseScore(it)
+        }
 
     }
 
@@ -165,28 +140,16 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
         }
     }
 
-    fun getPoseScore(bitmap: Bitmap) {
-        poseAnalyzeManager.setBodyAnalyzeBitmap(bitmap)
-        lifecycleScope.launchWhenStarted {
-            poseAnalyzeManager.bodyAnalyze.collect { itPoseState ->
-                when (itPoseState) {
-                    is PoseAnalyzeManager.BodyAnalyzeState.Loading -> {
-                        binding.tvPozeOdds.isShimmerEnabled(true)
-                    }
-                    is PoseAnalyzeManager.BodyAnalyzeState.Success -> {
-                        viewModel.setPoseScore(itPoseState.score)
-                    }
-                }
-            }
-        }
-    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = viewModel
         navigateEvent()
-        //observeProfilePhotoAnalyze()
+        observeProfilePhotoAnalyze()
+        observeUserFlow()
+        Log.d("LIFECYCLE VIEW-> ", " Profile ")
     }
 
 
