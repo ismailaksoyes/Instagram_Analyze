@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.viewModels
+import com.avalon.calizer.shared.localization.LocalizationManager
 import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.utils.LoadingAnim
 import com.avalon.calizer.utils.NavDataType
@@ -50,10 +51,14 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
 
     private lateinit var layoutManager: LinearLayoutManager
 
+    @Inject
+    lateinit var localizationManager: LocalizationManager
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         layoutManager = LinearLayoutManager(view.context)
+        binding.localization = localizationManager
         binding.rcStoryView.layoutManager = layoutManager
         loadingAnim = LoadingAnim(childFragmentManager)
         setupRecyclerview()
@@ -189,7 +194,6 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
             findNavController().navigate(action)
         }
         binding.toolbar.onBack.setOnClickListener {
-            val action = StoryFragmentDirections.actionStoryFragmentToDestinationAnalyze()
             findNavController().navigateUp()
         }
     }

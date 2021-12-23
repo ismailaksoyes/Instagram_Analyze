@@ -16,6 +16,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import javax.inject.Inject
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.avalon.calizer.shared.localization.LocalizationManager
+import com.avalon.calizer.shared.model.LocalizationType
 import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.StoryViewModel
 import com.avalon.calizer.utils.Keyboard
 import com.avalon.calizer.utils.LoadingAnim
@@ -33,6 +35,9 @@ class StoryBottomSheet : BottomSheetDialogFragment() {
 
 
     lateinit var loadingAnim: LoadingAnim
+
+    @Inject
+    lateinit var localizationManager: LocalizationManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +61,7 @@ class StoryBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.localization = localizationManager
         Keyboard.show(view)
         observeUserPk()
         showStoryClick()
@@ -71,7 +76,7 @@ class StoryBottomSheet : BottomSheetDialogFragment() {
                 viewModel.setLoadingPk()
                 getUserPk()
             }else{
-                binding.etInputLayout.error = "not null"
+                binding.etInputLayout.error = localizationManager.localization(LocalizationType.GENERAL_CONNOTBEEMTY_TITLE)
             }
 
         }
@@ -148,7 +153,7 @@ class StoryBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun noSuchUser() {
-        binding.etInputLayout.error = "nosuchuser"
+        binding.etInputLayout.error = localizationManager.localization(LocalizationType.GENERAL_NOSUCHUSER_TITLE)
         view?.let { itView ->
             Keyboard.show(itView)
         }

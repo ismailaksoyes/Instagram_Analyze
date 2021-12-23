@@ -33,5 +33,17 @@ object  LocalizationType {
      const val PHOTO_UPLOADBTN_TITLE = "photo_uploadbtn_title"
      const val PHOTO_RESULTFACE_TITLE = "photo_resultface_title"
      const val PHOTO_RESULTPOSE_TITLE = "photo_resultpose_title"
+     const val STORY_STORYLIST_TITLE = "story_storylist_title"
+     const val STORY_STORYSEARCH_TITLE = "story_storysearch_title"
+     const val STORY_ONEFEATURED_TITLE = "story_onefeatured_title"
+     const val STORY_NOTFOLLOWWATCH_TITLE = "story_notfollowwatch_title"
+     const val STORYVIEWS_SECRETWATCH_TITLE = "storyviews_secretwatch_title"
+     const val GENERAL_ENTERUSERNAME_TITLE = "general_enterusername_title"
+     const val STORYVIEWS_WATCHSTORY_BTN = "storyviews_watchstory_btn"
+     const val STORYVIEWS_ONEFEATURED_TITLE = "storyviews_onefeatured_title"
+     const val GENERAL_NOSUCHUSER_TITLE = "general_nosuchuser_title"
+     const val GENERAL_CONNOTBEEMTY_TITLE = "general_connotbeemty_title"
+     const val GENERAL_GALLERY_PERMISSIONS = "general_gallery_permissions"
+     const val GENERAL_OK_UPPERCASE = "general_ok_uppercase"
 
 }

@@ -1,50 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.main.fragments.profile.photocmp.photopager.PhotoPagerFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <data>
+        <import type="com.avalon.calizer.shared.model.LocalizationType"/>
+        <variable
+            name="localization"
+            type="com.avalon.calizer.shared.localization.LocalizationManager" />
+
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_top_photoAnalyze"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="?colorPrimary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:padding="12dp"
-        android:elevation="12dp">
-        <ImageView
-            android:id="@+id/iv_back_btn"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:src="@drawable/ic_back_ico"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="GUNCELLENECEK"
-            style="@style/text_medium_style"
+        android:layout_height="match_parent"
+        tools:context=".ui.main.fragments.profile.photocmp.photopager.PhotoPagerFragment">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_top_photoAnalyze"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="?colorPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:padding="12dp"
+            android:elevation="12dp">
+            <ImageView
+                android:id="@+id/iv_back_btn"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:src="@drawable/ic_back_ico"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Result"
+                android:text="@{localization.localization(LocalizationType.PHOTO_TOOLBAR_TITLE)}"
+                style="@style/text_medium_style"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_viewPager_PhotoAnalyze"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_top_photoAnalyze"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:clipChildren="false"
+            android:foregroundGravity="center"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vp_viewPager_PhotoAnalyze"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_top_photoAnalyze"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:clipToPadding="false"
-        android:overScrollMode="never"
-        android:clipChildren="false"
-        android:foregroundGravity="center"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
