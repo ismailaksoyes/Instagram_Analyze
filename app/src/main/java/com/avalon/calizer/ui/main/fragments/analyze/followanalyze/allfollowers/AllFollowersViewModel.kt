@@ -43,7 +43,6 @@ class AllFollowersViewModel @Inject constructor(
         viewModelScope.launch {
             allFollowers.emit(followRepository.getFollowers())
         }
-
     }
 
     private suspend fun updateNewProfilePicture(userId:Long, url:String){

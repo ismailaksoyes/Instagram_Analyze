@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.viewModels
+import com.avalon.calizer.shared.localization.LocalizationManager
 import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.utils.LoadingAnim
 import com.avalon.calizer.utils.NavDataType
@@ -50,29 +51,25 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
 
     private lateinit var layoutManager: LinearLayoutManager
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        observeData()
-        initData()
+    @Inject
+    lateinit var localizationManager: LocalizationManager
 
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         layoutManager = LinearLayoutManager(view.context)
+        binding.localization = localizationManager
         binding.rcStoryView.layoutManager = layoutManager
         loadingAnim = LoadingAnim(childFragmentManager)
         setupRecyclerview()
         observeUserStoryPk()
         observeUserHighlightPk()
         actionNavigate()
-    }
-
-    private fun observeData() {
+        observeLoadingState()
+        observeOpenStoryData()
         observeStoryData()
-
-
     }
+
 
     private fun setupRecyclerview() {
         binding.rcStoryView.adapter = StoryAdapter { itStoryId ->
@@ -86,6 +83,33 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
 
     }
 
+    private fun observeOpenStoryData(){
+        lifecycleScope.launch {
+            viewModel.openStory.collectLatest {
+                when(it){
+                    is StoryViewModel.OpenStoryState.Success->{
+                        viewModel.setLoadingState(false)
+                        setStoryViews(it.storyList)
+                    }
+                    is StoryViewModel.OpenStoryState.Error->{
+                        Toast.makeText(requireContext(), "HIKAYE YOK", Toast.LENGTH_SHORT).show()
+                        viewModel.setLoadingState(false)
+                    }
+                }
+
+
+            }
+        }
+    }
+
+    private fun observeLoadingState(){
+        lifecycleScope.launch {
+            viewModel.loading.collectLatest {
+                isLoadingDialog(it)
+            }
+        }
+    }
+
     private fun observeStoryData() {
         lifecycleScope.launch {
             viewModel.storyList.collect {
@@ -93,17 +117,9 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
                     is StoryViewModel.StoryState.Success -> {
                         setAdapterStory(it.storyData)
                     }
-                    is StoryViewModel.StoryState.OpenStory -> {
-                        viewModel.setLoadingState(false)
-                        setStoryViews(it.urlList)
-                    }
-                    is StoryViewModel.StoryState.Loading -> {
-                        isLoadingDialog(it.isLoading)
-                    }
                     is StoryViewModel.StoryState.Error -> {
                         Toast.makeText(requireContext(), "HIKAYE YOK", Toast.LENGTH_SHORT).show()
-                        viewModel.setLoadingState(false)
-
+                      //  viewModel.setLoadingState(false)
                     }
                 }
 
@@ -155,14 +171,6 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
         }
     }
 
-
-    private fun initData() {
-        lifecycleScope.launch {
-            viewModel.getStoryList()
-        }
-
-    }
-
     private fun isLoadingDialog(isStatus: Boolean) {
         if (isStatus) {
             loadingAnim.showDialog()
@@ -186,7 +194,6 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
             findNavController().navigate(action)
         }
         binding.toolbar.onBack.setOnClickListener {
-            val action = StoryFragmentDirections.actionStoryFragmentToDestinationAnalyze()
             findNavController().navigateUp()
         }
     }

@@ -25,8 +25,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val prefs: MySharedPreferences,
     private val repository: Repository,
-    private val roomDb: RoomRepository,
-    private val localizationManager: LocalizationManager
+    private val roomDb: RoomRepository
 ) : ViewModel() {
 
     private val _userData = MutableStateFlow<UserDataFlow>(UserDataFlow.Empty)
@@ -40,6 +39,7 @@ class ProfileViewModel @Inject constructor(
     val poseScore:MutableLiveData<Int> = MutableLiveData()
 
     val faceScore:MutableLiveData<Int> = MutableLiveData()
+
 
     init {
         getUserDetails()

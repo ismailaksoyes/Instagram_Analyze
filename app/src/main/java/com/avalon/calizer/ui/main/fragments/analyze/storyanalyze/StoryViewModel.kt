@@ -21,37 +21,38 @@ class StoryViewModel @Inject constructor(
     val prefs: MySharedPreferences
 ) : ViewModel() {
 
-    private val _storyData = MutableStateFlow<StoryState>(StoryState.Empty)
-    val storyData: StateFlow<StoryState> = _storyData
-
-    private val _storyList = MutableSharedFlow<StoryState>()
-    val storyList:SharedFlow<StoryState> = _storyList
+    init {
+        getStoryList()
+    }
 
 
+    private val _storyList = MutableStateFlow<StoryState>(StoryState.Empty)
+    val storyList:StateFlow<StoryState> = _storyList
+
+    private val _openStory = MutableSharedFlow<OpenStoryState>()
+    val openStory :SharedFlow<OpenStoryState> = _openStory
+
+    val loading = MutableSharedFlow<Boolean>()
+
+
+    sealed class OpenStoryState{
+        data class Success(val storyList:List<String>):OpenStoryState()
+        object Error : OpenStoryState()
+    }
 
     sealed class StoryState {
         object Empty : StoryState()
         data class Success(val storyData: List<StoryData>) : StoryState()
-        data class ClickItem(val userId: Long) : StoryState()
-        data class OpenStory(val urlList: List<String>) : StoryState()
-        data class OpenHg(val urlList: List<String>) : StoryState()
-        data class Loading(val isLoading: Boolean) : StoryState()
         object Error : StoryState()
     }
 
-
-    fun setClickItemId(userId: Long) {
-        _storyData.value = StoryState.ClickItem(userId)
-    }
-
     fun setLoadingState(isLoading: Boolean) {
-       // _storyData.value = StoryState.Loading(isLoading)
         viewModelScope.launch {
-            _storyList.emit(StoryState.Loading(isLoading = isLoading))
+            loading.emit(isLoading)
         }
     }
 
-    suspend fun getStoryList() {
+     private fun getStoryList() {
         viewModelScope.launch {
             when (val response = repository.getReelsTray(prefs.allCookie)) {
                 is Resource.Success -> {
@@ -68,10 +69,8 @@ class StoryViewModel @Inject constructor(
                             )
                         }
                         if (storyList.size > 0) {
-                           // _storyData.value = StoryState.Success(storyList)
                             _storyList.emit(StoryState.Success(storyList))
                         } else {
-                           // _storyData.value = StoryState.Error
                             _storyList.emit(StoryState.Error)
                         }
                     } ?: kotlin.run {  _storyList.emit(StoryState.Error) }
@@ -103,20 +102,15 @@ class StoryViewModel @Inject constructor(
                             }
                         }
                         if (urlList.isNotEmpty()) {
-                            //_storyData.value = StoryState.OpenStory(urlList)
-                            _storyList.emit(StoryState.OpenStory(urlList))
+                            _openStory.emit(OpenStoryState.Success(urlList))
                         } else {
-                            //_storyData.value = StoryState.Error
-                            _storyList.emit(StoryState.Error)
+                            _openStory.emit(OpenStoryState.Error)
                         }
 
-
-                    } ?: kotlin.run {  _storyList.emit(StoryState.Error) }
+                    } ?: kotlin.run {  _openStory.emit(OpenStoryState.Error) }
                 }
                 is Resource.Error -> {
-                   // _storyData.value = StoryState.Error
-                    _storyList.emit(StoryState.Error)
-                    //val errorcode = response.errorCode
+                    _openStory.emit(OpenStoryState.Error)
                 }
             }
 
@@ -140,19 +134,15 @@ class StoryViewModel @Inject constructor(
                             }
                         }
                         if (urlList.isNotEmpty()) {
-                            //_storyData.value = StoryState.OpenStory(urlList)
-                            _storyList.emit(StoryState.OpenStory(urlList))
+                            _openStory.emit(OpenStoryState.Success(urlList))
                         } else {
-                           // _storyData.value = StoryState.Error
-                            _storyList.emit(StoryState.Error)
+                           _openStory.emit(OpenStoryState.Error)
                         }
 
-                    }?: kotlin.run {  _storyList.emit(StoryState.Error) }
+                    }?: kotlin.run {  _openStory.emit(OpenStoryState.Error) }
                 }
                 is Resource.Error -> {
-                   // _storyData.value = StoryState.Error
-                    _storyList.emit(StoryState.Error)
-                   // val errorcode = response.errorCode
+                    _openStory.emit(OpenStoryState.Error)
                 }
             }
         }

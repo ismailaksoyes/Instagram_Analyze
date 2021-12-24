@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.avalon.calizer.databinding.ProfileFragmentBinding
+import com.avalon.calizer.shared.localization.LocalizationManager
 import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.FaceAnalyzeManager
 import com.avalon.calizer.ui.main.fragments.profile.photocmp.photopager.PoseAnalyzeManager
@@ -38,6 +39,9 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
 
     @Inject
     lateinit var poseAnalyzeManager: PoseAnalyzeManager
+
+    @Inject
+    lateinit var localizationManager: LocalizationManager
 
 
     @Inject
@@ -146,10 +150,10 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = viewModel
+        binding.localization = localizationManager
         navigateEvent()
         observeProfilePhotoAnalyze()
         observeUserFlow()
-        Log.d("LIFECYCLE VIEW-> ", " Profile ")
     }
 
 

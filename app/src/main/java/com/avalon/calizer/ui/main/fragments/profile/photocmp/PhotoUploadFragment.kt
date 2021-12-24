@@ -21,6 +21,8 @@ import androidx.navigation.fragment.findNavController
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 import com.avalon.calizer.databinding.FragmentPhotoUploadBinding
+import com.avalon.calizer.shared.localization.LocalizationManager
+import com.avalon.calizer.shared.model.LocalizationType
 import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.utils.showSnackBar
 import com.google.android.material.snackbar.Snackbar
@@ -32,6 +34,9 @@ import javax.inject.Inject
 class PhotoUploadFragment : BaseFragment<FragmentPhotoUploadBinding>(FragmentPhotoUploadBinding::inflate) {
 
    val viewModel: PhotoAnalyzeViewModel by viewModels()
+
+    @Inject
+    lateinit var localizationManager: LocalizationManager
 
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -81,6 +86,7 @@ class PhotoUploadFragment : BaseFragment<FragmentPhotoUploadBinding>(FragmentPho
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.localization = localizationManager
         initData()
     }
 
@@ -127,9 +133,9 @@ class PhotoUploadFragment : BaseFragment<FragmentPhotoUploadBinding>(FragmentPho
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) -> {
                 binding.clTopComp.showSnackBar(
-                    "PERMISSION REQUIRED",
+                    localizationManager.localization(LocalizationType.GENERAL_GALLERY_PERMISSIONS),
                     Snackbar.LENGTH_INDEFINITE,
-                    "OK"
+                    localizationManager.localization(LocalizationType.GENERAL_OK_UPPERCASE)
                 ) {
                     requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
                 }

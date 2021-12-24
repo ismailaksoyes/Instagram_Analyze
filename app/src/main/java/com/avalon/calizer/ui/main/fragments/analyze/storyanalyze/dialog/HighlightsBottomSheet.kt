@@ -14,6 +14,8 @@ import com.avalon.calizer.R
 import com.avalon.calizer.data.local.story.HighlightsData
 import com.avalon.calizer.data.local.story.StoryData
 import com.avalon.calizer.databinding.BottomSheetHighlightsStoryBinding
+import com.avalon.calizer.shared.localization.LocalizationManager
+import com.avalon.calizer.shared.model.LocalizationType
 import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.adapter.HighlightsAdapter
 import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.adapter.StoryAdapter
 import com.avalon.calizer.utils.Keyboard
@@ -40,6 +42,9 @@ class HighlightsBottomSheet : BottomSheetDialogFragment() {
     lateinit var highlightsAdapter: HighlightsAdapter
 
     private lateinit var layoutManager: LinearLayoutManager
+
+    @Inject
+    lateinit var localizationManager: LocalizationManager
     
 
 
@@ -66,6 +71,7 @@ class HighlightsBottomSheet : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         layoutManager = LinearLayoutManager(view.context)
         binding.rcHighlights.layoutManager = layoutManager
+        binding.localization = localizationManager
         binding.etInput.requestFocus()
         Keyboard.show(view)
         observeUserPk()
@@ -80,7 +86,7 @@ class HighlightsBottomSheet : BottomSheetDialogFragment() {
                 viewModel.setLoadingPk()
                 getUserPk()
             }else{
-                binding.etInputLayout.error = "not null"
+                binding.etInputLayout.error = localizationManager.localization(LocalizationType.GENERAL_CONNOTBEEMTY_TITLE)
             }
 
         }
@@ -140,13 +146,9 @@ class HighlightsBottomSheet : BottomSheetDialogFragment() {
                         isLoadingDialog(true)
                     }
                     is HighlightsSheetViewModel.UserPkState.Success -> {
-                        //isLoadingDialog(false)
                         viewModel.getHighlights(it.userId)
-
-                       // openStory(it.userId)
                     }
                     is HighlightsSheetViewModel.UserPkState.ClickItem->{
-                        Log.d("CLICKITEM",it.highlightsId)
                         openStory(it.highlightsId)
                     }
                     is HighlightsSheetViewModel.UserPkState.Highlights->{
@@ -176,7 +178,7 @@ class HighlightsBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun noSuchUser() {
-        binding.etInputLayout.error = "nosuchuser"
+        binding.etInputLayout.error = localizationManager.localization(LocalizationType.GENERAL_NOSUCHUSER_TITLE)
         view?.let { itView ->
             Keyboard.show(itView)
         }

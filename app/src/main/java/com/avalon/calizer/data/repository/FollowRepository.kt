@@ -22,24 +22,24 @@ class FollowRepository @Inject constructor(
         return roomDao.getFollowersData(prefs.selectedAccount)
     }
 
-    suspend fun getFollowing(position: Int):List<FollowingData>{
-        return roomDao.getFollowingData(position,prefs.selectedAccount)
+    suspend fun getFollowing():List<FollowingData>{
+        return roomDao.getFollowingData(prefs.selectedAccount)
     }
 
-    suspend fun getUnFollowers(position: Int): List<FollowersData> {
-        return roomDao.getUnFollowers(prefs.selectedAccount, position)
+    suspend fun getUnFollowers(): List<FollowersData> {
+        return roomDao.getUnFollowers(prefs.selectedAccount)
     }
 
     suspend fun getUnFollowersCount():Long{
         return roomDao.getUnFollowersCount(prefs.selectedAccount)
     }
 
-    suspend fun getNotFollowers(position: Int): List<FollowersData> {
-        return roomDao.getNotFollowers(prefs.selectedAccount, position)
+    suspend fun getNotFollowers(): List<FollowersData> {
+        return roomDao.getNotFollowers(prefs.selectedAccount)
     }
 
-    suspend fun getNewFollowers(position: Int):List<FollowersData>{
-        return roomDao.getNewFollowers(prefs.selectedAccount,position)
+    suspend fun getNewFollowers():List<FollowersData>{
+        return roomDao.getNewFollowers(prefs.selectedAccount)
     }
     suspend fun getNewFollowersCount():Long{
         return roomDao.getNewFollowersCount(prefs.selectedAccount)

@@ -11,13 +11,19 @@ import androidx.viewpager2.widget.ViewPager2
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 import com.avalon.calizer.databinding.FragmentPhotoPagerBinding
+import com.avalon.calizer.shared.localization.LocalizationManager
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class PhotoPagerFragment : Fragment() {
     private val args: PhotoPagerFragmentArgs by navArgs()
     private lateinit var binding: FragmentPhotoPagerBinding
     private lateinit var viewPager:ViewPager2
     private lateinit var analyzeData: List<PhotoAnalyzeData>
+
+    @Inject
+    lateinit var localizationManager: LocalizationManager
 
 
     override fun onCreateView(
@@ -31,6 +37,7 @@ class PhotoPagerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.localization = localizationManager
         createViewPagerAdapter()
         backBtn()
     }
@@ -64,7 +71,7 @@ class PhotoPagerFragment : Fragment() {
 
     private fun backBtn(){
         binding.ivBackBtn.setOnClickListener {
-            it.findNavController().navigate(R.id.action_photoPagerFragment_to_photoUploadFragment)
+            it.findNavController().popBackStack()
         }
     }
 

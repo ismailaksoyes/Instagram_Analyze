@@ -17,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.profile.photoanalyze.PhotoAnalyzeData
 import com.avalon.calizer.databinding.FragmentPhotoAnalyzeBinding
+import com.avalon.calizer.shared.localization.LocalizationManager
 import com.avalon.calizer.ui.main.fragments.profile.photocmp.PhotoAnalyzeViewModel
 import com.avalon.calizer.utils.Utils
 import com.avalon.calizer.utils.analyzeTextColor
@@ -46,6 +47,9 @@ class PhotoAnalyzeFragment : Fragment() {
     @Inject
     lateinit var faceAnalyzeManager: FaceAnalyzeManager
 
+    @Inject
+    lateinit var localizationManager: LocalizationManager
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,6 +62,7 @@ class PhotoAnalyzeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.localization = localizationManager
         initData()
     }
 
@@ -70,6 +75,7 @@ class PhotoAnalyzeFragment : Fragment() {
         val analyzeData = requireArguments().getParcelable<PhotoAnalyzeData>(ARG_DATA)
         setFaceScore()
         setPoseScore()
+        setBitmap()
         analyzeData?.let { itAnalyzeData->
             itAnalyzeData.uri?.let { itUri->
                 binding.tvFaceRate.isShimmerEnabled(true)
@@ -117,16 +123,21 @@ class PhotoAnalyzeFragment : Fragment() {
 
     }
 
-    private fun setPoseScore() {
+
+    private fun setBitmap(){
         poseAnalyzeManager.poseDataResult = {
             Utils.ifTwoNotNull(it.poseData,it.image){itPose,itImage->
                 binding.cvCanvas.setPoseData(
                     poseData = itPose,
                     bitmap = itImage
                 )
+                binding.cvCanvas.invalidate()
 
             }
         }
+    }
+
+    private fun setPoseScore() {
         poseAnalyzeManager.poseResult = { itScore->
             binding.tvPoseRate.isShimmerEnabled(false)
             binding.tvPoseRate.analyzeTextColor(itScore)

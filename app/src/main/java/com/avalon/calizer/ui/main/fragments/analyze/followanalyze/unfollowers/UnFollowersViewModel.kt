@@ -20,14 +20,17 @@ import javax.inject.Inject
 class UnFollowersViewModel  @Inject constructor (private val followRepository: FollowRepository, private val repository: Repository,private val prefs:MySharedPreferences):
     ViewModel(){
 
-    val allUnFollowers =  MutableSharedFlow<List<FollowersData>>()
+    val allUnFollowers =  MutableStateFlow<List<FollowersData>>(listOf())
 
     val profileUrl = MutableSharedFlow<Pair<String,Long>>()
 
+    init {
+        getFollowData()
+    }
 
-    suspend fun getFollowData(dataSize: Int) {
+     fun getFollowData() {
         viewModelScope.launch {
-            val data = followRepository.getUnFollowers(dataSize)
+            val data = followRepository.getUnFollowers()
             allUnFollowers.emit(data)
         }
 
