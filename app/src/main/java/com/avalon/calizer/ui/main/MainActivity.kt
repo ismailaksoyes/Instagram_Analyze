@@ -68,7 +68,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigation.setOnItemReselectedListener {
 
-            Log.d("MenuItemId-> ", "initNavController: ${it.itemId}")
             when (it.itemId) {
                 R.id.profile -> {
                     navController.popBackStack(R.id.destination_profile, false)
@@ -83,17 +82,18 @@ class MainActivity : AppCompatActivity() {
 
         }
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.destination_profile || destination.id == R.id.destination_analyze || destination.id == R.id.destination_settings) {
+
+            if (shouldNotBeSeen.contains(destination.id)){
+                binding.bottomNavigation.visibility = View.GONE
+            }else{
                 binding.bottomNavigation.visibility = View.VISIBLE
                 firstOpen()
-            } else if (destination.id == R.id.destination_accounts) {
-                binding.bottomNavigation.visibility = View.GONE
             }
-
         }
 
-
     }
+
+    private val shouldNotBeSeen =  listOf<Int>(R.id.storyViewsFragment,R.id.splashFragment,R.id.destination_accounts,R.id.destination_tutorial)
 
 
 

@@ -24,10 +24,12 @@ class NotFollowersViewModel @Inject constructor (private val followRepository: F
 
     val profileUrl = MutableSharedFlow<Pair<String,Long>>()
 
-
-    suspend fun getFollowData(dataSize: Int) {
+    init {
+        getFollowData()
+    }
+     fun getFollowData() {
         viewModelScope.launch {
-            val data = followRepository.getNotFollowers(dataSize)
+            val data = followRepository.getNotFollowers()
             allNotFollowers.emit(data)
         }
 

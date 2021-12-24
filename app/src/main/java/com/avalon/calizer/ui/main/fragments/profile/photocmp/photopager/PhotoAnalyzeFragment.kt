@@ -75,6 +75,7 @@ class PhotoAnalyzeFragment : Fragment() {
         val analyzeData = requireArguments().getParcelable<PhotoAnalyzeData>(ARG_DATA)
         setFaceScore()
         setPoseScore()
+        setBitmap()
         analyzeData?.let { itAnalyzeData->
             itAnalyzeData.uri?.let { itUri->
                 binding.tvFaceRate.isShimmerEnabled(true)
@@ -122,16 +123,21 @@ class PhotoAnalyzeFragment : Fragment() {
 
     }
 
-    private fun setPoseScore() {
+
+    private fun setBitmap(){
         poseAnalyzeManager.poseDataResult = {
             Utils.ifTwoNotNull(it.poseData,it.image){itPose,itImage->
                 binding.cvCanvas.setPoseData(
                     poseData = itPose,
                     bitmap = itImage
                 )
+                binding.cvCanvas.invalidate()
 
             }
         }
+    }
+
+    private fun setPoseScore() {
         poseAnalyzeManager.poseResult = { itScore->
             binding.tvPoseRate.isShimmerEnabled(false)
             binding.tvPoseRate.analyzeTextColor(itScore)

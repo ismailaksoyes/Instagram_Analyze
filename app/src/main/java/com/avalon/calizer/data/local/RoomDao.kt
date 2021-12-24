@@ -50,8 +50,8 @@ interface RoomDao {
     @Query("SELECT * FROM followers_table WHERE analyzeUserId=:userId ORDER BY dsUserID ASC")
     suspend fun getAllFollowers(userId: Long):List<FollowersData>
 
-    @Query("SELECT * FROM following_table WHERE analyzeUserId=:userId ORDER BY dsUserID ASC LIMIT 12 OFFSET :position")
-    suspend fun getFollowingData(position: Int, userId: Long): List<FollowingData>
+    @Query("SELECT * FROM following_table WHERE analyzeUserId=:userId ORDER BY dsUserID ASC")
+    suspend fun getFollowingData(userId: Long): List<FollowingData>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addFollowersData(followData: List<FollowersData>)
@@ -78,17 +78,17 @@ interface RoomDao {
     suspend fun updateFollowingSaveType(userId: Long)
 
 
-    @Query("SELECT * FROM old_followers_table WHERE analyzeUserId=:userId AND uniqueType IN(SELECT uniqueType FROM old_followers_table WHERE analyzeUserId=:userId EXCEPT SELECT uniqueType FROM followers_table WHERE analyzeUserId=:userId)  ORDER BY dsUserID ASC LIMIT 12 OFFSET :position")
-    suspend fun getUnFollowers(userId: Long, position: Int): List<FollowersData>
+    @Query("SELECT * FROM old_followers_table WHERE analyzeUserId=:userId AND uniqueType IN(SELECT uniqueType FROM old_followers_table WHERE analyzeUserId=:userId EXCEPT SELECT uniqueType FROM followers_table WHERE analyzeUserId=:userId)  ORDER BY dsUserID ASC")
+    suspend fun getUnFollowers(userId: Long): List<FollowersData>
 
     @Query("SELECT Count() FROM old_followers_table WHERE analyzeUserId=:userId AND uniqueType IN(SELECT uniqueType FROM old_followers_table WHERE analyzeUserId=:userId EXCEPT SELECT uniqueType FROM followers_table WHERE analyzeUserId=:userId)")
     suspend fun getUnFollowersCount(userId: Long): Long
 
-    @Query("SELECT * FROM following_table WHERE  analyzeUserId=:userId AND uniqueType IN (SELECT uniqueType FROM following_table WHERE analyzeUserId=:userId EXCEPT SELECT uniqueType FROM followers_table WHERE analyzeUserId=:userId)   ORDER BY dsUserID ASC LIMIT 12 OFFSET :position")
-    suspend fun getNotFollowers(userId: Long, position: Int): List<FollowersData>
+    @Query("SELECT * FROM following_table WHERE  analyzeUserId=:userId AND uniqueType IN (SELECT uniqueType FROM following_table WHERE analyzeUserId=:userId EXCEPT SELECT uniqueType FROM followers_table WHERE analyzeUserId=:userId)   ORDER BY dsUserID ASC")
+    suspend fun getNotFollowers(userId: Long): List<FollowersData>
 
-    @Query("SELECT * FROM followers_table WHERE analyzeUserId=:userId AND uniqueType IN (SELECT uniqueType FROM followers_table WHERE analyzeUserId=:userId  EXCEPT SELECT uniqueType FROM old_followers_table WHERE analyzeUserId=:userId ) ORDER BY dsUserID ASC LIMIT 12 OFFSET :position")
-    suspend fun getNewFollowers(userId: Long, position: Int): List<FollowersData>
+    @Query("SELECT * FROM followers_table WHERE analyzeUserId=:userId AND uniqueType IN (SELECT uniqueType FROM followers_table WHERE analyzeUserId=:userId  EXCEPT SELECT uniqueType FROM old_followers_table WHERE analyzeUserId=:userId ) ORDER BY dsUserID ASC")
+    suspend fun getNewFollowers(userId: Long): List<FollowersData>
 
     @Query("SELECT Count() FROM followers_table WHERE analyzeUserId=:userId AND uniqueType IN (SELECT uniqueType FROM followers_table WHERE analyzeUserId=:userId  EXCEPT SELECT uniqueType FROM old_followers_table WHERE analyzeUserId=:userId )")
     suspend fun getNewFollowersCount(userId: Long): Long

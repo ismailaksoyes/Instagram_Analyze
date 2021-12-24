@@ -21,14 +21,17 @@ import javax.inject.Inject
 @HiltViewModel
 class NewFollowersViewModel @Inject constructor (private val followRepository: FollowRepository, private val repository: Repository,private val prefs:MySharedPreferences):ViewModel(){
 
-    val allFollowers =  MutableSharedFlow<List<FollowersData>>()
+    val allFollowers =  MutableStateFlow<List<FollowersData>>(listOf())
 
     val profileUrl = MutableSharedFlow<Pair<String,Long>>()
 
+    init {
+        getFollowData()
+    }
 
-    suspend fun getFollowData(dataSize: Int) {
+     fun getFollowData() {
         viewModelScope.launch {
-            val data = followRepository.getNewFollowers(dataSize)
+            val data = followRepository.getNewFollowers()
             allFollowers.emit(data)
         }
 
