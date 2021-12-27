@@ -17,6 +17,9 @@ interface RoomDao {
     @Query("UPDATE followers_table SET profilePicUrl = :url WHERE dsUserID=:userId")
     suspend fun updateFollowersNewProfilePicture(userId:Long,url:String)
 
+    @Query("DELETE FROM accounts_table WHERE dsUserID = :userId")
+    suspend fun deleteAccount(userId: Long)
+
     @Query("UPDATE following_table SET profilePicUrl = :url WHERE dsUserID=:userId")
     suspend fun updateFollowingNewProfilePicture(userId:Long,url:String)
 
@@ -98,5 +101,6 @@ interface RoomDao {
 
     @Query("SELECT Count() FROM followers_table WHERE analyzeUserId=:userId")
     suspend fun getFollowersCount(userId: Long):Long
+
 
 }

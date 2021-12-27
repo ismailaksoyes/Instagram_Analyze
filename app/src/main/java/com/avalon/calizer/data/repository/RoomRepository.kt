@@ -31,6 +31,10 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao,private va
         roomDao.addAccount(accountsData)
     }
 
+    suspend fun deleteAccount(){
+        roomDao.deleteAccount(prefs.selectedAccount)
+    }
+
    suspend fun getAccounts(): List<AccountsData> {
         return roomDao.getAllAccountDetails
     }
@@ -39,8 +43,8 @@ class RoomRepository @Inject constructor(private val roomDao: RoomDao,private va
         return roomDao.getAllFollowers(prefs.selectedAccount)
     }
 
-    suspend fun getFollowingData(position:Int):List<FollowingData>{
-        return roomDao.getFollowingData(position,prefs.selectedAccount)
+    suspend fun getFollowingData():List<FollowingData>{
+        return roomDao.getFollowingData(prefs.selectedAccount)
     }
 
     suspend fun updateAccount(profile_Pic : String?, user_name:String?, ds_userId:String?){

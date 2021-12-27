@@ -17,10 +17,13 @@ import com.avalon.calizer.data.local.AccountsData
 import com.avalon.calizer.data.local.profile.AccountsInfoData
 import com.avalon.calizer.databinding.FragmentAccountsBinding
 import com.avalon.calizer.shared.localization.LocalizationManager
+import com.avalon.calizer.shared.model.LocalizationType
 import com.avalon.calizer.ui.accounts.adapters.AccountsAdapter
 import com.avalon.calizer.ui.accounts.adapters.SelectedUserInterface
 import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.utils.MySharedPreferences
+import com.avalon.calizer.utils.showError
+import com.avalon.calizer.utils.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -100,6 +103,9 @@ class AccountsFragment  : BaseFragment<FragmentAccountsBinding>(FragmentAccounts
 
                     }
                     is AccountsViewModel.LastAccountsState.Error -> {
+                        binding.shmView.stopShimmer()
+                        binding.shmView.visibility = View.GONE
+                        showError(localizationManager.localization(LocalizationType.ACCOUNTS_RELOGINREQUIRED_ERROR))
                     }
                     is AccountsViewModel.LastAccountsState.UpdateData -> {
                         viewModel.getLastAccountList()

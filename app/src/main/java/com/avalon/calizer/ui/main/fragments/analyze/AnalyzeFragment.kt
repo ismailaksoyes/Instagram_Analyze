@@ -63,7 +63,7 @@ class AnalyzeFragment : BaseFragment<AnalyzeFragmentBinding>(AnalyzeFragmentBind
             AnalyzeViewData(
                 uri = R.drawable.ic_resolution,
                 title = getTextLocalization(LocalizationType.ANALYZE_ALLPOSTS_TITLE),
-                type = AnalyzeAdapterType.ALL_POST.type
+                type = R.id.action_destination_analyze_to_allPostFragment
             ),
             AnalyzeViewData(
                 uri = R.drawable.ic_follow_poz_ico,
