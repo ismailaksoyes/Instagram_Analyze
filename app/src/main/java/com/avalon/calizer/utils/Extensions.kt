@@ -62,7 +62,6 @@ fun ImageView.loadPostUrl(url: String?) {
     Glide.with(context)
         .load(url)
         .error(shimmerDrawable)
-        .centerCrop()
         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
         .placeholder(shimmerDrawable)
         .into(this)
