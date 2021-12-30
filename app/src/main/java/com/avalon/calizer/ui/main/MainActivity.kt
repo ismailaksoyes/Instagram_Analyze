@@ -34,6 +34,7 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -119,6 +120,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
 
     private fun observeSaveFollowData() {
         lifecycleScope.launchWhenCreated {

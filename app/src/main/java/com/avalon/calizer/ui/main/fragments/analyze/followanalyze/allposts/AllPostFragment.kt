@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +29,8 @@ class AllPostFragment : BaseFragment<FragmentAllPostBinding>(FragmentAllPostBind
 
     val list1 = ArrayList<PostViewData>()
     val list2 = ArrayList<PostViewData>()
+
+    private val viewModel:AllPostViewModel by viewModels()
 
     @Inject
     lateinit var localizationManager: LocalizationManager

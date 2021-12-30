@@ -16,5 +16,6 @@ interface ApiHelper{
     suspend fun getHighlightsStory(highlightId:String,cookies: String?):Resource<ApiResponseHighlightsStory>
     suspend fun getStoryViewer(storyId:String,cookies: String?,maxId:String?):Resource<ApiResponseStoryViewer>
     suspend fun getTranslation(url:String,lang:String):Resource<HashMap<String,String>>
+    suspend fun getUserAllMedia(url:String,cookies: String?):Resource<ApiResponseUserMedia>
     //usercase update details
 }

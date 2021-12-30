@@ -109,6 +109,12 @@ interface ApiService {
         @Query("max_id")maxId: String?
     ):Response<ApiResponseStoryViewer>
 
+    @GET()
+    suspend fun getUserAllMedia(
+        @Url url:String,
+        @Header("Cookie") cookies: String?
+    ):Response<ApiResponseUserMedia>
+
 
 
 }
