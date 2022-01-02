@@ -25,6 +25,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/cl_comment"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@color/background_shadow"
             android:padding="8dp">
             <ImageView
                 android:id="@+id/iv_like"
@@ -43,8 +44,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 style="@style/text_medium_uncolored_style"
                 android:textColor="@color/white"
+               android:shadowColor="@color/red"
                 android:layout_marginStart="5dp"
-                tools:text="4k"/>
+                tools:text="4ddk"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,6 +55,7 @@
             android:layout_height="wrap_content"
            app:layout_constraintStart_toEndOf="@+id/cl_like"
             app:layout_constraintEnd_toEndOf="parent"
+            android:background="@color/background_shadow"
             app:layout_constraintBottom_toBottomOf="parent"
             android:padding="8dp">
             <ImageView

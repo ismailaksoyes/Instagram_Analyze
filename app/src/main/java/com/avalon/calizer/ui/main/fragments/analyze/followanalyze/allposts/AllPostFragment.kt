@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,18 +18,17 @@ import com.avalon.calizer.shared.localization.LocalizationManager
 import com.avalon.calizer.shared.model.LocalizationType
 import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allposts.adapter.AllPostAdapter
+import com.avalon.calizer.utils.AllPostState
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class AllPostFragment : BaseFragment<FragmentAllPostBinding>(FragmentAllPostBinding::inflate) {
 
-
-
-    val list1 = ArrayList<PostViewData>()
-    val list2 = ArrayList<PostViewData>()
 
     private val viewModel:AllPostViewModel by viewModels()
 
@@ -40,20 +40,38 @@ class AllPostFragment : BaseFragment<FragmentAllPostBinding>(FragmentAllPostBind
 
         setupRecyclerview()
         observeTabLayout()
-
+        observeAllPostData(savedInstanceState)
         binding.toolbar.setTitle = localizationManager.localization(LocalizationType.ANALYZE_ALLPOSTS_TITLE)
 
-        if (savedInstanceState!=null){
-            binding.pagerAnalyze.getTabAt(savedInstanceState.getInt("tabState"))?.select()
-        }
+    }
 
-        for (i in 41..49){
-            list1.add(PostViewData(i.toLong(),54,78,"https://picsum.photos/id/$i/200/200"))
-        }
-        for (i in 44..52){
-            list2.add(PostViewData(i.toLong(),57,79,"https://picsum.photos/id/$i/200/200"))
-        }
+    private fun observeAllPostData(savedInstanceState: Bundle?){
+        lifecycleScope.launch {
+            viewModel.allPostData.collectLatest {
 
+                when(it){
+                    is AllPostViewModel.PostState.Success->{
+                        (binding.rcMostLikedPost.adapter as AllPostAdapter).setAllPost(it.data)
+                        shimmerControl(false)
+                        if (savedInstanceState!=null){
+                            val tabPosition = savedInstanceState.getInt("tabState")
+                            binding.pagerAnalyze.getTabAt(tabPosition)?.select()
+                            setTabLayoutPosition(tabPosition)
+                        }else{
+                            setTabLayoutPosition(0)
+                        }
+                    }
+                    is AllPostViewModel.PostState.Loading->{
+                        shimmerControl(true)
+                    }
+
+
+
+                }
+
+
+            }
+        }
     }
 
     private fun setupRecyclerview() {
@@ -77,24 +95,39 @@ class AllPostFragment : BaseFragment<FragmentAllPostBinding>(FragmentAllPostBind
         return binding.pagerAnalyze.selectedTabPosition
     }
 
+    private fun changeAdapterState(postState: AllPostState){
+        (binding.rcMostLikedPost.adapter as AllPostAdapter).setPostState(postState)
+    }
+
+    private fun setTabLayoutPosition(position:Int){
+        when(position){
+            0->{ changeAdapterState(AllPostState.MOST_LIKE) }
+            1->{ changeAdapterState(AllPostState.MOST_COMMENT)}
+        }
+    }
+
+    private fun shimmerControl(status:Boolean){
+        if (status){
+            binding.allPostView.visibility = View.GONE
+            binding.postShimmerView.visibility = View.VISIBLE
+        }else{
+            binding.allPostView.visibility = View.VISIBLE
+            binding.postShimmerView.visibility = View.GONE
+        }
+    }
+
     private fun observeTabLayout(){
         binding.pagerAnalyze.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                Log.d("tabLayout-> ", "onTabSelected: $tab ")
-                tab?.position.let { itPosition->
-                   when(itPosition){
-                       0->{ (binding.rcMostLikedPost.adapter as AllPostAdapter).submitList(list1) }
-                       1->{(binding.rcMostLikedPost.adapter as AllPostAdapter).submitList(list2)}
-                   }
+                tab?.position?.let { itPosition->
+                  setTabLayoutPosition(itPosition)
                 }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
-                Log.d("tabLayout-> ", "onTabUnSelected: $tab ")
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
-                Log.d("tabLayout-> ", "onTabReSelected: $tab ")
             }
 
         })
