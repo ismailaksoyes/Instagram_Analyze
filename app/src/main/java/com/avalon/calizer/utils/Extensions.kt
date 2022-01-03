@@ -30,6 +30,7 @@ import com.bumptech.glide.request.target.Target
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.snackbar.Snackbar
+import com.tapadoo.alerter.Alerter
 import okhttp3.internal.wait
 
 
@@ -46,6 +47,22 @@ fun ImageView.loadPPUrl(url: String?) {
         .load(url)
         .error(shimmerDrawable)
         .diskCacheStrategy(DiskCacheStrategy.NONE)
+        .placeholder(shimmerDrawable)
+        .into(this)
+}
+fun ImageView.loadPostUrl(url: String?) {
+    val shimmer = Shimmer.AlphaHighlightBuilder()
+        .setDuration(1800)
+        .setBaseAlpha(0.7f)
+        .setHighlightAlpha(0.6f)
+        .setDirection(Shimmer.Direction.LEFT_TO_RIGHT)
+        .setAutoStart(true)
+        .build()
+    val shimmerDrawable = ShimmerDrawable().apply { setShimmer(shimmer) }
+    Glide.with(context)
+        .load(url)
+        .error(shimmerDrawable)
+        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
         .placeholder(shimmerDrawable)
         .into(this)
 }
@@ -189,6 +206,16 @@ fun View.showSnackBar(
         }.show()
     } else {
         snackbar.show()
+    }
+}
+
+fun Fragment.showError(title:String){
+    if (title.isNotEmpty()){
+        this.activity?.let { Alerter.create(it)
+            .setTitle(title)
+            .setIcon(R.drawable.info_ico)
+            .setBackgroundColorRes(R.color.red_light)
+            .show() }
     }
 }
 

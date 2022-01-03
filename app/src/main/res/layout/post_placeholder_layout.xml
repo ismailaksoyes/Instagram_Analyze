@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="130dp"
+    android:layout_height="130dp"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <View
+        android:id="@+id/iv_post"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:scaleType="fitXY"
+        android:background="#dddddd"
+        android:elevation="0dp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_like"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cl_comment"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/background_shadow"
+        android:padding="8dp">
+        <View
+            android:id="@+id/iv_like"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="#dddddd"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:id="@+id/tv_like_count"
+            android:layout_width="50dp"
+            android:layout_height="10dp"
+            app:layout_constraintStart_toEndOf="@id/iv_like"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="5dp"
+            android:background="#dddddd"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_comment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/cl_like"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/background_shadow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="8dp">
+        <View
+            android:id="@+id/iv_comment"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="#dddddd"
+            app:layout_constraintDimensionRatio="H,4:1"/>
+        <View
+            android:id="@+id/tv_comment_count"
+            android:layout_width="50dp"
+            android:layout_height="10dp"
+            android:background="#dddddd"
+            app:layout_constraintStart_toEndOf="@id/iv_comment"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="5dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

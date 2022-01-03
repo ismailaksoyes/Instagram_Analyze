@@ -37,6 +37,8 @@ class Repository @Inject constructor(private val apiHelper: ApiHelper) {
 
     suspend fun getStoryViewer(storyId:String,cookies: String?,maxId:String?) = apiHelper.getStoryViewer(storyId, cookies, maxId)
 
+    suspend fun getUserAllMedia(url:String,cookies: String?) = apiHelper.getUserAllMedia(url, cookies)
+
     /**
     suspend fun getStory(userId: Long,cookies: String?):Flow<Resource<ApiResponseStory>>{
         return flow {

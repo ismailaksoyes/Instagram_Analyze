@@ -34,6 +34,7 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -93,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private val shouldNotBeSeen =  listOf<Int>(R.id.storyViewsFragment,R.id.splashFragment,R.id.destination_accounts,R.id.destination_tutorial)
+    private val shouldNotBeSeen =  listOf<Int>(R.id.storyViewsFragment,R.id.splashFragment,R.id.destination_accounts,R.id.destination_tutorial,R.id.webLoginFragment)
 
 
 
@@ -119,6 +120,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
 
     private fun observeSaveFollowData() {
         lifecycleScope.launchWhenCreated {

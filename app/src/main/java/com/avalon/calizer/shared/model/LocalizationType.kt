@@ -45,5 +45,6 @@ object  LocalizationType {
      const val GENERAL_CONNOTBEEMTY_TITLE = "general_connotbeemty_title"
      const val GENERAL_GALLERY_PERMISSIONS = "general_gallery_permissions"
      const val GENERAL_OK_UPPERCASE = "general_ok_uppercase"
+     const val ACCOUNTS_RELOGINREQUIRED_ERROR = "accounts_reloginrequired_error"
 
 }

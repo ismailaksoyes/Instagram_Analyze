@@ -88,6 +88,7 @@ dependencies {
     implementation(retrofitDependencies.logging_interceptor)
     // Room components
     implementation(roomDependencies.room_ktx)
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
     kapt(roomDependencies.room_compiler)
     testImplementation(roomDependencies.room_testing)
     //Lifecycle
@@ -131,6 +132,8 @@ dependencies {
     //coil
     implementation(coilDependencies.coil)
     implementation("androidx.core:core-ktx:1.7.0")
+
+    implementation("com.github.tapadoo:alerter:7.2.4")
 
 
 }

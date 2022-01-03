@@ -53,6 +53,9 @@
             app:popExitAnim="@anim/slide_out_right"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"/>
+        <action
+            android:id="@+id/action_destination_analyze_to_allPostFragment"
+            app:destination="@id/allPostFragment" />
     </fragment>
     <fragment
         android:id="@+id/allFollowersFragment"
@@ -173,5 +176,9 @@
             android:id="@+id/action_notFollowStoryViewsFragment_to_storyFragment"
             app:destination="@id/storyFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/allPostFragment"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allposts.AllPostFragment"
+        android:label="AllPostFragment" />
 
 </navigation>

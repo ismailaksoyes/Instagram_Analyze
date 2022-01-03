@@ -68,6 +68,7 @@ class ProfileFragment : BaseFragment<ProfileFragmentBinding>(ProfileFragmentBind
                     }
 
                     is ProfileViewModel.UserDataFlow.Error -> {
+
                         val action =
                             ProfileFragmentDirections.actionDestinationProfileToDestinationAccounts()
                         findNavController().navigate(action)

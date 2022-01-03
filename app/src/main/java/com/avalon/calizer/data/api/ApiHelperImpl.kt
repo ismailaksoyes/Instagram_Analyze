@@ -83,6 +83,13 @@ class ApiHelperImpl  @Inject constructor(private val apiService: ApiService, pri
        }
     }
 
+    override suspend fun getUserAllMedia(url: String,cookies: String?): Resource<ApiResponseUserMedia> {
+      return when(val response = checkResponse { (apiService::getUserAllMedia)(url, cookies) }){
+          is ApiResponseUserMedia->Resource.Success(data = response)
+          else->Resource.Error(errorCode = response as Int)
+      }
+    }
+
     private suspend fun checkResponse(call:suspend() -> Response<*>):Any?{
         if (!networkConnectivity.isConnected()){
             return NO_INTERNET_CONNECTION
