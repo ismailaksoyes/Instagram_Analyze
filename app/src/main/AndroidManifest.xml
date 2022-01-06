@@ -16,7 +16,8 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustPan|adjustResize">
 
-        <activity android:name=".ui.main.MainActivity">
+        <activity android:name=".ui.main.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

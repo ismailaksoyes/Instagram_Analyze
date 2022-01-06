@@ -1,40 +1,23 @@
 package com.avalon.calizer.ui.main.fragments.analyze.storyanalyze
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.avalon.calizer.R
 import com.avalon.calizer.data.local.story.StoryData
 import com.avalon.calizer.databinding.FragmentStoryBinding
-import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.adapter.ShowStoryInterface
 import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.adapter.StoryAdapter
-import com.avalon.calizer.ui.main.fragments.analyze.storyanalyze.dialog.StoryBottomSheet
-import com.avalon.calizer.utils.safeNavigate
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import androidx.core.content.ContextCompat.getSystemService
+
 import androidx.fragment.app.viewModels
 import com.avalon.calizer.shared.localization.LocalizationManager
 import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.utils.LoadingAnim
-import com.avalon.calizer.utils.NavDataType
 import com.avalon.calizer.utils.NavDataType.USER_PK_HIGHLIGHTS
 import com.avalon.calizer.utils.NavDataType.USER_PK_TYPE
 
@@ -44,7 +27,6 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
 
 
     val viewModel: StoryViewModel by viewModels()
-
 
     lateinit var loadingAnim: LoadingAnim
 

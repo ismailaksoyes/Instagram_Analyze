@@ -55,11 +55,6 @@ android {
     }
 
 
-    packagingOptions {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
 
 
     kotlinOptions {
@@ -118,7 +113,6 @@ dependencies {
 
     // Activity KTX for viewModels()
     implementation(androidxsupportDependencies.activity_ktx)
-
     implementation(androidxsupportDependencies.fragment_ktx)
 
     //navigation comp
@@ -129,9 +123,6 @@ dependencies {
     implementation(lottieDependencies.lottie)
 
 
-    //coil
-    implementation(coilDependencies.coil)
-    implementation("androidx.core:core-ktx:1.7.0")
 
     implementation("com.github.tapadoo:alerter:7.2.4")
 

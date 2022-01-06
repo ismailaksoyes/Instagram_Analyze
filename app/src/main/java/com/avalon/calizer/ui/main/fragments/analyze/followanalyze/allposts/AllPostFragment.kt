@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,7 +38,7 @@ class AllPostFragment : BaseFragment<FragmentAllPostBinding>(FragmentAllPostBind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        navigate()
         setupRecyclerview()
         observeTabLayout()
         observeAllPostData(savedInstanceState)
@@ -84,6 +85,13 @@ class AllPostFragment : BaseFragment<FragmentAllPostBinding>(FragmentAllPostBind
         )
         binding.rcMostLikedPost.setHasFixedSize(true)
 
+    }
+
+    private fun navigate(){
+        binding.cvMustLike.setOnClickListener {
+            val action = AllPostFragmentDirections.actionAllPostFragmentToMostLikedDialog()
+            findNavController().navigate(action)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

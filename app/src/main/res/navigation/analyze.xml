@@ -179,6 +179,14 @@
     <fragment
         android:id="@+id/allPostFragment"
         android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allposts.AllPostFragment"
-        android:label="AllPostFragment" />
+        android:label="AllPostFragment" >
+        <action
+            android:id="@+id/action_allPostFragment_to_mostLikedDialog"
+            app:destination="@id/mostLikedDialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/mostLikedDialog"
+        android:name="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allposts.dialog.MostLikedDialog"
+        android:label="MostLikedDialog" />
 
 </navigation>

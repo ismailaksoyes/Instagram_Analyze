@@ -71,11 +71,6 @@ class ViewPagerFragment : BaseFragment<FragmentViewPagerBinding>(FragmentViewPag
     }
 
 
-
-    override fun onDestroy() {
-        binding.viewPager2.unregisterOnPageChangeCallback(onTutorialPageChangeCallBack)
-        super.onDestroy()
-    }
     private fun setupPagerClick(){
         binding.tvNextIntro.setOnClickListener {
             viewPager.setCurrentItem(2,true)

@@ -12,6 +12,7 @@
     </style>
 
 
+
     <style name="Theme.Calizer" parent="Base.Theme.Calizer">
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/blue_night</item>

@@ -1,15 +1,15 @@
 object Versions {
     const val constraint_layout_version = "2.1.0"
     const val lifecycle_version = "2.3.1"
-    const val coroutines_version = "1.6.0-RC3"
-    const val kotlin_version = "1.5.21"
+    const val coroutines_version = "1.6.0"
+    const val kotlin_version = "1.6.0"
     const val hilt_version = "2.38.1"
-    const val room_version = "2.3.0"
+    const val room_version = "2.4.0"
 
     const val appcompat_version = "1.3.1"
     const val material_design_version = "1.4.0"
 
-    const val core_ktx_version = "1.6.0"
+    const val core_ktx_version = "1.7.0"
     const val preference_ktx_version = "1.1.1"
     const val multidex_version = "1.0.3"
     const val legacy_support_version = "1.0.0"
@@ -36,7 +36,7 @@ object Versions {
 
     const val coroutines_play_services_version = "1.2.1"
 
-    const val android_gradle_plugin_version = "7.0.2"
+    const val android_gradle_plugin_version = "7.0.4"
     const val gms_play_services_version = "4.3.8"
 
     const val compose_version = "1.0.5"
@@ -50,7 +50,7 @@ object buildConfigVersions{
     const val compileSdkVersion = 31
     const val buildToolsVersion = "30.0.2"
     const val minSdkVersion = 21
-    const val targetSdkVersion = 30
+    const val targetSdkVersion = 31
     const val versionCode = 1
     const val versionName = "1.0"
 }
