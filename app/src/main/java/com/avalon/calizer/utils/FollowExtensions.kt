@@ -1,11 +1,13 @@
 package com.avalon.calizer.utils
 
+import com.avalon.calizer.data.local.analyze.PostUserData
 import com.avalon.calizer.data.local.follow.FollowData
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.data.local.follow.FollowingData
+import com.avalon.calizer.data.remote.insresponse.ApiResponseMediaDetails
 
 
-    fun List<FollowersData>.followersToFollowList() = map {
+fun List<FollowersData>.followersToFollowList() = map {
         FollowData(
             uid = it.uid,
             uniqueType = it.uniqueType,
@@ -68,3 +70,15 @@ import com.avalon.calizer.data.local.follow.FollowingData
             username = it.username
         )
     }
+
+    fun List<ApiResponseMediaDetails.User>.mediaDetailsToPostUser(analyzeUserId:Long,mediaId:Long) = map {
+        PostUserData(
+            analyzeUserId = analyzeUserId,
+            dsUserID = it.pk,
+            mediaId = mediaId,
+            profilePicUrl = it.profilePicUrl,
+            username = it.username
+        )
+    }
+
+

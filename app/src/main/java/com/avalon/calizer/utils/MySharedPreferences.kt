@@ -37,6 +37,10 @@ class MySharedPreferences @Inject constructor(var prefs:SharedPreferences) {
         get() = prefs.getLong(Constants.FOLLOWING_UPDATE_DATE, -1)
         set(value) = prefs.edit().putLong(Constants.FOLLOWING_UPDATE_DATE, value).apply()
 
+    var mostLikeUpdateData:Long
+    get() = prefs.getLong(Constants.MOST_LIKE_UPDATE_DATE,-1)
+    set(value) = prefs.edit().putLong(Constants.MOST_LIKE_UPDATE_DATE,value).apply()
+
     var firstLogin: Boolean
         get() = prefs.getBoolean(Constants.FIRST_LOGIN, true)
         set(value) = prefs.edit().putBoolean(Constants.FIRST_LOGIN,value).apply()
