@@ -50,11 +50,16 @@ class AllPostFragment : BaseFragment<FragmentAllPostBinding>(FragmentAllPostBind
         observeAllPostData(savedInstanceState)
         binding.toolbar.setTitle = localizationManager.localization(LocalizationType.ANALYZE_ALLPOSTS_TITLE)
 
+        binding.cvMustLike.setOnClickListener {
+            mostLikeAnalyze()
+        }
     }
 
     private fun mostLikeAnalyze(){
         val postData = (binding.rcMostLikedPost.adapter as AllPostAdapter).currentList
-
+        if (postData.isNotEmpty()){
+            viewModel.mostLikeAnalyze(postData)
+        }
     }
 
     private fun observeAllPostData(savedInstanceState: Bundle?){

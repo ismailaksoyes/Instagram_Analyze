@@ -115,6 +115,8 @@ interface ApiService {
         @Header("Cookie") cookies: String?
     ):Response<ApiResponseUserMedia>
 
+
+    @GET("media/{mediaId}/likers")
     suspend fun getMediaDetails(
         @Path("mediaId") mediaId:Long,
         @Header("Cookie") cookies: String?
