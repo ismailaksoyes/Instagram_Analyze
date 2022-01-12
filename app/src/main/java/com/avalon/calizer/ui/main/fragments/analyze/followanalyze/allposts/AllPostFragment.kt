@@ -14,16 +14,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.avalon.calizer.R
 import com.avalon.calizer.data.local.analyze.PostViewData
+import com.avalon.calizer.data.local.follow.FollowRequestParams
 import com.avalon.calizer.databinding.FragmentAllPostBinding
 import com.avalon.calizer.shared.localization.LocalizationManager
 import com.avalon.calizer.shared.model.LocalizationType
 import com.avalon.calizer.ui.base.BaseFragment
 import com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allposts.adapter.AllPostAdapter
 import com.avalon.calizer.utils.AllPostState
+import com.avalon.calizer.utils.Utils
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 
@@ -36,6 +40,8 @@ class AllPostFragment : BaseFragment<FragmentAllPostBinding>(FragmentAllPostBind
     @Inject
     lateinit var localizationManager: LocalizationManager
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navigate()
@@ -44,6 +50,16 @@ class AllPostFragment : BaseFragment<FragmentAllPostBinding>(FragmentAllPostBind
         observeAllPostData(savedInstanceState)
         binding.toolbar.setTitle = localizationManager.localization(LocalizationType.ANALYZE_ALLPOSTS_TITLE)
 
+        binding.cvMustLike.setOnClickListener {
+            mostLikeAnalyze()
+        }
+    }
+
+    private fun mostLikeAnalyze(){
+        val postData = (binding.rcMostLikedPost.adapter as AllPostAdapter).currentList
+        if (postData.isNotEmpty()){
+            viewModel.mostLikeAnalyze(postData)
+        }
     }
 
     private fun observeAllPostData(savedInstanceState: Bundle?){

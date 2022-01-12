@@ -2,6 +2,7 @@ package com.avalon.calizer.data.local
 
 
 import androidx.room.*
+import com.avalon.calizer.data.local.analyze.PostUserData
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.data.local.follow.FollowingData
 import com.avalon.calizer.data.local.follow.OldFollowersData
@@ -67,6 +68,12 @@ interface RoomDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addOldFollowingData(followData: List<OldFollowingData>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addMediaLikeUser(likeData : List<PostUserData>)
+
+    @Query("SELECT * FROM post_like_table WHERE analyzeUserId=:userId")
+    suspend fun getLikeUserMedia(userId: Long): List<PostUserData>
 
     @Query("DELETE FROM followers_table WHERE analyzeUserId=:userId")
     suspend fun deleteFollowersData(userId: Long)

@@ -39,6 +39,8 @@ class Repository @Inject constructor(private val apiHelper: ApiHelper) {
 
     suspend fun getUserAllMedia(url:String,cookies: String?) = apiHelper.getUserAllMedia(url, cookies)
 
+    suspend fun getMediaDetails(mediaId:Long,cookies: String?) = apiHelper.getMediaDetails(mediaId, cookies)
+
     /**
     suspend fun getStory(userId: Long,cookies: String?):Flow<Resource<ApiResponseStory>>{
         return flow {

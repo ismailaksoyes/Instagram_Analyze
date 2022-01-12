@@ -3,6 +3,7 @@ package com.avalon.calizer.data.repository
 import com.avalon.calizer.data.local.AccountsData
 import com.avalon.calizer.data.local.follow.FollowersData
 import com.avalon.calizer.data.local.RoomDao
+import com.avalon.calizer.data.local.analyze.PostUserData
 import com.avalon.calizer.data.local.follow.FollowData
 import com.avalon.calizer.data.local.follow.FollowingData
 import com.avalon.calizer.utils.MySharedPreferences
@@ -43,6 +44,12 @@ class FollowRepository @Inject constructor(
     }
     suspend fun getNewFollowersCount():Long{
         return roomDao.getNewFollowersCount(prefs.selectedAccount)
+    }
+    suspend fun addMediaLikeUser(likeData : List<PostUserData>){
+        roomDao.addMediaLikeUser(likeData)
+    }
+    suspend fun getLikeUserMedia(): List<PostUserData>{
+        return roomDao.getLikeUserMedia(prefs.selectedAccount)
     }
 
     suspend fun updateFollowersNewProfilePicture(userId:Long,url:String){

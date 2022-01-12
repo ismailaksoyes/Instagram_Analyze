@@ -12,6 +12,7 @@ object Constants {
         const val SELECTED_ACCOUNT = "selectedAccount"
         const val FOLLOWERS_UPDATE_DATE = "followersUpdateDate"
         const val FOLLOWING_UPDATE_DATE = "followingUpdateDate"
+        const val MOST_LIKE_UPDATE_DATE = "mostLikeUpdateDate"
         const val SHOW_INTRO = "showIntro"
         const val FOLLOWERS_TYPE = "followers_type"
         const val FOLLOWING_TYPE = "following_type"
