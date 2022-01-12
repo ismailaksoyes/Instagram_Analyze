@@ -3,11 +3,14 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="viewModel"
             type="com.avalon.calizer.ui.main.fragments.analyze.followanalyze.allfollowers.AllFollowersViewModel" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
 
         android:layout_width="match_parent"
@@ -27,141 +30,153 @@
             android:id="@+id/all_post_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="visible">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_user_post"
-                android:layout_width="match_parent"
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_must_like"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                app:layout_constraintTop_toTopOf="parent"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="@dimen/card_elevation_mid"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="14dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toStartOf="@id/cv_notfollow_like"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/barrier_cv">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?colorSurface"
+                    android:padding="12dp"
+                    app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_followers_plus"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_follow_ico"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_next_icon"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_followers_text"
+                        style="@style/text_medium_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Aktif Takipciler"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/iv_followers_plus"
+                        tools:text="Aktif Takipciler" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_notfollow_like"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                android:layout_marginEnd="20dp"
+                app:cardElevation="@dimen/card_elevation_mid"
+                app:layout_constraintBottom_toBottomOf="@id/cv_must_like"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:clipChildren="false"
-                android:clipToPadding="false">
+                app:layout_constraintStart_toEndOf="@id/cv_must_like"
+                app:layout_constraintTop_toTopOf="@id/cv_must_like">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cv_must_like"
-                    android:layout_width="170dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toStartOf="@id/cv_notfollow_like"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:cardElevation="@dimen/card_elevation_mid"
-                    app:cardCornerRadius="12dp">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?colorSurface"
+                    android:padding="12dp"
+                    app:layout_constraintEnd_toEndOf="@+id/cv_must_like"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/constraintLayout2">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="?colorSurface"
-                        android:padding="12dp">
+                    <ImageView
+                        android:id="@+id/iv_unfollowers_plus"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_follow_ico"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                        <ImageView
-                            android:id="@+id/iv_followers_plus"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:src="@drawable/ic_follow_ico"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_next_icon"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_next_icon"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"/>
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_unfollowers_text"
+                        style="@style/text_medium_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Gizli Takipciler"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/iv_unfollowers_plus"
+                        tools:text="Gizli Takipciler" />
 
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tv_followers_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            style="@style/text_medium_style"
-                            tools:text="Aktif Takipciler"
-                            android:text="Aktif Takipciler"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/iv_followers_plus" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cv_notfollow_like"
-                    android:layout_width="170dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/cv_must_like"
-                    app:layout_constraintTop_toTopOf="@id/cv_must_like"
-                    app:layout_constraintBottom_toBottomOf="@id/cv_must_like"
-                    app:cardElevation="@dimen/card_elevation_mid"
-                    app:cardCornerRadius="12dp">
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="?colorSurface"
-                        android:padding="12dp">
-                        <ImageView
-                            android:id="@+id/iv_unfollowers_plus"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:src="@drawable/ic_follow_ico"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"/>
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_next_icon"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"/>
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tv_unfollowers_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/iv_unfollowers_plus"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            tools:text="Gizli Takipciler"
-                            android:text="Gizli Takipciler"
-                            style="@style/text_medium_style"
-                            />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier_cv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="cv_must_like,cv_notfollow_like"/>
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/pagerAnalyze"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_user_post"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:background="@color/trans"
-                app:tabBackground="@color/trans"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                app:tabMode="fixed"
+                android:background="@color/trans"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/barrier_cv"
+                app:tabBackground="@color/trans"
                 app:tabIconTint="?colorOnBackground"
-                app:tabIndicatorColor="?colorOnBackground"
                 app:tabIndicator="@drawable/tab_indicator_posts"
+                app:tabIndicatorColor="?colorOnBackground"
                 app:tabIndicatorFullWidth="false"
-                app:tabTextColor="?attr/colorOnBackground"
+                app:tabMode="fixed"
                 app:tabRippleColor="@null"
-                app:tabTextAppearance="@style/text_medium_style">
+                app:tabTextAppearance="@style/text_medium_style"
+                app:tabTextColor="?attr/colorOnBackground">
+
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/tab1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="EN COK BEGENI"
-                    />
+                    android:text="EN COK BEGENI" />
+
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/tab2"
                     android:layout_width="wrap_content"
@@ -176,32 +191,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
                 android:overScrollMode="never"
-                tools:itemCount="6"
-                tools:listitem="@layout/posts_item_view"
-                tools:layoutMode="clipBounds"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/pagerAnalyze" />
+                app:layout_constraintTop_toBottomOf="@id/pagerAnalyze"
+                tools:itemCount="6"
+                tools:layoutMode="clipBounds"
+                tools:listitem="@layout/posts_item_view" />
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:id="@+id/post_shimmer_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:orientation="vertical"
-            android:visibility="gone">
-            <include layout="@layout/post_shimmer_layout"/>
-        </LinearLayout>
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
 
+            <include layout="@layout/post_shimmer_layout" />
+        </LinearLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

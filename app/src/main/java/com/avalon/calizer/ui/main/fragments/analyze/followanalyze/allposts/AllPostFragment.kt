@@ -48,6 +48,7 @@ class AllPostFragment : BaseFragment<FragmentAllPostBinding>(FragmentAllPostBind
         setupRecyclerview()
         observeTabLayout()
         observeAllPostData(savedInstanceState)
+        observeMostLikedViewData()
         binding.toolbar.setTitle = localizationManager.localization(LocalizationType.ANALYZE_ALLPOSTS_TITLE)
 
         binding.cvMustLike.setOnClickListener {
@@ -59,6 +60,20 @@ class AllPostFragment : BaseFragment<FragmentAllPostBinding>(FragmentAllPostBind
         val postData = (binding.rcMostLikedPost.adapter as AllPostAdapter).currentList
         if (postData.isNotEmpty()){
             viewModel.mostLikeAnalyze(postData)
+        }
+    }
+
+    private fun observeMostLikedViewData(){
+        lifecycleScope.launch {
+            viewModel.allAnalyzeMediaData.collectLatest {
+                when(it){
+                   is AllPostViewModel.PostMediaAnalyzeState.Success->{
+                        it.data.forEach { itData->
+                            Log.d("observeData-> ", "observeMostLikedViewData: $itData ")
+                        }
+                    }
+                }
+            }
         }
     }
 
