@@ -128,6 +128,7 @@ class AllPostViewModel @Inject constructor(
                             }
                         }
                     }
+                    prefs.mostLikeUpdateData = System.currentTimeMillis()
                     addLikeUserMediaLocal(cacheData)
                     likeUserAnalyze(cacheData)
                 }
