@@ -171,10 +171,6 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(FragmentStoryBinding::i
             val action = StoryFragmentDirections.actionStoryFragmentToHighlightsBottomSheet()
             findNavController().navigate(action)
         }
-        binding.clNoFollowStory.setOnClickListener {
-            val action = StoryFragmentDirections.actionStoryFragmentToNotFollowStoryViewsFragment()
-            findNavController().navigate(action)
-        }
         binding.toolbar.onBack.setOnClickListener {
             findNavController().navigateUp()
         }

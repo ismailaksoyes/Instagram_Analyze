@@ -125,42 +125,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_no_follow_story"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/radius_rect"
-            android:elevation="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_username_highlights">
-
-            <TextView
-                android:id="@+id/tv_no_follow_story"
-                style="@style/text_medium_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                tools:text="Takip Etmeden İzleyenler"
-                android:text="@{localization.localization(LocalizationType.STORY_NOTFOLLOWWATCH_TITLE)}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:layout_width="10dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="20dp"
-                android:src="@drawable/ic_next_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

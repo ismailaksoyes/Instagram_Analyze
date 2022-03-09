@@ -1,0 +1,654 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "8b2f4efd8f40b926b698cedcb7e601e6",
+    "entities": [
+      {
+        "tableName": "followers_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT, `uniqueType` INTEGER, `analyzeUserId` INTEGER, `dsUserID` INTEGER, `fullName` TEXT, `hasAnonymousProfilePicture` INTEGER, `isPrivate` INTEGER, `isVerified` INTEGER, `latestReelMedia` INTEGER, `profilePicUrl` TEXT, `profilePicId` TEXT, `username` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uniqueType",
+            "columnName": "uniqueType",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "analyzeUserId",
+            "columnName": "analyzeUserId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dsUserID",
+            "columnName": "dsUserID",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fullName",
+            "columnName": "fullName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hasAnonymousProfilePicture",
+            "columnName": "hasAnonymousProfilePicture",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isPrivate",
+            "columnName": "isPrivate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isVerified",
+            "columnName": "isVerified",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "latestReelMedia",
+            "columnName": "latestReelMedia",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "profilePicUrl",
+            "columnName": "profilePicUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "profilePicId",
+            "columnName": "profilePicId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_followers_table_uniqueType",
+            "unique": true,
+            "columnNames": [
+              "uniqueType"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_followers_table_uniqueType` ON `${TABLE_NAME}` (`uniqueType`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "following_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT, `uniqueType` INTEGER, `analyzeUserId` INTEGER, `dsUserID` INTEGER, `fullName` TEXT, `hasAnonymousProfilePicture` INTEGER, `isPrivate` INTEGER, `isVerified` INTEGER, `latestReelMedia` INTEGER, `profilePicUrl` TEXT, `profilePicId` TEXT, `username` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uniqueType",
+            "columnName": "uniqueType",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "analyzeUserId",
+            "columnName": "analyzeUserId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dsUserID",
+            "columnName": "dsUserID",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fullName",
+            "columnName": "fullName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hasAnonymousProfilePicture",
+            "columnName": "hasAnonymousProfilePicture",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isPrivate",
+            "columnName": "isPrivate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isVerified",
+            "columnName": "isVerified",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "latestReelMedia",
+            "columnName": "latestReelMedia",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "profilePicUrl",
+            "columnName": "profilePicUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "profilePicId",
+            "columnName": "profilePicId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_following_table_uniqueType",
+            "unique": true,
+            "columnNames": [
+              "uniqueType"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_following_table_uniqueType` ON `${TABLE_NAME}` (`uniqueType`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "old_followers_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT, `uniqueType` INTEGER, `analyzeUserId` INTEGER, `dsUserID` INTEGER, `fullName` TEXT, `hasAnonymousProfilePicture` INTEGER, `isPrivate` INTEGER, `isVerified` INTEGER, `latestReelMedia` INTEGER, `profilePicUrl` TEXT, `profilePicId` TEXT, `username` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uniqueType",
+            "columnName": "uniqueType",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "analyzeUserId",
+            "columnName": "analyzeUserId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dsUserID",
+            "columnName": "dsUserID",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fullName",
+            "columnName": "fullName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hasAnonymousProfilePicture",
+            "columnName": "hasAnonymousProfilePicture",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isPrivate",
+            "columnName": "isPrivate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isVerified",
+            "columnName": "isVerified",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "latestReelMedia",
+            "columnName": "latestReelMedia",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "profilePicUrl",
+            "columnName": "profilePicUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "profilePicId",
+            "columnName": "profilePicId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_old_followers_table_uniqueType",
+            "unique": true,
+            "columnNames": [
+              "uniqueType"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_old_followers_table_uniqueType` ON `${TABLE_NAME}` (`uniqueType`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "old_following_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT, `uniqueType` INTEGER, `analyzeUserId` INTEGER, `dsUserID` INTEGER, `fullName` TEXT, `hasAnonymousProfilePicture` INTEGER, `isPrivate` INTEGER, `isVerified` INTEGER, `latestReelMedia` INTEGER, `profilePicUrl` TEXT, `profilePicId` TEXT, `username` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uniqueType",
+            "columnName": "uniqueType",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "analyzeUserId",
+            "columnName": "analyzeUserId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dsUserID",
+            "columnName": "dsUserID",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fullName",
+            "columnName": "fullName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hasAnonymousProfilePicture",
+            "columnName": "hasAnonymousProfilePicture",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isPrivate",
+            "columnName": "isPrivate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isVerified",
+            "columnName": "isVerified",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "latestReelMedia",
+            "columnName": "latestReelMedia",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "profilePicUrl",
+            "columnName": "profilePicUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "profilePicId",
+            "columnName": "profilePicId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_old_following_table_uniqueType",
+            "unique": true,
+            "columnNames": [
+              "uniqueType"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_old_following_table_uniqueType` ON `${TABLE_NAME}` (`uniqueType`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "accounts_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT, `userName` TEXT NOT NULL, `profilePic` TEXT NOT NULL, `csfr` TEXT NOT NULL, `dsUserID` INTEGER NOT NULL, `rur` TEXT NOT NULL, `sessID` TEXT NOT NULL, `shbid` TEXT NOT NULL, `shbts` TEXT NOT NULL, `mid` TEXT NOT NULL, `allCookie` TEXT NOT NULL, `isFirstFollowersAnalyze` INTEGER NOT NULL, `isFirstFollowingAnalyze` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userName",
+            "columnName": "userName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "profilePic",
+            "columnName": "profilePic",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "csfr",
+            "columnName": "csfr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dsUserID",
+            "columnName": "dsUserID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rur",
+            "columnName": "rur",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sessID",
+            "columnName": "sessID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shbid",
+            "columnName": "shbid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shbts",
+            "columnName": "shbts",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mid",
+            "columnName": "mid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "allCookie",
+            "columnName": "allCookie",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isFirstFollowersAnalyze",
+            "columnName": "isFirstFollowersAnalyze",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isFirstFollowingAnalyze",
+            "columnName": "isFirstFollowingAnalyze",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_accounts_table_dsUserID",
+            "unique": true,
+            "columnNames": [
+              "dsUserID"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_accounts_table_dsUserID` ON `${TABLE_NAME}` (`dsUserID`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "accounts_info",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT, `userName` TEXT, `profilePic` TEXT, `followers` INTEGER, `following` INTEGER, `posts` INTEGER, `userId` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userName",
+            "columnName": "userName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "profilePic",
+            "columnName": "profilePic",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "followers",
+            "columnName": "followers",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "following",
+            "columnName": "following",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "posts",
+            "columnName": "posts",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "RemoteKeys",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`repoId` TEXT NOT NULL, `prevKey` INTEGER, `nextKey` INTEGER, PRIMARY KEY(`repoId`))",
+        "fields": [
+          {
+            "fieldPath": "repoId",
+            "columnName": "repoId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "prevKey",
+            "columnName": "prevKey",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nextKey",
+            "columnName": "nextKey",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "repoId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "post_like_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT, `analyzeUserId` INTEGER, `uniqueType` INTEGER, `dsUserID` INTEGER, `mediaId` INTEGER, `profilePicUrl` TEXT, `username` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "analyzeUserId",
+            "columnName": "analyzeUserId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uniqueType",
+            "columnName": "uniqueType",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dsUserID",
+            "columnName": "dsUserID",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mediaId",
+            "columnName": "mediaId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "profilePicUrl",
+            "columnName": "profilePicUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_post_like_table_uniqueType",
+            "unique": true,
+            "columnNames": [
+              "uniqueType"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_post_like_table_uniqueType` ON `${TABLE_NAME}` (`uniqueType`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8b2f4efd8f40b926b698cedcb7e601e6')"
+    ]
+  }
+}
