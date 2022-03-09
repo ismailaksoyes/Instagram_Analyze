@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import com.avalon.calizer.data.local.analyze.MostLikeViewData
 import com.avalon.calizer.data.local.analyze.PostUserData
 import com.avalon.calizer.data.local.analyze.PostViewData
 import com.avalon.calizer.data.local.follow.FollowRequestParams
@@ -33,24 +34,26 @@ class AllPostViewModel @Inject constructor(
 
     val allPostData = MutableStateFlow<PostState>(PostState.Empty)
 
-    private val _allAnalyzeMediaData = MutableStateFlow<PostMediaAnalyzeState>(PostMediaAnalyzeState.Empty)
-    val allAnalyzeMediaData:StateFlow<PostMediaAnalyzeState> = _allAnalyzeMediaData
+    private val _allAnalyzeMediaData =
+        MutableStateFlow<PostMediaAnalyzeState>(PostMediaAnalyzeState.Empty)
+    val allAnalyzeMediaData: StateFlow<PostMediaAnalyzeState> = _allAnalyzeMediaData
 
     init {
         allPostData.value = PostState.Loading
         getAllMedia()
     }
 
-    sealed class PostMediaAnalyzeState{
+    sealed class PostMediaAnalyzeState {
         object Empty : PostMediaAnalyzeState()
-        object Loading :PostMediaAnalyzeState()
-        data class Success(val data:List<PostUserData>):PostMediaAnalyzeState()
+        object Loading : PostMediaAnalyzeState()
+        object Error : PostMediaAnalyzeState()
+        data class Success(val data: List<MostLikeViewData>) : PostMediaAnalyzeState()
     }
 
-    sealed class PostState{
+    sealed class PostState {
         object Empty : PostState()
-        object Loading :PostState()
-        data class Success(val data:List<PostViewData>):PostState()
+        object Loading : PostState()
+        data class Success(val data: List<PostViewData>) : PostState()
     }
 
     fun getAllMedia() {
@@ -84,38 +87,56 @@ class AllPostViewModel @Inject constructor(
         }
     }
 
-    private fun likeUserAnalyze(userList:List<PostUserData>){
-        userList.forEach { itData->
-            Log.d("analyze-> ", "likeUserAnalyze: $itData ")
+    private fun likeUserAnalyze(userList: List<PostUserData>) {
+        val newList =
+            userList.groupBy { it.dsUserID }.map { it.value }.sortedByDescending { it.size }.take(9)
+        val viewDataList = ArrayList<MostLikeViewData>()
+        newList.forEach { itData ->
+            itData.getOrNull(0)?.let { itUserData ->
+                viewDataList.add(
+                    MostLikeViewData(
+                        profileUrl = itUserData.profilePicUrl,
+                        username = itUserData.username,
+                        likeCount = itData.size.toLong()
+                    )
+                )
+            }
+        }
+        if (viewDataList.isNotEmpty()) {
+            _allAnalyzeMediaData.value = PostMediaAnalyzeState.Success(viewDataList)
+        } else {
+            _allAnalyzeMediaData.value = PostMediaAnalyzeState.Error
         }
     }
 
-    private fun addLikeUserMediaLocal(userList:List<PostUserData>){
+    private fun addLikeUserMediaLocal(userList: List<PostUserData>) {
         viewModelScope.launch {
             followRepository.addMediaLikeUser(userList)
         }
     }
 
-    private suspend fun getLikeUserMediaLocal():List<PostUserData>{
+    private suspend fun getLikeUserMediaLocal(): List<PostUserData> {
         return followRepository.getLikeUserMedia()
     }
 
-     fun mostLikeAnalyze(postData:List<PostViewData>){
+    fun mostLikeAnalyze(postData: List<PostViewData>) {
         viewModelScope.launch {
             val mostLikeTime = Date(prefs.mostLikeUpdateData)
             if (Utils.getTimeDifference(mostLikeTime)) {
-                if (postData.isNotEmpty()){
+                if (postData.isNotEmpty()) {
                     val cacheData = arrayListOf<PostUserData>()
-                    postData.forEach { postListItem->
+                    postData.forEach { postListItem ->
                         delay((500 + (0..250).random()).toLong())
-                        postListItem.mediaId?.let { itMediaId->
-                            when(val response = repository.getMediaDetails(itMediaId,prefs.allCookie)){
-                                is Resource.Success->{
-                                    response.data?.users?.forEach { itUser->
+                        postListItem.mediaId?.let { itMediaId ->
+                            when (val response =
+                                repository.getMediaDetails(itMediaId, prefs.allCookie)) {
+                                is Resource.Success -> {
+                                    response.data?.users?.forEach { itUser ->
                                         cacheData.add(
                                             PostUserData(
                                                 analyzeUserId = prefs.selectedAccount,
-                                                uniqueType = itUser.pk.toString().plus(itMediaId.toString().take(6)).toLong(),
+                                                uniqueType = itUser.pk.toString()
+                                                    .plus(itMediaId.toString().take(6)).toLong(),
                                                 dsUserID = itUser.pk,
                                                 mediaId = itMediaId,
                                                 profilePicUrl = itUser.profilePicUrl,
@@ -132,7 +153,7 @@ class AllPostViewModel @Inject constructor(
                     addLikeUserMediaLocal(cacheData)
                     likeUserAnalyze(cacheData)
                 }
-            }else{
+            } else {
                 val data = getLikeUserMediaLocal()
                 likeUserAnalyze(data)
             }
